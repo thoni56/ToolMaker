@@ -1,27 +1,22 @@
 ########## index ##########
-%%SET foo(foo, fie, fum)
-%%(foo)
-%%(foo[0])
-%%( foo [ 0 ] )
-%%(foo[1])
-%%(foo[2])
-%%(foo[3])
+foo,fie,fum
+3
+3
+foo
+fie
+fum
 %%(foo[4])
 %%(foo[-1])
-%%(foo[ - 1 ])
-%%SET fie(2)
-%%(foo[fie])
-%%(foo[%%(fie)])
-%%SET fie(2, hej)
-%%(foo[fie])
-%%(foo[%%(fie)])
-%%SET fie(hej, hopp)
-%%(foo[fie])
-%%(foo[%%(fie)])
+%%(foo[-1])
+fie
+fie
+%%(foo[2,hej])
+%%(foo[2,hej])
+%%(foo[hej,hopp])
+%%(foo[hej,hopp])
 %%(foo[fum])
 %%(1[5])
-%%(%%(fie)[6])
-########## ../imp index.tst >index.tst.tmp; cat index.tst.tmp; rm index.tst.tmp ##########
+%%(hej,hopp[6])
 
 
 index.tst
@@ -80,21 +75,3 @@ index.tst
 6 error(s) detected.
 4 warning(s) issued.
 
-foo,fie,fum
-3
-3
-foo
-fie
-fum
-%%(foo[4])
-%%(foo[-1])
-%%(foo[-1])
-fie
-fie
-%%(foo[2,hej])
-%%(foo[2,hej])
-%%(foo[hej,hopp])
-%%(foo[hej,hopp])
-%%(foo[fum])
-%%(1[5])
-%%(hej,hopp[6])

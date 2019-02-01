@@ -1,15 +1,3 @@
 ########## foo ##########
-%%SET foo("Hej", Hopp)
-%%IF (foo(Hej))
-Error!
-%%ELSE
-OK!
-%%ENDIF
-%%IF (foo("Hopp"))
-Error!
-%%ELSE
-OK!
-%%ENDIF
-########## ../imp foo.tst >foo.tst.tmp; cat foo.tst.tmp; rm foo.tst.tmp ##########
 Error!
 Error!
