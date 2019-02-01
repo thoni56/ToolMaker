@@ -1,7 +1,7 @@
 ########## tab ##########
-		%%if (foo(fie))
-%%endif
-########## ../imp tab.tst >tab.tst.tmp; cat tab.tst.tmp; rm tab.tst.tmp ##########
+		%%IF (foo(fie))
+
+%%ENDIF
 
 
 tab.tst
@@ -15,6 +15,3 @@ tab.tst
 No errors detected.
 1 warning(s) issued.
 
-		%%IF (foo(fie))
-
-%%ENDIF

@@ -1,10 +1,5 @@
 ########## text ##########
 Hej hopp
 Hello world !
-`%%SET (A) (1)
-`%%(A)
-########## ../imp text.tst >text.tst.tmp; cat text.tst.tmp; rm text.tst.tmp ##########
-Hej hopp
-Hello world !
 %%SET (A) (1)
 %%(A)

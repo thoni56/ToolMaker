@@ -1,5 +1,2 @@
 ########## stringchars ##########
-%%SET foo("!@#$%^&*()-_=+[{]}'`~;:/?.>,<\|%%""%%SET<=>=")
-%%(foo)
-########## ../imp stringchars.tst >stringchars.tst.tmp; cat stringchars.tst.tmp; rm stringchars.tst.tmp ##########
 !@#$%^&*()-_=+[{]}'`~;:/?.>,<\|%%"%%SET<=>=
