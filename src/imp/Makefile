@@ -48,9 +48,11 @@ impList.o: impList.c
 
 #-
 
+test:
+	cd TEST; jregr
+
 clean:
-	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt imp.voc impParse.* impScan.* \
-	impScSema.* impPaSema.* impCommon.* impList.* imp imp.a
+	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt imp imp.a
 
 depend file:
 	@echo -n "Make depend "

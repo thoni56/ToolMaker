@@ -1,7 +1,4 @@
 ########## undef2 ##########
-%%IF ({%%(UNDEF), 2} (%%(UNDEF)))
-%%ENDIF
-########## ../imp undef2.tst >undef2.tst.tmp; cat undef2.tst.tmp; rm undef2.tst.tmp ##########
 
 
 undef2.tst

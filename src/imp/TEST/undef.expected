@@ -1,9 +1,6 @@
 ########## undef ##########
-%%IF (E (1))
+%%IF (E(1))
 %%ENDIF
-%%IF ({%%(UNDEF), 2} (%%(UNDEF)))
-%%ENDIF
-########## ../imp undef.tst >undef.tst.tmp; cat undef.tst.tmp; rm undef.tst.tmp ##########
 
 
 undef.tst
@@ -23,5 +20,3 @@ undef.tst
 No errors detected.
 3 warning(s) issued.
 
-%%IF (E(1))
-%%ENDIF
