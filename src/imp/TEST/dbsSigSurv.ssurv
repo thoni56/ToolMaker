@@ -80,6 +80,8 @@ DDHINITFIELD   ,S       ,  623/15514 - APZ211                ;
 
 
 
+DDHINITFK      ,S       ,  625/15514 - APZ211                ;
+
 
 
 
@@ -132,14 +134,14 @@ TOWCHAROWR     ,S       ,  584/15514 - APZ211                ;
 
 
 
-TOWCHAVOLROWR  ,R       ,  580/15514 - APZ211                ;
+TOWCHAVOLROWR  ,T       ,  580/15514 - APZ211                ;
 
 
 
 
 
 
-TOWCLOSEACK    ,T CB    ,  578/15514 - APZ211                ;
+TOWCLOSEACK    ,S CB    ,  578/15514 - APZ211                ;
 
 
 
@@ -224,7 +226,7 @@ TOWGETPRESYMACK,S CB    ,  650/15514 - APZ211                ;
 
 
 
-TOWGETR        ,T       ,  574/15514 - APZ211                ;
+TOWGETR        ,S       ,  574/15514 - APZ211                ;
 
 
 
@@ -280,7 +282,7 @@ TOWLETFLDR     ,S       ,  588/15514 - APZ211                ;
 
 
 
-TOWOPENR       ,T       ,  576/15514 - APZ211                ;
+TOWOPENR       ,S       ,  576/15514 - APZ211                ;
 
 
 
@@ -391,6 +393,8 @@ DDHINITFIELDR  ,R       ,  624/15514 - APZ211                ;
 
 
 
+DDHINITFKR     ,R       ,  626/15514 - APZ211                ;
+
 
 
 
@@ -443,14 +447,14 @@ TOWCHAROW      ,R       ,  583/15514 - APZ211                ;
 
 
 
-TOWCHAVOLROW   ,S       ,  579/15514 - APZ211                ;
+TOWCHAVOLROW   ,T       ,  579/15514 - APZ211                ;
 
 
 
 
 
 
-TOWCLOSE       ,T       ,  577/15514 - APZ211                ;
+TOWCLOSE       ,R       ,  577/15514 - APZ211                ;
 
 
 
@@ -555,7 +559,7 @@ TOWGETPRESYM   ,R       ,  649/15514 - APZ211                ;
 
 
 
-TOWGETROW      ,T       ,  571/15514 - APZ211                ;
+TOWGETROW      ,R       ,  571/15514 - APZ211                ;
 
 
 
@@ -611,12 +615,14 @@ TOWLETFLD      ,R       ,  587/15514 - APZ211                ;
 
 
 
+TOWLETFLDFK    ,R       ,  629/15514 - APZ211                ;
 
 
 
 
 
-TOWOPEN        ,T       ,  575/15514 - APZ211                ;
+
+TOWOPEN        ,R       ,  575/15514 - APZ211                ;
 
 
 
