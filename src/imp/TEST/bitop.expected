@@ -1,15 +1,4 @@
 ########## bitop ##########
-%%ESET VARIABEL(-1 BITAND 256)
-%%(VARIABEL)
-%%ESET VARIABEL(5 BITOR 7)
-%%(VARIABEL)
-%%((5-1) BITAND (1+3))
-%%(5-1 BITAND 1+3)
-%%BEGIN(bittest(num))
-%%(num)
-%%END(bittest)
-%%EINCLUDE(bittest(3 BITOR 6))
-########## ../imp bitop.tst >bitop.tst.tmp; cat bitop.tst.tmp; rm bitop.tst.tmp ##########
 256
 7
 4
