@@ -1,0 +1,221 @@
+%%-- Code generation of DDL struvtures
+%%--                        Date: 1991-05-08/egon@robin
+
+%%------------------- structureIncludes ----------------------------------
+%%BEGIN(structureIncludes)
+%%LOOP(structure, STRUCTURES)
+#include "%%(structure).hh"
+%%ENDLOOP(structure)
+%%END(structureIncludes)
+
+
+%%------------------- structureDecl -------------------------------------
+%%BEGIN(structureDecl)
+%%SET structName(%%(structureDecl[1]))
+%%PROCESS(, "%%(structName).hh")
+//============ %%(structName).hh
+//=======================================================================
+
+#ifndef _%%(structName)_hh
+#define _%%(structName)_hh
+
+%%INCLUDE(classHead(%%(structName)))
+class %%(structName) {
+public:
+%%IF(STRUCTURE_%%(structName)_PERSISTENT_ELEMENTS[0] > 0)
+    // Persistent elements
+%%LOOP(elemName, STRUCTURE_%%(structName)_PERSISTENT_ELEMENTS)
+%%SET elemType(%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1]))
+%%IF(elemType = "String")
+    char %%(elemName)[%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_SIZE)];
+%%ELSE
+    %%(elemType) %%(elemName);
+%%ENDIF
+%%ENDLOOP(elemName)
+
+%%ENDIF
+%%IF(STRUCTURE_%%(structName)_DYNAMIC_ELEMENTS[0] > 0)
+    // Dynamic elements
+%%LOOP(elemName, STRUCTURE_%%(structName)_DYNAMIC_ELEMENTS)
+%%SET elemType(%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1]))
+%%IF(elemType = "String")
+    char %%(elemName)[%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_SIZE)];
+%%ELSE
+    %%(elemType) %%(elemName);
+%%ENDIF
+%%ENDLOOP(elemName)
+
+%%ENDIF
+%%IF(STRUCTURE_%%(structName)_VOLATILE_ELEMENTS[0] > 0)
+    // Volatile elements
+%%LOOP(elemName, STRUCTURE_%%(structName)_VOLATILE_ELEMENTS)
+    %%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE) %%(elemName);
+%%ENDLOOP(elemName)
+
+%%ENDIF
+%%SET args()
+%%LOOP(elemName, STRUCTURE_%%(structName)_PERSISTENT_ELEMENTS)
+%%SET elemType(%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1]))
+%%IF(elemType = "String")
+%%SET args(, "char *")
+%%ELSE
+%%SET args(, %%(elemType))
+%%ENDIF
+%%ENDLOOP(elemName)
+%%LOOP(elemName, STRUCTURE_%%(structName)_DYNAMIC_ELEMENTS)
+%%SET elemType(%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1]))
+%%IF(elemType = "String")
+%%SET args(, "char *")
+%%ELSE
+%%SET args(, %%(elemType))
+%%ENDIF
+
+%%ENDLOOP(elemName)
+    // Constructor
+%%IF(args[0] > 0)
+    %%(structName)(%%(args));   
+%%ENDIF
+    %%(structName)();   
+
+    // Ranking operators
+    Boolean operator==(%%(structName));
+    Boolean operator<(%%(structName));
+}; // %%(structName)
+
+class %%(structName)Attribute {
+public:
+    DbResultCode get(DbBaseObject*, AttributeIndex, %%(structName)&);
+    DbResultCode get(DbBaseObject*, AttributeIndex, %%(structName)&, int index);
+    DbResultCode set(DbBaseObject*, AttributeIndex, %%(structName));
+    DbResultCode set(DbBaseObject*, AttributeIndex, %%(structName), int index);
+%%IF(STRUCTURE_%%(structName)_VOLATILE(?))
+    DbResultCode prepare();
+    DbResultCode rollback();
+%%ENDIF
+
+%%IF(STRUCTURE_%%(structName)_VOLATILE_ELEMENTS[0] > 0)
+protected:
+    // Volatile elements
+%%LOOP(elemName, STRUCTURE_%%(structName)_VOLATILE_ELEMENTS)
+    %%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE) %%(elemName);
+%%ENDLOOP(elemName)
+%%ENDIF
+}; // %%(structName)Attribute
+
+#endif
+//-- EoF ------------------------------------------------------------
+%%END(structureDecl)
+
+
+%%------------------- structureDef --------------------------------------
+%%BEGIN(structureDef)
+%%SET structName(%%(structureDef[1]))
+%%PROCESS(, "%%(structName).cc")
+//============ %%(structName).cc
+//=======================================================================
+
+#include "DOL.hh"
+#include "%%(structName).hh"
+
+%%SET args()
+%%SET argNo(0)
+%%LOOP(elemName, STRUCTURE_%%(structName)_PERSISTENT_ELEMENTS)
+%%SET argNo(%%(argNo+1))
+%%SET elemType(%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1]))
+%%IF(elemType = "String")
+%%SET args(, "char *arg%%(argNo)")
+%%ELSE
+%%SET args(, "%%(elemType) arg%%(argNo)")
+%%ENDIF
+%%ENDLOOP(elemName)
+%%LOOP(elemName, STRUCTURE_%%(structName)_DYNAMIC_ELEMENTS)
+%%SET argNo(%%(argNo+1))
+%%SET elemType(%%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1]))
+%%IF(elemType = "String")
+%%SET args(, "char *arg%%(argNo)")
+%%ELSE
+%%SET args(, "%%(elemType) arg%%(argNo)")
+%%ENDIF
+%%ENDLOOP(elemName)
+%%IF(args[0] > 0)
+%%INCLUDE(functionHead("%%(structName)::%%(structName)"))
+%%(structName)::%%(structName)(%%(args))
+{
+%%SET argNo(0)
+%%LOOP(elemName, STRUCTURE_%%(structName)_PERSISTENT_ELEMENTS)
+%%SET argNo(%%(argNo+1))
+%%IF(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1] = "String")
+    memset(%%(elemName), 0, %%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_SIZE));
+    strcpy(%%(elemName), arg%%(argNo));
+%%ELSE
+    %%(elemName) = arg%%(argNo);
+%%ENDIF
+%%ENDLOOP(elemName)
+%%LOOP(elemName, STRUCTURE_%%(structName)_DYNAMIC_ELEMENTS)
+%%SET argNo(%%(argNo+1))
+%%IF(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_TYPE[1] = "String")
+    memset(%%(elemName), 0, %%(STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_SIZE));
+    strcpy(%%(elemName), arg%%(argNo));
+%%ELSE
+    %%(elemName) = arg%%(argNo);
+%%ENDIF
+%%ENDLOOP(elemName)
+}
+%%ENDIF
+%%INCLUDE(functionHead("%%(structName)::%%(structName)"))
+%%(structName)::%%(structName)()
+{}
+%%INCLUDE(functionHead("%%(structName)::operator=="))
+Boolean %%(structName)::operator==(%%(structName) x)
+{
+    return memcmp(this, &x, %%(STRUCTURE_%%(structName)_DBSIZE)) == 0;
+}
+%%INCLUDE(functionHead("%%(structName)::operator<"))
+Boolean %%(structName)::operator<(%%(structName) x)
+{
+    return memcmp(this, &x, %%(STRUCTURE_%%(structName)_DBSIZE)) < 0;
+}
+
+%%INCLUDE(functionHead("%%(structName)Attribute::get"))
+DbResultCode %%(structName)Attribute::get(DbBaseObject* dbObject, AttributeIndex index, %%(structName)& buffer)
+{	
+%%LOOP(elemName, STRUCTURE_%%(structName)_VOLATILE_ELEMENTS)
+    buffer.%%(elemName) = %%(elemName);
+%%ENDLOOP(elemName)
+    return dbObject->getValue(index, &buffer);
+}
+%%INCLUDE(functionHead("%%(structName)Attribute::get"))
+DbResultCode %%(structName)Attribute::get(DbBaseObject* dbObject, AttributeIndex index, %%(structName)& buffer, int arrayindex)
+{	
+%%LOOP(elemName, STRUCTURE_%%(structName)_VOLATILE_ELEMENTS)
+    buffer.%%(elemName) = %%(elemName);
+%%ENDLOOP(elemName)
+    return dbObject->getSlice(index, arrayindex*%%(STRUCTURE_%%(structName)_DBSIZE), %%(STRUCTURE_%%(structName)_DBSIZE), &buffer);
+}
+%%INCLUDE(functionHead("%%(structName)Attribute::set"))
+DbResultCode %%(structName)Attribute::set(DbBaseObject* dbObject, AttributeIndex index, %%(structName) buffer)
+{	
+%%LOOP(elemName, STRUCTURE_%%(structName)_VOLATILE_ELEMENTS)
+    %%(elemName) = buffer.%%(elemName);
+%%ENDLOOP(elemName)
+    return dbObject->putValue(index, &buffer);
+}
+%%INCLUDE(functionHead("%%(structName)Attribute::set"))
+DbResultCode %%(structName)Attribute::set(DbBaseObject* dbObject, AttributeIndex index, %%(structName) buffer, int arrayindex)
+{	
+%%LOOP(elemName, STRUCTURE_%%(structName)_VOLATILE_ELEMENTS)
+    %%(elemName) = buffer.%%(elemName);
+%%ENDLOOP(elemName)
+    return dbObject->putSlice(index, arrayindex*%%(STRUCTURE_%%(structName)_DBSIZE), %%(STRUCTURE_%%(structName)_DBSIZE), &buffer);
+}
+%%IF(STRUCTURE_%%(structName)_VOLATILE(?))
+%%INCLUDE(functionHead("%%(structName)Attribute::prepare"))
+DbResultCode %%(structName)Attribute::prepare()
+{ return SUCCEEDED; }
+%%INCLUDE(functionHead("%%(structName)Attribute::rollback"))
+DbResultCode %%(structName)Attribute::rollback()
+{ return SUCCEEDED; }
+%%ENDIF
+
+//-- EoF ------------------------------------------------------------
+%%END(structureDef)

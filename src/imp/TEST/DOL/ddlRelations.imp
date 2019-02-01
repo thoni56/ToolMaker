@@ -1,0 +1,333 @@
+%%-- Code generation of DDL relations
+%%--                        Date: 1991-06-12/egon@robin
+
+%%------------------- relationsForwardDecl ----------------------------------
+%%BEGIN(relationsForwardDecl)
+//=======================================================================
+// Forward declarations of relations
+%%LOOP(relation, RELATIONS)
+class %%(relation);
+%%ENDLOOP(relation)
+%%END(relationsForwardDecl)
+
+
+%%------------------- relationDecl --------------------------------------
+%%BEGIN(relationDecl)
+%%SET relName(%%(relationDecl[1]))
+%%PROCESS(, "%%(relName).hh")
+//============ %%(relName).hh
+//=======================================================================
+
+#ifndef _%%(relName)_hh
+#define _%%(relName)_hh
+
+#include "%%(RELATION_%%(relName)_TO).hh"
+
+%%INCLUDE(classHead(%%(relName)))
+#ifndef %%(relName)_CLASS_ID
+#define %%(relName)_CLASS_ID %%(%%(relName)_CLASS_ID)
+#endif
+
+class %%(relName) : public DbSetAbstractObject {
+public:
+
+    void add(%%(RELATION_%%(relName)_TO)*);
+    void sub(%%(RELATION_%%(relName)_TO)*);
+%%IF(RELATION_%%(relName)_BIDIRECTED(?))
+    void inverse_sub(%%(RELATION_%%(relName)_TO)*);
+%%ENDIF
+    %%(RELATION_%%(relName)_TO)* updateNext(DbResultCode& result, LocalTransaction* trId);
+    %%(RELATION_%%(relName)_TO)* openrlockNext(DbResultCode& result, LocalTransaction* trId);
+    %%(RELATION_%%(relName)_TO)* openNext(DbResultCode& result, %%(RELATION_%%(relName)_TO)* dol = NULL);
+%%IF(RELATION_%%(relName)_UNIQUE(?)) 
+    %%(RELATION_%%(relName)_TO)* update(ClassIdentity, DbResultCode&, LocalTransaction*);
+    %%(RELATION_%%(relName)_TO)* remove(ClassIdentity, DbResultCode&, LocalTransaction*);
+    %%(RELATION_%%(relName)_TO)* openrlock(ClassIdentity, DbResultCode&, LocalTransaction*);
+    %%(RELATION_%%(relName)_TO)* open(ClassIdentity, DbResultCode&, %%(RELATION_%%(relName)_TO)* dol=NULL);
+
+%%LOOP(clas, CLASS_%%(RELATION_%%(relName)_TO)_SUBCLASSES)
+    %%(clas)* update%%(clas)(DbResultCode& result, LocalTransaction* trId)
+	{ return (%%(clas)*) update(%%(clas)_CLASS_ID, result, trId); }
+    %%(clas)* remove%%(clas)(DbResultCode& result, LocalTransaction* trId)
+	{ return (%%(clas)*) remove(%%(clas)_CLASS_ID, result, trId); }
+    %%(clas)* openrlock%%(clas)(DbResultCode& result, LocalTransaction* trId)
+	{ return (%%(clas)*) openrlock(%%(clas)_CLASS_ID, result, trId); }
+    %%(clas)* open%%(clas)(DbResultCode& result)
+	{ return (%%(clas)*) open(%%(clas)_CLASS_ID, result); }
+
+%%ENDLOOP(clas)
+
+%%ELSE
+    Boolean isMember(%%(RELATION_%%(relName)_TO)* dol);
+%%ENDIF
+
+protected:
+    // Constructors
+    %%(relName)(DbTitle*, DBOperation, %%(RELATION_%%(relName)_FROM)* mainObject, DbResultCode&);
+    %%(relName)(ClassIdentity classIdentity, %%(RELATION_%%(relName)_FROM)* mainObject, DbResultCode&);
+    // Transaction handling
+    DbResultCode prepare();
+    void rollbackSubObject();
+
+%%INCLUDE(friendDecl(%%(relName)))
+
+private:
+    %%(RELATION_%%(relName)_FROM)* main_Object;
+}; // %%(relName)
+
+#endif
+//-- EoF ------------------------------------------------------------
+%%END(relationDecl)
+
+
+%%------------------- relationDef --------------------------------------
+%%BEGIN(relationDef)
+%%SET relName(%%(relationDef[1]))
+%%PROCESS(, "%%(relName).cc")
+//============ %%(relName).cc
+//=======================================================================
+
+#include "DOL.hh"
+#include "%%(relName).hh"
+#include "%%(RELATION_%%(relName)_FROM).hh"
+
+%%IF(CLASS_%%(RELATION_%%(relName)_TO)_SUBCLASSES[0] > 0)
+// Include subclasses to %%(relName):
+%%LOOP(class, CLASS_%%(RELATION_%%(relName)_TO)_SUBCLASSES)
+#include "%%(class).hh"
+%%ENDLOOP(class)
+%%ENDIF
+
+
+%%INCLUDE(functionHead("%%(relName)::%%(relName)"))
+%%(relName)::%%(relName)(DbTitle* title, DBOperation op, %%(RELATION_%%(relName)_FROM)* mainObject, DbResultCode& result)
+    : (title, op, result, mainObject->get_Transaction()) 
+{
+    main_Object = mainObject;
+}
+
+%%INCLUDE(functionHead("%%(relName)::%%(relName)"))
+%%(relName)::%%(relName)(ClassIdentity classIdentity, %%(RELATION_%%(relName)_FROM)* mainObject, DbResultCode& result)
+    : (classIdentity, result, mainObject->get_Transaction())
+{
+    main_Object = mainObject;
+}
+
+%%INCLUDE(functionHead("%%(relName)::add"))
+void %%(relName)::add(%%(RELATION_%%(relName)_TO)* dol)
+{
+    if (operation == UPDATE || operation == CREATE) {
+        switch (dol->getTitle()->getClassIdentity()) {
+        case %%(RELATION_%%(relName)_TO)_CLASS_ID:
+%%LOOP(className, CLASS_%%(RELATION_%%(relName)_TO)_SUBCLASSES)
+        case %%(className)_CLASS_ID:
+%%ENDLOOP(className)
+%%IF(RELATION_%%(relName)_UNIQUE(?)) 
+	    if (find(dol->getTitle()->getClassIdentity()))
+		error("%%(relName)::add : 1");
+%%ENDIF
+	    addElement(dol->getTitle());
+%%IF(RELATION_%%(relName)_BIDIRECTED(?))
+	    // Remove other end of the bidirectional relation
+	    DbResultCode result;
+	    %%(RELATION_%%(relName)_FROM)* inv_dol = dol->update%%(RELATION_%%(relName)_INVERSE_ATTRIBUTE)(result, get_Transaction());
+	    if (inv_dol) {
+		%%(relName)* rel = inv_dol->open%%(CLASS_%%(RELATION_%%(relName)_TO)_ATTRIBUTE_%%(RELATION_%%(relName)_INVERSE_ATTRIBUTE)_OTHER_SIDE)(result);
+		rel->inverse_sub(dol);
+	    }
+	    // Set the inverse attribute in the bidirectional relation
+	    dol->%%(RELATION_%%(relName)_INVERSE_ATTRIBUTE)_inverse(main_Object);
+%%ENDIF
+	    break;
+        default:
+	    error("%%(relName)::add : 2");
+        }
+    }
+    else error("%%(relName)::add : 3");
+}
+
+%%INCLUDE(functionHead("%%(relName)::sub"))
+void %%(relName)::sub(%%(RELATION_%%(relName)_TO)* dol)
+{
+    if (operation == UPDATE || operation == CREATE) {
+        switch (dol->getTitle()->getClassIdentity()) {
+        case %%(RELATION_%%(relName)_TO)_CLASS_ID:
+%%LOOP(className, CLASS_%%(RELATION_%%(relName)_TO)_SUBCLASSES)
+        case %%(className)_CLASS_ID:
+%%ENDLOOP(className)
+	    removeElement(dol->getTitle());
+%%IF(RELATION_%%(relName)_BIDIRECTED(?))
+	    // Set the inverse attribute in the bidirectional relation
+	    dol->%%(RELATION_%%(relName)_INVERSE_ATTRIBUTE)_inverse(NULL);
+%%ENDIF
+	    break;
+        default:
+	    error("%%(relName)::sub");
+        }
+    }
+    else error("%%(relName)::sub");
+}
+
+%%IF(RELATION_%%(relName)_BIDIRECTED(?))
+%%INCLUDE(functionHead("%%(relName)::inverse_sub"))
+void %%(relName)::inverse_sub(%%(RELATION_%%(relName)_TO)* dol)
+{
+    if (operation == UPDATE || operation == CREATE) {
+        switch (dol->getTitle()->getClassIdentity()) {
+        case %%(RELATION_%%(relName)_TO)_CLASS_ID:
+%%LOOP(className, CLASS_%%(RELATION_%%(relName)_TO)_SUBCLASSES)
+        case %%(className)_CLASS_ID:
+%%ENDLOOP(className)
+	    removeElement(dol->getTitle());
+	    break;
+        default:
+	    error("%%(relName)::inverse_sub");
+        }
+    }
+    else error("%%(relName)::inverse_sub");
+}
+%%ENDIF 
+
+%%INCLUDE(functionHead("%%(relName)::updateNext"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::updateNext(DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title = DbSetAbstractObject::iterate();
+    if (title)
+    	return %%(RELATION_%%(relName)_TO)::open(title, result, UPDATE, trId);
+    else {
+	result = END_OF_SET;
+ 	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(relName)::openrlockNext"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::openrlockNext(DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title = DbSetAbstractObject::iterate();
+    if (title)
+    	return %%(RELATION_%%(relName)_TO)::open(title, result, OPENRLOCK, trId);
+    else {
+	result = END_OF_SET;
+ 	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(relName)::openNext"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::openNext(DbResultCode& result, %%(RELATION_%%(relName)_TO)* dol)
+{
+    DbTitle* title = DbSetAbstractObject::iterate();
+    if (title) {
+	if (dol == NULL)
+	    return %%(RELATION_%%(relName)_TO)::open(title, result, OPEN, NULL);
+	else
+	    return %%(RELATION_%%(relName)_TO)::open(title, result, dol);
+    }
+    else {
+        result = END_OF_SET;
+ 	return NULL;
+    }
+}
+
+%%IF(NOT RELATION_%%(relName)_UNIQUE(?)) 
+%%INCLUDE(functionHead("%%(relName)::isMember"))
+Boolean %%(relName)::isMember(%%(RELATION_%%(relName)_TO)* dol)
+{
+    return DbSetAbstractObject::isMember(dol->getTitle());
+}
+%%ENDIF
+
+%%IF(RELATION_%%(relName)_UNIQUE(?)) 
+%%INCLUDE(functionHead("%%(relName)::update"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::update(ClassIdentity classId, DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title = DbSetAbstractObject::find(classId);
+    if (title)
+    	return %%(RELATION_%%(relName)_TO)::open(title, result, UPDATE, trId);
+    else
+        result = OBJECT_NOT_FOUND;
+    return NULL;
+}
+%%ENDIF
+
+%%IF(RELATION_%%(relName)_UNIQUE(?)) 
+%%INCLUDE(functionHead("%%(relName)::remove"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::remove(ClassIdentity classId, DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title = DbSetAbstractObject::find(classId);
+    if (title)
+    	return %%(RELATION_%%(relName)_TO)::open(title, result, REMOVE, trId);
+    else
+        result = OBJECT_NOT_FOUND;
+    return NULL;
+}
+%%ENDIF
+
+%%IF(RELATION_%%(relName)_UNIQUE(?)) 
+%%INCLUDE(functionHead("%%(relName)::openrlock"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::openrlock(ClassIdentity classId, DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title = DbSetAbstractObject::find(classId);
+    if (title)
+    	return %%(RELATION_%%(relName)_TO)::open(title, result, OPENRLOCK, trId);
+    else
+        result = OBJECT_NOT_FOUND;
+    return NULL;
+}
+%%ENDIF
+
+%%IF(RELATION_%%(relName)_UNIQUE(?)) 
+%%INCLUDE(functionHead("%%(relName)::open"))
+%%(RELATION_%%(relName)_TO)* %%(relName)::open(ClassIdentity classId, DbResultCode& result, %%(RELATION_%%(relName)_TO)* dol)
+{
+    DbTitle* title = DbSetAbstractObject::find(classId);
+    if (title) {
+	if (dol == NULL)
+	    return %%(RELATION_%%(relName)_TO)::open(title, result, OPEN, NULL);
+	else
+	    return %%(RELATION_%%(relName)_TO)::open(title, result, dol);
+    }
+    else
+        result = OBJECT_NOT_FOUND;
+    return NULL;
+}
+%%ENDIF
+
+%%INCLUDE(functionHead("%%(relName)::prepare"))
+DbResultCode %%(relName)::prepare()
+{
+    CLID clid;
+    LID lid;
+    DbAbstractObject* temp;
+    DbResultCode result;
+    for (int i = 0; i<insertCounter; ++i) {
+        temp = new DbAbstractObject (addList[i], OPEN, result);
+        if (result == SUCCEEDED) {
+            temp->getClidLid(clid, lid);
+            addList[i]->putClidLid(clid, lid);
+	}
+        delete temp;
+    }
+    for (int j = 0; j < deleteCounter; ++j) {
+        temp = new DbAbstractObject (deleteList[j],OPEN,result);
+        if (result == SUCCEEDED) {
+            temp->getClidLid(clid,lid);
+            deleteList[j]->putClidLid(clid,lid);
+	}
+        delete temp;
+    }
+    return SUCCEEDED;
+}
+
+%%INCLUDE(functionHead("%%(relName)::rollbackSubObject"))
+void %%(relName)::rollbackSubObject()
+{
+    for (int i = 0; i<insertCounter; ++i)
+        addList[i]= 0;
+    for (int j = 0; j<deleteCounter; ++j)
+        deleteList[j] = 0;
+    insertCounter = deleteCounter = 0;
+    LocalTransItem::rollbackSubObject(operation, theObject, uo_object);
+}
+
+//-- EoF ------------------------------------------------------------
+%%END(relationDef)
