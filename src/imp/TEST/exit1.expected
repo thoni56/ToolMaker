@@ -1,8 +1,4 @@
 ########## exit1 ##########
 Text f|re exit
-%%EXIT(1, "Nu slutar jag")
-Text efter exit
-########## ../imp exit1.tst >exit1.tst.tmp; cat exit1.tst.tmp; rm exit1.tst.tmp ##########
 Nu slutar jag
   Result from evaluation of %%EXIT was 1
-Text f|re exit

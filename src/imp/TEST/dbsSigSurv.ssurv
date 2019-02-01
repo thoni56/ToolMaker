@@ -4,7 +4,14 @@ USE BLOCK DBS;
 
 
 
+
+
 CONTFS         ,T       ,  666/15514 - APZ210                ;
+
+
+
+
+
 
 
 
@@ -15,7 +22,13 @@ TOWCOMDELKEY   ,T       ,  636/15514 - APZ211                ;
 
 
 
+
+
+
 TOWCOMINSKEY   ,T       ,  635/15514 - APZ211                ;
+
+
+
 
 
 
@@ -23,7 +36,13 @@ TOWCOMSCH      ,T       ,  637/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETSCH      ,T       ,  632/15514 - APZ211                ;
+
+
+
 
 
 
@@ -31,8 +50,14 @@ TOWINSSCH      ,T       ,  633/15514 - APZ211                ;
 
 
 
+
+
+
 TOWVERSCH      ,T       ,  634/15514 - APZ211                ;
+
  
+
+
 
 
 
@@ -43,11 +68,20 @@ CONTFSEND      ,S       ,  667/15514 - APZ210                ;
 
 
 
+
+
+
+
+
 DDHINITFIELD   ,S       ,  623/15514 - APZ211                ;
 
 
 
-DDHINITFK      ,S       ,  625/15514 - APZ211                ;
+
+
+
+
+
 
 
 
@@ -55,11 +89,20 @@ DDHINITTABLE   ,S       ,  621/15514 - APZ211                ;
 
 
 
+
+
+
 GIVEFSEND      ,S       ,  665/15514 - APZ210                ;
 
 
 
+
+
+
 SETFSEND       ,S       ,  669/15514 - APZ210                ;
+
+
+
 
 
 
@@ -70,7 +113,15 @@ STOREFUCODE    ,S       ,  853/15514 - APZ210                ;
 
 
 
+
+
+
+
+
 TOWCHALOCKACK  ,S CB    ,  600/15514 - APZ211                ;
+
+
+
 
 
 
@@ -78,11 +129,20 @@ TOWCHAROWR     ,S       ,  584/15514 - APZ211                ;
 
 
 
-TOWCHAVOLROWR  ,T       ,  580/15514 - APZ211                ;
 
 
 
-TOWCLOSEACK    ,S CB    ,  578/15514 - APZ211                ;
+TOWCHAVOLROWR  ,R       ,  580/15514 - APZ211                ;
+
+
+
+
+
+
+TOWCLOSEACK    ,T CB    ,  578/15514 - APZ211                ;
+
+
+
 
 
 
@@ -90,7 +150,13 @@ TOWCOMROWR     ,S       ,  594/15514 - APZ211                ;
 
 
 
+
+
+
 TOWDELROWR     ,S       ,  586/15514 - APZ211                ;
+
+
+
 
 
 
@@ -98,7 +164,13 @@ TOWGETFKINFACK ,S CB    ,  631/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETFKSACK   ,S CB    ,  590/15514 - APZ211                ;
+
+
+
 
 
 
@@ -106,7 +178,13 @@ TOWGETFLDNAMACK,S CB    ,  606/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETFLTACK   ,S CB    ,  620/15514 - APZ211                ;
+
+
+
 
 
 
@@ -115,7 +193,13 @@ TOWGETKEYDATACK,S CB    ,  614/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETNUMFLDACK,S CB    ,  610/15514 - APZ211                ;
+
+
+
 
 
 
@@ -123,7 +207,13 @@ TOWGETPCKFLDACK,S CB    ,  646/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETPREFLTACK,S CB    ,  648/15514 - APZ211                ;
+
+
+
 
 
 
@@ -131,7 +221,13 @@ TOWGETPRESYMACK,S CB    ,  650/15514 - APZ211                ;
 
 
 
-TOWGETR        ,S       ,  574/15514 - APZ211                ;
+
+
+
+TOWGETR        ,T       ,  574/15514 - APZ211                ;
+
+
+
 
 
 
@@ -139,7 +235,13 @@ TOWGETSTRFLDACK,S CB    ,  608/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETSYMBOLACK,S CB    ,  616/15514 - APZ211                ;
+
+
+
 
 
 
@@ -147,7 +249,13 @@ TOWGETSYMVALACK,S CB    ,  618/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETTABDATACK,S CB    ,  604/15514 - APZ211                ;
+
+
+
 
 
 
@@ -155,7 +263,13 @@ TOWGETTABNAMACK,S CB    ,  602/15514 - APZ211                ;
 
 
 
+
+
+
 TOWINSROWR     ,S       ,  582/15514 - APZ211                ;
+
+
+
 
 
 
@@ -163,7 +277,13 @@ TOWLETFLDR     ,S       ,  588/15514 - APZ211                ;
 
 
 
-TOWOPENR       ,S       ,  576/15514 - APZ211                ;
+
+
+
+TOWOPENR       ,T       ,  576/15514 - APZ211                ;
+
+
+
 
 
 
@@ -171,7 +291,13 @@ TOWPOSTCOMROWR ,S       ,  596/15514 - APZ211                ;
 
 
 
+
+
+
 TOWRESPARTR    ,S       ,  628/15514 - APZ211                ;
+
+
+
 
 
 
@@ -179,7 +305,13 @@ TOWROLLBCKR    ,S       ,  598/15514 - APZ211                ;
 
 
 
+
+
+
 TOWVERROWR     ,S       ,  592/15514 - APZ211                ;
+
+
+
 
 
 
@@ -187,7 +319,13 @@ TRHCHAROW      ,S       ,  552/15514 - APZ211                ;
 
 
 
+
+
+
 TRHCOMTRANS    ,S       ,  554/15514 - APZ211                ;
+
+
+
 
 
 
@@ -195,7 +333,13 @@ TRHDELROW      ,S       ,  556/15514 - APZ211                ;
 
 
 
+
+
+
 TRHGETDBNO     ,S       ,  558/15514 - APZ211                ;
+
+
+
 
 
 
@@ -203,7 +347,13 @@ TRHINSROW      ,S       ,  560/15514 - APZ211                ;
 
 
 
+
+
+
 TRHLETFLD      ,S       ,  562/15514 - APZ211                ;
+
+
+
 
 
 
@@ -211,12 +361,23 @@ TRHROLLBCK     ,S       ,  564/15514 - APZ211                ;
 
 
 
+
+
+
 TRHSTATRANS    ,S       ,  566/15514 - APZ211                ;
 
 
 
+
+
+
 TRHVERTRANS    ,S       ,  568/15514 - APZ211                ;
+
  
+
+
+
+
 
 
 
@@ -227,7 +388,11 @@ DDHINITFIELDR  ,R       ,  624/15514 - APZ211                ;
 
 
 
-DDHINITFKR     ,R       ,  626/15514 - APZ211                ;
+
+
+
+
+
 
 
 
@@ -235,11 +400,20 @@ DDHINITTABLER  ,R       ,  622/15514 - APZ211                ;
 
 
 
+
+
+
 GIVEFS         ,R       ,  664/15514 - APZ210                ;
 
 
 
+
+
+
 SETFS          ,R       ,  668/15514 - APZ210                ;
+
+
+
 
 
 
@@ -250,7 +424,15 @@ STOREFUCODEACK ,R CB    ,  854/15514 - APZ210                ;
 
 
 
+
+
+
+
+
 TOWCHALOCK     ,R       ,  599/15514 - APZ211                ;
+
+
+
 
 
 
@@ -258,11 +440,20 @@ TOWCHAROW      ,R       ,  583/15514 - APZ211                ;
 
 
 
-TOWCHAVOLROW   ,T       ,  579/15514 - APZ211                ;
 
 
 
-TOWCLOSE       ,R       ,  577/15514 - APZ211                ;
+TOWCHAVOLROW   ,S       ,  579/15514 - APZ211                ;
+
+
+
+
+
+
+TOWCLOSE       ,T       ,  577/15514 - APZ211                ;
+
+
+
 
 
 
@@ -270,7 +461,13 @@ TOWCOMROW      ,R       ,  593/15514 - APZ211                ;
 
 
 
+
+
+
 TOWDELROW      ,R       ,  585/15514 - APZ211                ;
+
+
+
 
 
 
@@ -278,7 +475,13 @@ TOWGETFKINF    ,R       ,  630/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETFKS      ,R       ,  589/15514 - APZ211                ;
+
+
+
 
 
 
@@ -286,7 +489,13 @@ TOWGETFLD      ,R       ,  572/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETFLDNAM   ,R       ,  605/15514 - APZ211                ;
+
+
+
 
 
 
@@ -294,7 +503,13 @@ TOWGETFLT      ,R       ,  619/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETKEY      ,R       ,  573/15514 - APZ211                ;
+
+
+
 
 
 
@@ -302,7 +517,13 @@ TOWGETKEYDAT   ,R       ,  613/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETKEYFLD   ,R       ,  611/15514 - APZ211                ;
+
+
+
 
 
 
@@ -310,7 +531,13 @@ TOWGETNUMFLD   ,R       ,  609/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETPCKFLD   ,R       ,  645/15514 - APZ211                ;
+
+
+
 
 
 
@@ -318,11 +545,20 @@ TOWGETPREFLT   ,R       ,  647/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETPRESYM   ,R       ,  649/15514 - APZ211                ;
 
 
 
-TOWGETROW      ,R       ,  571/15514 - APZ211                ;
+
+
+
+TOWGETROW      ,T       ,  571/15514 - APZ211                ;
+
+
+
 
 
 
@@ -330,7 +566,13 @@ TOWGETSTRFLD   ,R       ,  607/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETSYMBOL   ,R       ,  615/15514 - APZ211                ;
+
+
+
 
 
 
@@ -338,7 +580,13 @@ TOWGETSYMVAL   ,R       ,  617/15514 - APZ211                ;
 
 
 
+
+
+
 TOWGETTABDAT   ,R       ,  603/15514 - APZ211                ;
+
+
+
 
 
 
@@ -346,7 +594,13 @@ TOWGETTABNAM   ,R       ,  601/15514 - APZ211                ;
 
 
 
+
+
+
 TOWINSROW      ,R       ,  581/15514 - APZ211                ;
+
+
+
 
 
 
@@ -354,11 +608,18 @@ TOWLETFLD      ,R       ,  587/15514 - APZ211                ;
 
 
 
-TOWLETFLDFK    ,R       ,  629/15514 - APZ211                ;
 
 
 
-TOWOPEN        ,R       ,  575/15514 - APZ211                ;
+
+
+
+
+
+TOWOPEN        ,T       ,  575/15514 - APZ211                ;
+
+
+
 
 
 
@@ -366,7 +627,13 @@ TOWPOSTCOMROW  ,R       ,  595/15514 - APZ211                ;
 
 
 
+
+
+
 TOWRESPART     ,R       ,  627/15514 - APZ211                ;
+
+
+
 
 
 
@@ -374,7 +641,13 @@ TOWROLLBCK     ,R       ,  597/15514 - APZ211                ;
 
 
 
+
+
+
 TOWVERROW      ,R       ,  591/15514 - APZ211                ;
+
+
+
 
 
 
@@ -382,7 +655,13 @@ TRHCHAROWR     ,R       ,  553/15514 - APZ211                ;
 
 
 
+
+
+
 TRHCOMTRANSR   ,R       ,  555/15514 - APZ211                ;
+
+
+
 
 
 
@@ -390,7 +669,13 @@ TRHDELROWR     ,R       ,  557/15514 - APZ211                ;
 
 
 
+
+
+
 TRHGETDBNOACK  ,R CB    ,  559/15514 - APZ211                ;
+
+
+
 
 
 
@@ -398,7 +683,13 @@ TRHINSROWR     ,R       ,  561/15514 - APZ211                ;
 
 
 
+
+
+
 TRHLETFLDR     ,R       ,  563/15514 - APZ211                ;
+
+
+
 
 
 
@@ -406,12 +697,21 @@ TRHROLLBCKR    ,R       ,  565/15514 - APZ211                ;
 
 
 
+
+
+
 TRHSTATRANSR   ,R       ,  567/15514 - APZ211                ;
 
 
 
+
+
+
 TRHVERTRANSR   ,R       ,  569/15514 - APZ211                ;
+
  
+
+
 
 
 
@@ -419,7 +719,13 @@ DDHTABREF      ,S       ,  651/15514 - APZ211                ;
 
 
 
+
+
+
 DDHTABREFR     ,R       ,  652/15514 - APZ211                ;
+
+
+
 
 
 
@@ -427,7 +733,11 @@ TUSREALLPROT   ,R       ,  664/15514 - APZ21102              ;
 
 
 
+
+
+
 TUSREALLPROTACK,S       ,  665/15514 - APZ21102              ;
+
 END SIGNALSURVEY;
 *END;
 ID DBSSURVEY TYPE DOC;

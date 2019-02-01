@@ -1,8 +1,7 @@
 ########## exit3 ##########
 Text f|re exit
-%%EXIT("NonInteger", "Nu slutar jag")
+%%EXIT(NonInteger, Nu slutar jag)
 Text efter exit
-########## ../imp exit3.tst >exit3.tst.tmp; cat exit3.tst.tmp; rm exit3.tst.tmp ##########
 
 
 exit3.tst
@@ -16,6 +15,3 @@ exit3.tst
 1 error(s) detected.
 No warnings issued.
 
-Text f|re exit
-%%EXIT(NonInteger, Nu slutar jag)
-Text efter exit

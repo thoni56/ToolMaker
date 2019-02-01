@@ -1,9 +1,5 @@
 ########## exit2 ##########
 Text f|re exit
-%%EXIT(1, %%(HasNoValue))
-Text efter exit
-########## ../imp exit2.tst >exit2.tst.tmp; cat exit2.tst.tmp; rm exit2.tst.tmp ##########
-%%(HasNoValue)
 
 
 exit2.tst
@@ -18,5 +14,5 @@ exit2.tst
 No errors detected.
 2 warning(s) issued.
 
+%%(HasNoValue)
   Result from evaluation of %%EXIT was 1
-Text f|re exit

@@ -1,8 +1,7 @@
 ########## exit4 ##########
 Text f|re exit
-%%EXIT("NonInteger", %%(HasNoValue))
+%%EXIT(NonInteger, %%(HasNoValue))
 Text efter exit
-########## ../imp exit4.tst >exit4.tst.tmp; cat exit4.tst.tmp; rm exit4.tst.tmp ##########
 
 
 exit4.tst
@@ -18,6 +17,3 @@ exit4.tst
 1 error(s) detected.
 2 warning(s) issued.
 
-Text f|re exit
-%%EXIT(NonInteger, %%(HasNoValue))
-Text efter exit
