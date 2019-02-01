@@ -1,0 +1,2 @@
+.tst : ../../imp $2
+.tst : cat $2.fie $2.foo
