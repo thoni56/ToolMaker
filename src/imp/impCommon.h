@@ -1,5 +1,3 @@
-
-
 #ifndef _impCommon_H_
 #define _impCommon_H_
 /* impCommon.h
@@ -52,8 +50,3 @@ typedef struct TmToken {
 
 
 #endif
-
-
-
-
-
