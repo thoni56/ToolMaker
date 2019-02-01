@@ -1,0 +1,9 @@
+   0    0 Unknown          main
+   1    1 EndOfText        main
+   2    2 ';'              main
+   3    3 NUMBER           main
+   4    4 STRING           main
+   5    5 '%%END'          main
+   6    6 SKIPHEADER       main
+   7    7 IDENTIFIER       main
+   8    8 '%%MESSAGES'     main

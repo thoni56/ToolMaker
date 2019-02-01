@@ -1,0 +1,39 @@
+########## message ##########
+%%SET A (1)
+%%MESSAGE (1+2*9-9*A) Lite till i slutet
+%%MESSAGE (B*C+D)
+Inget f|re n{sta rad
+%%MESSAGE("Detta skall skrivas ut")
+%%KEEP
+%%MESSAGE("Detta skall inte skrivas ut")
+%%ENDKEEP
+%%COMMENT
+%%MESSAGE("Detta skall inte skrivas ut")
+%%ENDCOMMENT
+%%BEGIN(foo)
+%%MESSAGE("Detta skall inte skrivas ut")
+%%END(foo)
+%%MESSAGE("Detta skall ocks} skrivas ut")
+########## ../imp message.tst >message.tst.tmp; cat message.tst.tmp; rm message.tst.tmp ##########
+10
+B*C+D
+Detta skall skrivas ut
+Detta skall ocks} skrivas ut
+
+
+message.tst
+
+    3.  %%MESSAGE (B*C+D)
+=====>             1 2 3
+
+  *1*   204 W : Variable "B" not set.
+  *2*   204 W : Variable "C" not set.
+  *3*   204 W : Variable "D" not set.
+
+
+No errors detected.
+3 warning(s) issued.
+
+ Lite till i slutet
+Inget f|re n{sta rad
+%%MESSAGE("Detta skall inte skrivas ut")

@@ -1,0 +1,1362 @@
+%%COMMENTS
+SMK -- ScannerMaker 2.1(25) (1997-07-28 17:53)
+
+Author	: Tony Olsson, SoftLab ab
+Created	: 1990-10-08
+Date    : 1993-07-12/tony@wolf
+
+Copyright (c) SoftLab ab 1990-1993
+
+%%ENDCOMMENT
+
+%%IF(NOT currentOs(?))
+%%SET currentOs(%%(smkOs))
+%%ENDIF
+
+%%IF(smkTarget("c++"))
+%%SET targetLanguageExtension("cc")
+%%ENDIF
+
+%%IF(NOT targetLanguageExtension(?))
+%%SET targetLanguageExtension("c")
+%%ENDIF
+
+%%--------------------------------------------------------------
+%%--
+%%-- Check source position
+%%--
+%%IF(tmkTokenSrcp(?))
+%%  IF(tmkSrcpRow(?))
+%%	IF(tmkSrcpCol(?))
+%%	    SET smSRCP(ROWCOL)
+%%	ELSE
+%%	    SET smSRCP(ROW)
+%%	ENDIF
+%%  ELSE
+%%	IF(tmkSrcpCol(?))
+%%	    EXIT(1,"source position: row must be specified if column is specified");
+%%	ENDIF
+%%  ENDIF
+%%ELSE
+%%  SET smSRCP(NONE)
+%%ENDIF
+%%--
+%%--------------------------------------------------------------
+%%IF(tmkForce(0))
+%%  PROCESS(,"%%(smkPrefix)Scan.h.tmp")
+%%ELSE
+%%  PROCESS(,"%%(smkPrefix)Scan.h")
+%%ENDIF
+#ifndef _%%(smkPrefix)Scan_h_
+#define _%%(smkPrefix)Scan_h_
+
+%%IF (NOT doNotGenerateTokenH(?))
+#include "%%(tmkPrefix)Common.h"
+%%ENDIF
+
+%%INCLUDE(smVOCABULARY)
+
+typedef struct %%(smkPrefix)ScContextItem *%%(smkPrefix)ScContext;
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+extern %%(smkPrefix)ScContext %%(smkPrefix)ScNew( %%(smkPrefix)ScScanner smScanner );
+extern void %%(smkPrefix)ScDelete( %%(smkPrefix)ScContext smThis );
+extern int %%(smkPrefix)ScSkip( %%(smkPrefix)ScContext smThis, int smLength );
+extern int %%(smkPrefix)ScModify( %%(smkPrefix)ScContext smThis, unsigned char *smBuffer, int smLength );
+extern int %%(smkPrefix)ScCopy( %%(smkPrefix)ScContext smThis, unsigned char *smBuffer, unsigned int smFrom, unsigned int smTo );
+extern int %%(smkPrefix)ScMapCopy( %%(smkPrefix)ScContext smThis, unsigned char *smBuffer, unsigned int smFrom, unsigned int smTo );
+extern void %%(smkPrefix)ScScrScanner( %%(smkPrefix)ScScanner scanner, int smOnOff );
+extern void %%(smkPrefix)ScScrToken( %%(smkPrefix)ScScanner scanner, int smCode, int smOnOff );
+extern void %%(smkPrefix)ScScrRule( %%(smkPrefix)ScScanner scanner, int smCode, int smOnOff );
+extern int %%(smkPrefix)Scan( %%(smkPrefix)ScContext smThis, %%(tmkTokenName) *smToken );
+%%ELSE
+extern %%(smkPrefix)ScContext %%(smkPrefix)ScNew( /* SMVocScanner smScanner */ );
+extern void %%(smkPrefix)ScDelete( /* SMContext smThis */ );
+extern int %%(smkPrefix)ScSkip( /* SMContext smThis, int smLength */ );
+extern int %%(smkPrefix)ScModify( /* SMContext smThis, unsigned char *smBuffer, int smLength */ );
+extern int %%(smkPrefix)ScCopy( /* SMContext smThis, unsigned char *smBuffer, unsigned int smFrom, unsigned int smTo */ );
+extern int %%(smkPrefix)ScMapCopy( /* SMContext smThis, unsigned char *smBuffer, unsigned int smFrom, unsigned int smTo */ );
+extern void %%(smkPrefix)ScScrScanner( /* %%(smkPrefix)ScScanner scanner, int smOnOff */ );
+extern void %%(smkPrefix)ScScrToken( /* %%(smkPrefix)ScScanner scanner, int smCode, int smOnOff */ );
+extern void %%(smkPrefix)ScScrRule( /* %%(smkPrefix)ScScanner scanner, int smCode, int smOnOff */ );
+extern int %%(smkPrefix)Scan( /* SMContext smThis, TMToken *smToken */ );
+%%ENDIF
+
+%%IF (smEXPORT (?R))
+/* `%`%EXPORT */
+%%INCLUDE (smEXPORT)
+/* END `%`%EXPORT */
+%%ENDIF
+
+typedef struct %%(smkPrefix)ScContextItem {
+
+/* Private */
+
+  unsigned char *smBegining;
+  unsigned char *smContinue;
+  unsigned char *smEnd;
+  unsigned char *smPosPrevLine;
+  unsigned char *smPosLine;
+  unsigned char *smPosContinue;
+
+/* Public */
+
+  int smSize;
+
+  int smBufferOverflow;
+  int smLength;
+  unsigned char *smText;
+
+  int smLine;
+  int smColumn;
+  int smPosition;
+  int smNextLine;
+  int smNextColumn;
+  int smNextPosition;
+
+  %%(smkPrefix)ScScanner smScanner;
+
+%%IF(smCONTEXT(?R))
+%%INCLUDE(smCONTEXT)
+%%ENDIF
+
+} %%(smkPrefix)ScContextItem;
+
+#endif
+%%IF(tmkForce(0))
+%%  PROCESS(,"%%(smkPrefix)ScSema.%%(targetLanguageExtension).tmp")
+%%ELSE
+%%  PROCESS(,"%%(smkPrefix)ScSema.%%(targetLanguageExtension)")
+%%ENDIF
+/*----------------------------------------------------------------------*\
+
+	%%(smkPrefix)ScSema.%%(targetLanguageExtension)
+
+	ScannerMaker generated semantic actions
+
+\*----------------------------------------------------------------------*/
+
+%%IF (smIMPORT (?R))
+/* `%`%IMPORT */
+%%INCLUDE (smIMPORT)
+/* END `%`%IMPORT */
+%%ENDIF
+#include "%%(smkPrefix)Scan.h"
+%%IF(smkTarget("c++") AND NOT smREADER(?R))
+#include <sysent.h>
+%%ENDIF
+
+%%IF(smDECLARATION(?R))
+/* `%`%DECLARATION */
+%%INCLUDE(smDECLARATION)
+/* END `%`%DECLARATION */
+%%ENDIF
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScReader(
+     %%(smkPrefix)ScContext smThis,
+     unsigned char *smBuffer,
+     unsigned int smLength)
+%%ELSE
+int %%(smkPrefix)ScReader(smThis,smBuffer,smLength)
+     %%(smkPrefix)ScContext smThis;
+     unsigned char *smBuffer;
+     unsigned int smLength;
+%%ENDIF
+{
+%%IF(smREADER(?R))
+%%INCLUDE(smREADER)
+%%ELSE
+  /*
+   * Default reader
+   */
+%%IF(smkTarget("c++"))
+  extern int read(int fd, unsigned char *buffer, unsigned int length);
+%%ENDIF
+  return read(0,smBuffer,smLength);
+%%ENDIF
+}    
+
+%%IF(smPREHOOK(?R))
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScPreHook(
+     %%(smkPrefix)ScContext smThis,
+     %%(tmkTokenName) *smToken)
+%%ELSE
+int %%(smkPrefix)ScPreHook(smThis,smToken)
+     %%(smkPrefix)ScContext smThis;
+     %%(tmkTokenName) *smToken;
+%%ENDIF
+{
+%%IF(smPREHOOK(?R))
+%%INCLUDE(smPREHOOK)
+%%ELSIF(smkTarget("c++"))
+  (void)smThis;		/* Prevents warning from C++ */
+  (void)smToken;	/* Prevents warning from C++ */
+%%ENDIF
+  return -1;
+}
+%%ENDIF
+
+%%IF(smACTION(?) OR smACTIONS(?))
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScAction(
+     %%(smkPrefix)ScContext smThis,
+     int smInternalCode,
+     %%(tmkTokenName) *smToken)
+%%ELSE
+int %%(smkPrefix)ScAction(smThis,smInternalCode,smToken)
+     %%(smkPrefix)ScContext smThis;
+     int smInternalCode;
+     %%(tmkTokenName) *smToken;
+%%ENDIF
+{
+  enum {
+    smSkipToken		= -1,
+    smContinueToken	= -2
+  };
+%%IF(smACTION(?R))
+%%INCLUDE(smACTION)
+%%ENDIF
+%%IF(smACTIONS(?))
+%%INCLUDE(smACTIONS("smInternalCode"))
+%%ELSIF(smkTarget("c++"))
+  (void)smThis;		/* Prevents warning from C++ */
+  (void)smInternalCode;	/* Prevents warning from C++ */
+  (void)smToken;	/* Prevents warning from C++ */
+%%ENDIF
+  return smToken->%%(tmkTokenCode);
+}
+%%ENDIF
+
+%%IF(smPOSTHOOK(?R))
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScPostHook(
+     %%(smkPrefix)ScContext smThis,
+     %%(tmkTokenName) *smToken)
+%%ELSE
+int %%(smkPrefix)ScPostHook(smThis,smToken)
+     %%(smkPrefix)ScContext smThis;
+     %%(tmkTokenName) *smToken;
+%%ENDIF
+{
+  enum {
+    smSkipToken		= -1
+  };
+%%IF(smPOSTHOOK(?R))
+%%INCLUDE(smPOSTHOOK)
+%%ELSIF(smkTarget("c++"))
+  (void)smThis;		/* Prevents warning from C++ */
+  (void)smToken;	/* Prevents warning from C++ */
+%%ENDIF
+  return smToken->%%(tmkTokenCode);
+}
+%%ENDIF
+
+%%IF(tmkForce(0))
+%%  PROCESS(,"%%(smkPrefix)Scan.%%(targetLanguageExtension).tmp")
+%%ELSE
+%%  PROCESS(,"%%(smkPrefix)Scan.%%(targetLanguageExtension)")
+%%ENDIF
+/*----------------------------------------------------------------------*\
+
+	%%(smkPrefix)Scan.%%(targetLanguageExtension)
+
+	ScannerMaker generated scanner
+
+\*----------------------------------------------------------------------*/
+
+%%IF (smIMPORT (?R))
+/* `%`%IMPORT */
+%%INCLUDE (smIMPORT)
+/* END `%`%IMPORT */
+%%ENDIF
+
+#include <stdio.h>
+%%IF (smkTarget("ansi-c") OR smkTarget("c++"))
+#include <stdlib.h>
+#include <string.h>
+%%ELSE
+#include <memory.h>
+#include <malloc.h>
+%%ENDIF
+#include "%%(smkPrefix)Scan.h"
+
+/* Local imports */
+%%IF (smkTarget("ansi-c") OR smkTarget("c++"))
+extern int %%(smkPrefix)ScReader( %%(smkPrefix)ScContext smThis, unsigned char *smBuffer, unsigned int smLength );
+%%IF(smPREHOOK(?R))
+extern int %%(smkPrefix)ScPreHook( %%(smkPrefix)ScContext smThis, %%(tmkTokenName) *smToken );
+%%ENDIF
+extern int %%(smkPrefix)ScAction( %%(smkPrefix)ScContext smThis, int smInternalCode, %%(tmkTokenName) *smToken );
+%%IF(smPOSTHOOK(?R))
+extern int %%(smkPrefix)ScPostHook( %%(smkPrefix)ScContext smThis, %%(tmkTokenName) *smToken );
+%%ENDIF
+%%ELSE
+extern int %%(smkPrefix)ScReader( /* SMContext smThis, unsigned char smBuffer, unsigned int smLength */ );
+%%IF(smPREHOOK(?R))
+extern int %%(smkPrefix)ScPreHook( /* SMContext smThis, TMToken *smToken */ );
+%%ENDIF
+extern int %%(smkPrefix)ScAction( /* SMContext smThis, int smInternalCode, TMToken *smToken */ );
+%%IF(smPOSTHOOK(?R))
+extern int %%(smkPrefix)ScPostHook( /* SMContext smThis, TMToken *smToken */ );
+%%ENDIF
+%%ENDIF
+
+/* System dependencies */
+%%INCLUDE(systemDependencies)
+
+%%IF(smTrace(1))
+%%INCLUDE(smDEBUG)
+%%ENDIF
+
+/* START of scanning tables */
+
+%%IF(smMAP(?))
+
+/*
+ * MAP
+ *
+ * [character] -> character
+ *
+ */
+
+static UByte%%(smMAPvecTyp) smMap[%%(smMAPvecLen)]=%%INCLUDE(smMAPvec);
+%%IF(smMAPskip(?))
+static UByte%%(smMAPvecTyp) smMapSkip=%%(smMAPskip);
+%%ENDIF
+%%ENDIF
+
+%%BEGIN(smDoMap)
+%%IF(smMAPvecLen(?))
+%%(smDoMap[1])=smMap[%%(smDoMap[2])];
+%%IF(smMAPskip(?))
+if(%%(smDoMap[1])==%%(smMAPskip)) continue;
+%%ENDIF
+%%ELSE
+%%(smDoMap[1])=%%(smDoMap[2]);
+%%ENDIF
+%%END(smDoMap)
+
+/*
+ * SCANNER
+ *
+ * [scanner] -> state
+ */
+
+static UByte%%(smSCANNERvecTyp) smScanner[%%(smSCANNERvecLen)]=%%INCLUDE(smSCANNERvec);
+
+/*
+ * ACCEPT (internal token code)
+ *
+ * [state] -> icode
+ */
+
+static UByte%%(smACCEPTvecTyp) smAccept[%%(smACCEPTvecLen)]=%%INCLUDE(smACCEPTvec);
+
+/*
+ * EXTERNAL TOKEN CODE
+ *
+ * [icode] -> ecode
+ */
+
+static UByte%%(smTOKENCODEvecTyp) smTokenCode[%%(smTOKENCODEvecLen)]=%%INCLUDE(smTOKENCODEvec);
+
+/*
+ * EOT and Unknown
+ *
+ * [scanner] -> icode
+ *
+ */
+
+static UByte%%(smEOTCODEvecTyp) smEOTCode[%%(smEOTCODEvecLen)]=%%INCLUDE(smEOTCODEvec);
+static UByte%%(smUNKNOWNCODEvecTyp) smUnknownCode[%%(smUNKNOWNCODEvecLen)]=%%INCLUDE(smUNKNOWNCODEvec);
+
+/*
+ * DFA
+ */
+
+%%IF(smROW(1))
+static UByte%%(smROWtyp) smDFArow[%%(smROWlen)]=%%INCLUDE(smROWvec);
+%%ENDIF
+%%IF(smCOL(1))
+static UByte%%(smCOLtyp) smDFAcol[%%(smCOLlen)]=%%INCLUDE(smCOLvec);
+%%ENDIF
+%%IF(smLES(1) OR smGCS(1))
+  %%IF(smLES(1))
+static UByte%%(smLESdetRowTyp) smDFAdetRow[%%(smLESorGCSrowLen)]=%%INCLUDE(smLESdetRow);
+static UByte%%(smLESdetColTyp) smDFAdetCol[%%(smLESorGCScolLen)]=%%INCLUDE(smLESdetCol);
+  %%ENDIF
+static UByte%%(smLESorGCSrowTyp) smDFArowVal[%%(smLESorGCSrowLen)]=%%INCLUDE(smLESorGCSrow);
+static UByte%%(smLESorGCScolTyp) smDFAcolVal[%%(smLESorGCScolLen)]=%%INCLUDE(smLESorGCScol);
+static UByte%%(smERRtyp) smDFAerr[(%%(smERRrowLen)*%%(smERRcolLen)+7)/8]=%%INCLUDE(smERRvec);
+  %%IF(smERR(1))
+static UByte%%(smERRrowTyp) smDFAerrRow[%%(smLESorGCSrowLen)]=%%INCLUDE(smERRrow);
+static UByte%%(smERRcolTyp) smDFAerrCol[%%(smLESorGCScolLen)]=%%INCLUDE(smERRcol);
+  %%ENDIF
+%%ENDIF
+%%IF(smRDS(1))
+static UByte%%(smRDSvecTyp) smDFAval[%%(smRDSvecLen)]=%%INCLUDE(smRDSvec);
+  %%IF(smLES(0) AND smGCS(0))
+static UByte%%(smRDSbasTyp) smDFAbase[%%(smRows)]=%%INCLUDE(smRDSbas);
+static UByte%%(smRDSchkTyp) smDFAcheck[%%(smRDSchkLen)]=%%INCLUDE(smRDSchk);
+  %%ENDIF
+%%ELSE
+  %%IF(smDFArowLen(0))
+static UByte%%(smDFAtyp) smDFAval[%%(smDFAcolLen)]=%%INCLUDE(smDFAmat);
+  %%ELSE
+static UByte%%(smDFAtyp) smDFAval[%%(smDFArowLen)][%%(smDFAcolLen)]=%%INCLUDE(smDFAmat);
+  %%ENDIF
+%%ENDIF
+
+%%BEGIN(smDoDFA)
+{
+%%IF(smLES(1) OR smGCS(1))
+  int smERRindex;
+%%ELSIF(smRDS(1))
+  int smRDSindex;
+%%ENDIF
+
+%%IF(smLES(1) OR smGCS(1))
+  %%IF(smROW(1))
+  %%(smDoDFA[2])=smDFArow[%%(smDoDFA[2])];
+  %%ENDIF
+  %%IF(smCOL(1))
+  %%(smDoDFA[1])=smDFAcol[%%(smDoDFA[1])];
+  %%ENDIF
+  %%IF(smERR(1))
+  smERRindex=smDFAerrRow[%%(smDoDFA[2])]*%%(smERRcolLen)+smDFAerrCol[%%(smDoDFA[1])];
+  %%ELSE
+  smERRindex=%%(smDoDFA[2])*%%(smERRcolLen)+%%(smDoDFA[1]);
+  %%ENDIF
+  if(smDFAerr[smERRindex>>3] & (0x80>>(smERRindex&0x7))) 
+    %%(smDoDFA[2])=%%(smError);
+  else {
+  %%IF(smLES(1))
+    if(smDFAdetRow[%%(smDoDFA[2])]<smDFAdetCol[%%(smDoDFA[1])])
+   %%(smDoDFA[2])=smDFArowVal[%%(smDoDFA[2])];
+    else if(smDFAdetRow[%%(smDoDFA[2])]>smDFAdetCol[%%(smDoDFA[1])])
+    %%(smDoDFA[2])=smDFAcolVal[%%(smDoDFA[1])];
+    else
+  %%ENDIF
+  %%IF(smRDS(1))
+      %%(smDoDFA[2])=smDFAval[smDFArowVal[%%(smDoDFA[2])]+smDFAcolVal[%%(smDoDFA[1])]];
+  %%ELSE
+      %%(smDoDFA[2])=smDFAval[smDFArowVal[%%(smDoDFA[2])]][smDFAcolVal[%%(smDoDFA[1])]];
+  %%ENDIF
+  }
+%%ELSE
+  %%IF(smRDS(1))
+    %%IF(smROW(1))
+  %%(smDoDFA[2])=smDFArow[%%(smDoDFA[2])];
+    %%ENDIF
+    %%IF(smCOL(1))
+  smRDSindex=smDFAbase[%%(smDoDFA[2])]+smDFAcol[%%(smDoDFA[1])];
+    %%ELSE
+  smRDSindex=smDFAbase[%%(smDoDFA[2])]+%%(smDoDFA[1]);
+    %%ENDIF
+  if(smDFAcheck[smRDSindex]==%%(smDoDFA[2])) {
+   %%(smDoDFA[2])=smDFAval[smRDSindex];
+  }
+  else
+    %%(smDoDFA[2])=%%(smError);
+  %%ELSE
+    %%IF(smROW(1))
+      %%IF(smCOL(1))
+  %%(smDoDFA[2])=smDFAval[smDFArow[%%(smDoDFA[2])]+smDFAcol[%%(smDoDFA[1])]];
+      %%ELSE
+  %%(smDoDFA[2])=smDFAval[smDFArow[%%(smDoDFA[2])]+%%(smDoDFA[1])];
+      %%ENDIF
+    %%ELSE
+      %%IF(smCOL(1))
+  %%(smDoDFA[2])=smDFAval[%%(smDoDFA[2])][smDFAcol[%%(smDoDFA[1])]];
+      %%ELSE
+  %%(smDoDFA[2])=smDFAval[%%(smDoDFA[2])][%%(smDoDFA[1])];
+      %%ENDIF
+    %%ENDIF
+  %%ENDIF
+%%ENDIF
+}
+%%END(smDoDFA)
+
+/* END of scanning tables */
+
+%%IF(smLOOKAHEAD(?))
+/*
+ * LOOKAHEAD
+ *
+ * [icode] -> type   (0=no lookahead, 1=fix prefix, 2=fix suffix, 3=variable length)
+ * [icode] -> prefix (length or state)
+ * [icode] -> suffix (length or state)
+ *
+ */
+
+static UByte%%(smLOOKAHEADtypeVecTyp) smLookaheadType[%%(smLOOKAHEADtypeVecLen)]=%%INCLUDE(smLOOKAHEADtypeVec);
+static UByte%%(smLOOKAHEADprefixVecTyp) smLookaheadPrefix[%%(smLOOKAHEADprefixVecLen)]=%%INCLUDE(smLOOKAHEADprefixVec);
+static UByte%%(smLOOKAHEADsuffixVecTyp) smLookaheadSuffix[%%(smLOOKAHEADsuffixVecLen)]=%%INCLUDE(smLOOKAHEADsuffixVec);
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+static unsigned char *smLookahead(
+     int smCode,
+     unsigned char *smAt,
+     unsigned char *smEnd)
+%%ELSE
+static unsigned char *smLookahead(smCode,smAt,smEnd)
+     int smCode;
+     unsigned char *smAt;
+     unsigned char *smEnd;
+%%ENDIF
+{
+  unsigned char *halt;
+  unsigned char ch;
+  int state;
+
+  switch(smLookaheadType[smCode]) {
+  case 1:			/* Fix prefix length */
+    return smAt+smLookaheadPrefix[smCode];
+  case 2:			/* Fix suffix length */
+    return smEnd-smLookaheadSuffix[smCode];
+  case 3:			/* Variable length */
+    /* Scan forward */
+    state=smLookaheadPrefix[smCode];
+    for(;;) {
+%%INCLUDE(smDoMap("ch","*smAt++"))
+%%INCLUDE(smDoDFA("ch","state"))
+      if(state==%%(smError)) break;
+      if(smAccept[state]>0) {
+	halt=smAt;
+	continue;
+      }
+    }
+    /* Scan bakward */
+    state=smLookaheadSuffix[smCode];
+    for(;;) {
+      if(smAccept[state]>0 && smEnd<=halt) break;
+%%INCLUDE(smDoMap("ch","*--smEnd"))
+%%INCLUDE(smDoDFA("ch","state"))
+      }
+    return smEnd;
+  }
+  return (unsigned char *) -1;
+}
+%%ENDIF
+
+
+
+%%IF(smSCREEN(?))
+
+static UByte%%(smSCREENcheckScanTyp) smScreenCheckScan[%%(smSCREENcheckScanLen)]=%%INCLUDE(smSCREENcheckScan);
+static UByte%%(smSCREENcheckCodeTyp) smScreenCheckCode[%%(smSCREENcheckCodeLen)]=%%INCLUDE(smSCREENcheckCode);
+static UByte%%(smSCREENcheckCodeScanTyp) smScreenCheckCodeScan[%%(smSCREENcheckCodeScanLen)]=%%INCLUDE(smSCREENcheckCodeScan);
+static UByte%%(smSCREENtableBeginTyp) smScreenTableBegin[%%(smSCREENtableBeginLen)]=%%INCLUDE(smSCREENtableBegin);
+static UByte%%(smSCREENtableEndTyp) smScreenTableEnd[%%(smSCREENtableEndLen)]=%%INCLUDE(smSCREENtableEnd);
+static UByte%%(smSCREENtokenLengthTyp) smScreenTokenLength[%%(smSCREENtokenLengthLen)]=%%INCLUDE(smSCREENtokenLength);
+static UByte%%(smSCREENtokenStartTyp) smScreenTokenStart[%%(smSCREENtokenStartLen)]=%%INCLUDE(smSCREENtokenStart);
+static UByte%%(smSCREENtokenCodeTyp) smScreenTokenCode[%%(smSCREENtokenCodeLen)]=%%INCLUDE(smSCREENtokenCode);
+static UByte%%(smSCREENcheckTokenTyp) smScreenCheckToken[%%(smSCREENcheckTokenLen)]=%%INCLUDE(smSCREENcheckToken);
+static UByte%%(smSCREENtokensTyp) smScreenTokens[%%(smSCREENtokensLen)]=%%INCLUDE(smSCREENtokens);
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+static int smScreening(
+     %%(smkPrefix)ScScanner smScanner,
+     int smCode,
+     unsigned char *smText,
+     int smLength)
+%%ELSE
+static int smScreening(smScanner,smCode,smText,smLength)
+     %%(smkPrefix)ScScanner smScanner;
+     int smCode;
+     unsigned char *smText;
+     int smLength;
+%%ENDIF
+{
+  int start;
+  int stop;
+  int middle;
+
+  if(smScreenCheckScan[smScanner]==2)
+    return smCode;
+  if(smScreenCheckCode[smCode]==2)
+    return smCode;
+
+  start=smScreenTableBegin[smScanner];
+  stop=smScreenTableEnd[smScanner];
+  while(start<=stop) {
+    int screenLength;
+    
+    middle=(start+stop)>>1;
+    screenLength=smScreenTokenLength[middle];
+    if(screenLength<smLength) start=middle+1;
+    else if(screenLength>smLength) stop=middle-1;
+    else {
+%%IF(smMAP(?))
+      unsigned char *at1;
+      unsigned char *at2;
+      unsigned char ch;
+      
+      for(at1=smText,at2=(unsigned char *)smScreenTokens+smScreenTokenStart[middle];screenLength-->0;*at1++,*at2++) {
+%%INCLUDE(smDoMap("ch","*at1"))
+	if(ch!=*at2) break;
+      }
+      if(screenLength<0) break;
+      else if(ch>*at2) start=middle+1;
+      else stop=middle-1;
+%%ELSE
+      screenLength=memcmp(smScreenTokens+smScreenTokenStart[middle],smText,screenLength);
+      if(screenLength<0) start=middle+1;
+      else if(screenLength>0) stop=middle-1;
+      else break;
+%%ENDIF
+    }
+  }
+  return (start<=stop) ? smScreenTokenCode[middle] : smCode;
+}
+%%ENDIF
+
+%%IF(NOT smSRCP(NONE))
+
+/*
+ * Source position calculation 
+ */
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+static void smSourcePosition(
+     %%(smkPrefix)ScContext smThis,
+     unsigned char *smAt,
+     unsigned char *smEnd)
+%%ELSE
+static void smSourcePosition(smThis,smAt,smEnd) 
+     %%(smkPrefix)ScContext smThis;
+     unsigned char *smAt;
+     unsigned char *smEnd;
+%%ENDIF
+{
+  if(smThis->smPosContinue<smEnd) {
+    if(smThis->smPosContinue>smAt) smAt=smThis->smPosContinue;
+    smThis->smNextPosition+=smEnd-smAt;
+%%IF(smSRCP("ROWCOL"))
+    for(;smAt<smEnd;smAt++) 
+      if(*smAt==%%(smNewLine)) {
+	smThis->smPosLine=smAt;
+	smThis->smNextLine++;
+%%IF({"MSDOS", "WIN32"} (%%(smkOs)))
+      } else if ((*smAt==%%(smCarriageReturn)) && (*(smAt+1)==%%(smNewLine))) {
+	smThis->smPosLine=smAt++;
+	smThis->smNextLine++;
+%%ENDIF
+      }
+
+    smThis->smNextColumn=smEnd-smThis->smPosLine;
+%%ELSIF(smSRCP("ROW"))
+    for(;smAt<smEnd;smAt++) 
+       if ((*smAt==%%(smNewLine))
+%%IF({"MSDOS", "WIN32"} (%%(smkOs)))
+           || ((*smAt==%%(smCarriageReturn)) && (*(smAt+1)==%%(smNewLine)))) 
+%%ELSE
+           )
+%%ENDIF
+          smThis->smNextLine++;
+%%ENDIF
+    smThis->smPosContinue=smEnd;
+  }
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+static void smRewindSourcePosition(
+     %%(smkPrefix)ScContext smThis,
+     unsigned char *smAt,
+     unsigned char *smEnd)
+%%ELSE
+static void smRewindSourcePosition(smThis,smAt,smEnd)
+     %%(smkPrefix)ScContext smThis;
+     unsigned char *smAt;
+     unsigned char *smEnd;
+%%ENDIF
+{
+  if(smThis->smPosContinue>smEnd) return;
+  smThis->smNextPosition-=smEnd-smAt;
+%%IF(smSRCP("ROWCOL"))
+  while(smAt<smEnd--) if(*smEnd==%%(smNewLine)) smThis->smNextLine--;
+  while(smThis->smBegining<smEnd) 
+    if(*smEnd==%%(smNewLine)) {
+      smThis->smPosLine=smEnd;
+      break; 
+    }
+    else smEnd--;
+  if(smAt<smThis->smPosLine) smThis->smPosLine=smThis->smPosPrevLine;
+  smThis->smNextColumn=smAt-smThis->smPosLine;
+%%ELSIF(smSRCP("ROW"))
+  while(smAt<smEnd--) if(*smEnd==%%(smNewLine)) smThis->smNextLine--;
+%%ENDIF
+  smThis->smPosContinue=smAt;
+}
+%%ENDIF
+
+
+/*
+ * int smReadBuffer(SMContext smThis)
+ *
+ * SmThis function reads charcters using the reader into the buffer in a
+ * context. The buffer is enlarged if the current buffer is full
+ * (smEnd-smText==smSize) or reduced if current buffer is larger than
+ * the standard buffer size and the token may fit the standard buffer
+ * (smEnd-smText<smTokenSize AND smSize>smTokenSize). The function
+ * returns the number of characters read into the buffer.
+ *
+ */
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+static int smReadBuffer(%%(smkPrefix)ScContext smThis)
+%%ELSE
+static int smReadBuffer(smThis)
+     %%(smkPrefix)ScContext smThis;
+%%ENDIF
+{
+  long length;
+  int size;
+  long mod;
+
+  if(smThis->smBegining!=smThis->smText) {
+    /* Move data to beginning of buffer */
+    length=smThis->smEnd-smThis->smText;
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+    memcpy((void *)smThis->smBegining,(void *)smThis->smText,(size_t)length);
+%%ELSE
+    memcpy((void *)smThis->smBegining,(void *)smThis->smText,length);
+%%ENDIF
+    if(length<%%(smTokenSize) && smThis->smSize>%%(smTokenSize)) {
+      /* Reduce buffer size */
+      smThis->smSize=%%(smTokenSize);
+%%IF(smkTarget("ansi-c"))
+      smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)%%(smTokenSize)+1);
+%%ELSIF(smkTarget("c++"))
+/* This is for Sun CC that has an incorrect defintion of realloc! */
+#if defined __SUNPRO_CC && __SUNPRO_CC == 0x400
+#define malloc_t void *
+#endif
+#ifdef __GNUG__
+      smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,%%(smTokenSize)+1);
+#else
+      smThis->smBegining=(unsigned char *)realloc((malloc_t)smThis->smBegining,%%(smTokenSize)+1);
+#endif
+%%ELSE
+      smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,%%(smTokenSize)+1);
+%%ENDIF
+    }
+  }
+  else if(smThis->smBegining+smThis->smSize==smThis->smEnd) {
+    /* Try to enlarge buffer */
+    if(smThis->smSize==%%(smTokenMaxSize)) {
+      /* Cut Buffer */
+%%IF(NOT smSRCP(NONE))
+      smSourcePosition(smThis,smThis->smText,smThis->smEnd-%%(smTokenSize));
+%%ENDIF
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+      memcpy((void *)smThis->smBegining,(void *)(smThis->smEnd-%%(smTokenSize)),(size_t)%%(smTokenSize));
+%%ELSE
+      memcpy((void *)smThis->smBegining,(void *)(smThis->smEnd-%%(smTokenSize)),%%(smTokenSize));
+%%ENDIF
+%%IF(smkOs(MSDOS))
+#ifdef NEED_HUGE_ARITHM
+      mod=(long)(((char huge *)smThis->smEnd-(char huge *)smThis->smBegining)-(long)%%(smTokenSize));
+#else
+      mod=(long)(((char *)smThis->smEnd-(char *)smThis->smBegining)-(long)%%(smTokenSize));
+#endif
+%%ELSE
+      mod=smThis->smEnd-smThis->smBegining-%%(smTokenSize);
+%%ENDIF
+      smThis->smContinue-=mod;
+      smThis->smEnd-=mod;
+      smThis->smPosPrevLine-=mod;
+      smThis->smPosLine-=mod;
+      smThis->smPosContinue-=mod;
+      smThis->smBufferOverflow+=mod;
+    }
+    else {
+      unsigned char *begining = smThis->smBegining;
+%%IF(smkTarget("c++"))
+      size=(int)(smThis->smSize*1.5);
+%%ELSE
+      size=smThis->smSize*1.5;
+%%ENDIF
+      if(size>%%(smTokenMaxSize)) size=%%(smTokenMaxSize);
+      /* Enlarge buffer */
+%%IF(smkTarget("ansi-c"))
+      smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)size+1);
+%%ELSIF(smkTarget("c++"))
+#ifdef __GNUG__
+      smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,size+1);
+#else
+      smThis->smBegining=(unsigned char *)realloc((malloc_t)smThis->smBegining,size+1);
+#endif
+%%ELSE
+      smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,size+1);
+%%ENDIF
+      if(smThis->smBegining==NULL) {
+	/* Cut Buffer */
+	smThis->smBegining = begining;	/* Restore to original buffer */
+%%IF(NOT smSRCP(NONE))
+	smSourcePosition(smThis,smThis->smText,smThis->smEnd-%%(smTokenSize));
+%%ENDIF
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+	memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-%%(smTokenSize)), (size_t)%%(smTokenSize));
+%%ELSE
+	memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-%%(smTokenSize)), %%(smTokenSize));
+%%ENDIF
+%%IF(smkOs(MSDOS))
+#ifdef NEED_HUGE_ARITHM
+        mod=(long)(((char huge *)smThis->smEnd-(char huge *)smThis->smBegining)-(long)%%(smTokenSize));
+#else
+        mod=(long)(((char *)smThis->smEnd-(char *)smThis->smBegining)-(long)%%(smTokenSize));
+#endif
+%%ELSE
+	mod=smThis->smEnd-smThis->smBegining-%%(smTokenSize);
+%%ENDIF
+	smThis->smContinue-=mod;
+	smThis->smEnd-=mod;
+	smThis->smPosPrevLine-=mod;
+	smThis->smPosLine-=mod;
+	smThis->smPosContinue-=mod;
+        smThis->smBufferOverflow+=mod;
+      }
+      else
+	smThis->smSize=size;
+    }
+  }
+  if(smThis->smBegining!=smThis->smText) {
+%%IF(smkOs(MSDOS))
+#ifdef NEED_HUGE_ARITHM
+    mod=(long)((char huge *)smThis->smText-(char huge *)smThis->smBegining);
+#else
+    mod=(long)((char *)smThis->smText-(char *)smThis->smBegining);
+#endif
+%%ELSE
+    mod=smThis->smText-smThis->smBegining;
+%%ENDIF
+    smThis->smContinue-=mod;
+    smThis->smEnd-=mod;
+    smThis->smPosPrevLine-=mod;
+    smThis->smPosLine-=mod;
+    smThis->smPosContinue-=mod;
+    smThis->smText-=mod;
+  }
+  length=smThis->smSize-(smThis->smEnd-smThis->smBegining);
+  length=%%(smkPrefix)ScReader(smThis,smThis->smEnd,(unsigned int)length);
+  if(length<0) return length;
+  smThis->smEnd+=length;
+%%IF(smExclude(?))
+  *(smThis->smEnd)=%%(smExclude);
+%%ENDIF
+  return length;
+}
+
+/*
+ * SMContext SMNew( %%(smkPrefix)ScScanner scanner )
+ *
+ * Create a new context.
+ *
+ */
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+%%(smkPrefix)ScContext %%(smkPrefix)ScNew(%%(smkPrefix)ScScanner smScanner)
+%%ELSE
+%%(smkPrefix)ScContext %%(smkPrefix)ScNew(smScanner)
+	%%(smkPrefix)ScScanner smScanner;
+%%ENDIF
+{
+  %%(smkPrefix)ScContext smThis;
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+  smThis=(%%(smkPrefix)ScContext)malloc((size_t)sizeof(%%(smkPrefix)ScContextItem));
+%%ELSE
+  smThis=(%%(smkPrefix)ScContext)malloc(sizeof(%%(smkPrefix)ScContextItem));
+%%ENDIF
+  if(smThis==NULL) {
+    return NULL;
+  }
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+  smThis->smBegining=(unsigned char *)malloc((size_t)%%(smTokenSize)+1);
+%%ELSE
+  smThis->smBegining=(unsigned char *)malloc(%%(smTokenSize)+1);
+%%ENDIF
+  if(smThis->smBegining==NULL) {
+    free((char *)smThis);
+    return NULL;
+  }
+  smThis->smSize=%%(smTokenSize);
+  smThis->smContinue=smThis->smBegining;
+  smThis->smEnd=smThis->smBegining;
+  smThis->smPosPrevLine=smThis->smBegining-1;
+  smThis->smPosLine=smThis->smBegining-1;
+  smThis->smPosContinue=smThis->smBegining;
+  smThis->smText=smThis->smBegining;
+  
+  smThis->smLength=0;
+  smThis->smNextLine=1;
+  smThis->smNextColumn=1;
+  smThis->smNextPosition=0;
+  smThis->smLine=1;
+  smThis->smColumn=1;
+  smThis->smPosition=0;
+  smThis->smScanner=smScanner;
+%%IF(isExclude(?))
+  smThis->smBegining[0]=%%(smExclude);
+%%ELSE
+  smThis->smBegining[0]=0;
+%%ENDIF
+  return smThis;
+}
+
+/*
+ * void SMDelete( SMContext smThis )
+ *
+ * Destroy a context and associated buffer.
+ *
+ */
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+void %%(smkPrefix)ScDelete(%%(smkPrefix)ScContext smThis)
+%%ELSE
+void %%(smkPrefix)ScDelete(smThis)
+     %%(smkPrefix)ScContext smThis;
+%%ENDIF
+{
+  free((char *)smThis->smBegining);
+  free((char *)smThis);
+}
+
+/*
+ * int SMSkip( SMContext smThis, int smLength )
+ *
+ * Enlarge/reduce the current token in a context with length characters.
+ * If length is less than zero reduce the token, if length is greater
+ * than zero enlarge the token.
+ *
+ */
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScSkip(
+     %%(smkPrefix)ScContext smThis,
+     int smLength)
+%%ELSE
+int %%(smkPrefix)ScSkip(smThis,smLength)
+     %%(smkPrefix)ScContext smThis;
+     int smLength;
+%%ENDIF
+{
+  int empty;
+
+  if(smLength>0) {
+    empty=smThis->smEnd-smThis->smContinue;
+    if(empty<smLength) {
+      empty=smReadBuffer(smThis);
+      if(empty<0) return empty;
+      empty=smThis->smEnd-smThis->smContinue;
+      if(empty<smLength) smLength=empty;
+    }
+%%IF(NOT smSRCP(NONE))
+    smSourcePosition(smThis,smThis->smContinue,smThis->smContinue+smLength);
+%%ENDIF
+    smThis->smContinue+=smLength;
+    smThis->smLength+=smLength;
+  }
+  else if(smLength<0) {
+    smLength= -smLength;
+    if(smLength>smThis->smLength) smLength=smThis->smLength;
+%%IF(NOT smSRCP(NONE))
+    smRewindSourcePosition(smThis,smThis->smContinue-smLength,smThis->smContinue);
+%%ENDIF
+    smThis->smContinue-=smLength;
+    smThis->smLength-=smLength;
+    }
+  return smLength;
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScModify(
+     %%(smkPrefix)ScContext smThis,
+     unsigned char *smBuffer,
+     int smLength)
+%%ELSE
+int %%(smkPrefix)ScModify(smThis,smBuffer,smLength)
+     %%(smkPrefix)ScContext smThis;
+     unsigned char *smBuffer;
+     int smLength;
+%%ENDIF
+{
+  if(smLength<0) {
+/* This code is identical to smSkip but no source position is rewinded */
+    smLength= -smLength;
+    if(smLength>smThis->smLength) smLength=smThis->smLength;
+    smThis->smContinue-=smLength;
+    smThis->smLength-=smLength;
+/***********************************************************************/
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+    memcpy((void *)smThis->smContinue,(void *)smBuffer,(size_t)smLength);
+%%ELSE
+    memcpy((void *)smThis->smContinue,(void *)smBuffer,smLength);
+%%ENDIF
+    return smLength;
+  }
+  else if(smLength>0) {
+    int length1;
+    int length2;
+    
+    for(length2=smLength;(length1=%%(smkPrefix)ScSkip(smThis,length2));length2-=length1) {
+      if(length1<0) return length1;
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+      memcpy((void *)(smThis->smContinue-length1),(void *)smBuffer,(size_t)length1);
+%%ELSE
+      memcpy((void *)(smThis->smContinue-length1),(void *)smBuffer,length1);
+%%ENDIF
+      smBuffer+=length1;
+    }
+    return smLength-length2;
+  }
+  return smLength;
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScCopy(
+     %%(smkPrefix)ScContext smThis,
+     unsigned char *smBuffer,
+     unsigned int smFrom,
+     unsigned int smTo)
+%%ELSE
+int %%(smkPrefix)ScCopy(smThis,smBuffer,smFrom,smTo)
+     %%(smkPrefix)ScContext smThis;
+     unsigned char *smBuffer;
+     unsigned int smFrom;
+     unsigned int smTo;
+%%ENDIF
+{
+  if(smFrom>smThis->smLength) smFrom=smThis->smLength;
+  if(smTo>smThis->smLength) smTo=smThis->smLength;
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+  memcpy((void *)smBuffer,(void *)(smThis->smText+smFrom),(size_t)smTo-smFrom);
+%%ELSE
+  memcpy((void *)smBuffer,(void *)(smThis->smText+smFrom),smTo-smFrom);
+%%ENDIF
+  return smTo-smFrom;
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)ScMapCopy(
+     %%(smkPrefix)ScContext smThis,
+     unsigned char *smBuffer,
+     unsigned int smFrom,
+     unsigned int smTo)
+%%ELSE
+int %%(smkPrefix)ScMapCopy(smThis,smBuffer,smFrom,smTo)
+     %%(smkPrefix)ScContext smThis;
+     unsigned char *smBuffer;
+     unsigned int smFrom;
+     unsigned int smTo;
+%%ENDIF
+{
+  int n;
+  int len;
+  unsigned char *at;
+
+  if(smFrom>smThis->smLength) smFrom=smThis->smLength;
+  if(smTo>smThis->smLength) smTo=smThis->smLength;
+  len=0;
+  for(n=smFrom,at=smThis->smText+smFrom;n<smTo;n++) {
+%%INCLUDE(smDoMap("*smBuffer++","*at++"))
+    len++;
+  }
+  return len;
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+void %%(smkPrefix)ScScrScanner(
+     %%(smkPrefix)ScScanner smScanner,
+     int smOnOff)
+%%ELSE
+void %%(smkPrefix)ScScrScanner(smScanner, smOnOff)
+     %%(smkPrefix)ScScanner smScanner;
+     int smOnOff;
+%%ENDIF
+{
+%%IF(smSCREEN(?))
+  if(smScreenCheckScan[smScanner]) smScreenCheckScan[smScanner]=smOnOff ? 2 : 1;
+%%ELSIF(smkTarget("c++"))
+  (void)smScanner;	/* Prevents warning from C++ */
+  (void)smOnOff;	/* Prevents warning from C++ */
+%%ENDIF
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+void %%(smkPrefix)ScScrToken(
+     %%(smkPrefix)ScScanner smScanner,
+     int smCode,
+     int smOnOff)
+%%ELSE
+void %%(smkPrefix)ScScrToken(smScanner, smCode, smOnOff)
+     %%(smkPrefix)ScScanner smScanner;
+     int smCode;
+     int smOnOff;
+%%ENDIF
+{
+%%IF(smSCREEN(?))
+  int i;
+  for(i=0;i<%%(smSCREENcheckCodeLen);i++)
+    if(smScreenCheckCode[i] && 
+       smTokenCode[smScreenCheckCode[i]]==smCode && 
+       smScreenCheckCodeScan[i]==smScanner) {
+      smScreenCheckCode[i]= smOnOff ? 2 : 1;
+      break;
+    }
+%%ELSIF(smkTarget("c++"))
+  (void)smScanner;	/* Prevents warning from C++ */
+  (void)smCode;		/* Prevents warning from C++ */
+  (void)smOnOff;	/* Prevents warning from C++ */
+%%ENDIF
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+void %%(smkPrefix)ScScrRule(
+     %%(smkPrefix)ScScanner smScanner,
+     int smCode,
+     int smOnOff)
+%%ELSE
+void %%(smkPrefix)ScScrRule(smScanner, smCode, smOnOff)
+     %%(smkPrefix)ScScanner smScanner;
+     int smCode;
+     int smOnOff;
+%%ENDIF
+{
+%%IF(smSCREEN(?))
+  int i;
+  for(i=smScreenTableBegin[smScanner];i<=smScreenTableEnd[smScanner];i++) 
+    if(smTokenCode[smScreenTokenCode[i]]==smCode) {
+      smScreenCheckToken[i]=smOnOff ? 1 : 0;
+      break;
+    }
+%%ELSIF(smkTarget("c++"))
+  (void)smScanner;	/* Prevents warning from C++ */
+  (void)smCode;		/* Prevents warning from C++ */
+  (void)smOnOff;	/* Prevents warning from C++ */
+%%ENDIF
+}
+
+%%IF(smkTarget("ansi-c") OR smkTarget("c++"))
+int %%(smkPrefix)Scan(
+     %%(smkPrefix)ScContext smThis,
+     %%(tmkTokenName) *smToken)
+%%ELSE
+int %%(smkPrefix)Scan(smThis,smToken)
+     %%(smkPrefix)ScContext smThis;
+     %%(tmkTokenName) *smToken;
+%%ENDIF
+{
+  unsigned char *at;
+  unsigned char *end;
+  unsigned char *rew_at;
+  unsigned char ch;
+  int state;
+  int rew_state;
+  int code;
+%%IF(smTrace(1))
+  int ocode1;
+  int ocode2;
+  %%(smkPrefix)ScScanner traceScanner;
+%%ENDIF
+
+  do {				/* Skip loop */
+%%IF(NOT smSRCP(NONE))
+%%IF(smSRCP("ROWCOL")) 
+    smThis->smLine=smThis->smNextLine;
+    smThis->smColumn=smThis->smNextColumn;
+%%ELSIF(smSRCP("ROW"))
+    smThis->smLine=smThis->smNextLine;
+%%ENDIF
+    smThis->smPosition=smThis->smNextPosition;
+%%ENDIF
+%%IF(smPREHOOK(?R))
+    %%(smkPrefix)ScPreHook(smThis,smToken);
+%%ENDIF
+    end=(smThis->smEnd);
+    smThis->smText=smThis->smContinue;
+    smThis->smBufferOverflow=0;
+%%IF(NOT smSRCP(NONE))
+%%IF(smSRCP("ROWCOL")) 
+    smToken->%%(tmkTokenSrcp).%%(tmkSrcpRow)=smThis->smNextLine;
+    smToken->%%(tmkTokenSrcp).%%(tmkSrcpCol)=smThis->smNextColumn;
+%%ELSIF(smSRCP("ROW"))
+    smToken->%%(tmkTokenSrcp).%%(tmkSrcpRow)=smThis->smNextLine;
+%%ENDIF
+    smThis->smPosPrevLine=smThis->smPosLine;
+%%ENDIF
+    rew_at=smThis->smText;
+    do {			/* Continue loop */
+      rew_state=%%(smError);
+      rew_at++;
+      at=(smThis->smContinue);
+      state=smScanner[smThis->smScanner];
+      for (;;) {
+%%IF(NOT smExclude(?))
+	if(at==end) {
+	  int mod;
+	  
+	  if(state>=%%(smError)) state-=%%(smError)+1;
+	  smThis->smContinue=end;
+	  mod=smReadBuffer(smThis);
+	  if(mod<0) return mod;
+	  rew_at-=end-smThis->smContinue;
+	  at=smThis->smContinue;
+	  end=smThis->smEnd;
+          if(at==end) 
+	    break;
+        }
+%%ELSE
+	for (;;) {
+%%ENDIF
+	  ch = *at++;
+%%INCLUDE(smDoDFA("ch","state"))
+	  if(state>=%%(smError)) break;
+	  if(smAccept[state]>0) {
+	    rew_state=state;
+	    rew_at=at;
+	  }
+%%IF(smExclude(?))
+	}
+	if(at>end) {
+	  int mod;
+	  
+	  if(state>=%%(smError)) state-=%%(smError)+1;
+	  smThis->smContinue=end;
+	  mod=smReadBuffer(smThis);
+	  if(mod<0) return mod;
+	  rew_at-=end-smThis->smContinue;
+	  at=smThis->smContinue;
+	  end=smThis->smEnd;
+          if(at==end) 
+	    break;
+        }
+	else
+	  break;
+%%ENDIF
+      }
+      if(rew_state==%%(smError)) {
+        if(rew_at>end) {
+  	  code=smEOTCode[smThis->smScanner];
+	  rew_at=end;
+        }
+        else
+	  code=smUnknownCode[smThis->smScanner];
+      }	
+      else
+	code=smAccept[rew_state]-1;	
+%%IF(smTrace(1))
+      ocode2=code;
+%%ENDIF
+%%IF(smLOOKAHEAD(?))
+      if(smLookaheadType[code])
+	smThis->smContinue=smLookahead(code,smThis->smText,rew_at);
+      else
+	smThis->smContinue=rew_at;
+%%ELSE
+      smThis->smContinue=rew_at;
+%%ENDIF
+      smThis->smLength=smThis->smContinue-smThis->smText;
+%%IF(smSCREEN(?))
+      code=smScreening(smThis->smScanner,code,smThis->smText,smThis->smLength);
+%%ENDIF
+%%IF(smTrace(1))
+      ocode1=code;
+%%ENDIF
+%%IF(NOT smSRCP(NONE))
+      smSourcePosition(smThis,smThis->smText,smThis->smContinue);
+%%ENDIF
+%%IF(smTrace(1))
+  traceScanner = smThis->smScanner;
+%%ENDIF
+%%IF(smACTION(?) OR smACTIONS(?))
+      smToken->%%(tmkTokenCode)=smTokenCode[code]-1;
+      code=%%(smkPrefix)ScAction(smThis,code,smToken);
+%%ELSE
+      code=smTokenCode[code]-1;
+%%ENDIF
+    } while(code<-1);
+%%IF(smTrace(1))
+    {
+      unsigned char rem;
+      
+      rem=smThis->smText[smThis->smLength];
+      smThis->smText[smThis->smLength]=0;	
+%%IF(smSCREEN(?))
+      if ((smTokenCode[ocode2]-1 != code) && (code>=0))
+	printf("AT: %3d,%3d (%8d+%6d) TOKEN: (%-15s) -> %-15s (%3d) IN %-8s",
+	       smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
+	       smDebugTokens[ocode2],smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
+      else
+	printf("AT: %3d,%3d (%8d+%6d) TOKEN: %-15s                      (%3d) IN %-8s",
+	       smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
+	       smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
+%%ELSE
+	printf("AT: %3d,%3d (%8d+%6d) TOKEN: %-15s (%3d) IN %-8s",
+	       smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
+	       smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
+%%ENDIF
+      if(smTokenCode[ocode2]==0) 
+	printf(" =>SKIP"); 
+      else if ((smTokenCode[ocode2]-1 != code) && (code>=0))
+	printf(" => (%3d)",smTokenCode[ocode2]-1);
+      else
+	printf(" => %3d",smTokenCode[ocode2]-1);
+      if(smTokenCode[ocode2]-1 != code) 
+	if(code<0) 
+	  printf(" -> SKIP"); 
+	else 
+	  printf(" -> %3d",code);
+      if(smThis->smBufferOverflow) 
+	printf(" IS (OVERFLOW %d)",smThis->smBufferOverflow); 
+      else 
+	printf(" IS");
+      printf(" \"%s\"\n",smThis->smText);
+      smThis->smText[smThis->smLength]=rem;
+    }
+%%ENDIF
+%%IF(smPOSTHOOK(?R))
+    smToken->%%(tmkTokenCode)=code;
+    code=%%(smkPrefix)ScPostHook(smThis,smToken);
+%%ENDIF
+  } while(code<0);
+  return smToken->%%(tmkTokenCode)=code;
+}
+%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
+%%PROCESS(, "/dev/null")
+%%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
+%%PROCESS(, "NUL")
+%%ELSE
+	Unknown current OS!!! 
+%%ENDIF
+%%IF(tmkForce(0))
+%%--
+%%-- Check generated files, discard them or replace the old files if
+%%-- new files are different
+%%--
+%%  ESET files ("%%(smkPrefix)Scan.h", "%%(smkPrefix)Scan.%%(targetLanguageExtension)", "%%(smkPrefix)ScSema.%%(targetLanguageExtension)")
+%%  LOOP(file, files)
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
+%%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
+%%	        IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
+%%	            EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
+%%	        ENDIF
+%%          ELSE
+%%	        IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
+%%	            EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%	        ENDIF
+%%          ENDIF
+%%      ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
+%%	    IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
+%%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%          ENDIF
+%%      ELSE
+	Illegal OS option
+%%      ENDIF
+%%  ENDLOOP(file)
+%%ENDIF
+
+

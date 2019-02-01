@@ -1,0 +1,23 @@
+########## exit4 ##########
+Text f|re exit
+%%EXIT("NonInteger", %%(HasNoValue))
+Text efter exit
+########## ../imp exit4.tst >exit4.tst.tmp; cat exit4.tst.tmp; rm exit4.tst.tmp ##########
+
+
+exit4.tst
+
+    2.  %%EXIT("NonInteger", %%(HasNoValue))
+=====>  1                    2  3
+
+  *1*   208 E : Value "NonInteger" of wrong type, must be INTEGER.
+  *2*   204 W : Variable "%%(HasNoValue)" not set.
+  *3*   204 W : Variable "HasNoValue" not set.
+
+
+1 error(s) detected.
+2 warning(s) issued.
+
+Text f|re exit
+%%EXIT(NonInteger, %%(HasNoValue))
+Text efter exit

@@ -1,0 +1,1151 @@
+-------------------------
+Imping addval.tst
+-------------------------
+-------------------------
+Diffing addval.tst
+-------------------------
+-------------------------
+Imping case.tst
+-------------------------
+-------------------------
+Diffing case.tst
+-------------------------
+-------------------------
+Imping comment.tst
+-------------------------
+-------------------------
+Diffing comment.tst
+-------------------------
+-------------------------
+Imping common.tst
+-------------------------
+-------------------------
+Diffing common.tst
+-------------------------
+-------------------------
+Imping emptystr.tst
+-------------------------
+-------------------------
+Diffing emptystr.tst
+-------------------------
+-------------------------
+Imping include.tst
+-------------------------
+-------------------------
+Diffing include.tst
+-------------------------
+-------------------------
+Imping keep.tst
+-------------------------
+-------------------------
+Diffing keep.tst
+-------------------------
+-------------------------
+Imping macro.tst
+-------------------------
+
+
+macro.tst
+
+  11.   %%(Fie)
+====>      1
+
+  *1*   204 W : Variable "Fie" not set.
+
+  31.   %%IF (NOT Optimize(Merge) OR Fie(Merge))
+====>                                1
+
+  *1*   204 W : Variable "Fie" not set.
+
+  39.   %%IF (Fie(Fie))
+====>         1
+
+  *1*   204 W : Variable "Fie" not set.
+
+  54.   %%ELSIF (Fie(Fum))
+====>            1
+
+  *1*   204 W : Variable "Fie" not set.
+
+  56.   %%ELSIF (Fie(Fie) OR Fie(Foo))
+====>            1           2
+
+  *1*   204 W : Variable "Fie" not set.
+  *2*   204 W : Variable "Fie" not set.
+
+
+No errors detected.
+6 warning(s) issued.
+
+-------------------------
+Diffing macro.tst
+-------------------------
+-------------------------
+Imping misc.tst
+-------------------------
+
+
+misc.tst
+
+   1.   %%PROCESS()
+====>   1
+
+  *1*   202 W : No file(s) given, statement ignored.
+
+   2.   %%PROCESS("")
+====>   1
+
+  *1*   202 W : No file(s) given, statement ignored.
+
+   3.   %%PROCESS(,"")
+====>   1
+
+  *1*   202 W : No file(s) given, statement ignored.
+
+   4.   %%PROCESS("","")
+====>   1
+
+  *1*   202 W : No file(s) given, statement ignored.
+
+   5.   %%PROCESS("FOO")
+====>             1
+
+  *1*   201 W : File "FOO" not found.
+
+   6.   %%INCLUDE()
+====>   1
+
+  *1*   202 W : No file(s) given, statement ignored.
+
+   7.   %%INCLUDE("")
+====>   1
+
+  *1*   202 W : No file(s) given, statement ignored.
+
+   8.   %%INCLUDE(FOO)
+====>             1
+
+  *1*   205 W : Label "FOO" not defined.
+
+   9.   %%INCLUDE("FOO")
+====>             1
+
+  *1*   201 W : File "FOO" not found.
+
+
+No errors detected.
+9 warning(s) issued.
+
+-------------------------
+Diffing misc.tst
+-------------------------
+-------------------------
+Imping pwspa.tst
+-------------------------
+
+
+pwsint.tst
+
+  20.1  %%END(foonotincl)
+====>         1
+
+  *1*   203 W : Label "foonotincl" differs from corresponding BEGIN label.
+
+  44.1  %%END(fooidata)
+====>         1
+
+  *1*   203 W : Label "fooidata" differs from corresponding BEGIN label.
+
+
+
+No errors detected.
+2 warning(s) issued.
+
+-------------------------
+Diffing pwspa.tst
+-------------------------
+-------------------------
+Imping val.tst
+-------------------------
+-------------------------
+Diffing val.tst
+-------------------------
+-------------------------
+Imping index.tst
+-------------------------
+
+
+index.tst
+
+   8.   %%(foo[4])
+====>          1
+
+  *1*   209 E : Index value "4" out of range.
+
+   9.   %%(foo[-1])
+====>          1
+
+  *1*   209 E : Index value "-1" out of range.
+
+  10.   %%(foo[ - 1 ])
+====>           1
+
+  *1*   209 E : Index value "-1" out of range.
+
+  15.   %%(foo[fie])
+====>          1
+
+  *1*   208 E : Value "2,hej" of wrong type, must be INTEGER.
+
+  16.   %%(foo[%%(fie)])
+====>          1
+
+  *1*   204 W : Variable "2,hej" not set.
+
+  18.   %%(foo[fie])
+====>          1
+
+  *1*   208 E : Value "hej,hopp" of wrong type, must be INTEGER.
+
+  19.   %%(foo[%%(fie)])
+====>          1
+
+  *1*   204 W : Variable "hej,hopp" not set.
+
+  20.   %%(foo[fum])
+====>          1
+
+  *1*   204 W : Variable "fum" not set.
+
+  21.   %%(1[5])
+====>        1
+
+  *1*   211 E : Only variables may have index.
+
+  22.   %%(%%(fie)[6])
+====>      1
+
+  *1*   204 W : Variable "hej,hopp" not set.
+
+
+6 error(s) detected.
+4 warning(s) issued.
+
+-------------------------
+Diffing index.tst
+-------------------------
+-------------------------
+Imping includePars.tst
+-------------------------
+
+
+includePars.tst
+
+   2.   %%(test)
+====>      1
+
+  *1*   204 W : Variable "test" not set.
+
+   3.   %%(test[0])
+====>      1
+
+  *1*   204 W : Variable "test" not set.
+
+   4.   %%(test[1])
+====>      1
+
+  *1*   204 W : Variable "test" not set.
+
+   5.   %%(test[2])
+====>      1    2
+
+  *1*   204 W : Variable "test" not set.
+  *2*   209 E : Index value "2" out of range.
+
+
+1 error(s) detected.
+4 warning(s) issued.
+
+-------------------------
+Diffing includePars.tst
+-------------------------
+-------------------------
+Imping loop.tst
+-------------------------
+
+
+loop.tst
+
+  33.   %%LOOP(i <= %%(foo[1]))
+====>               1
+
+  *1*   204 W : Variable "hej" not set.
+
+  34.   %%(foo[i])
+====>          1
+
+  *1*   204 W : Variable "i" not set.
+
+  63.   %%(LVAR)
+====>      1
+
+  *1*   204 W : Variable "LVAR" not set.
+
+  81.   %%LOOP (L, {%%(UNDEF), %%(A)})
+====>                  1
+
+  *1*   204 W : Variable "UNDEF" not set.
+
+  82.   %%LOOP (M <= A[2]*UNDEF)
+====>                     1
+
+  *1*   204 W : Variable "UNDEF" not set.
+
+  87.   %%LOOP (L1 <= L2+3)
+====>                 1
+
+  *1*   204 W : Variable "L2" not set.
+
+
+No errors detected.
+6 warning(s) issued.
+
+-------------------------
+Diffing loop.tst
+-------------------------
+-------------------------
+Imping message.tst
+-------------------------
+10
+B*C+D
+Detta skall skrivas ut
+Detta skall ocks} skrivas ut
+
+
+message.tst
+
+   3.   %%MESSAGE (B*C+D)
+====>              1 2 3
+
+  *1*   204 W : Variable "B" not set.
+  *2*   204 W : Variable "C" not set.
+  *3*   204 W : Variable "D" not set.
+
+
+No errors detected.
+3 warning(s) issued.
+
+-------------------------
+Diffing message.tst
+-------------------------
+-------------------------
+Imping expression.tst
+-------------------------
+
+
+expression.tst
+
+  17.   %%(5 * (fum+3))
+====>           1
+
+  *1*   204 W : Variable "fum" not set.
+
+
+No errors detected.
+1 warning(s) issued.
+
+-------------------------
+Diffing expression.tst
+-------------------------
+-------------------------
+Imping stringchars.tst
+-------------------------
+-------------------------
+Diffing stringchars.tst
+-------------------------
+-------------------------
+Imping emptyval.tst
+-------------------------
+-------------------------
+Diffing emptyval.tst
+-------------------------
+-------------------------
+Imping condition.tst
+-------------------------
+
+
+condition.tst
+
+ 132.   %%IF (5 = D[6])
+====>               1
+
+  *1*   209 E : Index value "6" out of range.
+
+ 135.   %%IF (D[6] # D[6])
+====>           1      2
+
+  *1*   209 E : Index value "6" out of range.
+  *2*   209 E : Index value "6" out of range.
+
+ 138.   %%IF ({1,2,3}[5] < 7)
+====>                 1
+
+  *1*   209 E : Index value "5" out of range.
+
+ 141.   %%IF (1*UNDEF*UNDEF[7] > {1,2,3}[0])
+====>           1     2
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+
+ 144.   %%IF (UNDEF <= 94+C[2]+2*D[2])
+====>         1
+
+  *1*   204 W : Variable "UNDEF" not set.
+
+ 147.   %%IF (UNDEF >= UNDEF)
+====>         1        2
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+
+ 152.   %%ELSIF (UNDEF > 3)
+====>            1
+
+  *1*   204 W : Variable "UNDEF" not set.
+
+ 163.   %%IF (VAR11 (1,%%(VAR15), 2, %%(VAR14), %%(VAR13)))
+====>                     1             2
+
+  *1*   204 W : Variable "VAR15" not set.
+  *2*   204 W : Variable "VAR14" not set.
+
+
+4 error(s) detected.
+8 warning(s) issued.
+
+-------------------------
+Diffing condition.tst
+-------------------------
+-------------------------
+Imping defined.tst
+-------------------------
+
+
+defined.tst
+
+  37.   %%IF (%%(B) (?))
+====>            1
+
+  *1*   204 W : Variable "B" not set.
+
+  38.   `%%IF (%%(B)(?))      * * * FACIT * * *
+====>             1
+
+  *1*   204 W : Variable "B" not set.
+
+
+No errors detected.
+2 warning(s) issued.
+
+-------------------------
+Diffing defined.tst
+-------------------------
+-------------------------
+Imping in.tst
+-------------------------
+
+
+in.tst
+
+  50.   %%IF ({%%((1+2+3)/6*UNDEF), "String", String} (%%(UNDEF), "String"))
+====>                       1                             2
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+
+  55.   %%IF ({%%((1+2+3)/6*UNDEF), "String", String} (%%(UNDEF), String))
+====>                       1                             2
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+
+  60.   %%IF ({%%((1+2+3)/6*UNDEF), "String", String} (%%(UNDEF), %%("String")
+        ))
+====>                       1                             2
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+
+  65.   %%IF (E (1,2))
+====>         1
+
+  *1*   204 W : Variable "E" not set.
+
+  69.   %%IF ({%%((1+2+3)/6*UNDEF), "String", String} (%%(UNDEF), %%(%%("Strin
+        g"))))
+====>                       1                             2          3
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+  *3*   204 W : Variable "String" not set.
+
+  72.   %%ESET A (1, 2, 6+NODEF1, NODEF2)
+====>                     1       2
+
+  *1*   204 W : Variable "NODEF1" not set.
+  *1*   204 W : Variable "NODEF1" not set.
+  *2*   204 W : Variable "NODEF2" not set.
+  *2*   204 W : Variable "NODEF2" not set.
+
+  73.   %%ESET B (1, 3*2+NODEF1, NODEF3)
+====>                    1       2
+
+  *1*   204 W : Variable "NODEF1" not set.
+  *1*   204 W : Variable "NODEF1" not set.
+  *2*   204 W : Variable "NODEF3" not set.
+  *2*   204 W : Variable "NODEF3" not set.
+
+
+No errors detected.
+18 warning(s) issued.
+
+-------------------------
+Diffing in.tst
+-------------------------
+-------------------------
+Imping insert.tst
+-------------------------
+
+
+insert.tst
+
+   7.   %%({1,2,3,4,5}[6])
+====>                  1
+
+  *1*   209 E : Index value "6" out of range.
+
+   8.   %%({1,2,3,4,5}[7])
+====>                  1
+
+  *1*   209 E : Index value "7" out of range.
+
+
+2 error(s) detected.
+No warnings issued.
+
+-------------------------
+Diffing insert.tst
+-------------------------
+-------------------------
+Imping nonempty.tst
+-------------------------
+
+
+nonempty.tst
+
+  33.   %%IF (C (*))
+====>         1
+
+  *1*   204 W : Variable "C" not set.
+
+  36.   %%IF ({1}[2] (*))
+====>             1
+
+  *1*   209 E : Index value "2" out of range.
+
+  39.   %%IF (%%(A) (*))
+====>         1
+
+  *1*   214 E : Empty string not allowed as variable name
+  *1*   204 W : Variable "<NULL>" not set.
+
+  42.   %%IF (%%(C) (*))
+====>         1  2
+
+  *1*   204 W : Variable "%%(C)" not set.
+  *2*   204 W : Variable "C" not set.
+
+
+2 error(s) detected.
+4 warning(s) issued.
+
+-------------------------
+Diffing nonempty.tst
+-------------------------
+-------------------------
+Imping region.tst
+-------------------------
+
+
+region.tst
+
+   2.   hejsan%%(R1)%%END (R1)
+====>            1
+
+  *1*   204 W : Variable "R1" not set.
+
+  11.   %%LOOP (L1, R2)
+====>               1
+
+  *1*   204 W : Variable "R2" not set.
+
+  12.   Parameter nr %%(I) = %%(R2[I])
+====>                           1
+
+  *1*   204 W : Variable "R2" not set.
+
+  24.   %%EINCLUDE (%%(G)PELLE    (2,VAR,15-10+h*9))
+====>                  1             2         3
+
+  *1*   204 W : Variable "G" not set.
+  *2*   204 W : Variable "VAR" not set.
+  *3*   204 W : Variable "h" not set.
+
+  25.   %%INCLUDE (PELLE    (2,VAR,%%(15-10+h*9)))
+====>              1                        2
+
+  *1*   205 W : Label "PELLE" not defined.
+  *2*   204 W : Variable "h" not set.
+
+  59.   %%INCLUDE (R21 ())
+====>   1
+
+  *1*   213 E : Incorrect number of parameters given in INCLUDE statement
+
+  61.   %%INCLUDE (R21 (1,2))
+====>   1
+
+  *1*   213 E : Incorrect number of parameters given in INCLUDE statement
+
+  67.   %%INCLUDE (R22 ())
+====>   1
+
+  *1*   213 E : Incorrect number of parameters given in INCLUDE statement
+
+  68.   %%INCLUDE (R22 (1))
+====>   1
+
+  *1*   213 E : Incorrect number of parameters given in INCLUDE statement
+
+  71.   %%INCLUDE (R22 (1,2,3,4))
+====>   1
+
+  *1*   213 E : Incorrect number of parameters given in INCLUDE statement
+
+  99.   %%(P1)                    V{rde p} P1 efter INCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P1" not set.
+
+ 100.   %%(P2)                    V{rde p} P2 efter INCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P2" not set.
+
+ 101.   %%(P3)                    V{rde p} P3 efter INCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P3" not set.
+
+ 102.   %%(P4)                    V{rde p} P4 efter INCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P4" not set.
+
+ 108.   %%(P1)                    V{rde p} P1 efter EINCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P1" not set.
+
+ 109.   %%(P2)                    V{rde p} P2 efter EINCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P2" not set.
+
+ 110.   %%(P3)                    V{rde p} P3 efter EINCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P3" not set.
+
+ 111.   %%(P4)                    V{rde p} P4 efter EINCLUDE-satsen
+====>      1
+
+  *1*   204 W : Variable "P4" not set.
+
+
+5 error(s) detected.
+16 warning(s) issued.
+
+-------------------------
+Diffing region.tst
+-------------------------
+-------------------------
+Imping set.tst
+-------------------------
+
+
+set.tst
+
+  23.   %%SET A (%%(V1) ,%%(V22), %%(V3))
+====>                                1
+
+  *1*   204 W : Variable "V3" not set.
+
+  36.   %%SET A (%%(V1), %%(V2), %%(V3))
+====>                       1
+
+  *1*   204 W : Variable "V2" not set.
+
+  37.   %%SET %%(VAR) (%%(V1), %%(V2), %%(V3))
+====>            1                2
+
+  *1*   204 W : Variable "VAR" not set.
+  *2*   204 W : Variable "V2" not set.
+
+  39.   %%SET %%(VAR2) (%%(V1), %%(6*87+9-VAR3), %%(V3))
+====>            1                        2
+
+  *1*   204 W : Variable "VAR2" not set.
+  *2*   204 W : Variable "VAR3" not set.
+
+  62.   %%(SUBLIST[4])
+====>              1
+
+  *1*   209 E : Index value "4" out of range.
+
+  64.   %%(SUBLIST[5])
+====>              1
+
+  *1*   209 E : Index value "5" out of range.
+
+  77.   %%(SUBLIST[4])
+====>              1
+
+  *1*   209 E : Index value "4" out of range.
+
+  79.   %%(SUBLIST[5])
+====>              1
+
+  *1*   209 E : Index value "5" out of range.
+
+
+4 error(s) detected.
+6 warning(s) issued.
+
+-------------------------
+Diffing set.tst
+-------------------------
+-------------------------
+Imping text.tst
+-------------------------
+-------------------------
+Diffing text.tst
+-------------------------
+-------------------------
+Imping eset.tst
+-------------------------
+
+
+eset.tst
+
+  20.   %%ESET A (V1 ,V22, V3)
+====>                      1
+
+  *1*   204 W : Variable "V3" not set.
+
+  33.   %%ESET A (V1, V2, V3)
+====>                 1
+
+  *1*   204 W : Variable "V2" not set.
+
+  34.   %%ESET %%(VAR) (V1, V2, V3)
+====>             1         2
+
+  *1*   204 W : Variable "VAR" not set.
+  *2*   204 W : Variable "V2" not set.
+
+  36.   %%ESET %%(VAR2) (V1, 6*87+9-VAR3, V3)
+====>             1                 2
+
+  *1*   204 W : Variable "VAR2" not set.
+  *2*   204 W : Variable "VAR3" not set.
+
+  59.   %%(SUBLIST[4])
+====>              1
+
+  *1*   209 E : Index value "4" out of range.
+
+  61.   %%(SUBLIST[5])
+====>              1
+
+  *1*   209 E : Index value "5" out of range.
+
+  74.   %%(SUBLIST[4])
+====>              1
+
+  *1*   209 E : Index value "4" out of range.
+
+  76.   %%(SUBLIST[5])
+====>              1
+
+  *1*   209 E : Index value "5" out of range.
+
+ 109.   %%(%%(%%(VAR64)))
+====>      1
+
+  *1*   204 W : Variable "BottomLevel" not set.
+
+ 111.   %%(%%(%%(%%(VAR64))))
+====>      1  2
+
+  *1*   204 W : Variable "%%(BottomLevel)" not set.
+  *2*   204 W : Variable "BottomLevel" not set.
+
+
+4 error(s) detected.
+9 warning(s) issued.
+
+-------------------------
+Diffing eset.tst
+-------------------------
+-------------------------
+Imping exit1.tst
+-------------------------
+Nu slutar jag
+  Result from evaluation of %%EXIT was 1
+-------------------------
+Diffing exit1.tst
+-------------------------
+-------------------------
+Imping exit2.tst
+-------------------------
+%%(HasNoValue)
+
+
+exit2.tst
+
+   2.   %%EXIT(1, %%(HasNoValue))
+====>             1  2
+
+  *1*   204 W : Variable "%%(HasNoValue)" not set.
+  *2*   204 W : Variable "HasNoValue" not set.
+
+
+No errors detected.
+2 warning(s) issued.
+
+  Result from evaluation of %%EXIT was 1
+-------------------------
+Diffing exit2.tst
+-------------------------
+-------------------------
+Imping exit3.tst
+-------------------------
+
+
+exit3.tst
+
+   2.   %%EXIT("NonInteger", "Nu slutar jag")
+====>   1
+
+  *1*   208 E : Value "NonInteger" of wrong type, must be INTEGER.
+
+
+1 error(s) detected.
+No warnings issued.
+
+-------------------------
+Diffing exit3.tst
+-------------------------
+-------------------------
+Imping exit4.tst
+-------------------------
+
+
+exit4.tst
+
+   2.   %%EXIT("NonInteger", %%(HasNoValue))
+====>   1                    2  3
+
+  *1*   208 E : Value "NonInteger" of wrong type, must be INTEGER.
+  *2*   204 W : Variable "%%(HasNoValue)" not set.
+  *3*   204 W : Variable "HasNoValue" not set.
+
+
+1 error(s) detected.
+2 warning(s) issued.
+
+-------------------------
+Diffing exit4.tst
+-------------------------
+-------------------------
+Imping crossref.tst
+-------------------------
+Disable logging
+Fixes bug in register allocation
+Fixes bug in WSII
+-------------------------
+Diffing crossref.tst
+-------------------------
+-------------------------
+Imping system.tst
+-------------------------
+
+
+system.tst
+
+  18.   %%(resVar2) -- Odefinierad
+====>      1
+
+  *1*   204 W : Variable "resVar2" not set.
+
+  34.   %%IF (IMP$SYSTEM("ls /dev/nul*", resVar1) AND VAR2 = 1)
+====>                                                 1
+
+  *1*   204 W : Variable "VAR2" not set.
+
+  40.   %%IF(IMP$SYSTEM(%%(cmd), resVar1)) 
+====>                      1
+
+  *1*   204 W : Variable "cmd" not set.
+
+
+No errors detected.
+3 warning(s) issued.
+
+-------------------------
+Diffing system.tst
+-------------------------
+-------------------------
+Imping bugs.tst
+-------------------------
+
+
+bugs.tst
+
+  39.   %%    LOOP(i <= VALUE_%%(value)_VALUE[0])
+====>                   1
+
+  *1*   204 W : Variable "VALUE_12_VALUE" not set.
+
+  40.   %%      IF (VALUE_%%(value)_PROP[i]("LITERAL"))
+====>               1                    2
+
+  *1*   204 W : Variable "VALUE_12_PROP" not set.
+  *2*   204 W : Variable "i" not set.
+
+
+No errors detected.
+3 warning(s) issued.
+
+-------------------------
+Diffing bugs.tst
+-------------------------
+-------------------------
+Imping DOL.tst
+-------------------------
+-------------------------
+Diffing DOL.tst
+-------------------------
+-------------------------
+Diffing dbsSigSurv.ssurv
+-------------------------
+-------------------------
+Diffing ArrayAttributeType.cc
+-------------------------
+-------------------------
+Diffing ArrayAttributeType.hh
+-------------------------
+-------------------------
+Diffing Attribute.cc
+-------------------------
+-------------------------
+Diffing Attribute.hh
+-------------------------
+-------------------------
+Diffing AttributeProperty.cc
+-------------------------
+-------------------------
+Diffing AttributeProperty.hh
+-------------------------
+-------------------------
+Diffing AttributeType.cc
+-------------------------
+-------------------------
+Diffing AttributeType.hh
+-------------------------
+-------------------------
+Diffing Boolean.cc
+-------------------------
+-------------------------
+Diffing Boolean.hh
+-------------------------
+-------------------------
+Diffing BooleanValue.cc
+-------------------------
+-------------------------
+Diffing BooleanValue.hh
+-------------------------
+-------------------------
+Diffing Class.cc
+-------------------------
+-------------------------
+Diffing Class.hh
+-------------------------
+-------------------------
+Diffing ClassAttributes.cc
+-------------------------
+-------------------------
+Diffing ClassAttributes.hh
+-------------------------
+-------------------------
+Diffing DOL.cc
+-------------------------
+-------------------------
+Diffing DOL.hh
+-------------------------
+-------------------------
+Diffing DbEntity.cc
+-------------------------
+-------------------------
+Diffing DbEntity.hh
+-------------------------
+-------------------------
+Diffing DbObject.cc
+-------------------------
+-------------------------
+Diffing DbObject.hh
+-------------------------
+-------------------------
+Diffing DynString.cc
+-------------------------
+-------------------------
+Diffing DynString.hh
+-------------------------
+-------------------------
+Diffing DynamicString.cc
+-------------------------
+-------------------------
+Diffing DynamicString.hh
+-------------------------
+-------------------------
+Diffing DynamicStructure.cc
+-------------------------
+-------------------------
+Diffing DynamicStructure.hh
+-------------------------
+-------------------------
+Diffing Element.cc
+-------------------------
+-------------------------
+Diffing Element.hh
+-------------------------
+-------------------------
+Diffing Float.cc
+-------------------------
+-------------------------
+Diffing Float.hh
+-------------------------
+-------------------------
+Diffing FloatValue.cc
+-------------------------
+-------------------------
+Diffing FloatValue.hh
+-------------------------
+-------------------------
+Diffing Integer.cc
+-------------------------
+-------------------------
+Diffing Integer.hh
+-------------------------
+-------------------------
+Diffing IntegerValue.cc
+-------------------------
+-------------------------
+Diffing IntegerValue.hh
+-------------------------
+-------------------------
+Diffing Name.cc
+-------------------------
+-------------------------
+Diffing Name.hh
+-------------------------
+-------------------------
+Diffing NilValue.cc
+-------------------------
+-------------------------
+Diffing NilValue.hh
+-------------------------
+-------------------------
+Diffing PersistentElement.cc
+-------------------------
+-------------------------
+Diffing PersistentElement.hh
+-------------------------
+-------------------------
+Diffing PersistentStructure.cc
+-------------------------
+-------------------------
+Diffing PersistentStructure.hh
+-------------------------
+-------------------------
+Diffing PredefinedType.cc
+-------------------------
+-------------------------
+Diffing PredefinedType.hh
+-------------------------
+-------------------------
+Diffing PrimitiveValue.cc
+-------------------------
+-------------------------
+Diffing PrimitiveValue.hh
+-------------------------
+-------------------------
+Diffing Relation.cc
+-------------------------
+-------------------------
+Diffing Relation.hh
+-------------------------
+-------------------------
+Diffing StringValue.cc
+-------------------------
+-------------------------
+Diffing StringValue.hh
+-------------------------
+-------------------------
+Diffing Structure.cc
+-------------------------
+-------------------------
+Diffing Structure.hh
+-------------------------
+-------------------------
+Diffing StructureValue.cc
+-------------------------
+-------------------------
+Diffing StructureValue.hh
+-------------------------
+-------------------------
+Diffing UniqueName.cc
+-------------------------
+-------------------------
+Diffing UniqueName.hh
+-------------------------
+-------------------------
+Diffing Value.cc
+-------------------------
+-------------------------
+Diffing Value.hh
+-------------------------
+-------------------------
+Diffing VolatileElement.cc
+-------------------------
+-------------------------
+Diffing VolatileElement.hh
+-------------------------
+-------------------------
+Diffing keySpecifikation.cc
+-------------------------
+-------------------------
+Diffing keySpecifikation.hh
+-------------------------

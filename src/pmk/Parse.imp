@@ -1,0 +1,2266 @@
+%%COMMENTS
+
+%%ENDCOMMENT
+
+%%IF(NOT currentOs(?))
+%%SET currentOs(%%(pmkOs))
+%%ENDIF
+
+%%IF(NOT pmVersion(?))
+%%MESSAGE("PM Error -- Incompatible versions of PMK and template file.")
+%%ELSE
+%%IF(NOT pmVersion("2.1"))
+%%MESSAGE("PM Error -- Incompatible versions of PMK and template file.")
+%%ELSE
+%%IF(pmkTarget("c++"))
+%%SET targetLanguageExtension("cc")
+%%ENDIF
+%%IF(NOT targetLanguageExtension(?))
+%%SET targetLanguageExtension("c")
+%%ENDIF
+%%IF (tmkGrmAttrDecl(?V))
+%%BEGIN(pmIData)
+typedef struct %%(parserPrefix)Grammar {
+%%LOOP (i, tmkGrmAttrDecl)
+   %%(i);
+%%ENDLOOP (i)
+} %%(parserPrefix)Grammar;
+
+%%END(pmIData)
+%%ENDIF
+%%IF(tmkForce(0))
+%%  PROCESS(, "%%(parserPrefix)Parse.h.tmp")
+%%ELSE
+%%  PROCESS(, "%%(parserPrefix)Parse.h")
+%%ENDIF
+#ifndef _%%(parserPrefix)Parse_h_
+#define _%%(parserPrefix)Parse_h_
+/*----------------------------------------------------------------------*\
+
+  %%(parserPrefix)Parse.h
+
+  Parser interface
+
+\*----------------------------------------------------------------------*/
+
+
+%%IF (NOT doNotGenerateTokenH(?))
+/* Token and Srcp definition */
+#include "%%(tmkPrefix)Common.h"
+%%ENDIF
+
+/* External functions */
+%%IF({"ansi-c", "c++"} (%%(pmkTarget)))
+extern void %%(parserPrefix)Parse(void); /* Parser */
+%%ELSE
+extern void %%(parserPrefix)Parse(); /* Parser */
+%%ENDIF
+
+%%IF (pmkExport (?R))
+/* Export */
+%%INCLUDE (pmkExport)
+%%ENDIF
+
+#endif
+%%IF(tmkForce(0))
+%%  PROCESS(, "%%(parserPrefix)Parse.%%(targetLanguageExtension).tmp")
+%%ELSE
+%%PROCESS(, "%%(parserPrefix)Parse.%%(targetLanguageExtension)")
+%%ENDIF
+/*----------------------------------------------------------------------*\
+
+	%%(parserPrefix)Parse.%%(targetLanguageExtension)
+
+	ParserMaker generated parser
+
+\*----------------------------------------------------------------------*/
+
+%%IF (pmkImport (?R))
+/* `%`%IMPORT */
+%%INCLUDE (pmkImport)
+/* END `%`%IMPORT */
+%%ENDIF
+
+%%IF({"ansi-c", "c++"} (%%(pmkTarget)))
+#include <string.h>
+%%ELSE
+#include <strings.h>
+#include <memory.h>
+%%ENDIF
+#include <setjmp.h>
+
+#include "%%(parserPrefix)Parse.h"
+
+#define PMTRUE 1
+#define PMFALSE 0
+typedef unsigned char PmBoolean; /* For logical values */
+
+/* System dependencies */
+%%INCLUDE(systemDependencies)
+
+%%IF (NOT doNotGenerateTokenH(?))
+/* Token definition */
+#include "%%(tmkPrefix)Common.h"
+%%ENDIF
+
+%%IF (pmIData(?R))
+/* `%`%ATTRIBUTES - The semantic attributes for grammar symbols */
+%%INCLUDE(pmIData)
+/* END `%`%ATTRIBUTES */
+%%ENDIF
+
+/* Parser constants *\
+\* ---------------- */
+#define ERROR_ACT 0			/* Action - Error */
+#define SHIFT_ACT 1			/* Action - Shift */
+#define SHIFTRED_ACT 2		/* Action - Shift_Reduce */
+#define REDUCE_ACT 3		/* Action - Reduce */
+#define ACCEPT_ACT 4		/* Action - Accept */
+
+#define ERR_SYM 0		/* Error token */
+#define ENDMARK 1		/* End of file token code */
+
+/* Recovery method *\
+\* --------------- */
+#define NONE_REC 0		/* No recovery found */
+#define IN_REC 1		/* Insertion of symbol(s) */
+#define DEL_REC 2		/* Deletion of symbol(s) */
+#define REP_REC 3		/* Replacement of symbol(s) */
+#define BAK_REC 4		/* Stack backup */
+#define HALT_REC 5		/* System halted */
+
+/* Error class *\
+\* ----------- */
+#define LEX_ERR 1		/* Non valid scanner symbol found */
+#define SYN_ERR 2		/* Normal syntax error */
+#define OFLW_ERR 3		/* Parse stack overflow */
+#define TAB_ERR 4		/* Parse table error */
+	   
+/* Error severity *\
+\* -------------- */
+#define WAR_SEV 1		/* Warnings */
+#define ERR_SEV 2		/* Repairable error */
+#define FAT_SEV 3		/* Fatal error */
+#define SYS_SEV 4		/* System & limit error */
+
+/* Parser constants *\
+\* ---------------- */
+#define SccMax %%(pmSccMax)		/* Max scanner code value */
+#define TermMin 1		/* Minimum terminal number */
+#define Terms %%(pmTerms)		/* Number of terminals in grammar */
+#define StateMin 1		/* Minimum state number */
+#define States %%(pmStates)		/* Number of states */
+#define ProdMin 1		/* Minimum production number */
+#define Prods %%(pmProds)		/* Number of productions */
+#define PmStkMax %%(pmStackMax)		/* Parse stack size */
+#define	PmLaMax %%(pmLookAheadMax)		/* Look-ahead length */
+#define	PmCost %%(pmCost)		/* Shifting cost */
+
+/* Types *\
+\* ----- */
+typedef unsigned char TermSet[(Terms + TermMin + 7) >> 3]; /* Terminal set */
+typedef UByte%%(pmStateTyp) ParseStack[PmStkMax]; /* Parse stack */
+
+/* Terminal table *\
+\* -------------- */
+%%IF(pmActPack(GCS) OR pmActPack(LES))
+typedef unsigned char ErrTab[(%%(pmErrRows) * %%(pmErrCols) + 7) / 8]; /* Error table */
+%%ENDIF
+
+%%IF(pmRec(Multiple))
+typedef struct {
+    UByte%%(pmTermTyp) tsym;		/* Normal continuation */
+    UByte%%(pmTermTyp) ssym;		/* Separator continuation */
+} ContRec;
+%%ENDIF
+
+typedef struct {
+%%IF(pmRec(Multiple))
+    ContRec cont[%%(pmStates)];		/* Continuation function */
+%%ENDIF
+    TermSet sepa;		/* Separator symbols */
+    TermSet fiduc;		/* Fiducial symbols */
+    TermSet skip;		/* Symbols to skip */
+} RecTab;
+
+typedef struct  {
+%%IF(pmActPack(RDS))
+%%IF(NOT pmActRDSvectorLen(0))
+    UByte%%(pmActTyp) act[%%(pmActRDSvectorLen)];		/* Action table */
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmActRows(0) OR pmActCols(0)))
+    UByte%%(pmActTyp) act[%%(pmActRows)][%%(pmActCols)];		/* Action table */
+%%ENDIF
+%%ENDIF
+%%IF(pmActPack(RDS) AND NOT (pmActPack(GCS) OR pmActPack(LES)))
+    UByte%%(pmRDScheckTyp) actCheck[%%(pmActRDScheckLen)];	/* Row Displacement Check Vector*/
+%%ENDIF
+%%IF(pmActPack(LES) OR pmActPack(GCS) OR pmActPack(RDS))
+    UByte%%(pmActRowMapTyp) actRix[%%(pmStates)];		/* Action row mapping */
+%%ENDIF
+%%IF(pmActPack(LES) OR pmActPack(GCS))
+    UByte%%(pmActColMapTyp) actCix[%%(pmTerms)];		/* Action column mapping */
+%%IF(pmActPack(LES))
+    UByte%%(pmActCondTyp) actRc[%%(pmStates)];		/* Action row conditions */
+    UByte%%(pmActCondTyp) actCc[%%(pmTerms)];		/* Action column conditions */
+%%ENDIF
+    ErrTab err;			/* Error table */
+%%IF(pmActPack(Error))
+    UByte%%(pmErrRowMapTyp) errRix[%%(pmStates)];		/* Error row mapping */
+    UByte%%(pmErrColMapTyp) errCix[%%(pmTerms)];		/* Error column mapping */
+%%ENDIF
+%%ENDIF
+    RecTab recover;		/* Error recovery info */
+} TermTab;
+
+static TermTab act = {
+%%IF(pmActPack(RDS))
+%%IF(NOT pmActRDSvectorLen(0))
+%%INCLUDE(pmActTab),
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmActRows(0) OR pmActCols(0)))
+%%INCLUDE(pmActTab),
+%%ENDIF
+%%ENDIF
+%%IF(pmActPack(RDS) AND NOT (pmActPack(GCS) OR pmActPack(LES)))
+%%INCLUDE(pmRDScheck),
+%%ENDIF
+%%IF(pmActPack(LES) OR pmActPack(GCS) OR pmActPack(RDS))
+%%INCLUDE(pmActRowMap),
+%%ENDIF
+%%IF(pmActPack(LES) OR pmActPack(GCS))
+%%INCLUDE(pmActColMap),
+%%IF(pmActPack(LES))
+%%INCLUDE(pmActRowCond),
+%%INCLUDE(pmActColCond),
+%%ENDIF
+%%INCLUDE(pmErrVect),
+%%IF(pmActPack(Error))
+%%INCLUDE(pmErrRowMap),
+%%INCLUDE(pmErrColMap),
+%%ENDIF
+%%ENDIF
+{
+%%IF(pmRec(Multiple))
+%%INCLUDE(pmContTab),
+%%ENDIF
+%%INCLUDE(pmSeparators),
+%%INCLUDE(pmFiducials),
+%%INCLUDE(pmSkips)
+}
+};
+
+
+/* Non terminal table *\
+\* ------------------ */
+typedef  struct {
+%%IF(pmGtoPack(RDS))
+%%IF(NOT pmGtoRDSvectorLen(0))
+    UByte%%(pmGtoTyp) gto[%%(pmGtoRDSvectorLen)];		/* Goto table */
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmGtoRows(0) OR pmGtoCols(0)))
+    UByte%%(pmGtoTyp) gto[%%(pmGtoRows)][%%(pmGtoCols)];		/* Goto table */
+%%ENDIF
+%%ENDIF
+%%IF(pmGtoPack(LES) OR pmGtoPack(GCS) OR pmGtoPack(RDS))
+    UByte%%(pmGtoRowMapTyp) gtoRix[%%(pmStates)];		/* Goto row mapping */
+%%ENDIF
+%%IF(pmGtoPack(LES) OR pmGtoPack(GCS))
+    UByte%%(pmGtoColMapTyp) gtoCix[%%(pmNonTerms)];		/* Goto column mapping */
+%%IF(pmGtoPack(LES))
+    UByte%%(pmGtoCondTyp) gtoRc[%%(pmStates)];		/* Goto row conditions */
+    UByte%%(pmGtoCondTyp) gtoCc[%%(pmNonTerms)];		/* Goto column conditions */
+%%ENDIF
+%%ENDIF
+    UByte%%(pmLhsTyp) lhs[%%(pmProds)];		/* Left hand side symbols */
+    UByte%%(pmRhszTyp) rhsz[%%(pmProds)];		/* Size of the RHS */
+} NonTermTab;
+
+static NonTermTab gto = {
+%%IF(pmGtoPack(RDS))
+%%IF(NOT pmGtoRDSvectorLen(0))
+%%INCLUDE(pmGtoTab),
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmGtoRows(0) OR pmGtoCols(0)))
+%%INCLUDE(pmGtoTab),
+%%ENDIF
+%%ENDIF
+%%IF(pmGtoPack(LES) OR pmGtoPack(GCS) OR pmGtoPack(RDS))
+%%INCLUDE(pmGtoRowMap),
+%%ENDIF
+%%IF(pmGtoPack(LES) OR pmGtoPack(GCS))
+%%INCLUDE(pmGtoColMap),
+%%IF(pmGtoPack(LES))
+%%INCLUDE(pmGtoRowCond),
+%%INCLUDE(pmGtoColCond),
+%%ENDIF
+%%ENDIF
+%%INCLUDE(pmLhs),
+%%INCLUDE(pmRhsz)
+};
+
+
+/* Vocabulary *\
+\* ---------- */
+typedef struct {
+    UByte%%(pmSccTyp) scc;			/* Scanner code value */
+    UByte%%(pmICostTyp) iCost;		/* Insertion cost */
+    UByte%%(pmDCostTyp) dCost;		/* Deletion cost */
+    char *name;			/* Name string */
+    char *psym;			/* Print name */
+} VocTab[%%(pmTerms)];
+			     
+static VocTab voc = %%INCLUDE(pmVocTab);
+
+
+/* Variables used in the parsing process *\
+\* ------------------------------------- */
+short %%(parserPrefix)StkP;			/* Stack pointer */
+%%(tmkTokenName) %%(parserPrefix)SySt[PmStkMax];	/* Symbol stack */
+%%IF (tmkGrmAttrDecl(?V))
+%%(parserPrefix)Grammar %%(parserPrefix)SeSt[PmStkMax];	/* Semantic stack */ 
+%%ENDIF
+static UByte%%(pmStateTyp) currstat;		/* Current state number */
+static UByte%%(pmArgTyp) arg;		/* Argument */
+static UByte1 action;		/* Action type */
+static PmBoolean endparse;	/* Termination flag */
+static ParseStack parsStk;	/* Parse stack */
+static UByte%%(pmTermTyp) scIndex[%%(pmSccMax) + 1]; /* Converts scanner code to internal value */
+static %%(tmkTokenName) tokenBuf;	/* Scanner token buffer */
+static %%(tmkTokenName) *token = &tokenBuf;	/* Pointer to it for readsymb */
+
+
+%%IF(pmRec(Single))
+/* Error recovery look-ahead buffer *\
+\* -------------------------------- */
+static %%(tmkTokenName) la_buff[PmLaMax + 1]; /* Buffer */
+static int la_ptr;		/* Current pointer */
+static int la_end;		/* Last item */
+%%ENDIF
+
+static jmp_buf pmJmpB;		/* Buffer for long jump */
+
+/* Interface routines *\
+\* ------------------ */
+%%IF (NOT pmIScan(?R))
+#include "%%(tmkPrefix)Scan.h"
+%%BEGIN (pmIScan)
+%%(tmkPrefix)Scan(lexContext, token);%%END (pmIScan)
+%%ENDIF
+
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+extern void %%(parserPrefix)RPoi(	/* Error recovery - restart point  */
+%%(tmkTokenName) *sym			/* IN the restart symbol */
+);
+extern void %%(parserPrefix)ISym(	/* Error recovery - insert symbol  */
+%%IF (tmkCodeDecl(?V))
+%%(tmkCodeDecl),			/* IN terminal code number */
+%%ELSE
+int %%(tmkTokenCode),			/* IN terminal code number */
+%%ENDIF
+char *sstr,			/* IN terminal string */
+char *pstr,			/* IN the terminals print symbol */
+%%(tmkTokenName) *sym			/* OUT the created scanner symbol */
+);
+extern void %%(parserPrefix)DSym(	/* Error recovery - delete symbol  */
+%%(tmkTokenName) *sym,			/* IN terminal code number */
+char *sstr,			/* IN terminal string */
+char *pstr			/* IN terminals print string */
+);
+extern void %%(parserPrefix)Mess(	/* Error recovery - error message  */
+%%(tmkTokenName) *sym,			/* IN error token */
+int method,			/* IN recovery method */
+int code,			/* IN error classification */
+int severity			/* IN error severity code */
+);
+%%ELSE
+extern void %%(parserPrefix)RPoi();	/* Error recovery - restart point  */
+extern void %%(parserPrefix)ISym();	/* Error recovery - insert symbol  */
+extern void %%(parserPrefix)DSym();	/* Error recovery - delete symbol  */
+extern void %%(parserPrefix)Mess();	/* Error recovery - error message  */
+%%ENDIF
+
+/* External functions */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+extern void %%(parserPrefix)PaSema(
+int rule			/* IN production number */
+);
+%%ELSE
+void %%(parserPrefix)PaSema();
+%%ENDIF
+
+/*----------------------------------------------------------------------------
+ * paAbort - Abort the parsing process
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void paAbort(
+%%(tmkTokenName) *token,		/* IN current token */
+short eClass,			/* IN error classification */
+short severity			/* IN error severity code */
+)
+%%ELSE
+static void paAbort(token, eClass, severity) 
+%%(tmkTokenName) *token;		/* IN current token */
+short eClass;			/* IN error classification */
+short severity;			/* IN error severity code */
+%%ENDIF
+{
+    %%(parserPrefix)Mess(token, HALT_REC, eClass, severity);
+    longjmp(pmJmpB, PMTRUE);	/* Jump out to top level */
+}/*paAbort()*/
+
+
+/*----------------------------------------------------------------------------
+ * SetIns - Add one element to a set
+ *----------------------------------------------------------------------------
+ */
+#define SetIns(set, n) ((set)[(n) >> 3] |= (0x80 >> ((n) & 0x7)))
+
+
+/*----------------------------------------------------------------------------
+ * SetClear - Clear a ParserMaker set
+ *----------------------------------------------------------------------------
+ */
+%%IF(pmkTarget("ansi-c") OR pmkTarget("c++"))
+#define SetClear(set, length) memset((void *)set, 0, (size_t)((length) + 7) >> 3)
+%%ELSE
+#define SetClear(set, length) memset((void *)set, 0, ((length) + 7) >> 3)
+%%ENDIF
+
+/*----------------------------------------------------------------------------
+ * SetMem - Check member inclusion
+ *----------------------------------------------------------------------------
+ */
+#define SetMem(set, n) ((set)[(n) >> 3] & (0x80 >> ((n) & 0x7)))
+
+
+/*----------------------------------------------------------------------------
+ * paInit - Initialize the parsing process
+ *----------------------------------------------------------------------------
+ */
+%%IF(pmkTarget("ansi-c") OR pmkTarget("c++"))
+static void paInit(void)
+%%ELSE
+static void paInit()
+%%ENDIF
+{
+    short i;
+
+%%IF(pmRec(Single))
+    la_ptr = 0;
+    la_end = 0;
+%%ENDIF
+    %%(parserPrefix)StkP = 0;
+    currstat = 1;
+    endparse = PMFALSE;
+    parsStk[0] = 1;
+
+    /* Scanner interface */
+    for (i = 0; i <= SccMax; i++) scIndex[i] = ERR_SYM;
+    for (i = TermMin; i <= Terms; i++) scIndex[voc[i - TermMin].scc] = (UByte%%(pmTermTyp))i;
+}/*paInit()*/
+
+
+/*----------------------------------------------------------------------------
+ * pushStat[Tok] - Push the current state on the stack and possibly push current
+ *	      token on the symbol stack.
+ *----------------------------------------------------------------------------
+ */
+%%IF(pmInline(?) AND pmInline(OFF))
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void pushStatTok(void)		/* IN push status and token on stack */
+)
+%%ELSE
+static void pushStatTok()		/* IN push status and token on stack */
+%%ENDIF
+{
+    if (++%%(parserPrefix)StkP < PmStkMax) {
+	parsStk[%%(parserPrefix)StkP] = currstat;
+%%IF(pmkMOVMEM(?))
+	movmem(token, &%%(parserPrefix)SySt[%%(parserPrefix)StkP], sizeof(%%(tmkTokenName)));
+%%ELSE
+	%%(parserPrefix)SySt[%%(parserPrefix)StkP] = *token;
+%%ENDIF
+    } else {
+	token->%%(tmkTokenCode) = voc[token->%%(tmkTokenCode)-TermMin].scc;
+	paAbort(token, OFLW_ERR, SYS_SEV);
+    }/*if*/
+}/*pushStatTok()*/
+
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void pushStat(void)		/* IN push status on stack */
+)
+%%ELSE
+static void pushStat()			/* IN push status on stack */
+%%ENDIF
+{
+    if (++%%(parserPrefix)StkP < PmStkMax) {
+	parsStk[%%(parserPrefix)StkP] = currstat;
+    } else {
+	token->%%(tmkTokenCode) = voc[token->%%(tmkTokenCode)-TermMin].scc;
+	paAbort(token, OFLW_ERR, SYS_SEV);
+    }/*if*/
+}/*pushStat()*/
+%%ELSE
+%%IF(pmkMOVMEM(?))
+#define MOVETOKEN movmem(token, &%%(parserPrefix)SySt[%%(parserPrefix)StkP], sizeof(%%(tmkTokenName)))
+%%ELSE
+#define MOVETOKEN %%(parserPrefix)SySt[%%(parserPrefix)StkP] = *token
+%%ENDIF
+#define pushStatTok()\
+{\
+    if (++%%(parserPrefix)StkP < PmStkMax) {\
+	parsStk[%%(parserPrefix)StkP] = currstat;\
+	MOVETOKEN;\
+    } else {\
+	token->%%(tmkTokenCode) = voc[token->%%(tmkTokenCode)-TermMin].scc;\
+	paAbort(token, OFLW_ERR, SYS_SEV);\
+    }\
+} 
+
+#define pushStat()\
+{\
+    if (++%%(parserPrefix)StkP < PmStkMax) {\
+	parsStk[%%(parserPrefix)StkP] = currstat;\
+    } else {\
+	token->%%(tmkTokenCode) = voc[token->%%(tmkTokenCode)-TermMin].scc;\
+	paAbort(token, OFLW_ERR, SYS_SEV);\
+    }\
+} 
+%%ENDIF
+
+%%COMMENT
+	readSymb will always require the token to be read to be called
+	'token' and must be a pointer to a %%(tmkTokenName) variable.
+
+	This is to avoid trouble with the possibly user defined %%(IScan)
+	section which would otherwise be impossible to define.
+
+%%ENDCOMMENT
+%%IF(pmInline(?) AND pmInline(OFF))
+%%BEGIN (readSymb)
+readSymb(%%(token));
+%%END (readSymb)
+/*----------------------------------------------------------------------------
+ * readSymb - Read a token symbol from the source file
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void readSymb(
+%%(tmkTokenName) *token			/* OUT scanned token */
+)
+%%ELSE
+static void readSymb(sym)
+%%(tmkTokenName) *token;		/* OUT scanned token */
+%%ENDIF
+{
+%%IF(pmRec(Single))
+    if (la_ptr < la_end) {
+	/* Read symbol from the look-ahead set */
+	la_ptr++;
+%%IF(pmkMOVMEM(?))
+	movmem(&la_buff[la_ptr], token, sizeof(%%(tmkTokenName)));
+%%ELSE
+	*token = la_buff[la_ptr];
+%%ENDIF
+    } else {
+%%ENDIF
+	do {
+	    %%INCLUDE(pmIScan)
+	    if ((token->%%(tmkTokenCode) > SccMax) || (token->%%(tmkTokenCode) < 0)) {
+		token->%%(tmkTokenCode) = ERR_SYM;
+	    } else token->%%(tmkTokenCode) = scIndex[token->%%(tmkTokenCode)];
+	    if (token->%%(tmkTokenCode) == ERR_SYM) {
+		%%(parserPrefix)Mess(sym, DEL_REC, LEX_ERR, FAT_SEV);
+	    }/*if*/
+	} while (token->%%(tmkTokenCode) == ERR_SYM);
+%%IF(pmRec(Single))
+   }/*if*/
+%%ENDIF
+}/*readSymb()*/
+%%ELSE
+%%BEGIN(readSymb)
+{
+%%IF(pmRec(Single))
+    if (la_ptr < la_end) {
+	la_ptr++;
+%%IF(pmkMOVMEM(?))
+	movmem(&la_buff[la_ptr], &token, sizeof(%%(tmkTokenName)));
+%%ELSE
+	*token = la_buff[la_ptr];
+%%ENDIF
+    } else {
+%%ENDIF
+	do {
+	    %%INCLUDE(pmIScan)
+	    if (token->%%(tmkTokenCode) > SccMax || token->%%(tmkTokenCode) < 0) {
+		token->%%(tmkTokenCode) = ERR_SYM;
+	    } else token->%%(tmkTokenCode) = scIndex[token->%%(tmkTokenCode)];
+	    if (token->%%(tmkTokenCode) == ERR_SYM) {
+		%%(parserPrefix)Mess(token, DEL_REC, LEX_ERR, FAT_SEV);
+		}
+	} while (token->%%(tmkTokenCode) == ERR_SYM);
+%%IF(pmRec(Single))
+    }
+%%ENDIF
+}
+%%END (readSymb)
+%%ENDIF
+
+
+/*----------------------------------------------------------------------------
+ * actTbl - Do a look-up in the action table
+ *----------------------------------------------------------------------------
+ */
+%%IF(NOT(pmInline(?)))
+#define actTbl(st, sy, action, arg)\
+{\
+    register int actEnt;\
+    register int actSt;\
+    register int actSy;\
+    actSt = st - StateMin;\
+    actSy = sy - TermMin;\
+%%IF(pmActPack(GCS) OR pmActPack(LES))
+%%IF(pmActPack(Error))
+    actEnt = act.errRix[actSt] * %%(pmErrCols) + act.errCix[actSy];\
+%%ELSE
+    actEnt = actSt * %%(pmErrCols) + actSy;\
+%%ENDIF
+    if (!SetMem(act.err, actEnt))\
+%%IF(pmActPack(LES))
+	if (act.actRc[actSt] < act.actCc[actSy]) actEnt = act.actRix[actSt];\
+	else if (act.actRc[actSt] > act.actCc[actSy]) actEnt = act.actCix[actSy];\
+	else\
+%%ENDIF
+%%IF(pmActPack(RDS))
+%%IF(NOT pmActRDSvectorLen(0))
+	    actEnt = act.act[act.actRix[actSt] + act.actCix[actSy]];\
+%%ELSE
+	    ;\
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmActRows(0) OR pmActCols(0)))
+	    actEnt = act.act[act.actRix[actSt]][act.actCix[actSy]];\
+%%ELSE
+	    ;\
+%%ENDIF
+%%ENDIF
+    else actEnt = ERROR_ACT;\
+%%ELSIF(pmActPack(RDS))
+    if (act.actCheck[act.actRix[actSt] + actSy] == actSt)\
+	actEnt = act.act[act.actRix[actSt] + actSy];\
+    else actEnt = ERROR_ACT;\
+%%ELSE
+    actEnt = act.act[actSt][actSy];\
+%%ENDIF
+    *action = actEnt & 0x7;\
+    *arg = actEnt >> 3;\
+}/*actTbl()*/
+%%ELSE
+%%IF(NOT(pmInline(OFF)))
+#define actTbl(st, sy, action, arg)\
+{\
+    register int actEnt;\
+    register int actSt;\
+    register int actSy;\
+    actSt = st - StateMin;\
+    actSy = sy - TermMin;\
+%%IF(pmActPack(GCS) OR pmActPack(LES))
+%%IF(pmActPack(Error))
+    actEnt = act.errRix[actSt] * %%(pmErrCols) + act.errCix[actSy];\
+%%ELSE
+    actEnt = actSt * %%(pmErrCols) + actSy;\
+%%ENDIF
+    if (!SetMem(act.err, actEnt))\
+%%IF(pmActPack(LES))
+	if (act.actRc[actSt] < act.actCc[actSy]) actEnt = act.actRix[actSt];\
+	else if (act.actRc[actSt] > act.actCc[actSy]) actEnt = act.actCix[actSy];\
+	else\
+%%ENDIF
+%%IF(pmActPack(RDS))
+%%IF(NOT pmActRDSvectorLen(0))
+	    actEnt = act.act[act.actRix[actSt] + act.actCix[actSy]];\
+%%ELSE
+	    ;\
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmActRows(0) OR pmActCols(0)))
+	    actEnt = act.act[act.actRix[actSt]][act.actCix[actSy]];\
+%%ELSE
+	    ;\
+%%ENDIF
+%%ENDIF
+    else actEnt = ERROR_ACT;\
+%%ELSIF(pmActPack(RDS))
+    if (act.actCheck[act.actRix[actSt] + actSy] == actSt)\
+	actEnt = act.act[act.actRix[actSt] + actSy];\
+    else actEnt = ERROR_ACT;\
+%%ELSE
+    actEnt = act.act[actSt][actSy];\
+%%ENDIF
+    *action = actEnt & 0x7;\
+    *arg = actEnt >> 3;\
+}/*actTbl()*/
+%%ELSE
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void actTbl(
+UByte%%(pmStateTyp) st,			/* IN state number */
+UByte%%(pmTermTyp) sy,			/* IN symbol number */
+UByte1 *action,			/* OUT parser action */
+UByte%%(pmArgTyp) *arg			/* OUT parser argument (prod/state) */
+)
+%%ELSE
+static void actTbl(st, sy, action, arg)
+UByte%%(pmStateTyp) st;			/* IN state number */
+UByte%%(pmTermTyp) sy;			/* IN symbol number */
+UByte1 *action;			/* OUT parser action */
+UByte%%(pmArgTyp) *arg;			/* OUT parser argument (prod/state) */
+%%ENDIF
+{
+    register int actEnt;	/* Action table entry */
+    register int actSt;
+    register int actSy;
+
+    actSt = st - StateMin;
+    actSy = sy - TermMin;
+%%IF(pmActPack(GCS) OR pmActPack(LES))
+%%IF(pmActPack(Error))
+    actEnt = act.errRix[actSt] * %%(pmErrCols) + act.errCix[actSy];
+%%ELSE
+    actEnt = actSt * %%(pmErrCols) + actSy;
+%%ENDIF
+    if (!SetMem(act.err, actEnt))
+%%IF(pmActPack(LES))
+	if (act.actRc[actSt] < act.actCc[actSy]) actEnt = act.actRix[actSt];
+	else if (act.actRc[actSt] > act.actCc[actSy]) actEnt = act.actCix[actSy];
+	else
+%%ENDIF
+%%IF(pmActPack(RDS))
+%%IF(NOT pmActRDSvectorLen(0))
+	    actEnt = act.act[act.actRix[actSt] + act.actCix[actSy]];
+%%ELSE
+	    ;
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmActRows(0) OR pmActCols(0)))
+	    actEnt = act.act[act.actRix[actSt]][act.actCix[actSy]];
+%%ELSE
+	    ;
+%%ENDIF
+%%ENDIF
+    else actEnt = ERROR_ACT;
+%%ELSIF(pmActPack(RDS))
+    if (act.actCheck[act.actRix[actSt] + actSy] == actSt)
+	actEnt = act.act[act.actRix[actSt] + actSy];
+    else actEnt = ERROR_ACT;
+%%ELSE
+    actEnt = act.act[actSt][actSy];
+%%ENDIF
+
+    *action = actEnt & 0x7;
+    *arg = actEnt >> 3;
+}/*actTbl()*/
+%%ENDIF
+%%ENDIF
+
+
+/*----------------------------------------------------------------------------
+ * gtoTbl - Do a look-up in the goto table
+ *----------------------------------------------------------------------------
+ */
+%%IF(NOT(pmInline(?)))
+#define gtoTbl(st, sy, action, arg)\
+{\
+    register int gtoEnt;\
+    register int gtoSt;\
+    register int gtoSy;\
+    gtoSt = st - StateMin;\
+    gtoSy = sy - Terms - 1;\
+%%IF(pmGtoPack(LES))
+    if (gto.gtoRc[gtoSt] < gto.gtoCc[gtoSy]) gtoEnt = gto.gtoRix[gtoSt];\
+    else if (gto.gtoRc[gtoSt] > gto.gtoCc[gtoSy]) gtoEnt = gto.gtoCix[gtoSy];\
+    else\
+%%ENDIF
+%%IF(pmGtoPack(GCS) OR pmGtoPack(LES))
+%%IF(pmGtoPack(RDS))
+%%IF(NOT pmGtoRDSvectorLen(0))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gto.gtoCix[gtoSy]];\
+%%ELSE
+	;\
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmGtoRows(0) OR pmGtoCols(0)))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt]][gto.gtoCix[gtoSy]];\
+%%ELSE
+	;\
+%%ENDIF
+%%ENDIF
+%%ELSIF(pmGtoPack(RDS))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gtoSy];\
+%%ELSE
+	gtoEnt = gto.gto[gtoSt][gtoSy];\
+%%ENDIF
+    *action = gtoEnt & 0x7;\
+    *arg = gtoEnt >> 3;\
+}/*gtoTbl()*/
+%%ELSE
+%%IF(NOT(pmInline(OFF)))
+#define gtoTbl(st, sy, action, arg)\
+{\
+    register int gtoEnt;\
+    register int gtoSt;\
+    register int gtoSy;\
+    gtoSt = st - StateMin;\
+    gtoSy = sy - Terms - 1;\
+%%IF(pmGtoPack(LES))
+    if (gto.gtoRc[gtoSt] < gto.gtoCc[gtoSy]) gtoEnt = gto.gtoRix[gtoSt];\
+    else if (gto.gtoRc[gtoSt] > gto.gtoCc[gtoSy]) gtoEnt = gto.gtoCix[gtoSy];\
+    else\
+%%ENDIF
+%%IF(pmGtoPack(GCS) OR pmGtoPack(LES))
+%%IF(pmGtoPack(RDS))
+%%IF(NOT pmGtoRDSvectorLen(0))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gto.gtoCix[gtoSy]];\
+%%ELSE
+	;\
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmGtoRows(0) OR pmGtoCols(0)))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt]][gto.gtoCix[gtoSy]];\
+%%ELSE
+	;\
+%%ENDIF
+%%ENDIF
+%%ELSIF(pmGtoPack(RDS))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gtoSy];\
+%%ELSE
+	gtoEnt = gto.gto[gtoSt][gtoSy];\
+%%ENDIF
+    *action = gtoEnt & 0x7;\
+    *arg = gtoEnt >> 3;\
+}/*gtoTbl()*/
+%%ELSE
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void gtoTbl(
+UByte%%(pmStateTyp) st,			/* IN state number */
+UByte%%(pmNonTermTyp) sy,			/* IN symbol number */
+UByte1 *action,			/* OUT parser action */
+UByte%%(pmArgTyp) *arg			/* OUT parser argument (prod/state) */
+)
+%%ELSE
+static void gtoTbl(st, sy, action, arg)
+UByte%%(pmStateTyp) st;			/* IN state number */
+UByte%%(pmNonTermTyp) sy;			/* IN symbol number */
+UByte1 *action;			/* OUT parser action */
+UByte%%(pmArgTyp) *arg;			/* OUT parser argument (prod/state) */
+%%ENDIF
+{
+    register int gtoEnt;	/* Goto table entry */
+    register int gtoSt;
+    register int gtoSy;
+
+    gtoSt = st - StateMin;
+    gtoSy = sy - Terms - 1;
+%%IF(pmGtoPack(LES))
+    if (gto.gtoRc[gtoSt] < gto.gtoCc[gtoSy]) gtoEnt = gto.gtoRix[gtoSt];
+    else if (gto.gtoRc[gtoSt] > gto.gtoCc[gtoSy]) gtoEnt = gto.gtoCix[gtoSy];
+    else
+%%ENDIF
+%%IF(pmGtoPack(GCS) OR pmGtoPack(LES))
+%%IF(pmGtoPack(RDS))
+%%IF(NOT pmGtoRDSvectorLen(0))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gto.gtoCix[gtoSy]];
+%%ELSE
+	;
+%%ENDIF
+%%ELSE
+%%IF(NOT (pmGtoRows(0) OR pmGtoCols(0)))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt]][gto.gtoCix[gtoSy]];
+%%ELSE
+	;
+%%ENDIF
+%%ENDIF
+%%ELSIF(pmGtoPack(RDS))
+	gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gtoSy];
+%%ELSE
+	gtoEnt = gto.gto[gtoSt][gtoSy];
+%%ENDIF
+
+    *action = gtoEnt & 0x7;
+    *arg = gtoEnt >> 3;
+}/*gtoTbl()*/
+%%ENDIF
+%%ENDIF
+
+
+/*----------------------------------------------------------------------------
+ * E R R O R   R E C O V E R Y
+ * ---------------------------
+ *
+ * The error recovery algorithm tries to modify current configuration in such
+ * a way that parsing can be resumed correctly. Current configuration is
+ * characterized by:
+ *
+ * w = x t y, where  x = parsed input
+ *		     t = current token
+ *		     y = unprocessed input
+ *----------------------------------------------------------------------------
+ */
+
+typedef struct {
+    %%(tmkTokenName) err_tok;
+    %%(tmkTokenName) res_tok;
+    short method;
+    short eClass;
+    short severity;
+} ERR_REC;
+
+static ERR_REC errdescr; 
+
+
+%%IF(pmRec(Single) OR pmRec(Multiple) OR pmRec(Panic))
+/*----------------------------------------------------------------------------
+ * ePush - Push a state during error recovery
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void ePush(
+UByte%%(pmStateTyp) state,			/* IN state to push */
+UByte%%(pmStateTyp) stack[],			/* INOUT parser stack */
+short *sp			/* INOUT current stack pointer */
+)
+%%ELSE
+static void ePush(state, stack, sp)
+UByte%%(pmStateTyp) state;			/* IN state to push */
+UByte%%(pmStateTyp) stack[];			/* INOUT parser stack */
+short *sp;			/* INOUT current stack pointer */
+%%ENDIF
+{
+    if (++(*sp) < PmStkMax) stack[*sp] = state;
+    else paAbort(&errdescr.err_tok, OFLW_ERR, SYS_SEV);
+}/*ePush()*/
+
+
+/*----------------------------------------------------------------------------
+ * legalAct - Check if a symbol is legal to shift in current state
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static PmBoolean legalAct(
+UByte%%(pmStateTyp) stack[],			/* IN current stack */
+short stack_p,			/* IN current stack pointer */
+UByte%%(pmTermTyp) sym			/* IN symbol code */
+)				/* RET true if "symbol" is read (shifted) */
+				/*     in current state */
+%%ELSE
+static PmBoolean legalAct(stack, stack_p, sym)
+UByte%%(pmStateTyp) stack[];			/* IN current stack */
+short stack_p;			/* IN current stack pointer */
+UByte%%(pmTermTyp) sym;			/* IN symbol code */
+				/* RET true if "symbol" is read (shifted) */
+				/*     in current state */
+%%ENDIF
+{
+    UByte%%(pmStateTyp) state;		/* Current state */
+    UByte1 action;		/* Current parser action */
+    UByte%%(pmArgTyp) arg;			/* Current parser argument */
+
+    ParseStack t_stk;		/* Temporary parser stack */
+    int i;			/* For loop index */
+
+    /* Copy stack
+     */
+    for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i]; 
+
+    state = stack[stack_p];
+
+    for (;;) {
+	actTbl(state, sym, &action, &arg);
+	switch (action) {
+
+	case ERROR_ACT:
+	    return(PMFALSE);
+
+	case SHIFT_ACT:
+	case SHIFTRED_ACT:	
+	case ACCEPT_ACT:
+	    return(PMTRUE);
+
+	case REDUCE_ACT:
+	    do {
+		stack_p = stack_p - gto.rhsz[arg - ProdMin];
+		gtoTbl(t_stk[stack_p], gto.lhs[arg - ProdMin], &action, &arg);
+		ePush(state, t_stk, &stack_p);
+	    } while (action != SHIFT_ACT);
+	    state = arg; t_stk[stack_p] = state;
+	    break;
+
+	}/*switch*/
+    }/*for*/
+}/*legalAct()*/
+			     
+	
+/*----------------------------------------------------------------------------
+ * gLegSym - Get legal symbols
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void gLegSym(
+ParseStack stack,		/* IN current stack */
+short stack_p,			/* IN current stack pointer */
+TermSet legals			/* OUT legal symbols in current state */
+)
+%%ELSE
+static void gLegSym(stack, stack_p, legals)
+ParseStack stack;		/* IN current stack */
+short stack_p;			/* IN current stack pointer */
+TermSet legals;			/* OUT legal symbols in current state */
+%%ENDIF
+{
+    short sym;			/* Loop index */
+
+    SetClear(legals, Terms + 1);
+    for (sym = 1; sym <= Terms; sym++) {
+	if (legalAct(stack, stack_p, sym)) SetIns(legals, sym);
+    }/*for*/
+}/*gLegSym()*/
+
+
+%%IF(pmRec(Panic))
+/*----------------------------------------------------------------------------
+ * backup - Backup the parse stack until current symbol is accepted (shifted)
+ *	    or the parse stack becomes empty
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static short backup(
+ParseStack stack,		/* IN current stack */
+short stack_p,			/* IN current stack pointer */
+UByte%%(pmTermTyp) sym	/* IN recovery symbol */
+)				/* RET new stack pointer, 0 if symbol is */
+				/*     not accepted */
+%%ELSE
+static short backup(stack, stack_p, sym)
+ParseStack stack;		/* IN current stack */
+short stack_p;			/* IN current stack pointer */
+UByte%%(pmTermTyp) sym;	/* IN recovery symbol */
+				/* RET new stack pointer, 0 if symbol is */
+				/*     not accepted */
+%%ENDIF
+{
+    while ((stack_p > 0) && (!legalAct(stack, stack_p, sym))) stack_p--;
+    return(stack_p);
+}/*backup()*/
+
+
+%%ENDIF
+/*----------------------------------------------------------------------------
+ * delSym - Delete a symbol in the input stream
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void delSym(
+%%(tmkTokenName) *token			/* INOUT symbol to delete, new symbol */
+)
+%%ELSE
+static void delSym(token)
+%%(tmkTokenName) *token;			/* INOUT symbol to delete, new symbol */
+%%ENDIF
+{
+    short  t;
+
+    t = token->%%(tmkTokenCode) - TermMin;
+    token->%%(tmkTokenCode) = voc[t].scc;
+    %%(parserPrefix)DSym(token, voc[t].name, voc[t].psym);
+%%INCLUDE (readSymb)
+    if (errdescr.method == IN_REC) errdescr.method = REP_REC;
+    else if (errdescr.method != REP_REC) errdescr.method = DEL_REC;
+}/*delSym()*/
+
+
+%%IF(pmRec(Single) OR pmRec(Multiple))
+/*----------------------------------------------------------------------------
+ * inSym - Insert a symbol in the input stream
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void inSym(
+short isym,			/* IN symbol code to insert */
+%%(tmkTokenName) *gen_symb		/* OUT created symbol */
+)
+%%ELSE
+static void inSym(isym, gen_symb)
+short isym;			/* IN symbol code to insert */
+%%(tmkTokenName) *gen_symb;		/* OUT created symbol */
+%%ENDIF
+{
+    %%(parserPrefix)ISym(voc[isym - TermMin].scc, voc[isym - TermMin].name,
+	   voc[isym - TermMin].psym, gen_symb);
+    if (errdescr.method == DEL_REC) errdescr.method = REP_REC;
+    else if (errdescr.method != REP_REC) errdescr.method = IN_REC; 
+
+    gen_symb->%%(tmkTokenCode) = isym;
+}/*inSym()*/
+
+
+%%ENDIF
+%%IF(pmRec(Panic) AND NOT pmRec(Multiple))
+/*----------------------------------------------------------------------------
+ * skipSyms - Discard input symbols until:
+ *	      a) Token is in "stopsys"
+ *	      b) Token is in the fiducial set
+ *	      Skip symbols are discarded.
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void skipSyms(
+PmBoolean first,		/* IN called once before? */
+TermSet stopsys,		/* IN stop symbols */
+%%(tmkTokenName) *err_tok		/* INOUT current token */
+)
+%%ELSE
+static void skipSyms(first, stopsys, err_tok)
+PmBoolean first;		/* IN called once before? */
+TermSet stopsys;		/* IN stop symbols */
+%%(tmkTokenName) *err_tok;		/* INOUT current token */
+%%ENDIF
+{
+    if (!first) delSym(err_tok);
+
+    while ((!SetMem(stopsys, err_tok->%%(tmkTokenCode))) &&
+	   (!SetMem(act.recover.fiduc, err_tok->%%(tmkTokenCode))) &&
+	   (err_tok->%%(tmkTokenCode) != ENDMARK) ||
+	   (SetMem(act.recover.skip, err_tok->%%(tmkTokenCode))))
+    {
+	delSym(err_tok);
+    }/*while*/
+}/*skipSyms()*/
+
+
+/*----------------------------------------------------------------------------
+ * panic - 
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void panic(
+TermSet leg_sys,		/* IN legal symbols in current state */
+ParseStack err_stk,		/* IN current parser stack */
+short *err_stkp,		/* INOUT current stack pointer */
+%%(tmkTokenName) *err_tok,		/* INOUT current token */  
+UByte%%(pmStateTyp) *newstat		/* OUT new state after recovery */
+)
+%%ELSE
+static void panic(leg_sys, err_stk, err_stkp, err_tok, newstat) 
+TermSet leg_sys;		/* IN legal symbols in current state */
+ParseStack err_stk;		/* IN current parser stack */
+short *err_stkp;		/* INOUT current stack pointer */
+%%(tmkTokenName) *err_tok;		/* INOUT current token */  
+UByte%%(pmStateTyp) *newstat;		/* OUT new state after recovery */
+%%ENDIF
+{
+    PmBoolean first;		/* First skip? */
+    short new_stkp;		/* Temporary pointer */
+
+    first = PMTRUE;
+    do {
+	skipSyms(first, leg_sys, err_tok);
+	new_stkp = backup(err_stk, *err_stkp, err_tok->%%(tmkTokenCode));
+	first = PMFALSE;
+    } while ((new_stkp <= 0) && (err_tok->%%(tmkTokenCode) != ENDMARK));
+
+    if ((new_stkp != *err_stkp) && (new_stkp > 0)) errdescr.method = BAK_REC;
+
+    *err_stkp = new_stkp;
+    *newstat = err_stk[*err_stkp];
+}/*panic()*/
+
+
+%%ENDIF
+%%IF(pmRec(Multiple))
+/*----------------------------------------------------------------------------
+ * M U L T I P L E   R E C O V E R Y
+ * ---------------------------------
+ *
+ * The multiple symbols recovery technique is a "true local corrector", i.e.
+ * it will always return a legal configuration for any input. Logically the
+ * algorithm can be described as follows:
+ *
+ * 1) Roerich method (Karlsruhe):
+ *    a. Find a continuation "u" of "x", such that "xu" is accepted.
+ *    b. De composite "ty" into "qsy'", where q is a string.
+ *    c. Delete "q".
+ *    d. Insert u' (a prefix of u) between "x" and "sy'" giving xu' s y'.
+%%IF(pmRec(Panic))
+ *
+ * 2) Panic mode:
+ *    If "q" contains a fiducial symbol "a"  then:
+ *    a. Pop stack until "a" is accepted.
+ *    b. If not succeeded resume at step 1.
+%%ENDIF
+ *----------------------------------------------------------------------------
+ */
+
+typedef struct {
+    UByte%%(pmStateTyp) r_state;		/* Recovery state */
+    PmBoolean r_sepa;		/* Insert separator? */
+    UByte%%(pmStateTyp) r_sstat;		/* Where to insert separator */
+} REC_POI;
+
+
+/*----------------------------------------------------------------------------
+ * acceptbl - Check whether "symbol" is reachable from current state using
+ *	      the continuation grammar.
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void acceptbl(
+UByte%%(pmTermTyp) sym,			/* IN terminal symbol code */
+ParseStack stack,		/* IN parse stack */
+short stack_p,			/* IN stack pointer */
+%%(tmkTokenName) *token,			/* IN current token */
+PmBoolean *found,		/* OUT "symbol" accepted? */
+REC_POI *point			/* OUT recovery point description */
+)
+%%ELSE
+static void acceptbl(sym, stack, stack_p, token, found, point)
+UByte%%(pmTermTyp) sym;			/* IN terminal symbol code */
+ParseStack stack;		/* IN parse stack */
+short stack_p;			/* IN stack pointer */
+%%(tmkTokenName) *token;			/* IN current token */
+PmBoolean *found;		/* OUT "symbol" accepted? */
+REC_POI *point;			/* OUT recovery point description */
+%%ENDIF
+{
+    PmBoolean done;		/* Terminator flag */
+    UByte%%(pmStateTyp) state;		/* Current state */
+    UByte1 action;		/* Parser action */
+    UByte1 sep_act;		/* Parser action separator test */
+    UByte%%(pmArgTyp) arg;			/* Parser prod/state */
+    UByte%%(pmArgTyp) sep_arg;		/* Parser prod/state separator test */
+    PmBoolean sepa_acc;		/* Separator is accepted? */
+    ParseStack t_stk;		/* Temporary parser stack */
+    short i;			/* Copy loop index */
+
+    for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i];
+
+    state = t_stk[stack_p];
+    done = PMFALSE;
+
+    while (!done) {
+	actTbl(state, sym, &action, &arg);
+	if (legalAct(t_stk, stack_p, sym)) {
+	    /* Symbol is directly accepted */
+	    done = PMTRUE;
+	    *found = PMTRUE;
+	    point->r_state = state;
+	} else {
+	    /* Use the continuation grammar */
+	    actTbl(state, act.recover.cont[state - StateMin].tsym, &action,
+		   &arg);
+	    actTbl(state, act.recover.cont[state - StateMin].ssym, &sep_act,
+		   &sep_arg);
+	    if ((action != sep_act) || (arg != sep_arg)) {
+		/* A separator is legal. Check if current symbol is accepted
+		 * behind the separator
+		 */
+	        ParseStack stk;	/* Temporary stack */
+	        short sp;	/* Temporary stack pointer */
+
+		sp = stack_p; 
+		for (i = 0; i <= stack_p; i++) stk[i] = t_stk[i];
+		sepa_acc = PMFALSE;
+
+		while (!sepa_acc) {
+		  actTbl(stk[sp], act.recover.cont[state - StateMin].ssym,
+			 &sep_act, &sep_arg);
+		    switch (sep_act) {
+
+		    case ERROR_ACT:
+		    case ACCEPT_ACT:
+			sepa_acc = PMTRUE;
+			break;
+
+		    case SHIFT_ACT: 
+			sepa_acc = PMTRUE;
+			ePush(sep_arg, stk, &sp);
+			break;
+
+		    case SHIFTRED_ACT:
+			ePush(1, stk, &sp);
+			sepa_acc = PMTRUE;
+			goto reduce;
+
+		    case REDUCE_ACT:
+		      reduce:
+			do {
+			    sp -= gto.rhsz[sep_arg-ProdMin];
+			    gtoTbl(stk[sp], gto.lhs[sep_arg-ProdMin], &sep_act,
+				   &sep_arg);
+			    ePush(1, stk, &sp);
+			} while (sep_act != SHIFT_ACT);
+
+			stk[sp] = sep_arg;
+			break;
+		    }/*switch*/
+		}/*while*/
+
+		if ((sep_act == SHIFT_ACT) || (sep_act == SHIFTRED_ACT)) {
+		    if (legalAct(stk, sp, sym)) {
+			/* Separator is to be inserted */
+			point->r_state = stk[sp];
+			point->r_sepa = PMTRUE;
+			point->r_sstat = state;
+			done = PMTRUE;
+			*found = PMTRUE;
+		    }/*if*/
+		}/*if*/
+	    }/*if*/
+		  
+	    if (!*found) {
+		switch (action) {
+
+		case ERROR_ACT: 
+		    paAbort(token, TAB_ERR, SYS_SEV);
+		    break;
+
+		case ACCEPT_ACT:
+		    done = PMTRUE;
+		    break;
+
+		case SHIFT_ACT:
+		    state = arg;
+		    ePush(state, t_stk, &stack_p);
+		    break;
+
+		case SHIFTRED_ACT:
+		    ePush(state, t_stk, &stack_p);
+		    goto reduce2;
+
+		case REDUCE_ACT:
+		  reduce2:
+		    do {
+			stack_p -= gto.rhsz[arg-ProdMin];
+			gtoTbl(t_stk[stack_p], gto.lhs[arg-ProdMin], &action,
+			       &arg);
+			ePush(state, t_stk, &stack_p);
+		    } while (action != SHIFT_ACT);
+
+		    state = arg;
+		    t_stk[stack_p] = state;
+		    break;
+
+		}/*switch*/
+	    }/*if*/
+	}/*if*/
+    }/*while*/
+}/*acceptbl()*/
+
+
+/*----------------------------------------------------------------------------
+ * search - Search recovery point
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void search(
+ParseStack stack,		/* IN current stack */
+short *stack_p,			/* INOUT current stack pointer */
+%%(tmkTokenName) *token,			/* INOUT current symbol */
+REC_POI *point			/* OUT descriptor of where to restart */
+				/*     the parser */
+)
+%%ELSE
+static void search(stack, stack_p, token, point)
+ParseStack stack;		/* IN current stack */
+short *stack_p;			/* INOUT current stack pointer */
+%%(tmkTokenName) *token;			/* INOUT current symbol */
+REC_POI *point;			/* OUT descriptor of where to restart */
+				/*     the parser */
+%%ENDIF
+{
+    UByte%%(pmStateTyp) state;		/* Current state */
+    PmBoolean rp_found;		/* Recovery point found? */
+%%IF(pmRec(Panic))
+    short new_stkp;		/* Temp stack pointer */
+%%ENDIF
+
+    state = stack[*stack_p];
+    point->r_state = state;
+    point->r_sepa = PMFALSE;
+    point->r_sstat = 1;
+    rp_found = PMFALSE;
+
+    do {
+	if (!SetMem(act.recover.skip, token->%%(tmkTokenCode))) {
+	    acceptbl(token->%%(tmkTokenCode), stack, *stack_p, token, &rp_found, point);
+	}/*if*/
+
+	if (!rp_found) {
+%%IF(pmRec(Panic))
+	    new_stkp = 0;
+	    if (SetMem(act.recover.fiduc, token->%%(tmkTokenCode))) {
+		new_stkp = backup(stack, *stack_p, token->%%(tmkTokenCode));
+	    }/*if*/
+	    if (new_stkp > 0) {
+		rp_found = PMTRUE;
+		*stack_p = new_stkp;
+		point->r_state = stack[*stack_p];
+		errdescr.method = BAK_REC;
+	    } else 
+%%ENDIF
+	        delSym(token);
+	}/*if*/
+    } while (!rp_found);
+}/*search()*/
+
+
+/*----------------------------------------------------------------------------
+ * reach - Use the continuation functions and insert symbols upto curr token.
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void reach(
+ParseStack stack,		/* INOUT current stack */
+short *stack_p,			/* INOUT current stack pointer */	
+%%(tmkTokenName) *token,			/* INOUT current symbol */
+REC_POI *point			/* IN recovery point descriptor */
+)
+%%ELSE
+static void reach(stack, stack_p, token, point)
+ParseStack stack;		/* INOUT current stack */
+short *stack_p;			/* INOUT current stack pointer */	
+%%(tmkTokenName) *token;			/* INOUT current symbol */
+REC_POI *point;			/* IN recovery point descriptor */
+%%ENDIF
+{
+    UByte%%(pmStateTyp) state;		/* Current state */
+    UByte%%(pmTermTyp) cont_sym;		/* Continuation symbol */
+    %%(tmkTokenName) gen_symb;		/* Generated symbol */
+    UByte1 action;		/* Current parser action */
+    UByte%%(pmArgTyp) arg;			/* Current prod/state */
+    PmBoolean sepaAccept;	/* Separator accepted yet? */
+    PmBoolean useSepa;		/* Use the separator now? */
+
+    state = stack[*stack_p];
+%%IF(pmkMOVMEM(?))
+    movmem(token, &gen_symb, sizeof(%%(tmkTokenName)));
+%%ELSE
+    gen_symb = *token;
+%%ENDIF
+    useSepa = PMFALSE;
+    while (state != point->r_state) {
+	if (point->r_sepa)
+	    if (state == point->r_sstat) {
+		/* Separator state reached, remember to use separator */
+		cont_sym = act.recover.cont[state-StateMin].ssym;
+		useSepa = PMTRUE;
+	    } else cont_sym = act.recover.cont[state-StateMin].tsym;
+	else cont_sym = act.recover.cont[state-StateMin].tsym;
+	sepaAccept = PMFALSE;
+
+	do {
+	  actTbl(state, cont_sym, &action, &arg);
+	  switch (action) {
+
+	  case ERROR_ACT:
+	    paAbort(token, TAB_ERR, SYS_SEV);
+	    break;
+
+	  case ACCEPT_ACT:
+	    break;
+
+	  case SHIFT_ACT:
+	    sepaAccept = PMTRUE;
+	    state = arg;
+	    inSym(cont_sym, &gen_symb);
+	    ePush(state, stack, stack_p);
+%%IF(pmkMOVMEM(?))
+	    movmem(&gen_symb, &%%(parserPrefix)SySt[*stack_p], sizeof(%%(tmTokenName)));
+%%ELSE
+	    %%(parserPrefix)SySt[*stack_p] = gen_symb;
+%%ENDIF
+	    break;
+
+	  case SHIFTRED_ACT:
+	    sepaAccept = PMTRUE;
+	    inSym(cont_sym, &gen_symb);
+	    ePush(state, stack, stack_p);
+%%IF(pmkMOVMEM(?))
+	    movmem(&gen_symb, &%%(parserPrefix)SySt[*stack_p], sizeof(%%(tmkTokenName)));
+%%ELSE
+	    %%(parserPrefix)SySt[*stack_p] = gen_symb;
+%%ENDIF
+	    goto reduce;
+
+	  case REDUCE_ACT:
+	    reduce:
+	    do {
+		*stack_p = *stack_p - gto.rhsz[arg-ProdMin];
+		%%(parserPrefix)PaSema(arg);
+		gtoTbl(stack[*stack_p], gto.lhs[arg-ProdMin], &action, &arg);
+		ePush(state, stack, stack_p);
+	    } while (action != SHIFT_ACT);
+	    state = arg;
+	    stack[*stack_p] = state;
+	  }/*switch*/
+	} while (useSepa && !sepaAccept);
+    }/*while*/
+}/*reach()*/
+
+
+/*----------------------------------------------------------------------------
+ * global - Global error recovery
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void multiple(
+ParseStack err_stk,		/* INOUT current parse stack */
+short *err_stkp,		/* INOUT current stack pointer */
+%%(tmkTokenName) *err_tok,		/* INOUT current token */
+UByte%%(pmStateTyp) *newstat		/* OUT state after recovery */	
+)
+%%ELSE
+static void multiple(err_stk, err_stkp, err_tok, newstat)
+ParseStack err_stk;		/* INOUT current parse stack */
+short *err_stkp;		/* INOUT current stack pointer */
+%%(tmkTokenName) *err_tok;		/* INOUT current token */
+UByte%%(pmStateTyp) *newstat;		/* OUT state after recovery */	
+%%ENDIF
+{
+    REC_POI  point;		/* Recovery point descriptor */
+
+    search(err_stk, err_stkp, err_tok, &point);
+    reach(err_stk, err_stkp, err_tok, &point);
+    *newstat = err_stk[*err_stkp];
+}/*multiple()*/
+
+
+%%ENDIF
+%%IF(pmRec(Single))
+/*----------------------------------------------------------------------------
+ * S I N G L E   R E C O V E R Y
+ * -----------------------------
+ *
+ * The single recovery technique tries to REPAIR the error by finding the
+ * least cost single symbol correction. One single symbol of:
+ * - insertion
+ * - deletion
+ * - replacement
+ * is concidered. The cost of the repair is the sum of the ADAPTION cost and
+ * the MODIFICATION cost. The adaption cost indicates how well a correction
+ * fits in the context. The modification cost is based on the
+ * insertion/deletion cost given in the input. A correction is applied if
+ * the cost is below a predefined threshold value.
+ *----------------------------------------------------------------------------
+ */
+
+#define ShiftCost (PmCost)	/* The cost of shifting one symbol */
+#define InfCost (ShiftCost * (PmLaMax)) /* Infinity */
+#define Thresh (((PmLaMax) - 3) * ShiftCost) /* Acceptance cost */
+
+
+/*----------------------------------------------------------------------------
+ * readLa - Read tokens to the look-ahead buffer
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void readLa(
+%%(tmkTokenName) *curtok			/* IN current token */
+)
+%%ELSE
+static void readLa(curtok)
+%%(tmkTokenName) *curtok;			/* IN current token */
+%%ENDIF
+{
+    int i;
+    %%(tmkTokenName) tokbuf;
+    %%(tmkTokenName) *token = &tokbuf;
+
+%%IF(pmkMOVMEM(?))
+    movmem(curtok, &la_buff[0], sizeof(%%(tmkTokenName)));
+    movmem(curtok, token, sizeof(%%(tmkTokenName)));
+%%ELSE
+    la_buff[0] = *curtok;
+    *token = *curtok;
+%%ENDIF
+    for (i = la_ptr + 1; i <= la_end; i++) {
+	/* Move old look_ahead to the beginning of the buffer */
+%%IF(pmkMOVMEM(?))
+	movmem(&la_buff[i], &la_buff[i - la_ptr], sizeof(%%(tmkTokenName)));
+%%ELSE
+	la_buff[i - la_ptr] = la_buff[i];
+%%ENDIF
+    }/*for*/
+    la_end = la_end - la_ptr;
+    la_ptr = -1;
+
+    while ((la_buff[la_end].%%(tmkTokenCode) != ENDMARK) && (la_end < PmLaMax)) {
+	la_end++;
+	do {
+            %%INCLUDE(pmIScan)
+	    if (token->%%(tmkTokenCode) > SccMax || token->%%(tmkTokenCode) < 0) {
+		token->%%(tmkTokenCode) = ERR_SYM;
+	    } else {
+		token->%%(tmkTokenCode) = scIndex[token->%%(tmkTokenCode)];
+	    }/*if*/
+	    if (token->%%(tmkTokenCode) == ERR_SYM) {
+		%%(parserPrefix)Mess(token, DEL_REC, LEX_ERR, FAT_SEV);
+	    }/*if*/
+	} while (token->%%(tmkTokenCode) == ERR_SYM);
+%%IF(pmkMOVMEM(?))
+	movmem(token, &la_buff[la_end], sizeof(%%(tmkTokenName)));
+%%ELSE
+	la_buff[la_end] = *token;
+%%ENDIF
+    }/*while*/
+}/*readLa()*/
+
+
+/*----------------------------------------------------------------------------
+ * rdLaSym - Fetches the i:th look-ahead symbol code from the look-ahead set
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static UByte%%(pmTermTyp) rdLaSym(
+char index			/* IN i:th look-ahead symbol */
+)				/* RET token code */
+%%ELSE
+static UByte%%(pmTermTyp) rdLaSym(index)
+char index;			/* IN i:th look-ahead symbol */
+				/* RET token code */
+%%ENDIF
+{
+    if (index > la_end) return(ENDMARK);
+    else return(la_buff[(int)index].%%(tmkTokenCode));
+}/*rdLaSym()*/
+
+
+/*----------------------------------------------------------------------------
+ * laParse - Continue the parsing process by reading tokens from the
+ *	     look-ahead set. The parse is terminated when:
+ *	     - out of read ahead
+ *	     - a new error is encountered
+ *	     Note! No semantic actions are carried out
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void laParse(
+UByte%%(pmTermTyp) sym,			/* IN current terminal symbol */
+char next_la,			/* IN index to next look-ahead symbol */
+ParseStack stack,		/* IN parse stack */
+short stack_p,			/* IN current stack pointer */
+short *cost			/* OUT adaption cost */
+)
+%%ELSE
+static void laParse(sym, next_la, stack, stack_p, cost)
+UByte%%(pmTermTyp) sym;			/* IN current terminal symbol */
+char next_la;			/* IN index to next look-ahead symbol */
+ParseStack stack;		/* IN parse stack */
+short stack_p;			/* IN current stack pointer */
+short *cost;			/* OUT adaption cost */
+%%ENDIF
+{
+    PmBoolean done ;		/* Terminator flag */
+    char sh_cnt;		/* Number of shifted symbols */
+    UByte%%(pmStateTyp) state;		/* Current state number */
+    UByte1 action;		/* Parser action */
+    UByte%%(pmArgTyp) arg; 		/* Parser argument */
+    short i;			/* Loop index */
+    ParseStack t_stk;		/* Temporary stack */
+
+    /* Copy stack
+     */
+    for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i];	
+
+    done = PMFALSE;
+    sh_cnt = 0;
+    state = t_stk[stack_p];
+
+    while (!done) {
+	actTbl(state, sym, &action, &arg);
+	
+	switch (action) {
+
+	case ERROR_ACT: 
+	    done = PMTRUE;
+	    break;
+
+	case SHIFT_ACT:
+	    state = arg;
+	    ePush(state, t_stk, &stack_p);
+	    sh_cnt++;
+	    if (sh_cnt == PmLaMax) done = PMTRUE;
+	    else {
+		sym = rdLaSym(next_la);
+		next_la++;
+	    }/*if*/
+	    break;
+
+	case SHIFTRED_ACT:
+	    ePush(state, t_stk, &stack_p);
+	    sh_cnt++;
+	    if (sh_cnt == PmLaMax) done = PMTRUE;
+	    else {
+		sym = rdLaSym(next_la);
+		if (next_la < PmLaMax) next_la++;
+	    }/*if*/
+	    goto reduce;
+
+	case REDUCE_ACT:
+	  reduce:
+	    do {
+		stack_p -= gto.rhsz[arg-ProdMin];
+		gtoTbl(t_stk[stack_p], gto.lhs[arg-ProdMin], &action, &arg);
+		ePush(state, t_stk, &stack_p);
+	    } while (action != SHIFT_ACT); 
+
+	    state = arg;
+	    t_stk[stack_p] = state;
+	    break;
+
+	case ACCEPT_ACT:
+	    done = PMTRUE;
+	    sh_cnt = PmLaMax;
+	    break;
+
+	}/*switch*/
+    }/*while*/
+
+    *cost = InfCost - (sh_cnt*ShiftCost);
+}/*laParse()*/
+
+
+/*----------------------------------------------------------------------------
+ * tryIn - Tries to insert a symbol from the legal set in front of current
+ *	   token: x t y  => x st y, where s becomes current symbol
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void tryIn(
+TermSet legals,			/* IN set of legal symbols */
+ParseStack stack,		/* IN current parser stack */
+short stack_p,			/* IN current stack pointer */
+UByte%%(pmTermTyp) *sym,			/* OUT best insertion symbol */
+short *cost,			/* OUT best cost so far */
+short *choice			/* OUT best choice so far */
+)
+%%ELSE
+static void tryIn(legals, stack, stack_p, sym, cost, choice)
+TermSet legals;			/* IN set of legal symbols */
+ParseStack stack;		/* IN current parser stack */
+short stack_p;			/* IN current stack pointer */
+UByte%%(pmTermTyp) *sym;			/* OUT best insertion symbol */
+short *cost;			/* OUT best cost so far */
+short *choice;			/* OUT best choice so far */
+%%ENDIF
+{
+    short i;
+    short mod_cost;		/* Modification cost */
+    short ad_cost;		/* Adaption cost */
+    short tot_cost;		/* Total insertion cost */
+
+    for (i = 1; i <= Terms; i++) {
+	/* For all legal symbols
+	 */
+	if (SetMem(legals, i)) {
+	    mod_cost = voc[i - TermMin].iCost;
+	    if (mod_cost < *cost) {
+		laParse(i, 0, stack, stack_p, &ad_cost);
+		tot_cost = ad_cost + mod_cost;
+		if (tot_cost < *cost) {
+		    *cost = tot_cost;
+		    *choice = IN_REC;
+		    *sym = (UByte%%(pmTermTyp))i;
+		}/*if*/
+	    }/*if*/
+	}/*if*/
+    }/*for*/
+}/*tryIn()*/
+
+
+/*----------------------------------------------------------------------------
+ * tryRep - Tries to replace currrent symbol with a new terminal:
+ *	    x t y  => x s y, where s becomes current symbol
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void tryRep(
+TermSet legals,			/* IN set of legal symbols */
+ParseStack stack,		/* IN current parser stack */
+short stack_p,			/* IN current stack pointer */
+UByte%%(pmTermTyp) *sym,			/* OUT best replacement symbol */
+short *cost,			/* OUT best cost so far */
+short *choice			/* OUT best choice so far */
+)
+%%ELSE
+static void tryRep(legals, stack, stack_p, sym, cost, choice)
+TermSet legals;			/* IN set of legal symbols */
+ParseStack stack;		/* IN current parser stack */
+short stack_p;			/* IN current stack pointer */
+UByte%%(pmTermTyp) *sym;			/* OUT best replacement symbol */
+short *cost;			/* OUT best cost so far */
+short *choice;			/* OUT best choice so far */
+%%ENDIF
+{
+    short i;
+    short mod_cost;		/* Modification cost */
+    short ad_cost;		/* Adaption cost */
+    short tot_cost;		/* Total replacment cost */
+
+    for (i = 1; i <= Terms; i++) {
+	/* For all legal symbols
+	 */
+	if (SetMem(legals, i)) {
+	    mod_cost = (short) (voc[i-TermMin].iCost +
+			voc[rdLaSym(0)-TermMin].dCost) / 2 + 1;
+	    if (mod_cost < *cost) {
+		laParse(i, 1, stack, stack_p, &ad_cost);
+		tot_cost = ad_cost + mod_cost;
+		if (tot_cost < *cost) {
+		    *cost = tot_cost;
+		    *choice = REP_REC;
+		    *sym = (UByte%%(pmTermTyp))i;
+		}/*if*/
+	    }/*if*/
+	}/*if*/
+    }/*for*/
+}/*tryRep()*/
+
+
+/*----------------------------------------------------------------------------
+ * tryDel - Tries to delete current symbol: x t y  => x y
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void tryDel(
+ParseStack stack,		/* IN current parser stack */
+short stack_p,			/* IN current stack pointer */
+short *cost,			/* INOUT best cost so far */
+short *choice			/* INOUT best choice so far */
+)
+%%ELSE
+static void tryDel(stack, stack_p, cost, choice)
+ParseStack stack;		/* IN current parser stack */
+short stack_p;			/* IN current stack pointer */
+short *cost;			/* INOUT best cost so far */
+short *choice;			/* INOUT best choice so far */
+%%ENDIF
+{
+    short mod_cost;		/* Modification cost */
+    short ad_cost;  		/* Adaption cost */
+    short tot_cost;		/* Total deletion cost */
+
+    mod_cost = voc[rdLaSym(0) - TermMin].dCost;
+    if (mod_cost < *cost) {
+	laParse(rdLaSym(1), 2, stack, stack_p, &ad_cost);
+	tot_cost = ad_cost + mod_cost;
+	if (tot_cost < *cost) {
+	    *cost = tot_cost;
+	    *choice = DEL_REC;
+	}/*if*/
+    }/*if*/
+}/*tryDel()*/
+
+
+/*----------------------------------------------------------------------------
+ * _pmInsert
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void _pmInsert(
+UByte%%(pmTermTyp) sym,			/* IN symbol code to insert */
+%%(tmkTokenName) *token			/* OUT constructed token */
+)
+%%ELSE
+static void _pmInsert(sym, token)
+UByte%%(pmTermTyp) sym;			/* IN symbol code to insert */
+%%(tmkTokenName) *token;			/* OUT constructed token */
+%%ENDIF
+{
+    inSym(sym, token);
+}/*_pmInsert()*/
+
+
+/*----------------------------------------------------------------------------
+ * _pmReplace
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void _pmReplace(
+UByte%%(pmTermTyp) sym,			/* IN replacement symbol code */
+%%(tmkTokenName) *token			/* OUT constructed token */
+)
+%%ELSE
+static void _pmReplace(sym, token)
+UByte%%(pmTermTyp) sym;			/* IN replacement symbol code */
+%%(tmkTokenName) *token;			/* OUT constructed token */
+%%ENDIF
+{
+    delSym(token);
+    inSym(sym, token);
+}/*_pmReplace()*/
+
+
+/*----------------------------------------------------------------------------
+ * _pmDelete
+ *----------------------------------------------------------------------------
+ */
+
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void _pmDelete(
+%%(tmkTokenName) *token			/* OUT new token */
+)
+%%ELSE
+static void _pmDelete(token)
+%%(tmkTokenName) *token;			/* OUT new token */
+%%ENDIF
+{
+%%INCLUDE (readSymb)
+    delSym(token);
+}/*_pmDelete()*/
+
+
+/*----------------------------------------------------------------------------
+ * single - Single error recovery
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void single(
+TermSet leg_sys,		/* IN legal symbols in current state */
+ParseStack err_stk,		/* INOUT current parser stack */
+short *err_stkp,		/* INOUT current stack pointer */
+%%(tmkTokenName) *token,		/* INOUT current token */
+UByte%%(pmStateTyp) *newstat		/* OUT recovery state */
+)
+%%ELSE
+static void single(leg_sys, err_stk, err_stkp, token, newstat)
+TermSet leg_sys;		/* IN legal symbols in current state */
+ParseStack err_stk;		/* INOUT current parser stack */
+short *err_stkp;		/* INOUT current stack pointer */
+%%(tmkTokenName) *token;		/* INOUT current token */
+UByte%%(pmStateTyp) *newstat;		/* OUT recovery state */
+%%ENDIF
+{
+    short choice;		/* Recovery action performed */
+    short cost;			/* Best cost so far */
+    UByte%%(pmTermTyp) sym;			/* Insert symbol */
+
+    choice = NONE_REC;
+    cost = InfCost;
+    readLa(token);
+
+    tryIn(leg_sys, err_stk, *err_stkp, &sym, &cost, &choice);
+    tryRep(leg_sys, err_stk, *err_stkp, &sym, &cost, &choice);
+    tryDel(err_stk, *err_stkp, &cost, &choice);
+
+    if (cost > Thresh) choice = NONE_REC;
+
+    switch (choice) {
+
+    case IN_REC:
+	_pmInsert(sym, token);
+	break;
+
+    case DEL_REC:  
+	_pmDelete(token);
+	break;
+
+    case REP_REC: 
+	_pmReplace(sym, token);
+	break;
+
+    default:
+%%INCLUDE (readSymb)
+    }/*switch*/
+
+    *newstat = err_stk[*err_stkp];
+}/*single()*/
+
+
+%%ENDIF
+
+%%ENDIF
+/*----------------------------------------------------------------------------
+ * recover - From an error
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+static void recover(
+ParseStack err_stk,		/* INOUT updated parse stack */
+short *err_stkp,		/* INOUT updated stack pointer */
+%%(tmkTokenName) *err_symb,		/* INOUT current token */
+UByte%%(pmStateTyp) *rec_stat		/* OUT state after recovery */
+)
+%%ELSE
+static void recover(err_stk, err_stkp, err_symb, rec_stat)
+ParseStack err_stk;		/* INOUT updated parse stack */
+short *err_stkp;		/* INOUT updated stack pointer */
+%%(tmkTokenName) *err_symb;		/* INOUT current token */
+UByte%%(pmStateTyp) *rec_stat;		/* OUT state after recovery */
+%%ENDIF
+{
+    TermSet legal_sy;		/* Legal symbols */
+
+%%IF(pmkMOVMEM(?))
+    movmem(err_symb, &errdescr.err_tok, sizeof(%%(tmkTokenName)));
+%%ELSE
+    errdescr.err_tok = *err_symb;
+%%ENDIF
+    errdescr.err_tok.%%(tmkTokenCode) = voc[errdescr.err_tok.%%(tmkTokenCode) - TermMin].scc;
+    errdescr.method = NONE_REC;
+    errdescr.eClass = SYN_ERR;
+    errdescr.severity = ERR_SEV;
+%%IF(pmRec(Single) OR pmRec(Panic) OR pmRec(Multiple))
+    gLegSym(err_stk, *err_stkp, legal_sy);
+%%IF(pmRec(Single))
+    single(legal_sy, err_stk, err_stkp, err_symb, rec_stat);
+    if (errdescr.method == NONE_REC) {
+%%ENDIF
+%%IF(pmRec(Multiple))
+	multiple(err_stk, err_stkp, err_symb, rec_stat);
+	%%(parserPrefix)Mess(&errdescr.err_tok, errdescr.method, errdescr.eClass, 
+	       errdescr.severity); 
+%%ENDIF
+%%IF(pmRec(Panic) AND NOT pmRec(Multiple))
+	panic(legal_sy, err_stk, err_stkp, err_symb, rec_stat);
+	%%(parserPrefix)Mess(&errdescr.err_tok, errdescr.method, errdescr.eClass,
+	       errdescr.severity); 
+%%ENDIF
+%%IF(NOT pmRec(Panic) AND NOT pmRec(Multiple) AND NOT pmRec(""))
+	_pmDelete(err_symb);
+	%%(parserPrefix)Mess(&errdescr.err_tok, DEL_REC, SYN_ERR, ERR_SEV);
+%%ENDIF
+%%IF(pmRec(Single))
+    } else {
+	%%(parserPrefix)Mess(&errdescr.err_tok, errdescr.method, SYN_ERR, errdescr.severity);
+    }/*if*/
+%%ENDIF
+%%IF(pmkMOVMEM(?))
+    movmem(err_symb, &errdescr.res_tok, sizeof(%%(tmkTokenName)));
+%%ELSE
+    errdescr.res_tok = *err_symb;
+%%ENDIF
+    errdescr.res_tok.%%(tmkTokenCode) = voc[errdescr.res_tok.%%(tmkTokenCode) - TermMin].scc;
+    %%(parserPrefix)RPoi(&errdescr.res_tok);
+%%ENDIF
+%%IF(pmRec(""))
+%%IF(pmRec(Single) OR pmRec(Panic) OR pmRec(Multiple))
+    if (errdescr.method == NONE_REC)
+%%ENDIF
+	paAbort(&errdescr.err_tok, SYN_ERR, FAT_SEV);
+%%ENDIF
+}/*recover()*/
+
+
+/*----------------------------------------------------------------------------
+ * %%(parserPrefix)Parse - Parser routine, entry point
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+void %%(parserPrefix)Parse(void)
+%%ELSE
+void %%(parserPrefix)Parse()
+%%ENDIF
+{
+%%IF (pmTrace(?))
+    int tokCode;
+    UByte%%(pmStateTyp) ostat;
+%%ENDIF
+    paInit();
+%%INCLUDE (readSymb)
+    pushStatTok()
+%%IF(pmkOs(VMS))
+    if (setjmp(&pmJmpB)) return;
+%%ELSE
+    if (setjmp(pmJmpB)) return;
+%%ENDIF
+
+%%IF (pmTrace(?))
+	    printf("\n");
+%%ENDIF	    
+    while (!endparse) {
+	actTbl(currstat, token->%%(tmkTokenCode), &action, &arg);
+
+	switch (action) {
+
+	case ERROR_ACT:
+%%IF (pmTrace(?))
+	    ostat = currstat;
+	    tokCode = token->%%(tmkTokenCode);
+%%ENDIF	    
+	    recover(parsStk, &%%(parserPrefix)StkP, token, &currstat);
+	    if (%%(parserPrefix)StkP == 0) endparse = PMTRUE;
+%%IF (pmTrace(?))
+	    printf("Token %d(%s) => Action ERROR  : State transition = %d => %d\n",
+			tokCode, voc[tokCode-TermMin].name, ostat, currstat);
+%%ENDIF	    
+	    break;
+
+	case SHIFT_ACT:
+%%IF (pmTrace(?))
+	    printf("Token %d(%s) => Action SHIFT  : State transition = %d => %d\n",
+			token->%%(tmkTokenCode),
+			voc[token->%%(tmkTokenCode)-TermMin].name,
+			currstat, arg);
+%%ENDIF	    
+	    currstat = arg;
+	    pushStatTok();
+%%INCLUDE (readSymb)
+	    break;
+
+	case SHIFTRED_ACT:
+%%IF (pmTrace(?))
+	    printf("Token %d(%s) => Action SHIFT_REDUCE\n",
+			token->%%(tmkTokenCode),
+			voc[token->%%(tmkTokenCode)-TermMin].name);
+%%ENDIF	    
+	    pushStatTok();
+%%INCLUDE (readSymb)
+	    goto reduce;
+
+ 	case REDUCE_ACT:
+	  reduce:
+	    do {
+		%%(parserPrefix)StkP -= gto.rhsz[arg - ProdMin];	
+%%IF (pmTrace(?))
+		printf("Token %d(%s) => Action REDUCE by rule %d\n",
+			token->%%(tmkTokenCode),
+			voc[token->%%(tmkTokenCode)-TermMin].name, arg);
+%%ENDIF
+		%%(parserPrefix)PaSema(arg);
+		gtoTbl(parsStk[%%(parserPrefix)StkP], gto.lhs[arg - ProdMin], &action, &arg);
+		pushStat();
+	    } while (action != SHIFT_ACT);
+
+%%IF (pmTrace(?))
+            printf("Token %d(%s) => Action REDUCE : State transition = %d => %d\n",
+			token->%%(tmkTokenCode),
+			voc[token->%%(tmkTokenCode)-TermMin].name,
+			currstat, arg);
+%%ENDIF	    
+	    currstat = arg;
+	    parsStk[%%(parserPrefix)StkP] = currstat;
+	    break;
+
+	case ACCEPT_ACT:
+	    endparse = PMTRUE;
+	    break;
+	}/*switch*/
+    }/*while*/
+}/*%%(parserPrefix)Parse()*/
+
+%%IF(tmkForce(0))
+%%  PROCESS(, "%%(parserPrefix)PaSema.%%(targetLanguageExtension).tmp")
+%%ELSE
+%%  PROCESS(, "%%(parserPrefix)PaSema.%%(targetLanguageExtension)")
+%%ENDIF
+/*----------------------------------------------------------------------*\
+
+	%%(parserPrefix)PaSema.%%(targetLanguageExtension)
+
+	ParserMaker generated semantic actions
+
+\*----------------------------------------------------------------------*/
+
+%%IF (pmkImport (?R))
+/* `%`%IMPORT */
+%%INCLUDE (pmkImport)
+/* END `%`%IMPORT */
+%%ENDIF
+
+/* System dependencies
+ * -------------------
+ */
+%%INCLUDE(systemDependencies)
+
+%%IF (NOT doNotGenerateTokenH(?))
+/* Token and Srcp definition */
+#include "%%(tmkPrefix)Common.h"
+%%ENDIF
+
+/* Attribute stacks *\
+\* ---------------- */
+%%IF (pmIData(?R))
+/* `%`%ATTRIBUTES */
+/* The semantic attributes for grammar symbols */
+%%INCLUDE(pmIData)
+/* END `%`%ATTRIBUTES */
+%%ENDIF
+
+extern short %%(parserPrefix)StkP;
+extern %%(tmkTokenName) %%(parserPrefix)SySt[];
+%%IF (tmkGrmAttrDecl(?V))
+extern %%(parserPrefix)Grammar %%(parserPrefix)SeSt[];
+%%ENDIF
+
+/* `%`%DECLARATIONS - User data and routines */
+
+%%INCLUDE(pmDecl)
+
+/* END `%`%DECLARATIONS */
+
+
+/*----------------------------------------------------------------------------
+ * %%(parserPrefix)PaSema - The semantic actions
+ *----------------------------------------------------------------------------
+ */
+%%IF ({"ansi-c","c++"} (%%(pmkTarget)))
+void %%(parserPrefix)PaSema(
+int rule			/* IN production number */
+)
+%%ELSE
+void %%(parserPrefix)PaSema(rule)
+int rule;			/* IN production number */
+%%ENDIF
+{
+%%INCLUDE(pmSemantics)
+    default: break; }
+}/*%%(parserPrefix)PaSema()*/
+%%ENDIF
+%%ENDIF
+
+%%IF(tmkForce(0))
+%%  PROCESS(, "%%(vocFileName).tmp")
+%%ELSE
+%%  PROCESS(, "%%(vocFileName)")
+%%ENDIF
+%%INCLUDE(pmVoc)
+%%--
+%%IF({"SunOS", "HP", "Apollo", "VMS"} (%%(currentOs)))
+%%PROCESS(, "/dev/null")
+%%ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
+%%PROCESS(, "NUL")
+%%ELSE
+	Illegal OS option
+%%ENDIF
+%%IF(tmkForce(0))
+%%--
+%%-- Check generated files, discard them or replace the old files if
+%%-- new files are different
+%%--
+%%  ESET files ("%%(parserPrefix)Parse.h", "%%(parserPrefix)Parse.%%(targetLanguageExtension)")
+%%  ESET files (,"%%(parserPrefix)PaSema.%%(targetLanguageExtension)", "%%(vocFileName)")
+%%  LOOP(file, files)
+%%      IF({"SunOS", "HP", "Apollo", "VMS"} (%%(currentOs)))
+%%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
+%%	        IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
+%%	            EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
+%%	        ENDIF
+%%          ELSE
+%%	        IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
+%%	            EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%	        ENDIF
+%%          ENDIF
+%%      ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
+%%	    IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
+%%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%          ENDIF
+%%      ELSE
+	Illegal OS option
+%%      ENDIF
+%%  ENDLOOP(file)
+%%ENDIF

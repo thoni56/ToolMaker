@@ -1,0 +1,6 @@
+# Makefile for license handler on DOS with DJGPP
+# Currently uses no license manager
+
+license.a: nolicense.o
+	ar a license.a nolicense.o
+

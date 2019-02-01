@@ -1,0 +1,28 @@
+########## tmcore ##########
+set os = "$argv[1]"
+if ("$os" == "PC") then
+  dos2unix -ascii tmcore.tst.win32
+  alias cat dos2unix -ascii
+else
+  ../../smk tmcore
+endif
+########## /bin/csh tmcore.tst UNIX ##########
+
+
+tmcore.tmk
+
+    1.  	%%TOKEN
+=====>  	1
+
+  *1*   65 E : If declaration is given in one token member it must be given in all.
+
+    6.  			y %% int %1%%;
+=====>  			1
+
+  *1*   101 E : 'CODE' inserted.
+  *1*   61 E : Directive defined twice, new directive skipped.
+
+
+3 error(s).
+No detected warnings.
+

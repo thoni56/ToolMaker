@@ -1,0 +1,15 @@
+SERVER
+
+	* Auto logout after 10 minutes
+	* Get a license giving "name@host" (max 256 characters)
+	
+LICENSE FILE
+
+	* <name> = <value>
+		DATE = 1990-02-03
+		HOST = eeyore
+		HOSTID = 15F...
+		USERS = 2
+		PASSWORD = ...
+
+		

@@ -1,0 +1,203 @@
+%%-- DDL code generation 
+%%--                        Date: 1991-06-12/egon@robin
+
+%%BEGIN(classHead)
+
+//-----------------------------------------------------------------------
+// %%(classHead[1])
+
+%%END(classHead)
+
+%%BEGIN(functionHead)
+
+//-----------------------------------------------------------------------
+// %%(functionHead[1])
+
+%%END(functionHead)
+
+
+%%------------------- init ----------------------------------------------
+%%-- Set the variables CLASS_className_ATTRIBUTE_attrName_ATTR_NUMBER,
+%%-- className_CLASS_ID, STRUCTURE_structName_DBSIZE.
+%%-- No code is generated.
+%%BEGIN(init)
+%%SET CLASS_ID_COUNTER(0)
+%%LOOP(className, CLASSES)
+%%SET CLASS_ID_COUNTER(%%(CLASS_ID_COUNTER+1))
+%%SET %%(className)_CLASS_ID(%%(CLASS_ID_COUNTER))
+%%SET attrNo(%%(CLASS_%%(className)_BASE_ATTRIBUTES))
+%%SET beforeKey("TRUE")
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0 OR CLASS_%%(className)_KEY[0] = 0)
+%%-- Generated keys:
+%%IF(CLASS_%%(className)_KEY[0] = 0)
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER(%%(attrNo+1))
+%%ELSE
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER(%%(attrNo))
+%%ENDIF
+%%ELSIF(CLASS_%%(className)_KEY(%%(attrName)))
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER(0)
+%%SET beforeKey("FALSE")
+%%ELSIF(beforeKey = "TRUE")
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER(%%(attrNo + 1))
+%%ELSE
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER(%%(attrNo))
+%%ENDIF
+%%SET attrNo(%%(attrNo+1))
+%%ENDLOOP(attrName)
+%%ENDLOOP(className)
+%%--
+%%LOOP(relName, RELATIONS)
+%%SET CLASS_ID_COUNTER(%%(CLASS_ID_COUNTER+1))
+%%SET %%(relName)_CLASS_ID(%%(CLASS_ID_COUNTER))
+%%ENDLOOP(relName)
+%%--
+%%LOOP(structName, STRUCTURES)
+%%SET STRUCTURE_%%(structName)_DBSIZE(0)
+%%LOOP(elemName, STRUCTURE_%%(structName)_PERSISTENT_ELEMENTS)
+%%SET STRUCTURE_%%(structName)_DBSIZE(%%(STRUCTURE_%%(structName)_DBSIZE+STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_SIZE))
+%%ENDLOOP(elemName)
+%%LOOP(elemName, STRUCTURE_%%(structName)_DYNAMIC_ELEMENTS)
+%%SET STRUCTURE_%%(structName)_DBSIZE(%%(STRUCTURE_%%(structName)_DBSIZE+STRUCTURE_%%(structName)_ELEMENT_%%(elemName)_SIZE))
+%%ENDLOOP(elemName)
+%%ENDLOOP(structName)
+%%END(init)
+
+
+
+%%------------------- makeDeclarations ----------------------------------
+%%BEGIN(makeDeclarations)
+%%INCLUDE(init)
+%%INCLUDE(DDLdecl)
+%%INCLUDE(DDLdef)
+
+%%INCLUDE(Loop(STRUCTURES, structureDecl))
+%%INCLUDE(Loop(RELATIONS, relationDecl))
+%%INCLUDE(Loop(CLASSES, classDecl))
+
+%%INCLUDE(Loop(STRUCTURES, structureDef))
+%%INCLUDE(Loop(RELATIONS, relationDef))
+%%INCLUDE(Loop(CLASSES, classDef))
+
+%%INCLUDE(DDLload)
+%%END(makeDeclarations)
+
+
+%%------------------- DDLdecl -------------------------------------------
+%%BEGIN(DDLdecl)
+%%PROCESS(, "DOL.hh")
+//============ DOL declarations =========================================
+//=======================================================================
+
+#ifndef _DOL_H_
+#define _DOL_H_
+
+#include "DBH.h"
+#include <string.h>
+
+#define Integer int
+#define Integer_8 char
+#define Integer_16 short
+#define Integer_32 int
+
+#define Natural unsigned int
+#define Natural_8 unsigned char
+#define Natural_16 unsigned short
+#define Natural_32 unsigned int
+
+#define Real double
+#define Real_32 float
+#define Real_64 double
+
+#define Boolean char
+#define Boolean_8 char
+#define Boolean_32 char
+
+#define Character char
+#define Character_8 char
+
+
+#define TRUE 1
+#define FALSE 0
+
+extern void error(char*);
+extern void DB_init(void);
+
+%%LOOP(class, CLASSES)
+#define %%(class)_CLASS_ID %%(%%(class)_CLASS_ID)
+%%ENDLOOP(class)
+%%LOOP(relation, RELATIONS)
+#define %%(relation)_CLASS_ID %%(%%(relation)_CLASS_ID)
+%%ENDLOOP(relation)
+
+#endif
+//-- EoF ------------------------------------------------------------
+%%END(DDLdecl)
+
+
+%%------------------- DDLdef --------------------------------------------
+%%BEGIN(DDLdef)
+%%PROCESS(, "DOL.cc")
+#include "DOL.hh"
+
+//=======================================================================
+// Database initialisations
+void DB_init(void)
+{
+    DbmGeneral::init();
+    DataBaseManager* dbmanager = getDbManager_t();
+%%LOOP(className, CLASSES)
+    install_t(dbmanager, %%(className)_CLASS_ID, "%%(className).dbLoad");
+%%ENDLOOP(className)
+%%LOOP(relName, RELATIONS)
+    install_t(dbmanager, %%(relName)_CLASS_ID, "%%(relName).dbLoad");
+%%ENDLOOP(relName)
+} 
+
+//=======================================================================
+// error() : Temporary solution. Will be replaced by exceptions.
+void error(char* str)
+{
+cout << "error: " << str << "\n";
+exit(1);
+}
+
+//-- EoF ------------------------------------------------------------
+%%END(DDLdef)
+
+
+%%------------------- DDLload -------------------------------------------
+%%BEGIN(DDLload)
+%%INCLUDE(Loop(CLASSES, loadClass))
+%%INCLUDE(Loop(RELATIONS, loadRelation))
+%%END(DDLload)
+
+%%------------------- Loop ----------------------------------------------
+%%-- Call Loop[2] for every element in Loop[1]
+%%BEGIN(Loop)
+%%LOOP(element, %%(Loop[1]))
+%%INCLUDE(%%(Loop[2])(%%(element)))
+%%ENDLOOP(element)
+%%END(Loop)
+
+
+%%BEGIN(friendDecl)
+%%SET name(%%(friendDecl[1]))
+%%LOOP(class, CLASSES)
+%%SET foundRef()
+%%LOOP(attr, CLASS_%%(class)_ATTRIBUTES)
+%%IF(CLASS_%%(class)_ATTRIBUTE_%%(attr)_TYPE = name)
+%%SET foundRef(1)
+%%ENDIF
+%%ENDLOOP(attr)
+%%IF(foundRef[0] > 0)
+    friend %%(class);
+%%ENDIF
+%%ENDLOOP(class)
+%%LOOP(rel, RELATIONS)
+%%IF(RELATION_%%(rel)_TO = name)
+    friend %%(rel);
+%%ENDIF
+%%ENDLOOP(rel)
+%%END(friendDecl)
+

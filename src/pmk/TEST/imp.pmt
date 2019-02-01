@@ -1,0 +1,1155 @@
+%%SET tmkTokenName("TmToken")
+%%SET tmkTokenCode("code")
+%%SET tmkTokenSrcp("srcp")
+%%SET tmkTokenDecl (" int code", " TmSrcp srcp", " char *text", " int begin", " int end")
+%%SET tmkSrcpName("TmSrcp")
+%%SET tmkSrcpRow("line")
+%%SET tmkSrcpCol("col")
+%%SET tmkSrcpFile("file")
+%%SET tmkSrcpDecl(" TmNatural line", " TmNatural col", " TmNatural file")
+%%BEGIN(tmkImport)
+
+/* .tmk-import */
+typedef int TmNatural;
+%%END(tmkImport)
+%%SET tmkForce(0)
+%%SET tmkOs("SunOS")
+%%SET pmkOs("SunOS")
+%%SET currentOs("SunOS")
+%%SET tmkTarget("c")
+%%SET pmkTarget("c")
+%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET pmkLibrary("%%(TMHOME)/lib/%%(pmkTarget)/")
+%%SET tmkPrefix("imp")
+%%SET parserPrefix("imp")
+%%SET listerPrefix("imp")
+%%SET tmkCodeDecl(" int code")
+%%SET tmkGrmAttrDecl(" Ast ast         /* An abstract syntax tree */", " TmSrcp srcp      /* Source position         */")
+%%SET tmkGrmAttrNames("ast", "srcp")
+%%BEGIN(pmkImport)
+
+/* .pmk-import */
+#include <stdio.h>
+#include "ast.h"
+#include "impScan.h"
+#include "impList.h"
+extern impContext impcontext;
+%%END(pmkImport)
+%%BEGIN(pmkExport)
+
+/* .pmk-export */
+#include "ast.h"
+%%END(pmkExport)
+%%PROCESS("%%(tmkLibrary)/Common.imp")
+%%SET pmStackMax(128)
+%%SET pmLookAheadMax(5)
+%%SET pmCost(5)
+%%BEGIN(pmIScan)
+ impScan(impcontext, token);
+
+%%END(pmIScan)
+%%SET pmOptimize(Lr0)
+%%SET pmActPack(RDS)
+%%SET pmGtoPack(RDS)
+%%SET pmRec(Single, Multiple, Panic)
+%%SET pmHeader("PMK -- ParserMaker 2.1(16) (1997-07-28 17:37)")
+%%SET pmVersion("2.1")
+%%SET pmCorrection("16")
+%%BEGIN(pmDecl)
+/* .pmk-declarations */
+%%END(pmDecl)
+%%SET pmStates(147)
+%%SET pmStateTyp(1)
+%%SET pmTerms(45)
+%%SET pmTermTyp(1)
+%%SET pmActTyp(2)
+%%SET pmArgTyp(1)
+%%SET pmActRDSvectorLen(930)
+%%BEGIN(pmActTab)
+{4,691,691,691,691,691,691,691,427,691,691,691,691,691,691,609,49,113,691
+,691,691,250,833,33,691,427,841,243,243,722,427,835,835,835,835,835,835
+,561,835,835,835,835,721,835,714,835,761,835,835,835,49,113,33,835,897,843
+,843,843,843,843,843,705,843,843,843,843,634,843,881,843,858,843,843,843
+,49,113,843,843,659,659,659,659,659,659,659,897,659,659,659,659,97,659,338
+,393,843,659,659,659,259,817,490,659,659,659,659,659,659,659,659,865,659
+,659,659,659,97,659,33,897,33,659,659,659,722,265,722,659,563,563,563,563
+,563,563,226,65,563,563,129,714,563,714,49,113,563,563,563,138,755,177,563
+,571,571,571,571,571,571,298,65,571,571,129,755,571,33,641,33,571,571,571
+,722,146,722,571,555,555,555,555,555,555,290,65,555,555,129,714,555,714
+,19,665,555,555,555,481,19,234,555,19,19,249,282,19,19,19,19,19,19,19,34
+,19,19,19,689,19,33,49,113,537,417,666,289,130,465,585,681,187,857,601,19
+,513,225,369,154,281,19,267,833,19,19,531,337,19,19,19,19,19,19,19,34,19
+,19,19,322,19,33,305,314,537,417,162,521,130,465,585,681,187,857,601,19
+,513,225,369,377,281,19,745,738,19,19,210,545,19,19,777,19,19,34,19,450
+,19,19,19,33,19,458,537,417,466,474,130,465,482,681,195,19,601,233,513,225
+,369,19,281,801,19,19,19,346,19,19,218,19,1121,34,19,321,19,19,19,33,19
+,1137,537,417,657,178,130,465,506,681,1161,19,601,330,513,225,369,19,281
+,514,19,19,433,0,19,19,0,19,0,34,19,19,19,19,19,33,19,0,537,417,0,0,130
+,465,0,681,0,19,601,737,513,225,369,19,281,0,19,19,0,0,19,19,306,19,0,34
+,19,19,19,19,19,33,19,0,537,417,19,0,130,465,0,681,0,33,601,793,513,225
+,369,722,281,0,33,19,11,0,0,0,722,19,0,73,19,19,714,0,19,19,0,19,73,34,19
+,714,19,19,19,33,19,0,537,417,0,0,130,465,0,681,0,0,601,0,513,225,369,0
+,281,1033,627,1081,627,627,627,627,747,627,627,627,627,217,1065,1073,1081
+,153,627,0,627,153,0,0,0,33,217,1049,1057,33,153,722,0,539,539,722,0,0,33
+,1081,1177,49,113,73,722,1113,714,73,33,217,714,747,1081,153,722,0,73,0
+,1113,714,0,33,217,1177,153,0,153,722,0,714,0,0,33,0,33,1081,1177,0,722
+,73,722,1113,714,811,811,217,193,523,497,153,73,0,73,714,1113,714,217,33
+,0,1177,153,0,0,722,33,0,1081,0,33,0,722,0,0,153,722,73,217,1113,714,363
+,153,33,73,547,547,714,73,722,33,714,1177,49,113,0,722,634,363,929,945,961
+,977,913,714,49,113,0,73,0,1113,714,0,1009,0,993,193,523,929,945,961,977
+,0,355,49,113,217,193,523,193,153,0,1009,0,993,0,193,217,33,217,355,153
+,0,153,722,913,217,0,0,33,153,33,193,0,0,722,73,722,33,714,0,193,217,193
+,722,0,153,73,193,73,714,217,714,217,33,153,73,153,217,714,722,0,153,33
+,0,33,0,0,193,722,33,722,73,0,0,714,722,0,217,193,0,73,153,73,714,0,714
+,0,73,217,33,714,193,153,0,435,722,0,0,193,0,33,217,49,113,0,153,722,73
+,217,0,714,435,153,33,193,193,435,0,73,722,33,714,0,811,217,217,722,33,153
+,153,0,73,0,722,714,0,33,33,73,193,0,714,722,722,33,0,193,0,714,217,722
+,747,449,153,73,73,217,714,714,193,153,33,73,0,153,714,193,722,33,217,0
+,33,33,153,722,0,217,722,722,73,153,33,714,747,0,0,73,722,33,714,73,193
+,714,714,722,0,153,787,787,73,0,217,714,0,33,153,73,153,747,714,722,787
+,153,33,0,33,0,0,33,722,33,722,73,0,722,714,722,0,827,827,0,73,0,73,714
+,443,714,403,73,714,274,714,170,49,113,49,113,33,0,33,49,113,443,722,403
+,722,411,443,0,403,33,33,0,419,49,113,722,722,714,33,714,49,113,411,0,722
+,0,33,411,73,419,714,714,722,0,419,33,0,0,0,714,0,722,0,0,0,0,0,714,0,0
+,0,0,0,0,0,0,714}
+%%END(pmActTab)
+%%SET pmActRDScheckLen(930)
+%%SET pmRDScheckTyp(1)
+%%SET pmActRowMapTyp(2)
+%%BEGIN(pmRDScheck)
+{1,16,16,16,16,16,16,16,122,16,16,16,16,16,16,74,122,122,16,16,16,105,105
+,16,16,122,76,76,76,16,122,9,9,9,9,9,9,68,9,9,9,9,88,9,16,9,86,9,9,9,88
+,88,9,9,68,8,8,8,8,8,8,86,8,8,8,8,24,8,108,8,9,8,8,8,24,24,8,8,10,10,10
+,10,10,10,10,108,10,10,10,10,10,10,47,47,8,10,10,10,77,77,136,10,17,17,17
+,17,17,17,17,106,17,17,17,17,17,17,57,136,92,17,17,17,57,31,92,17,6,6,6
+,6,6,6,65,6,6,6,6,57,6,92,65,65,6,6,6,54,20,20,6,14,14,14,14,14,14,32,14
+,14,14,14,20,14,75,78,99,14,14,14,75,56,99,14,25,25,25,25,25,25,33,25,25
+,25,25,75,25,99,69,81,25,25,25,58,69,83,25,69,69,29,29,69,69,69,69,69,69
+,69,70,69,69,69,84,69,70,12,12,70,70,12,34,70,70,70,70,70,70,70,109,70,70
+,70,60,70,109,102,102,109,109,40,40,109,109,109,109,109,109,109,110,109
+,109,109,44,109,110,36,36,110,110,62,63,110,110,110,110,110,110,110,72,110
+,110,110,45,110,72,91,19,72,72,93,66,72,72,95,72,72,73,72,129,72,72,72,73
+,72,130,73,73,131,132,73,73,133,73,73,79,73,27,73,73,73,79,73,98,79,79,79
+,49,79,79,100,79,138,80,79,38,79,79,79,80,79,140,80,80,80,71,80,80,142,80
+,143,89,80,39,80,80,80,89,80,145,89,89,52,147,89,89,147,89,147,90,89,89
+,89,89,89,90,89,147,90,90,147,147,90,90,147,90,147,96,90,90,90,90,90,96
+,90,147,96,96,147,147,96,96,35,96,147,97,96,96,96,96,96,97,96,147,97,97
+,0,147,97,97,147,97,147,35,97,97,97,97,97,35,97,147,139,0,2,147,147,147
+,139,0,147,35,0,0,35,147,0,0,147,0,139,2,0,139,0,0,0,2,0,147,2,2,147,147
+,2,2,147,2,147,147,2,147,2,2,2,147,2,127,127,146,127,127,127,127,128,127
+,127,127,127,146,128,128,67,146,127,147,127,128,147,147,147,146,67,128,128
+,128,67,146,147,43,43,128,147,147,67,111,67,43,43,146,67,146,146,128,101
+,111,128,30,113,111,101,147,67,147,67,67,147,111,113,111,30,147,113,111
+,147,101,147,147,30,147,113,107,113,147,30,111,113,111,111,46,46,107,59
+,59,59,107,30,147,113,30,113,113,59,107,147,107,59,147,147,107,46,147,134
+,147,59,147,46,147,147,94,59,107,134,107,107,112,134,94,46,42,42,46,59,94
+,134,59,134,42,42,147,134,135,112,135,135,135,135,112,94,135,135,147,134
+,147,134,134,147,135,147,135,61,61,114,114,114,114,147,137,114,114,61,37
+,37,64,61,147,114,147,114,147,3,37,61,64,137,37,147,64,61,137,3,147,147
+,37,3,64,7,147,147,37,61,64,3,61,147,23,7,11,3,147,7,37,26,64,37,23,64,11
+,7,23,3,11,26,3,7,147,26,23,147,11,147,147,13,23,26,11,7,147,147,7,26,147
+,13,115,147,23,13,11,23,147,11,147,26,115,13,26,117,115,147,124,13,147,147
+,119,147,115,117,124,124,147,117,115,13,119,147,13,124,119,117,121,123,124
+,147,115,117,119,115,147,48,121,123,119,103,121,123,147,117,147,103,117
+,147,121,123,119,125,147,119,121,123,48,147,41,147,103,125,48,53,53,125
+,121,123,41,121,123,87,41,125,48,147,53,48,5,125,41,87,147,104,53,87,41
+,147,5,104,53,125,5,87,125,55,147,147,41,87,5,41,53,15,104,53,5,147,55,22
+,22,87,147,15,87,147,55,15,5,18,18,5,55,22,21,15,147,18,147,147,22,15,21
+,18,55,147,22,55,21,147,50,50,147,15,147,18,15,126,18,116,21,22,28,21,4
+,126,126,116,116,51,147,50,4,4,126,51,116,50,118,126,147,116,82,28,147,120
+,118,118,82,28,51,85,50,120,120,118,147,85,147,141,118,28,120,82,28,141
+,147,120,144,147,147,147,85,147,144,147,147,147,147,147,141,147,147,147
+,147,147,147,147,147,144}
+%%END(pmRDScheck)
+%%BEGIN(pmActRowMap)
+{403,0,421,636,862,787,124,652,53,29,77,663,203,688,147,812,0,101,814,258
+,144,819,817,661,64,170,668,303,860,196,512,121,153,176,217,387,252,627
+,320,338,235,767,584,494,248,269,544,90,743,312,848,846,348,771,143,803
+,167,93,190,548,228,616,255,257,629,130,277,478,35,169,189,298,249,267,14
+,139,25,96,161,285,303,186,859,191,209,868,43,780,40,321,339,272,95,275
+,561,279,357,375,309,141,315,488,231,726,770,19,108,537,66,209,229,501,580
+,514,615,699,857,712,876,719,883,735,6,736,714,760,855,463,469,284,290,293
+,294,297,568,596,98,622,318,396,325,876,333,334,885,344,465}
+%%END(pmActRowMap)
+%%BEGIN(pmContTab)
+{{1,1}
+,{1,1}
+,{1,1}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{3,3}
+,{2,2}
+,{42,42}
+,{15,15}
+,{42,42}
+,{3,3}
+,{42,42}
+,{2,2}
+,{2,2}
+,{17,17}
+,{17,17}
+,{3,3}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{3,3}
+,{42,42}
+,{2,2}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{2,2}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{42,42}
+,{3,3}
+,{3,3}
+,{3,3}
+,{2,2}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{45,45}
+,{2,2}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{45,45}
+,{2,2}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{2,2}
+,{42,42}
+,{3,3}
+,{2,2}
+,{42,42}
+,{3,3}
+,{18,18}
+,{35,35}
+,{35,35}
+,{18,18}
+,{35,35}
+,{2,2}
+,{45,45}
+,{3,3}
+,{3,3}
+,{3,3}
+,{18,18}
+,{29,29}
+,{2,2}
+,{45,45}
+,{3,3}
+,{2,2}
+,{45,45}
+,{19,19}
+,{42,42}
+,{3,3}
+,{18,18}
+,{38,38}
+,{2,2}
+,{45,45}
+,{3,3}
+,{45,45}
+,{3,3}
+,{18,18}
+,{38,38}
+,{2,2}
+,{45,45}
+,{3,3}
+,{45,45}
+,{3,3}
+,{45,45}
+,{45,45}
+,{3,3}
+,{2,2}
+,{42,42}
+,{3,3}
+,{18,18}
+,{35,35}
+,{42,42}
+,{3,3}
+,{42,42}
+,{5,5}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{42,42}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{3,3}
+,{42,42}
+,{3,3}
+,{3,3}
+,{3,3}
+,{2,2}
+,{45,45}
+,{4,4}
+,{45,45}
+,{3,3}
+,{4,4}
+,{45,45}
+,{3,3}
+,{42,42}
+}
+%%END(pmContTab)
+%%BEGIN(pmSeparators)
+{0,0,0,0,0,0}
+%%END(pmSeparators)
+%%BEGIN(pmFiducials)
+{0,0,0,0,0,0}
+%%END(pmFiducials)
+%%BEGIN(pmSkips)
+{0,0,0,0,0,0}
+%%END(pmSkips)
+%%SET pmNonTerms(43)
+%%SET pmNonTermTyp(1)
+%%SET pmGtoTyp(2)
+%%SET pmGtoRDSvectorLen(850)
+%%BEGIN(pmGtoTab)
+{17,209,89,0,0,578,0,602,0,1025,0,553,0,0,642,650,921,682,145,498,633,0
+,618,1105,370,25,649,569,593,729,137,730,889,209,89,385,730,578,386,602
+,866,1025,698,873,818,137,730,706,921,850,145,498,409,730,618,1105,370,698
+,81,625,785,89,137,730,698,209,89,730,769,578,386,602,0,1025,698,1097,0
+,145,706,0,1089,0,145,498,0,0,618,1105,370,137,730,0,209,89,137,730,578
+,0,602,401,1025,698,386,0,0,0,698,921,818,145,498,0,0,618,905,370,409,730
+,0,209,89,137,730,578,730,602,0,1025,698,386,674,0,825,698,921,706,145,498
+,770,0,618,0,378,778,0,0,209,89,137,730,578,241,602,802,626,0,386,794,137
+,730,698,353,0,145,0,185,730,618,0,0,698,273,26,0,202,137,730,698,329,137
+,730,0,106,82,0,1129,489,698,42,90,122,698,0,50,114,0,98,58,74,66,209,89
+,0,0,578,1153,602,0,626,674,0,849,0,137,730,353,0,145,209,89,0,618,578,297
+,602,698,626,0,0,137,730,0,329,353,0,145,0,137,730,618,505,698,0,361,26
+,0,577,137,730,698,329,137,730,0,106,82,473,0,313,698,42,90,122,698,0,50
+,114,0,98,58,74,66,209,89,0,0,578,0,602,0,1025,0,0,0,137,730,0,921,0,145
+,498,0,0,618,26,0,698,0,0,0,0,137,730,0,106,82,0,0,0,394,42,90,122,698,26
+,50,114,0,98,58,74,66,0,0,106,82,0,0,0,0,42,90,122,26,0,50,114,0,98,58,74
+,66,0,106,82,0,0,0,0,42,90,122,26,0,50,114,0,98,58,74,66,0,106,82,0,0,0
+,0,42,90,122,26,0,50,114,0,98,58,74,66,0,106,82,617,0,0,0,42,90,122,0,0
+,50,114,0,98,58,74,66,209,89,0,0,578,753,602,425,626,673,209,89,137,730
+,578,345,602,145,626,0,0,618,0,0,698,105,809,145,0,137,730,618,0,137,730
+,137,730,137,730,137,730,698,209,89,0,698,578,698,602,698,626,698,209,89
+,137,730,578,201,602,145,626,0,0,618,0,0,698,713,1145,145,0,137,730,618
+,0,0,0,0,1169,0,0,137,730,698,209,89,0,0,578,0,602,697,626,698,209,89,137
+,730,578,937,602,145,626,0,0,618,137,730,698,953,0,145,0,137,730,618,0,0
+,698,137,730,0,0,137,730,698,209,89,0,0,578,698,602,0,626,698,209,89,0,0
+,578,969,602,145,626,0,0,618,0,0,0,985,0,145,0,137,730,618,0,0,0,0,0,0,0
+,137,730,698,209,89,0,0,578,0,602,0,626,698,209,89,0,0,578,1001,602,145
+,626,0,0,618,0,0,0,1017,0,145,0,137,730,618,0,0,0,0,0,0,0,137,730,698,209
+,89,0,0,578,0,602,0,626,698,209,89,0,0,578,529,602,145,626,0,0,618,0,0,0
+,41,0,145,0,137,730,618,0,0,0,0,0,0,0,137,730,698,121,89,0,0,578,0,602,0
+,626,698,57,89,0,0,578,0,602,145,626,0,0,618,0,0,0,0,0,145,0,137,730,618
+,0,0,0,0,0,0,0,137,730,698,89,0,0,610,0,602,0,626,0,698,0,0,0,0,0,0,145
+,0,762,89,618,169,594,778,602,0,626,0,137,730,257,0,0,802,0,145,0,794,0
+,618,698,0,0,0,0,185,730,137,730,762,0,0,169,0,778,762,0,698,169,698,778
+,161,0,0,802,0,0,441,794,0,802,0,0,0,794,0,185,730,0,0,0,762,185,730,169
+,0,778,762,698,0,169,0,778,1041,698,0,802,0,0,457,794,0,802,0,0,0,794,0
+,185,730,0,0,0,0,185,730,89,0,0,586,698,602,0,626,0,0,698,0,0,0,0,0,145
+,0,0,0,618,0,0,0,0,0,0,0,137,730,0,0,0,0,0,0,0,0,0,0,698}
+%%END(pmGtoTab)
+%%SET pmGtoRowMapTyp(2)
+%%BEGIN(pmGtoRowMap)
+{0,16,361,618,14,660,13,807,19,9,0,408,12,650,12,710,93,1,739,11,11,135
+,36,440,11,11,691,11,149,10,708,9,9,9,9,221,9,217,7,6,5,398,5,5,5,5,22,4
+,86,4,5,404,4,745,4,777,4,254,2,145,2,199,1,1,608,1,1,0,1,2,234,1,3,284
+,0,381,30,3,0,1,304,0,406,0,0,488,0,450,0,4,323,0,402,0,59,0,35,342,0,423
+,0,128,0,15,207,0,0,32,0,7,162,91,0,118,0,482,0,492,0,524,0,534,0,566,0
+,576,0,0,771,0,0,0,0,0,64,0,0,0,0,183,0,465,0,0,475,0,271}
+%%END(pmGtoRowMap)
+%%SET pmProds(108)
+%%SET pmLhsTyp(1)
+%%SET pmRhszTyp(1)
+%%BEGIN(pmLhs)
+{46,71,71,56,56,56,56,56,56,56,56,56,56,56,56,72,67,67,73,73,77,66,58,58
+,58,74,74,80,78,75,75,63,63,81,81,81,81,83,83,83,83,82,82,57,57,69,69,70
+,70,84,84,84,84,84,84,84,84,84,84,84,84,84,65,65,87,87,79,79,62,62,62,47
+,47,47,51,51,53,53,53,55,55,60,60,50,50,48,76,76,88,88,88,64,61,61,52,52
+,49,49,54,54,59,59,59,68,85,85,86,86}
+%%END(pmLhs)
+%%BEGIN(pmRhsz)
+{1,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,5,6,5,6,3,7,0,2,6,11,11,4,11,0,3,0,2,3
+,4,4,7,3,4,4,7,4,6,1,3,1,3,1,2,3,3,3,3,3,3,4,4,4,4,4,3,1,6,6,0,1,1,3,1,3
+,3,1,3,3,1,2,1,1,3,2,2,0,3,1,3,1,1,2,1,1,1,3,0,1,1,3,1,1,1,1,0,1,1,2,0,2
+,1,1}
+%%END(pmRhsz)
+%%SET pmSccMax(45)
+%%SET pmSccTyp(1)
+%%SET pmICostTyp(1)
+%%SET pmDCostTyp(1)
+%%BEGIN(pmVocTab)
+{{1,255,255,"EndOfText",""}
+,{2,1,1,"'('",""}
+,{3,1,1,"')'",""}
+,{4,1,1,"','",""}
+,{5,1,1,"'='",""}
+,{6,1,1,"'#'",""}
+,{7,1,1,"'>'",""}
+,{8,1,1,"'<'",""}
+,{9,1,1,"'?'",""}
+,{10,1,1,"'*'",""}
+,{11,1,1,"'+'",""}
+,{12,1,1,"'-'",""}
+,{13,1,1,"'/'",""}
+,{14,1,1,"'['",""}
+,{15,1,1,"']'",""}
+,{16,1,1,"'{'",""}
+,{17,1,1,"'}'",""}
+,{18,1,1,"TEXT",""}
+,{19,1,1,"'<='",""}
+,{20,1,1,"'OR'",""}
+,{21,1,1,"'>='",""}
+,{22,1,1,"'?R'",""}
+,{23,1,1,"'?V'",""}
+,{24,1,1,"'`%`%('",""}
+,{25,1,1,"'AND'",""}
+,{26,1,1,"'NOT'",""}
+,{27,1,1,"'`%`%IF'",""}
+,{28,1,1,"'`%`%SET'",""}
+,{29,1,1,"'`%`%END'",""}
+,{30,1,1,"INTEGER",""}
+,{31,1,1,"'`%`%KEEP'",""}
+,{32,1,1,"'`%`%ESET'",""}
+,{33,1,1,"'`%`%ELSE'",""}
+,{34,1,1,"'`%`%LOOP'",""}
+,{35,1,1,"'`%`%ENDIF'",""}
+,{36,1,1,"'`%`%ELSIF'",""}
+,{37,1,1,"'`%`%BEGIN'",""}
+,{38,1,1,"'`%`%ENDLOOP'",""}
+,{39,1,1,"'`%`%MESSAGE'",""}
+,{40,1,1,"'`%`%INCLUDE'",""}
+,{41,1,1,"'`%`%PROCESS'",""}
+,{42,1,1,"QUOT_STRING",""}
+,{43,1,1,"'`%`%EINCLUDE'",""}
+,{44,1,1,"'IMP$SYSTEM'",""}
+,{45,1,1,"UNQUOT_STRING",""}
+}
+%%END(pmVocTab)
+%%SET pmSem(On)
+%%BEGIN(pmSemantics)
+    switch (rule) {
+          case 1: { /* goal = statements_opt; */
+ 
+  impAstRoot = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast; 
+	break;}
+    case 3: { /* statements_opt = statements_opt statement; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast->next=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast; 
+	break;}
+    case 2: { /* statements_opt =; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=NULL; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 4: { /* statement = TEXT; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_TEXT,%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1, 
+                              %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, NULL, NULL, NULL, NULL);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 5: { /* statement = keep_statement; */
+ /* transfer all attributes */ 	break;}
+    case 10: { /* statement = set_statement; */
+ /* transfer all attributes */ 	break;}
+    case 11: { /* statement = eset_statement; */
+ /* transfer all attributes */ 	break;}
+    case 6: { /* statement = insert_statement; */
+ /* transfer all attributes */ 	break;}
+    case 13: { /* statement = if_statement; */
+ /* transfer all attributes */ 	break;}
+    case 15: { /* statement = loop_statement; */
+ /* transfer all attributes */ 	break;}
+    case 12: { /* statement = message_statement; */
+ /* transfer all attributes */ 	break;}
+    case 14: { /* statement = region_statement; */
+ /* transfer all attributes */ 	break;}
+    case 7: { /* statement = include_statement; */
+ /* transfer all attributes */ 	break;}
+    case 8: { /* statement = einclude_statement; */
+ /* transfer all attributes */ 	break;}
+    case 9: { /* statement = process_statement; */
+ /* transfer all attributes */ 	break;}
+    case 16: { /* keep_statement = '`%`%KEEP'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_KEEP,
+                                   %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, 
+				   NULL, NULL, NULL, NULL);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 17: { /* set_statement = '`%`%SET' ident '(' values_opt ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				  AST_ASSIGN, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].ast, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+5].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 18: { /* set_statement = '`%`%SET' ident '(' ',' values_opt ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				  AST_APPEND, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, NULL, NULL, NULL);
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 19: { /* eset_statement = '`%`%ESET' ident '(' eval_expressions_opt ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				   AST_ASSIGN, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, 
+				   %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].ast, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+5].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 20: { /* eset_statement = '`%`%ESET' ident '(' ',' eval_expressions_opt ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				   AST_APPEND, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast,
+				   %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 21: { /* insert_statement = '`%`%(' expression ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				   AST_EVAL, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast,  %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].text, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 22: { /* if_statement = '`%`%IF' '(' condition ')' statements_opt else_part '`%`%ENDIF'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SySt[%%(parserPrefix)StkP+7].srcp, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+6].srcp, 
+				 AST_IF, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, 
+				 %%(parserPrefix)SeSt[%%(parserPrefix)StkP+6].ast, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 25: { /* else_part = '`%`%ELSIF' '(' condition ')' statements_opt else_part; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 
+			       AST_ELSIF, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, 
+			       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+6].ast, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 24: { /* else_part = '`%`%ELSE' statements_opt; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 23: { /* else_part =; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = NULL; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 26: { /* loop_statement = '`%`%LOOP' '(' ident '<=' expression ')' statements_opt '`%`%ENDLOOP' '(' ident ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SySt[%%(parserPrefix)StkP+8].srcp, nulSrcp, 
+				   AST_LOOP1, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+                                impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].srcp, nulSrcp, nulSrcp, 
+					   AST_EVAL, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, "", NULL, NULL, NULL),
+                                %%(parserPrefix)SeSt[%%(parserPrefix)StkP+7].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+10].ast, NULL);
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 27: { /* loop_statement = '`%`%LOOP' '(' ident ',' variable ')' statements_opt '`%`%ENDLOOP' '(' ident ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SySt[%%(parserPrefix)StkP+8].srcp, nulSrcp, 
+				   AST_LOOP2, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				   %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+7].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+10].ast, NULL);
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 28: { /* message_statement = '`%`%MESSAGE' '(' expression ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				      AST_MESSAGE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 29: { /* region_statement = '`%`%BEGIN' '(' ident parameters_opt locals_opt ')' statements_opt '`%`%END' '(' ident ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SySt[%%(parserPrefix)StkP+8].srcp, nulSrcp, 
+				     AST_REGION, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].ast,
+                                  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+7].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+10].ast); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 31: { /* parameters_opt = '(' idents ')'; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast;
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 30: { /* parameters_opt =; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = NULL;
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 33: { /* locals_opt = ',' idents; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast;
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 32: { /* locals_opt =; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = NULL;
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 35: { /* include_statement = '`%`%INCLUDE' '(' ident ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				      AST_INCLUDE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, %%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 37: { /* include_statement = '`%`%INCLUDE' '(' ident '(' values_opt ')' ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_INCLUDE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+                                   impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].srcp, nulSrcp, nulSrcp, 
+					      AST_PARAMS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, NULL, NULL, NULL, NULL),
+                                    %%(parserPrefix)SySt[%%(parserPrefix)StkP+7].text, NULL, NULL);
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 36: { /* include_statement = '`%`%INCLUDE' '(' quoted_string ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				      AST_PROCESS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, FALSE, %%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 34: { /* include_statement = '`%`%INCLUDE' '(' ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				      AST_PROCESS, 0, NULL, NULL, FALSE, %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].text, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 39: { /* einclude_statement = '`%`%EINCLUDE' '(' ident ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				       AST_INCLUDE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, %%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 41: { /* einclude_statement = '`%`%EINCLUDE' '(' ident '(' eval_expressions_opt ')' ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				       AST_INCLUDE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].srcp, nulSrcp, nulSrcp, 
+						  AST_PARAMS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, 
+						  NULL, NULL, NULL, NULL), 
+				       %%(parserPrefix)SySt[%%(parserPrefix)StkP+7].text, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 40: { /* einclude_statement = '`%`%EINCLUDE' '(' quoted_string ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_PROCESS, 0, 
+				       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, FALSE, %%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 38: { /* einclude_statement = '`%`%EINCLUDE' '(' ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				       AST_PROCESS, 0, NULL, NULL, FALSE, %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].text, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 43: { /* process_statement = '`%`%PROCESS' '(' file_name ',' file_name ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				      AST_PROCESS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				      %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, FALSE, %%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 42: { /* process_statement = '`%`%PROCESS' '(' file_name ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				      AST_PROCESS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, TRUE, %%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 45: { /* condition = condition 'OR' and_condition; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+			       AST__OR, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 44: { /* condition = and_condition; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 47: { /* and_condition = and_condition 'AND' not_condition; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				   AST__AND, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				   NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 46: { /* and_condition = not_condition; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 49: { /* not_condition = 'NOT' boolean_expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST__NOT, 0, 
+				  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, NULL, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 48: { /* not_condition = boolean_expression; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 62: { /* boolean_expression = system_call; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 50: { /* boolean_expression = expression '=' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				       AST__EQ, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 51: { /* boolean_expression = expression '#' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				       AST__NEQ, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 52: { /* boolean_expression = expression '>' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				       AST__GT, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 53: { /* boolean_expression = expression '<' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				       AST__LT, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 54: { /* boolean_expression = expression '>=' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				       AST__GE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 55: { /* boolean_expression = expression '<=' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				       AST__LE, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 57: { /* boolean_expression = variable '(' '?R' ')'; */
+ 
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type == AST_INTEGER) {
+    char errStr[19];
+    strcat(errStr, "INTEGER**IDENTIFIER");
+    errStr[7] = (char)0xff;
+    impLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->srcp, 103, sevERR, errStr);
+  }
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp, nulSrcp, nulSrcp, AST__RDEFINED, 0, 
+				       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, NULL, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp;
+	break;}
+    case 58: { /* boolean_expression = variable '(' '?V' ')'; */
+ 
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type == AST_INTEGER) {
+    char errStr[19];
+    strcat(errStr, "INTEGER**IDENTIFIER");
+    errStr[7] = (char)0xff;
+    impLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->srcp, 103, sevERR, errStr);
+  }
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp, nulSrcp, nulSrcp, AST__DEFINED, 0, 
+				       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, NULL, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp;
+	break;}
+    case 59: { /* boolean_expression = variable '(' '?' ')'; */
+ 
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type == AST_INTEGER) {
+    char errStr[19];
+    strcat(errStr, "INTEGER**IDENTIFIER");
+    errStr[7] = (char)0xff;
+    impLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->srcp, 103, sevERR, errStr);
+  }
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp, nulSrcp, nulSrcp, AST__DEFINED, 0, 
+				       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, NULL, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp;
+	break;}
+    case 60: { /* boolean_expression = variable '(' '*' ')'; */
+ 
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type == AST_INTEGER) {
+    char errStr[19];
+    strcat(errStr, "INTEGER*IDENTIFIER");
+    errStr[7] = (char)0xff;
+    impLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->srcp, 103, sevERR, errStr);
+  }
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp, nulSrcp, nulSrcp, AST__NONEMPTY, 0, 
+				       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, NULL, NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].srcp;
+	break;}
+    case 56: { /* boolean_expression = variable '(' values_opt ')'; */
+ 
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type == AST_INTEGER) {
+    char errStr[19];
+    strcat(errStr, "INTEGER**IDENTIFIER");
+    errStr[7] = (char)0xff;
+    impLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->srcp, 103, sevERR, errStr);
+  }
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				       AST__IN, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				       NULL, NULL, NULL); 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+4].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp;
+	break;}
+    case 61: { /* boolean_expression = '(' condition ')'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast; 
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 63: { /* system_call = 'IMP$SYSTEM' '(' ident ',' ident ')'; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				AST__SYSTEM, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, 
+				NULL, NULL, NULL);
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 64: { /* system_call = 'IMP$SYSTEM' '(' quoted_string ',' ident ')'; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				AST__SYSTEM, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].ast, 
+				NULL, NULL, NULL);
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+6].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 66: { /* eval_expressions_opt = eval_expressions; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 65: { /* eval_expressions_opt =; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = NULL; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 68: { /* eval_expressions = eval_expressions ',' expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp, nulSrcp, nulSrcp, AST_EVAL, 0, 
+			       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, "", NULL, NULL, NULL);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast->next = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 67: { /* eval_expressions = expression; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				     AST_EVAL, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, "", NULL, NULL, NULL);
+	break;}
+    case 70: { /* expression = expression '+' term; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				AST__PLUS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 71: { /* expression = expression '-' term; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, 
+				AST__MINUS, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, 
+				NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 69: { /* expression = term; */
+
+  /* Transfer all attributes */ 
+	break;}
+    case 73: { /* term = term '*' factor; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, AST__TIMES, 0,
+			  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 74: { /* term = term '/' factor; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp, nulSrcp, nulSrcp, AST__DIVID, 0,
+			  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 72: { /* term = factor; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 75: { /* factor = operand; */
+ 
+  /* Transfer all attributes */
+	break;}
+    case 76: { /* factor = '-' factor; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST__NEG, 0, 
+			    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, NULL, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 77: { /* operand = quoted_string; */
+ 
+  /* Transfer all attributes */
+	break;}
+    case 78: { /* operand = variable; */
+ 
+  /* Transfer all attributes */
+	break;}
+    case 79: { /* operand = '(' expression ')'; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast;
+  free(%%(parserPrefix)SySt[%%(parserPrefix)StkP+3].text);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 80: { /* variable = ident index_opt; */
+
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast || %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type != AST_INTEGER)
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_GET, 0, 
+			       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, NULL, NULL, NULL);
+  /* else */
+    /* Transfer all attributes */
+	break;}
+    case 81: { /* variable = value_list index_opt; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+			     AST_GET, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, NULL, NULL, NULL);
+	break;}
+    case 83: { /* index_opt = '[' expression ']'; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].srcp;
+	break;}
+    case 82: { /* index_opt =; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=NULL; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 85: { /* idents = idents ',' ident; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast->next = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 84: { /* idents = ident; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 86: { /* ident = unquoted_string; */
+
+  if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast->type != AST_INTEGER)
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+			    AST_IDENT, 0, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, NULL, NULL, NULL, NULL);
+  /* else */
+    /* Transfer all attributes */
+	break;}
+    case 88: { /* unquoted_string = unquoted_string unquoted_string_item; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST__CONCAT, 0,
+				     %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast,%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, 
+				     NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 87: { /* unquoted_string = unquoted_string_item; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 89: { /* unquoted_string_item = UNQUOT_STRING; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_UNQUOTED_STRING,
+				       %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1,
+				       %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, NULL, NULL, NULL, NULL);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 91: { /* unquoted_string_item = insert_statement; */
+ 
+  /* Transfer all attributes */
+	break;}
+    case 90: { /* unquoted_string_item = INTEGER; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_INTEGER,
+				       %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1,
+				       %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, NULL, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 92: { /* value_list = '{' values_opt '}'; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_VALUE_LIST, 0, 
+			       %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, NULL, NULL, NULL, NULL);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 94: { /* values_opt = values; */
+ 
+  /* Transfer all attributes */
+	break;}
+    case 93: { /* values_opt =; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=NULL; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 95: { /* values = value; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 96: { /* values = values ',' value; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast->next = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 97: { /* value = literal; */
+
+
+	break;}
+    case 98: { /* value = unquoted_string; */
+
+    
+	break;}
+    case 99: { /* literal = quoted_string; */
+ 
+  /* Transfer all attributes */ 
+	break;}
+    case 100: { /* literal = value_list; */
+
+  /* Transfer all attributes */ 
+	break;}
+    case 102: { /* file_name = quoted_string; */
+
+  /* Transfer all elements */
+	break;}
+    case 103: { /* file_name = unquoted_string; */
+
+  /* Transfer all elements */
+	break;}
+    case 101: { /* file_name =; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = NULL;
+	break;}
+    case 104: { /* quoted_string = QUOT_STRING quoted_string_tail; */
+
+{
+  if(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast)
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST__CONCAT, 0,
+				  impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_STRING,
+					     %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1,
+					     %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, NULL, NULL, NULL, NULL),
+				  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, NULL, NULL, NULL);
+  else
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast=impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST_STRING,
+				  %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1, 
+				  %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, NULL, NULL, NULL, NULL);
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+}
+	break;}
+    case 106: { /* quoted_string_tail = quoted_string_tail quoted_string_item; */
+
+{
+  if(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast) {
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, AST__CONCAT, 0,
+					  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast, 
+					  NULL, NULL, NULL);
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp;
+  } else {
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].ast;
+    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].srcp;
+  }
+}
+	break;}
+    case 105: { /* quoted_string_tail =; */
+
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = NULL; 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = nulSrcp;
+	break;}
+    case 107: { /* quoted_string_item = QUOT_STRING; */
+ 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ast = impAstNode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, nulSrcp, nulSrcp, 
+				       AST_STRING, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].end-%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].begin+1,
+                                       %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].text, NULL, NULL, NULL, NULL); 
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	break;}
+    case 108: { /* quoted_string_item = insert_statement; */
+ 
+  /* Transfer all attributes */
+	break;}
+%%END(pmSemantics)
+%%SET vocFileName ("imp.voc")
+%%BEGIN (pmVoc)
+   0    0 Unknown              main
+   1    1 EndOfText            main
+   2    2 '('                  main
+   3    3 ')'                  main
+   4    4 ','                  main
+   5    5 '='                  main
+   6    6 '#'                  main
+   7    7 '>'                  main
+   8    8 '<'                  main
+   9    9 '?'                  main
+  10   10 '*'                  main
+  11   11 '+'                  main
+  12   12 '-'                  main
+  13   13 '/'                  main
+  14   14 '['                  main
+  15   15 ']'                  main
+  16   16 '{'                  main
+  17   17 '}'                  main
+  18   18 TEXT                 main
+  19   19 '<='                 main
+  20   20 'OR'                 main
+  21   21 '>='                 main
+  22   22 '?R'                 main
+  23   23 '?V'                 main
+  24   24 '`%`%('                main
+  25   25 'AND'                main
+  26   26 'NOT'                main
+  27   27 '`%`%IF'               main
+  28   28 '`%`%SET'              main
+  29   29 '`%`%END'              main
+  30   30 INTEGER              main
+  31   31 '`%`%KEEP'             main
+  32   32 '`%`%ESET'             main
+  33   33 '`%`%ELSE'             main
+  34   34 '`%`%LOOP'             main
+  35   35 '`%`%ENDIF'            main
+  36   36 '`%`%ELSIF'            main
+  37   37 '`%`%BEGIN'            main
+  38   38 '`%`%ENDLOOP'          main
+  39   39 '`%`%MESSAGE'          main
+  40   40 '`%`%INCLUDE'          main
+  41   41 '`%`%PROCESS'          main
+  42   42 QUOT_STRING          main
+  43   43 '`%`%EINCLUDE'         main
+  44   44 'IMP$SYSTEM'         main
+  45   45 UNQUOT_STRING        main
+%%END (pmVoc)
+%%PROCESS("%%(pmkLibrary)/Parse.imp")

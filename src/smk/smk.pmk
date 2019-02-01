@@ -1,0 +1,723 @@
+%%OPTIONS
+
+	List Grammar, Items, Tables, Statistics;
+
+%%IMPORT
+
+/*
+ * "Bug" in generated code does not include definition of memset
+ */
+#include <memory.h>
+
+#include <stdio.h>
+#include "common.h"
+#include "action.h"
+#include "ast.h"
+#include "definition.h"
+#include "map.h"
+#include "name.h"
+#include "pack.h"
+#include "rule.h"
+#include "scanner.h"
+#include "set.h"
+#include "smkList.h"
+#include "smkScan.h"
+#include "smk_i.h"
+#include "token.h"
+#include "vocabulary.h"
+
+extern smkScContext lexContext;
+
+%%SCANNER
+
+  smkScan(lexContext, token);
+
+%%INSERTSYMBOL
+
+  /* 
+   * Make the requested token
+   */
+
+  sym->code = code;
+  switch(code) {
+  case smk_MAIN_NUMBER_Token:
+    sym->inumber=0;
+    break;
+  case smk_MAIN_CLASS_Token:
+    sym->name=nameSearch("[\x00]");
+    break;
+  default:
+    sym->name=nameSearch("<PARSE ERROR>");
+    break;
+  };
+  sym->srcp.file=1;
+
+%%DECLARATIONS
+
+  Vocabulary grmVocabulary=0;
+  Scanner grmScanner=0;
+  RuleType grmRuleType=ruleUNDEF;
+
+%%ATTRIBUTES
+
+	srcp    %% TmkSrcp %1%%,
+	inumber %% int %1%%,
+	fnumber %% double %1%%,
+	name    %% Name %1%%,
+	ast     %% AST %1%%,
+	action  %% Action %1%%;
+
+%%TERMINALS
+
+	'%%' = 99, 3, 2 => '%%...%%';
+
+%%RULES
+
+<goal> 
+  = <skip sections opt> 
+%%{
+  /* Read vocabulary file */
+  vocabularyRead(optVocabulary);
+}%%
+    <code sections opt> <set definition sections opt>
+%%{
+  if(getBoolOpt(SET_OPT))
+    if(setGet(getStrOpt(SET_OPT))) 
+      setUse(getStrOpt(SET_OPT)); 
+    else
+      smkLog(NULL,254,sevERR,getStrOpt(SET_OPT));
+}%%
+    <definition sections opt> <vocabulary sections>
+%%{
+  Vocabulary vocabulary;
+  Scanner scanner;
+  Rule rule;
+
+  ruleCodes=0;
+  scannerCodes=0;
+  for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
+    for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
+      scanner->code=scannerCodes++;
+      for(rule=scanner->rules;rule;rule=rule->next)
+	if(rule->type==ruleUNDEF)
+	  rule->code=codeSKIP;
+	else
+	  rule->code=ruleCodes++;
+    }
+}%%
+  ;
+
+--: Sections
+
+<skip sections opt>
+  = <skip sections opt> <skip section>
+  !
+  ;
+
+<skip section>
+    = SKIPHEADER
+      -- Followed by language specific text skipped by the scanner.
+      <end opt>
+    ;
+
+<code sections opt>
+  = <code sections opt> <code section>
+  !
+  ;
+
+<set definition sections opt>
+  = <set definition sections>
+  !
+  ;
+
+<set definition sections>
+  = <set definition sections> <set definition section>
+  ! <set definition section>
+  ;
+
+
+
+<definition sections opt>
+  = <definition sections opt> <definition section>
+  !
+  ;
+
+<definition section>
+  = <map definition section>
+  ! <definition definition section>
+  ;
+
+<end opt>
+  = '%%END'
+  !
+  ;
+
+---: Code Section
+
+<code section>
+  = '%%DECLARATION'	<end opt>
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%DECLARATION'.srcp,262,sevERR,"");
+}%%
+  ! '%%CONTEXT'		<end opt>
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%CONTEXT'.srcp,262,sevERR,"");
+}%%
+  ! '%%EXPORT'		<end opt>
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%EXPORT'.srcp,262,sevERR,"");
+}%%
+  ! '%%READER'		<end opt>
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%READER'.srcp,262,sevERR,"");
+}%%
+  ! '%%PREHOOK'		<end opt>
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%PREHOOK'.srcp,262,sevERR,"");
+}%%
+  ! '%%ACTION'		<end opt>
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%ACTION'.srcp,262,sevERR,"");
+}%%
+  ! '%%POSTHOOK'	<end opt> 
+%%{
+  static int count=0;
+  if(count++) smkLog(`&%'%%POSTHOOK'.srcp,262,sevERR,"");
+}%%
+  ;
+
+
+---: Set Section
+
+<set definition section>
+  = '%%SET' <end opt>
+  ;
+
+
+---: Map Section
+
+<map definition section>
+  = '%%MAP' <maps> <end opt>
+%%{
+  mapUsed=1;
+}%%
+  ;
+
+<maps>
+  = <maps> <map>
+  ! <map>
+  ;
+
+<map>
+  = <class> '=' <class> ';'
+%%{
+  mapPut(%1<class>.name,%2<class>.name);
+}%%  
+  ;
+
+
+---: Definition Definition Section
+
+<definition definition section>
+  = '%%DEFINITION' <definition definitions> <end opt>
+  ;
+
+<definition definitions>
+  = <definition definitions> <definition definition>
+  ! <definition definition>
+  ;
+
+<definition definition>
+  = <identifier> '=' <selection rule> ';'
+%%{
+  Definition definition;
+
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL) definition=definitionPut(%<identifier>.name);
+  if(definition->ast)
+    smkLog(`&%<identifier>.srcp,233,sevERR,"");
+  else 
+    definition->ast=%<selection rule>.ast;
+}%%
+  ! <identifier> '=' '%%' ';'
+%%{
+  Definition definition;
+
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL) definition=definitionPut(%<identifier>.name);
+  if(definition->action) 
+    smkLog(`&%<identifier>.srcp,246,sevERR,"");
+  else
+    definition->action=%'%%'.action;
+}%%
+  ! <identifier> '=' <selection rule> '%%' ';'
+%%{
+  Definition definition;
+
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL) definition=definitionPut(%<identifier>.name);
+  if(definition->ast)
+    smkLog(`&%<identifier>.srcp,233,sevERR,"");
+  else 
+    definition->ast=%<selection rule>.ast;
+  if(definition->action) 
+    smkLog(`&%<identifier>.srcp,246,sevERR,"");
+  else
+    definition->action=%'%%'.action;
+}%%
+  ;
+
+---: Vocabulary Section
+
+<vocabulary sections>
+  = <vocabulary sections> <vocabulary section>
+  ! <vocabulary section>
+  ;
+
+<vocabulary section>
+  = '%%VOCABULARY' <external vocabulary name> <scanner sections>
+%%{
+  if(grmVocabulary) {
+    Scanner scanner;
+    for(scanner=grmVocabulary->scanners;scanner;scanner=scanner->next) rulePredefinedToMatch(scanner->rules);
+    vocabularyCheckTokens(grmVocabulary);
+    grmVocabulary=0;
+  }
+}%%
+  ! '%%VOCABULARY' <internal vocabulary name> <vocabulary definitions> <scanner sections>
+%%{
+  if(grmVocabulary) {
+    Scanner scanner;
+    for(scanner=grmVocabulary->scanners;scanner;scanner=scanner->next) rulePredefinedToMatch(scanner->rules);
+    vocabularyCheckTokens(grmVocabulary);
+    grmVocabulary=0;
+  }
+}%%
+  ;
+
+<external vocabulary name>
+  = <identifier>
+%%{
+  grmVocabulary=vocabularyGet(vocabularies, %<external vocabulary name>.name);
+  if(grmVocabulary==0) smkLog(`&%<identifier>.srcp,256,sevERR,"");
+}%%
+  ;
+
+<internal vocabulary name>
+  = <identifier>
+%%{
+  grmVocabulary=vocabularyNew(&vocabularies, %<identifier>.name);
+  if(grmVocabulary)
+    grmVocabulary->srcp=%<identifier>.srcp;
+  else
+    smkLog(`&%<identifier>.srcp,255,sevERR,"");
+}%%
+  ;
+
+<vocabulary definitions>
+  = <vocabulary definitions> <vocabulary definition>
+  ! <vocabulary definition>
+  ;
+
+<vocabulary definition>
+  = <token name> '=' <number> ';'
+%%{
+  if(grmVocabulary) {
+    Token token=tokenNew(&grmVocabulary->tokens, %<token name>.name, %<number>.inumber);
+    if(token==0) {
+      if(tokenGetByName(grmVocabulary->tokens, %<token name>.name))
+	smkLog(`&%<token name>.srcp,233,sevERR,"");
+      if(tokenGetByCode(grmVocabulary->tokens, %<number>.inumber))
+	smkLog(`&%<number>.srcp,212,sevERR,"");
+    }
+    else {
+      token->srcp=%<token name>.srcp;
+      token->vocabulary=grmVocabulary;
+    }
+  }
+}%%
+  ;
+
+----: Scanner section
+
+<scanner sections>
+  = <scanner sections> <scanner section>
+  ! <scanner section>
+  ;
+
+<scanner section>
+  = '%%SCANNER' <scanner name> <scanner inherit opt> 
+%%{
+  if(grmScanner && grmScanner==grmVocabulary->scanners) {
+    Token token;
+    for(token=grmVocabulary->tokens;token;token=token->next) 
+      if(token->name[0]=='"' || token->name[0]=='\'') {
+	Rule rule;
+	AST ast;
+
+	if((ast=astString(token->name))) {
+	  rule=ruleNew(&grmScanner->rules);
+	  rule->srcp=token->srcp;
+	  rule->scanner=grmScanner;
+	  rule->token=token;
+	  rule->ast=ast;
+	  rule->type=rulePREDEF;
+	}
+	else
+	  smkLog(`&token->srcp,220,sevERR,"");
+      }
+  }
+}%%
+    <screening section opt> <undefine token section opt> <token sections>
+%%{
+  if(grmScanner) {
+    if(grmScanner!=grmVocabulary->scanners) scannerCheckRedefinedPredefined(grmVocabulary->scanners, grmScanner);
+    scannerCheckRules(grmScanner);
+    grmScanner=0;
+  }
+}%%
+  ;
+
+<scanner name>
+  = <identifier>
+%%{
+  if(grmVocabulary) {
+    grmScanner=scannerNew(&grmVocabulary->scanners, %<scanner name>.name);
+    if(grmScanner) {
+      grmScanner->srcp=%<identifier>.srcp;
+      grmScanner->vocabulary=grmVocabulary;
+    }
+    else
+      smkLog(`&%<identifier>.srcp,257,sevERR,"");
+  }
+}%%
+  ;
+
+<scanner inherit opt>
+  = ':' <identifier>
+%%{
+  if(grmScanner) {
+    Scanner baseScanner=scannerGet(grmVocabulary->scanners, %<identifier>.name);
+    if(baseScanner)
+      scannerCopy(grmScanner, baseScanner);
+    else
+      smkLog(`&%<identifier>.srcp,258,sevERR,"");
+  }
+}%%
+  !
+  ;
+
+----: Undefine section
+
+<undefine token section opt>
+  = '%%UNDEFINE' <undefined token names opt> <end opt>
+  !
+  ;
+
+<undefined token names opt>
+  = <undefined token names opt> <undefined token name>
+  ! 
+  ;
+
+<undefined token name>
+  = <token name> ';'
+%%{
+  if(grmScanner) {
+    Rule rule;
+    Token token=tokenGetByName(grmVocabulary->tokens, %<token name>.name);
+    for(rule=grmScanner->rules;rule;rule=rule->next)
+      if(rule->token==token) rule->type=ruleUNDEF;
+  }
+}%%
+  ;
+
+----: Screening section
+
+<screening section opt>
+  = '%%SCREENING' 
+%%{
+   if(grmVocabulary && optScreen) {
+     Token token;
+     for(token=grmVocabulary->tokens;token;token=token->next) token->screening=NO;
+   }
+}%%
+  <screening definitions opt> <end opt>
+  !
+%%{
+   if(grmVocabulary && optScreen) {
+     Token token;
+     for(token=grmVocabulary->tokens;token;token=token->next) token->screening=YES;
+   }
+}%%
+  ;
+
+<screening definitions opt>
+  = <screening definitions opt> <screening definition>
+  !
+  ;
+
+<screening definition>
+  = <token name> ';'
+%%{
+  if(grmScanner && optScreen) {
+    Token token=tokenGetByName(grmVocabulary->tokens, %<token name>.name);
+    if(token) token->screening=YES;
+  }
+}%%
+  ;
+
+----: RULE and SKIP sections
+
+<token sections>
+  = <token sections> <token section>
+  ! <token section>
+  ;
+
+<token section>
+  = '%%RULE' %% grmRuleType=ruleMATCH; %% <tokens opt> <end opt>
+  ! '%%SKIP' %% grmRuleType=ruleSKIP;  %% <tokens opt> <end opt>
+  ;
+
+----: Tokens
+
+<tokens opt>
+  = <tokens opt> <token>
+  !
+  ;
+
+<token>
+  = <token name> '=' <lookahead rule> <action opt> ';'
+%%{
+  if(grmScanner) {
+    Token token=tokenGetByName(grmVocabulary->tokens, %<token name>.name);
+    if(token==0 && grmRuleType==ruleSKIP) {
+      token=tokenNew(&grmVocabulary->tokens, %<token name>.name, codeSKIP);
+      token->srcp=%<token name>.srcp;
+      token->vocabulary=grmVocabulary;
+    }
+    if(token) {
+      Rule rule=rulePredefined(grmScanner->rules, %<token name>.name);
+      if(rule==0) rule=ruleNew(&grmScanner->rules);
+      rule->srcp=%<token name>.srcp;
+      rule->scanner=grmScanner;
+      rule->token=token;
+      rule->type=grmRuleType;
+      rule->ast=%<lookahead rule>.ast;
+      rule->action=%<action opt>.action;
+    }
+    else
+      smkLog(`&%<token name>.srcp,259,sevERR,"");
+  }
+}%%
+  ! <token name> '=' '_ENDOFTEXT' <action opt> ';'
+%%{
+  if(grmScanner) {
+    Token token=tokenGetByName(grmVocabulary->tokens, %<token name>.name);
+    if(token==0 && grmRuleType==ruleSKIP) {
+      token=tokenNew(&grmVocabulary->tokens, %<token name>.name, codeSKIP);
+      token->srcp=%<token name>.srcp;
+      token->vocabulary=grmVocabulary;
+    }
+    if(token) {
+      Rule rule=rulePredefined(grmScanner->rules, %<token name>.name);
+      if(rule==0) rule=ruleNew(&grmScanner->rules);
+      rule->srcp=%<token name>.srcp;
+      rule->scanner=grmScanner;
+      rule->token=token;
+      rule->type=grmRuleType;
+      rule->ast=astEOT;
+      rule->action=%<action opt>.action;
+    }
+    else
+      smkLog(`&%<token name>.srcp,259,sevERR,"");
+  }
+}%%
+  ! <token name> '=' '_UNKNOWN' <action opt> ';'
+%%{
+  if(grmScanner) {
+    Token token=tokenGetByName(grmVocabulary->tokens, %<token name>.name);
+    if(token==0 && grmRuleType==ruleSKIP) {
+      token=tokenNew(&grmVocabulary->tokens, %<token name>.name, codeSKIP);
+      token->srcp=%<token name>.srcp;
+      token->vocabulary=grmVocabulary;
+    }
+    if(token) {
+      Rule rule=ruleNew(&grmScanner->rules);
+      rule->srcp=%<token name>.srcp;
+      rule->scanner=grmScanner;
+      rule->token=token;
+      rule->type=grmRuleType;
+      rule->ast=astUNKNOWN;
+      rule->action=%<action opt>.action;
+    }
+    else
+      smkLog(`&%<token name>.srcp,259,sevERR,"");
+  }
+}%%
+  ;
+
+
+<token name>
+  = <identifier>
+  ! <string>
+  ;
+
+----: Action
+
+<action opt>
+  = '%%'
+%%{
+  %<action opt>.action=%'%%'.action;
+}%%
+  ! '%%DO' <identifier>
+%%{
+  Definition definition;
+  
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL || definition->action==NULL)
+    smkLog(`&%<identifier>.srcp,245,sevERR,"");
+  else
+    %<action opt>.action=definition->action;
+}%%
+  !
+%%{
+  %<action opt>.action=NULL;
+}%%
+  ;
+
+---: Regular expression description
+
+<lookahead rule>
+  = <selection rule> '/' <selection rule>
+%%{
+  %<lookahead rule>.ast=astLookahead(%1<selection rule>.ast, %2<selection rule>.ast);
+}%%
+  ! <selection rule>
+  ;
+
+<selection rule>
+  = <selection rule> '!' <concat rule>
+%%{
+  %1<selection rule>.ast=astSelect(%2<selection rule>.ast, %<concat rule>.ast);
+}%%
+  ! <concat rule>
+  ;
+
+<concat rule>
+  = <concat rule> <closure rule>
+%%{
+  %1<concat rule>.ast=astConcat(%2<concat rule>.ast, %<closure rule>.ast);
+}%%
+  ! <closure rule>
+  ;
+
+<closure rule>
+  = <operand> '*' 
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,0,-1);
+}%%
+  ! <operand> '+'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,1,-1);
+}%%
+  ! <operand> '?'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,0,1);
+}%%
+  ! <operand> '{' <number> '}'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,%<number>.inumber,%<number>.inumber);
+}%%
+  ! <operand> '{' '-' <number> '}'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,0,%<number>.inumber);
+}%%
+  ! <operand> '{' <number> '-' '}'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,%<number>.inumber,-1);
+}%%
+  ! <operand> '{' <number> '-' <number> '}'
+%%{
+  if(%1<number>.inumber>%2<number>.inumber)
+    smkLog(`&%2<number>.srcp,237,sevERR,"");
+  else
+    %<closure rule>.ast=astClosure(%<operand>.ast,%1<number>.inumber,%2<number>.inumber);
+}%%
+  ! <operand>
+  ;
+
+<operand>
+  = <identifier>
+%%{
+  Definition definition;
+  
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL || definition->ast==NULL)
+    smkLog(`&%<identifier>.srcp,239,sevERR,"");
+  else
+    %<operand>.ast=definition->ast;
+}%%
+  ! <string>
+%%{
+  AST ast;
+
+  if((ast=astString(%<string>.name)))
+    %<operand>.ast=ast;
+  else
+    smkLog(`&%<string>.srcp,220,sevERR,"");
+}%%
+  ! <class>
+%%{
+  AST ast;
+
+  if((ast=astClass(%<class>.name)))
+    %<operand>.ast=ast;
+  else
+    smkLog(`&%<class>.srcp,238,sevERR,"");
+}%%
+  ! '.'
+%%{
+  %<operand>.ast=astCut();
+}%%
+  ! '(' <selection rule> ')'
+%%{
+  %<operand>.ast=%<selection rule>.ast;
+}%%
+  ;
+
+--: Lexemes
+
+<identifier>
+  = Identifier	%%{ %<identifier>.srcp=%Identifier.srcp; %<identifier>.name=%Identifier.name;}%%
+  ;
+
+<string>
+  = String
+%%{ 
+  %<string>.srcp=%String.srcp; 
+  %<string>.name=%String.name;
+}%%
+  ;
+
+<number>
+  = Number
+%%{ 
+  %<number>.srcp=%Number.srcp; 
+  %<number>.inumber=%Number.inumber; 
+}%%
+  ;
+
+<class>
+  = Class	
+%%{
+  %<class>.srcp=%Class.srcp;
+  %<class>.name=%Class.name;
+}%%
+  ;
+

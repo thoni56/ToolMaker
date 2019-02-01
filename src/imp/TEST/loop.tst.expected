@@ -1,0 +1,203 @@
+########## loop ##########
+%%LOOP(i<=4)
+Hej%%(i)!
+%%ENDLOOP(i)
+%%--
+%%LOOP(i <= 4)
+Hopp%%(i)!
+%%ENDLOOP(i)
+%%KEEP
+%%LOOP(i <= 4)
+Kept%%(i)!
+%%ENDLOOP(i)
+%%ENDKEEP
+%%LOOP(i <= 0)
+Skall ej skrivas ut %%(i)!
+%%ENDLOOP(i)
+%%SET foo()
+%%LOOP(i, foo)
+Skall ej skrivas ut %%(i)!
+%%ENDLOOP(i)
+%%KEEP
+%%LOOP(i <= 4)
+Kept%%(i)!
+%%ENDLOOP(i)
+%%ENDKEEP
+%%COMMENT
+%%LOOP(i <= 4)
+Commented%%(i)!
+%%ENDLOOP(i)
+%%ENDCOMMENT
+%%SET foo(hej, hopp, i, lingonskogen)
+%%LOOP(i <= foo[0])%%(foo[i]) %%ENDLOOP(i)
+%%LOOP(i <= %%(foo[0]))%%(foo[i]) %%ENDLOOP(i)
+%%LOOP(i <= %%(foo[1]))
+%%(foo[i])
+%%ENDLOOP(i)
+%%LOOP(i, foo)%%(i) %%ENDLOOP(i)
+
+%%BEGIN(aRegion)
+%%LOOP(k <= 5)
+%%(k)
+%%ENDLOOP(k)
+%%END(aRegion)
+%%IF(k(?))
+Error, k should not be defined!
+%%ELSE
+OK!
+%%ENDIF
+%%LOOP(i <= 2)
+F|re inre loopen %%(i).
+%%LOOP(j <= 2)
+I inre loopen %%(i), %%(j).
+%%ENDLOOP(j)
+Efter inre loopen %%(i).
+%%ENDLOOP(i)
+%%LOOP(i, foo)
+I loopen >%%(i)<
+%%ENDLOOP(i)
+Efter loopen >%%(i)<
+%%LOOP(i <= foo[0])
+I loopen >%%(i)<
+%%ENDLOOP(i)
+Efter loopen >%%(i)<
+%%(LVAR)
+`%%(LVAR)            * * * FACIT * * *
+%%LOOP (LVAR <= 4)
+%%(LVAR)
+%%ENDLOOP(LVAR)
+%%(LVAR)
+5                   * * * FACIT * * *
+%%LOOP (LVAR, 4)
+%%(LVAR)
+%%ENDLOOP(LVAR)
+"%%(LVAR)"
+""                  * * * FACIT * * *
+%%SET A (1,2,LVAR,"LVAR")
+%%LOOP (LVAR, A)
+%%(LVAR)
+%%(%%(LVAR))
+%%(%%(%%(LVAR)))
+%%ENDLOOP (LVAR)
+%%LOOP (L, {%%(UNDEF), %%(A)})
+%%LOOP (M <= A[2]*UNDEF)
+  Iterera mera
+%%ENDLOOP (M)
+%%ENDLOOP (L)
+%%-- Yttre loopen partialevalueras och den inre evalueras tre ggr
+%%LOOP (L1 <= L2+3)
+Lite text
+%%LOOP (L2 <= 3)
+En trippelrad
+%%ENDLOOP (L2)
+%%ENDLOOP(L1)
+########## ../imp loop.tst >loop.tst.tmp; cat loop.tst.tmp; rm loop.tst.tmp ##########
+
+
+loop.tst
+
+   33.  %%LOOP(i <= %%(foo[1]))
+=====>              1
+
+  *1*   204 W : Variable "hej" not set.
+
+   34.  %%(foo[i])
+=====>         1
+
+  *1*   204 W : Variable "i" not set.
+
+   63.  %%(LVAR)
+=====>     1
+
+  *1*   204 W : Variable "LVAR" not set.
+
+   81.  %%LOOP (L, {%%(UNDEF), %%(A)})
+=====>                 1
+
+  *1*   204 W : Variable "UNDEF" not set.
+
+   82.  %%LOOP (M <= A[2]*UNDEF)
+=====>                    1
+
+  *1*   204 W : Variable "UNDEF" not set.
+
+   87.  %%LOOP (L1 <= L2+3)
+=====>                1
+
+  *1*   204 W : Variable "L2" not set.
+
+
+No errors detected.
+6 warning(s) issued.
+
+Hej1!
+Hej2!
+Hej3!
+Hej4!
+Hopp1!
+Hopp2!
+Hopp3!
+Hopp4!
+%%LOOP(i <= 4)
+Kept%%(i)!
+%%ENDLOOP(i)
+%%LOOP(i <= 4)
+Kept%%(i)!
+%%ENDLOOP(i)
+hej hopp i lingonskogen hej hopp i lingonskogen %%LOOP(i<=%%(hej))
+%%(foo[i])
+%%ENDLOOP(i)
+hej hopp i lingonskogen 
+OK!
+F|re inre loopen 1.
+I inre loopen 1, 1.
+I inre loopen 1, 2.
+Efter inre loopen 1.
+F|re inre loopen 2.
+I inre loopen 2, 1.
+I inre loopen 2, 2.
+Efter inre loopen 2.
+I loopen >hej<
+I loopen >hopp<
+I loopen >i<
+I loopen >lingonskogen<
+Efter loopen ><
+I loopen >1<
+I loopen >2<
+I loopen >3<
+I loopen >4<
+Efter loopen >5<
+%%(LVAR)
+%%(LVAR)            * * * FACIT * * *
+1
+2
+3
+4
+5
+5                   * * * FACIT * * *
+4
+""
+""                  * * * FACIT * * *
+1
+1
+1
+2
+2
+2
+LVAR
+LVAR
+LVAR
+LVAR
+LVAR
+LVAR
+%%LOOP(L,{%%(UNDEF),1,2,LVAR,LVAR})
+%%LOOP(M<=%%(2*UNDEF))
+  Iterera mera
+%%ENDLOOP(M)
+%%ENDLOOP(L)
+%%LOOP(L1<=%%(L2+3))
+Lite text
+En trippelrad
+En trippelrad
+En trippelrad
+%%ENDLOOP(L1)

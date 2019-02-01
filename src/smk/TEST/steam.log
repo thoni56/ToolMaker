@@ -1,0 +1,40 @@
+Start 1997-01-22 11.02.26 /home/.disk1/project/ToolMaker/usr/thoni/src/smk/TEST (thoni)
+  Start 1997-01-22 11.02.26 /home/.disk1/project/ToolMaker/usr/thoni/src/smk/TEST/gen-test (thoni)
+    imp - failed 21.820/39.518
+    lmk - failed 12.270/17.678
+    pmk - failed 14.110/25.287
+    smk - failed 26.280/37.678
+    tmcore - failed 5.450/15.714
+    tmk - failed 16.490/1.43.248
+  Stop 11.06.29 1.41.370/4.02.478
+Stop 11.06.29 1.41.520/4.02.861
+Start 1997-07-25 09.02.13 /home/.disk10/project/ToolMaker/usr/thoni/src/smk/TEST (thoni)
+  Start 1997-07-25 09.02.13 /home/.disk10/project/ToolMaker/usr/thoni/src/smk/TEST/gen-test (thoni)
+    imp - passed 1.649/2.498
+    lmk - passed 0.966/1.362
+    pmk - passed 1.416/1.813
+    smk - passed 1.966/2.497
+    tmcore - passed 0.299/0.599
+    tmk - passed 1.233/1.728
+  Stop 09.02.24 7.866/11.448
+Stop 09.02.24 7.916/11.504
+Start 1997-07-28 17.14.52 /home/.disk10/project/ToolMaker/usr/thoni/src/smk/TEST (thoni)
+  Start 1997-07-28 17.14.52 /home/.disk10/project/ToolMaker/usr/thoni/src/smk/TEST/gen-test (thoni)
+    imp - failed 3.900/5.039
+    lmk - failed 2.730/3.575
+    pmk - failed 3.380/5.274
+    smk - failed 4.780/6.925
+    tmcore - passed 0.540/0.662
+    tmk - failed 3.190/5.024
+  Stop 17.15.21 19.870/29.483
+Stop 17.15.21 19.980/29.638
+Start 1997-07-28 17.16.32 /home/.disk10/project/ToolMaker/usr/thoni/src/smk/TEST (thoni)
+  Start 1997-07-28 17.16.33 /home/.disk10/project/ToolMaker/usr/thoni/src/smk/TEST/gen-test (thoni)
+    imp - passed 4.060/5.174
+    lmk - passed 2.930/3.746
+    pmk - passed 3.680/4.877
+    smk - passed 4.860/6.300
+    tmcore - passed 0.520/0.831
+    tmk - passed 3.420/5.111
+  Stop 17.17.02 20.950/29.076
+Stop 17.17.02 21.100/29.337

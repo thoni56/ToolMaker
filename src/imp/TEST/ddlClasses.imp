@@ -1,0 +1,1344 @@
+%%-- Code generation of DDL classes
+%%--                        Date: 1991-06-12/egon@robin
+
+%%------------------- classForwardDecl ----------------------------------
+%%BEGIN(classForwardDecl)
+//=======================================================================
+// Forward declarations of classes
+%%LOOP(class, CLASSES)
+class %%(class);
+%%ENDLOOP(class)
+%%END(classForwardDecl)
+
+
+%%BEGIN(isSubObject)
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(RELATION_%%(attrType)(?))
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION()
+%%ELSIF(CLASS_%%(attrType)(?))
+%%IF(CLASS_%%(attrType)_KEY[0] = 0)
+%%SET CLASS_%%(className)_ATTRIBUTE_%%(attrName)_SUBOBJECT()
+%%ENDIF
+%%ENDIF
+%%ENDIF
+%%END(isSubObject)
+
+
+%%BEGIN(getSearchLength)
+%%SET CLASS_%%(className)_searchLength(0)
+%%LOOP(attr, CLASS_%%(className)_ATTRIBUTES)
+%%IF(NOT CLASS_%%(className)_ATTRIBUTE_%%(attr)_ARRAY(?) AND NOT CLASS_%%(className)_ATTRIBUTE_%%(attr)_REFERENCE(?))
+%%IF(STRUCTURE_%%(CLASS_%%(className)_ATTRIBUTE_%%(attr)_TYPE)_DBSIZE > CLASS_%%(className)_searchLength)
+%%SET CLASS_%%(className)_searchLength(%%(STRUCTURE_%%(CLASS_%%(className)_ATTRIBUTE_%%(attr)_TYPE)_DBSIZE))
+%%ENDIF
+%%ENDIF
+%%ENDLOOP(attr)
+%%END(getSearchLength)
+
+
+%%------------------- classDecl -----------------------------------------
+%%BEGIN(classDecl)
+%%SET className(%%(classDecl[1]))
+%%PROCESS(, "%%(className).hh")
+//============ %%(className).hh
+//=======================================================================
+
+#ifndef _%%(className)_hh
+#define _%%(className)_hh
+
+%%INCLUDE(structureIncludes)
+%%INCLUDE(relationsForwardDecl)
+%%INCLUDE(classForwardDecl)
+
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0)
+// Include superclass:
+#include "%%(CLASS_%%(className)_BASECLASSES[1]).hh"
+%%ENDIF
+
+%%INCLUDE(classHead(%%(className)))
+#ifndef %%(className)_CLASS_ID
+#define %%(className)_CLASS_ID %%(%%(className)_CLASS_ID)
+#endif
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(getSearchLength)
+class %%(className)Iterator {
+public:
+    void reset();
+    %%(className)* updateNext(DbResultCode& result, LocalTransaction* trId);
+    %%(className)* openrlockNext(DbResultCode& result, LocalTransaction* trId);
+    %%(className)* openNext(DbResultCode& result, %%(className)* dol = NULL);
+protected:
+    friend %%(className);
+    %%(className)Iterator();
+    %%(className)Iterator(AttributeIndex attr, void* value, int length);
+    AttributeIndex attrNumber;
+%%IF(CLASS_%%(className)_searchLength > 0)
+    char searchValue[%%(CLASS_%%(className)_searchLength)];
+%%ENDIF
+    ObjectIndex index; 
+};
+%%ENDIF
+
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0)
+
+class %%(className) : public %%(CLASS_%%(className)_BASECLASSES[1]) {
+%%ELSE
+class %%(className) : public DbAbstractObject {
+%%ENDIF
+public:
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+    static %%(className)* create(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId);
+
+    static %%(className)* update(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId);
+
+    static %%(className)* remove(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId);
+
+    static %%(className)* openrlock(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId);
+
+    static %%(className)* open(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	%%(className)* dol = NULL);
+%%ELSE
+    static %%(className)* create(DbResultCode& result, LocalTransaction* trId);
+%%ENDIF
+
+    int getClassNo();
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+    static %%(className)Iterator* getIterator();
+%%ENDIF
+
+    // Attribute interface
+%%SET CLASS_%%(className)_REFERS()
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%INCLUDE(isSubObject)
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(NOT CLASS_%%(className)_REFERS(%%(attrType)))
+%%SET CLASS_%%(className)_REFERS(, %%(attrType))
+%%ENDIF
+    %%(attrType)* update%%(attrName)(int index, DbResultCode& result, LocalTransaction* trId);
+    %%(attrType)* remove%%(attrName)(int index, DbResultCode& result, LocalTransaction* trId);
+    %%(attrType)* openrlock%%(attrName)(int index, DbResultCode& result, LocalTransaction* trId);
+    %%(attrType)* open%%(attrName)(int index, DbResultCode& result, %%(attrType)* dol = NULL); 
+    void %%(attrName)(%%(attrType)*, int index); // set
+%%ELSE
+    %%(attrType) %%(attrName)(int index); // get
+    void %%(attrName)(%%(attrType) data, int index); // set
+%%ENDIF
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(NOT CLASS_%%(className)_REFERS(%%(attrType)))
+%%SET CLASS_%%(className)_REFERS(, %%(attrType))
+%%ENDIF
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+    %%(attrType)* create%%(attrName)(DbResultCode& result);
+    %%(attrType)* open%%(attrName)(DbResultCode& result);
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE(?))
+%%SET RELATION_%%(attrType)_INVERSE_ATTRIBUTE(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE))
+    DbResultCode %%(attrName)_inverse_add(%%(RELATION_%%(attrType)_TO)*);
+    DbResultCode %%(attrName)_inverse_sub(%%(RELATION_%%(attrType)_TO)*);
+%%ENDIF
+%%ELSE
+    %%(attrType)* update%%(attrName)(DbResultCode& result, LocalTransaction* trId);
+    %%(attrType)* remove%%(attrName)(DbResultCode& result, LocalTransaction* trId);
+    %%(attrType)* openrlock%%(attrName)(DbResultCode& result, LocalTransaction* trId);
+    %%(attrType)* open%%(attrName)(DbResultCode& result, %%(attrType)* dol = NULL);
+    void %%(attrName)(%%(attrType)* data); // set
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE(?))
+    void %%(attrName)_inverse(%%(attrType)*);
+%%ENDIF
+%%ENDIF
+%%ELSE
+    %%(attrType) %%(attrName)(void); // get
+%%IF(NOT CLASS_%%(className)_KEY(%%(attrName)))
+    void %%(attrName)(%%(attrType) data); // set
+%%ENDIF
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+    static %%(className)Iterator* search%%(attrName)(%%(attrType));
+%%ENDIF
+%%ENDIF
+%%IF(STRUCTURE_%%(attrType)_VOLATILE(?))
+%%SET CLASS_%%(className)_VOLATILE()
+%%ENDIF
+
+%%ENDLOOP(attrName)
+
+protected:
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+    friend %%(className)Iterator;
+%%ENDIF
+    // Constructors
+    %%(className)(DbBaseObject* object,
+	DbBaseObject* tempObject,
+	DBOperation op,
+	LocalTransaction* trId,
+        DbTitle* title);
+
+%%IF(CLASS_%%(className)_KEY[0] = 0)
+    %%(className)(ClassIdentity classIdentity, DbResultCode& result);
+
+%%ENDIF
+    static %%(className)* open(DbTitle* title,
+	DbResultCode& result,
+	DBOperation op,
+	LocalTransaction* trId);
+
+    static %%(className)* open(DbTitle* title,
+	DbResultCode& result,
+	%%(className)* dol);
+
+%%IF(CLASS_%%(className)_BASECLASSES[0] = 0)
+    void init(DBOperation);
+%%ELSE
+    void init(DBOperation, Boolean initBase = FALSE);
+%%ENDIF
+
+    // Transaction handling
+    DbResultCode prepare();
+    void commit();
+    void rollback();
+
+private:
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+    %%(attrType)* %%(attrName)_[%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE)];
+%%ELSE
+    %%(attrType)* %%(attrName)_;
+%%ENDIF
+%%ELSE
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+    DbTitleRef* %%(attrName)_[%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE)];
+%%ELSE
+    DbTitleRef* %%(attrName)_;
+%%ENDIF
+%%ENDIF
+%%ELSE
+    %%(attrType)Attribute %%(attrName)_;
+%%ENDIF
+%%ENDLOOP(attrName)
+
+%%INCLUDE(friendDecl(%%(className)))
+%%--IF(CLASS_%%(className)_KEY[0] > 0)
+%%LOOP(baseClass, CLASS_%%(className)_BASECLASSES)
+%%--IF(CLASS_%%(baseClass)_KEY[0] > 0)
+    friend %%(baseClass)* %%(baseClass)::open(DbTitle*, DbResultCode&, DBOperation, LocalTransaction*);
+    friend %%(baseClass)* %%(baseClass)::open(DbTitle*, DbResultCode&, %%(baseClass)*);
+%%--ENDIF
+%%ENDLOOP(baseClass)
+%%--ENDIF
+}; // %%(className)
+
+#endif
+//-- EoF ------------------------------------------------------------
+%%END(classDecl)
+
+
+%%------------------- classDef ------------------------------------------
+%%BEGIN(classDef)
+%%SET className(%%(classDef[1]))
+%%PROCESS(, "%%(className).cc")
+//============ %%(className).cc
+//=======================================================================
+
+#include "DOL.hh"
+#include "%%(className).hh"
+
+%%IF(CLASS_%%(className)_SUBCLASSES[0] > 0)
+// Include subclasses:
+%%LOOP(class, CLASS_%%(className)_SUBCLASSES)
+#include "%%(class).hh"
+%%ENDLOOP(class)
+%%ENDIF
+
+%%IF(CLASS_%%(className)_REFERS[0] > 0)
+// Include referenced classes:
+%%LOOP(class, CLASS_%%(className)_REFERS)
+%%IF(NOT (CLASS_%%(className)_SUBCLASSES(%%(class)) OR CLASS_%%(className)_BASECLASSES(%%(class)) OR class=className))
+#include "%%(class).hh"
+%%ENDIF
+%%ENDLOOP(class)
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)::create"))
+%%(className)* %%(className)::create(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId)
+{
+    DbTitle title (%%(className)_CLASS_ID, &key, %%(STRUCTURE_%%(CLASS_%%(className)_KEY_TYPE)_DBSIZE));
+    return open(&title, result, CREATE, trId);
+}
+%%ELSE
+%%INCLUDE(functionHead("%%(className)::create"))
+%%(className)* %%(className)::create(DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title = DbTitle::generateTitle(%%(className)_CLASS_ID);
+    return open(title, result, CREATE, trId);
+}
+%%ENDIF
+
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)::update"))
+%%(className)* %%(className)::update(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId)
+{
+    DbTitle title (%%(className)_CLASS_ID, &key, %%(STRUCTURE_%%(CLASS_%%(className)_KEY_TYPE)_DBSIZE));
+    return open(&title, result, UPDATE, trId);
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)::remove"))
+%%(className)* %%(className)::remove(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId)
+{
+    DbTitle title (%%(className)_CLASS_ID, &key, %%(STRUCTURE_%%(CLASS_%%(className)_KEY_TYPE)_DBSIZE));
+    return open(&title, result, REMOVE, trId);
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)::openrlock"))
+%%(className)* %%(className)::openrlock(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	LocalTransaction* trId)
+{
+    DbTitle title (%%(className)_CLASS_ID, &key, %%(STRUCTURE_%%(CLASS_%%(className)_KEY_TYPE)_DBSIZE));
+    return open(&title, result, OPENRLOCK, trId);
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)::open"))
+%%(className)* %%(className)::open(%%(CLASS_%%(className)_KEY_TYPE) key,
+	DbResultCode& result,
+	%%(className)* dol)
+{
+    DbTitle title (%%(className)_CLASS_ID, &key, %%(STRUCTURE_%%(CLASS_%%(className)_KEY_TYPE)_DBSIZE));
+    if (dol == NULL)
+        return open(&title, result, OPEN, NULL);
+    else
+        return open(&title, result, dol);
+}
+%%ENDIF
+
+%%INCLUDE(functionHead("%%(className)::getClassNo"))
+int %%(className)::getClassNo()
+{
+    return %%(className)_CLASS_ID;
+}
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)::getIterator"))
+%%(className)Iterator* %%(className)::getIterator()
+{
+    return new %%(className)Iterator;
+}
+%%ENDIF
+
+%%INCLUDE(functionHead("%%(className)::open"))
+%%(className)* %%(className)::open(DbTitle *title,
+	DbResultCode& result,
+	DBOperation op,
+	LocalTransaction* trId)
+{
+    DbBaseObject* object;
+    DbBaseObject* tempObject;
+    LocalTransItem* item;
+    if (item=trId->find(title))
+	return (%%(className)*) item;
+    result = DbAbstractObject::open(title, op, object, tempObject);
+    if (result != SUCCEEDED) 
+	return NULL;
+    else {
+	switch (object->getClassId()) {
+	case %%(className)_CLASS_ID:
+	    return new %%(className) (object, tempObject, op, trId, title);
+%%LOOP(subClass, CLASS_%%(className)_SUBCLASSES)
+	case %%(subClass)_CLASS_ID:
+	    return (%%(className)*) new %%(subClass) (object, tempObject, op, trId, title);
+%%ENDLOOP(subClass)
+	default:
+	    result = OBJECT_NOT_SUBCLASS;
+            return NULL;
+	}
+    }
+}
+
+%%INCLUDE(functionHead("%%(className)::open"))
+%%(className)* %%(className)::open(DbTitle *title, DbResultCode& result, %%(className)* dol)
+{
+    result = dol->reOpen(title);
+    if (result != SUCCEEDED) 
+        return NULL;
+    else {
+%%IF(CLASS_%%(className)_BASECLASSES[0] = 0)
+        dol->init(OPEN);
+%%ELSE
+        dol->init(OPEN, TRUE);
+%%ENDIF
+        return dol;
+    }
+}
+
+%%-- Constructor
+%%INCLUDE(functionHead("%%(className)::%%(className)"))
+%%(className)::%%(className)(DbBaseObject* object,
+	DbBaseObject* tempObject,
+	DBOperation op,
+	LocalTransaction* trId,
+	DbTitle* title)
+    : (object, tempObject, op, trId, title)
+{
+    %%(className)::init(op);
+}
+
+%%INCLUDE(functionHead("%%(className)::init"))
+%%IF(CLASS_%%(className)_BASECLASSES[0] = 0)
+void %%(className)::init(DBOperation op)
+{
+%%ELSE
+void %%(className)::init(DBOperation op, Boolean initBase)
+{
+    if (initBase)
+%%IF(CLASS_%%(CLASS_%%(className)_BASECLASSES[1])_BASECLASSES[0] = 0)
+	%%(CLASS_%%(className)_BASECLASSES[1])::init(op);
+%%ELSE
+	%%(CLASS_%%(className)_BASECLASSES[1])::init(op, initBase);
+%%ENDIF
+%%ENDIF
+    if (op == CREATE) {
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_INITIAL(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+%%LOOP(arrayIndex <= CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE)
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_INITIAL_VALUE_%%(arrayIndex) = "NIL")
+        // %%(attrName)_[%%(arrayIndex)] = DbTitleRef::nilRef();    // 4f - Nil reference
+%%ELSE
+        %%(attrName)_.set(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), %%(attrType)(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_INITIAL_VALUE_%%(arrayIndex))), %%(arrayIndex-1));
+%%ENDIF
+%%ENDLOOP(arrayIndex)
+%%ELSE
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_INITIAL_VALUE = "NIL")
+        // %%(attrName)_ = DbTitleRef::nilRef();    // 4f - Nil reference
+%%ELSE
+        %%(attrName)_.set(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), %%(attrType)(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_INITIAL_VALUE)));
+%%ENDIF
+%%ENDIF
+%%ENDIF
+%%ENDLOOP(attrName)
+    }
+    int i = 0;
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+    for (i=0; i<%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE); i++)
+        %%(attrName)_[i] = NULL;
+%%ELSE
+    %%(attrName)_ = NULL;
+%%ENDIF
+%%ENDIF
+%%ENDLOOP(attrName)
+}
+
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%INCLUDE(attributeInterface)
+%%ENDLOOP(attrName)
+
+
+%%INCLUDE(functionHead("%%(className)::prepare"))
+DbResultCode %%(className)::prepare()
+{
+    DbResultCode result = SUCCEEDED;
+    int i = 0;
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF(STRUCTURE_%%(attrType)_VOLATILE(?))
+    %%(attrName)_.prepare();
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+    if (%%(attrName)_ != NULL) {
+        result = %%(attrName)_->prepare();
+        if (result != SUCCEEDED)
+            return result;
+    }   
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+    for (i=0; i<%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE); i++) {
+        if (%%(attrName)_[i] != NULL) {
+            DbTitle* title = %%(attrName)_[i]->getTitle();
+            DbAbstractObject temp(title, OPEN, result);
+            if (result == SUCCEEDED)
+                %%(attrName)_[i]->prepare(theObject, &temp);  //byt namn
+        }
+    }
+%%ELSE
+    if (%%(attrName)_ != NULL) {
+        DbTitle* title = %%(attrName)_->getTitle();
+        DbAbstractObject temp(title, OPEN, result);
+        if (result == SUCCEEDED)
+            %%(attrName)_->prepare(theObject, &temp);  //byt namn
+    }
+%%ENDIF
+%%ENDIF
+%%ENDLOOP(attrName)
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0)
+    return %%(CLASS_%%(className)_BASECLASSES[1])::prepare();
+%%ELSE
+    return DbAbstractObject::prepare();
+%%ENDIF
+}
+
+%%INCLUDE(functionHead("%%(className)::commit"))
+void %%(className)::commit()
+{
+    if (theObject == NULL)
+	return;
+    DbTitle* title = NULL;
+    int i = 0;
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+    if (%%(attrName)_ != NULL) {
+        title = %%(attrName)_->commitSubObject();
+        if (title != NULL)
+            theObject->putValue(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title);
+    }
+    %%(attrName)_ = NULL;
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+    for (i=0; i<%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE); i++)
+        if (%%(attrName)_[i] != NULL) {
+            %%(attrName)_[i]->commit(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), i, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE));
+	    if (%%(attrName)_[i]->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+		delete %%(attrName)_[i];
+	    %%(attrName)_[i] = NULL;
+  	}
+%%ELSE
+    if (%%(attrName)_ != NULL) {
+        %%(attrName)_->commit(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER));
+	if (%%(attrName)_->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+	    delete %%(attrName)_;
+	%%(attrName)_ = NULL;
+    }
+%%ENDIF
+%%ENDIF
+%%ENDLOOP(attrName)
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0)
+    %%(CLASS_%%(className)_BASECLASSES[1])::commit();
+%%ELSE
+    DbAbstractObject::commit();
+%%ENDIF
+}
+
+%%INCLUDE(functionHead("%%(className)::rollback"))
+void %%(className)::rollback()
+{
+    if (theObject == NULL)
+	return;
+    int i = 0;
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF(STRUCTURE_%%(attrType)_VOLATILE(?))
+    %%(attrName)_.rollback();
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+    if (%%(attrName)_ != NULL)
+        %%(attrName)_->rollbackSubObject();
+    %%(attrName)_ = NULL;
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+    for (i=0; i<%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE); i++) {
+	if (%%(attrName)_[i])
+	    if (%%(attrName)_[i]->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+	        delete %%(attrName)_[i];
+        %%(attrName)_[i] = NULL;
+    }
+%%ELSE
+    if (%%(attrName)_)
+	if (%%(attrName)_->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+    	    delete %%(attrName)_;
+    %%(attrName)_ = NULL;
+%%ENDIF
+%%ENDIF
+%%ENDLOOP(attrName)
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0)
+    %%(CLASS_%%(className)_BASECLASSES[1])::rollback();
+%%ELSE
+    DbAbstractObject::rollback();
+%%ENDIF
+}
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)Iterator::%%(className)Iterator"))
+%%(className)Iterator::%%(className)Iterator()
+{
+    attrNumber = -1;
+    index = -1;
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%IF(CLASS_%%(className)_searchLength > 0)
+%%INCLUDE(functionHead("%%(className)Iterator::%%(className)Iterator"))
+%%(className)Iterator::%%(className)Iterator(AttributeIndex attr, void* value, int length)
+{
+    attrNumber = attr;
+    memcpy(searchValue, value, length);
+    index = -1;
+}
+%%ENDIF
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)Iterator::updateNext"))
+%%(className)* %%(className)Iterator::updateNext(DbResultCode& result, LocalTransaction* trId)
+{
+    DataBaseManager* dbmanager = getDbManager_t();
+    DbBaseObject* object;
+    %%(className)* temp;
+    while (TRUE) {
+%%IF(CLASS_%%(className)_searchLength > 0)
+        if (attrNumber == -1)
+            result = dbmanager->iterate(%%(className)_CLASS_ID, index, object);
+        else 
+            result = dbmanager->search(%%(className)_CLASS_ID, attrNumber,
+				       index, searchValue, object);
+%%ELSE
+        result = dbmanager->iterate(%%(className)_CLASS_ID, index, object);
+%%ENDIF
+        if (result != SUCCEEDED)
+	    return NULL;
+        DbTitle title (%%(className)_CLASS_ID, -1,
+		       object->getClid(), object->getLid());
+        temp = %%(className)::open(&title, result, UPDATE, trId);
+	if (result != OBJECT_NOT_SUBCLASS)
+	    return temp;
+    }
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)Iterator::openrlockNext"))
+%%(className)* %%(className)Iterator::openrlockNext(DbResultCode& result, LocalTransaction* trId)
+{
+    DataBaseManager* dbmanager = getDbManager_t();
+    DbBaseObject* object;
+    %%(className)* temp;
+    while (TRUE) {
+%%IF(CLASS_%%(className)_searchLength > 0)
+        if (attrNumber == -1)
+            result = dbmanager->iterate(%%(className)_CLASS_ID, index, object);
+        else 
+            result = dbmanager->search(%%(className)_CLASS_ID, attrNumber,
+				       index, searchValue, object);
+%%ELSE
+        result = dbmanager->iterate(%%(className)_CLASS_ID, index, object);
+%%ENDIF
+        if (result != SUCCEEDED)
+	    return NULL;
+        DbTitle title (%%(className)_CLASS_ID, -1,
+		       object->getClid(), object->getLid());
+        temp = %%(className)::open(&title, result, OPENRLOCK, trId);
+	if (result != OBJECT_NOT_SUBCLASS)
+	    return temp;
+    }
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)Iterator::openNext"))
+%%(className)* %%(className)Iterator::openNext(DbResultCode& result, %%(className)* dol)
+{
+    DataBaseManager* dbmanager = getDbManager_t();
+    DbBaseObject* object;
+    %%(className)* temp;
+    while (TRUE) {
+%%IF(CLASS_%%(className)_searchLength > 0)
+        if (attrNumber == -1)
+            result = dbmanager->iterate(%%(className)_CLASS_ID, index, object);
+        else 
+           result = dbmanager->search(%%(className)_CLASS_ID, attrNumber,
+				      index, searchValue, object);
+%%ELSE
+        result = dbmanager->iterate(%%(className)_CLASS_ID, index, object);
+%%ENDIF
+        if (result != SUCCEEDED)
+	    return NULL;
+        DbTitle title (%%(className)_CLASS_ID, -1,
+		       object->getClid(), object->getLid());
+        if (dol == NULL)
+	    temp = %%(className)::open(&title, result, OPEN, NULL);
+	else
+            temp = %%(className)::open(&title, result, dol);
+	if (result != OBJECT_NOT_SUBCLASS)
+	    return temp;
+    }
+}
+%%ENDIF
+
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(functionHead("%%(className)Iterator::reset"))
+void %%(className)Iterator::reset()
+{
+    index = -1;
+}
+%%ENDIF
+
+//-- EoF ------------------------------------------------------------
+%%END(classDef)
+
+
+%%BEGIN(getAttr)
+%%INCLUDE(functionHead("%%(className)::%%(attrName)"))
+%%(attrType) %%(className)::%%(attrName)(void) // get
+{
+    %%(attrType) temp;
+    %%(attrName)_.get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), temp);
+    return temp;
+}
+%%END(getAttr)
+
+
+%%BEGIN(setAttr)
+%%INCLUDE(functionHead("%%(className)::%%(attrName)"))
+void %%(className)::%%(attrName)(%%(attrType) data) // set
+{
+%%IF(STRUCTURE_%%(attrType)_PERSISTENT_ELEMENTS[0] > 0)
+    if (operation == UPDATE || operation == CREATE) {
+        %%(attrName)_.set(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), data);
+    }
+    else error("%%(className)::%%(attrName)");
+%%ELSE
+    %%(attrName)_.set(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), data);
+%%ENDIF
+}
+%%END(setAttr)
+
+
+%%BEGIN(searchAttr)
+%%INCLUDE(functionHead("%%(className)::search%%(attrName)"))
+%%(className)Iterator* %%(className)::search%%(attrName)(%%(attrType) value)
+{
+    return new %%(className)Iterator (%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), (void*) &value, %%(STRUCTURE_%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE)_DBSIZE));
+}
+
+%%END(searchAttr)
+
+
+%%BEGIN(getAttrArray)
+%%INCLUDE(functionHead("%%(className)::%%(attrName)"))
+%%(attrType) %%(className)::%%(attrName)(int index) // get
+{
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+        %%(attrType) temp;
+        %%(attrName)_.get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), temp, index);
+        return temp;
+        }
+    else error("%%(className)::%%(attrName)");
+}
+%%END(getAttrArray)
+
+
+%%BEGIN(setAttrArray)
+%%INCLUDE(functionHead("%%(className)::%%(attrName)"))
+void %%(className)::%%(attrName)(%%(attrType) data, int index) // set
+{
+%%IF(STRUCTURE_%%(attrType)_PERSISTENT_ELEMENTS[0] > 0)
+    if (operation == UPDATE || operation == CREATE) {
+%%ENDIF
+        if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE)))
+            %%(attrName)_.set(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), data, index);
+        else error("%%(className)::%%(attrName) : 1");
+%%IF(STRUCTURE_%%(attrType)_PERSISTENT_ELEMENTS[0] > 0)
+    }
+    else error("%%(className)::%%(attrName) : 2");
+%%ENDIF
+}
+%%END(setAttrArray)
+
+
+%%BEGIN(getAttrRef)
+%%INCLUDE(functionHead("%%(className)::update%%(attrName)"))
+%%(attrType)* %%(className)::update%%(attrName)(DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title;
+    if (%%(attrName)_ != NULL)
+        title = %%(attrName)_->getTitle();
+    else {
+        %%(attrName)_->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title);
+    };
+    if (title->getClassIdentity() != 0)     // 4f - Nil reference
+	return %%(attrType)::open(title, result, UPDATE, trId);
+    else {
+	result = OBJECT_NOT_FOUND;
+	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(className)::remove%%(attrName)"))
+%%(attrType)* %%(className)::remove%%(attrName)(DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title;
+    if (%%(attrName)_ != NULL)
+        title = %%(attrName)_->getTitle();
+    else {
+        %%(attrName)_->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title);
+    };
+    if (title->getClassIdentity() != 0)     // 4f - Nil reference
+        return %%(attrType)::open(title, result, REMOVE, trId);
+    else {
+	result = OBJECT_NOT_FOUND;
+	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(className)::openrlock%%(attrName)"))
+%%(attrType)* %%(className)::openrlock%%(attrName)(DbResultCode& result, LocalTransaction* trId)
+{
+    DbTitle* title;
+    if (%%(attrName)_ != NULL)
+        title = %%(attrName)_->getTitle();
+    else {
+        %%(attrName)_->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title);
+    };
+    if (title->getClassIdentity() != 0)     // 4f - Nil reference
+        return %%(attrType)::open(title, result, OPENRLOCK, trId);
+    else {
+	result = OBJECT_NOT_FOUND;
+	return NULL;
+    }
+}
+
+
+%%INCLUDE(functionHead("%%(className)::open%%(attrName)"))
+%%(attrType)* %%(className)::open%%(attrName)(DbResultCode& result, %%(attrType)* dol)
+{
+    DbTitle* title;
+    if (%%(attrName)_ != NULL)
+        title = %%(attrName)_->getTitle();
+    else {
+        %%(attrName)_->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title);
+    };
+    if (title->getClassIdentity() != 0) {     // 4f - Nil reference
+        if (dol == NULL)
+	    return %%(attrType)::open(title, result, OPEN, NULL);
+        else
+            return %%(attrType)::open(title, result, dol);
+    }
+    else {
+	result = OBJECT_NOT_FOUND;
+	return NULL;
+    }
+}
+%%END(getAttrRef)
+
+
+%%BEGIN(setAttrRef)
+%%INCLUDE(functionHead("%%(className)::%%(attrName)"))
+void %%(className)::%%(attrName)(%%(attrType)* data) // set
+{
+    if (operation == UPDATE || operation == CREATE) {
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE(?))
+%%-- 1:1, N:1 relation
+        DbTitle* title;
+	DbResultCode result;
+	if (!%%(attrName)_)
+            %%(attrName)_->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title);
+	else
+	    title = %%(attrName)_->getTitle();
+        if (title->getClassIdentity() != 0)  {    // 4f - Nil reference
+	    // Remove other end of the bidirectional relation
+	    %%(attrType)* dol = %%(attrType)::open(title, result, UPDATE, get_Transaction());
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE[1] = "N")
+	    dol->%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE)_inverse_sub(this);
+%%ELSE
+	    dol->%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE)_inverse(NULL);
+%%ENDIF
+	}
+	if (data)
+    	    // Set the inverse attribute in the bidirectional relation
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE[1] = "N")
+	    data->%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE)_inverse_add(this);
+%%ELSE
+	    data->%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE)_inverse(this);
+%%ENDIF
+%%ENDIF
+	if (%%(attrName)_ &&  %%(attrName)_->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+	    delete %%(attrName)_;
+	if (data)
+            %%(attrName)_ = new DbTitleRef(UPDATE, data->getTitle());
+	else
+	    %%(attrName)_ = DbTitleRef::nilRef();
+    }
+    else error("%%(className)::%%(attrName)");
+}
+
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE(?))
+%%INCLUDE(functionHead("%%(className)::%%(attrName)_inverse"))
+void %%(className)::%%(attrName)_inverse(%%(attrType)* data) // set
+{
+    if (operation == UPDATE || operation == CREATE) {
+	if (%%(attrName)_ && %%(attrName)_->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+	    delete %%(attrName)_;
+	if (data) 
+            %%(attrName)_ = new DbTitleRef(UPDATE, data->getTitle());
+	else
+	    %%(attrName)_ = DbTitleRef::nilRef();
+    }
+    else error("%%(className)::%%(attrName)_inverse");
+}
+%%ENDIF
+%%END(setAttrRef)
+
+
+%%BEGIN(getAttrArrayRef)
+%%INCLUDE(functionHead("%%(className)::update%%(attrName)"))
+%%(attrType)* %%(className)::update%%(attrName)(int index, DbResultCode& result,
+	LocalTransaction* trId)
+{
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+        DbTitle *title;
+        if (%%(attrName)_[index] != NULL)
+            title = %%(attrName)_[index]->getTitle();
+        else {
+            %%(attrName)_[index]->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title, index, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE));
+        }
+        return %%(attrType)::open(title, result, UPDATE, trId);
+    }
+    else {
+	result = INDEX_ERROR;
+	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(className)::remove%%(attrName)"))
+%%(attrType)* %%(className)::remove%%(attrName)(int index, DbResultCode& result,
+	LocalTransaction* trId)
+{
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+        DbTitle *title;
+        if (%%(attrName)_[index] != NULL)
+            title = %%(attrName)_[index]->getTitle();
+        else {
+            %%(attrName)_[index]->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title, index, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE));
+        }
+        return %%(attrType)::open(title, result, REMOVE, trId);
+    }
+    else {
+	result = INDEX_ERROR;
+	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(className)::openrlock%%(attrName)"))
+%%(attrType)* %%(className)::openrlock%%(attrName)(int index, DbResultCode& result,
+	LocalTransaction* trId)
+{
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+        DbTitle *title;
+        if (%%(attrName)_[index] != NULL)
+            title = %%(attrName)_[index]->getTitle();
+        else {
+            %%(attrName)_[index]->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title, index, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE));
+        }
+        return %%(attrType)::open(title, result, OPENRLOCK, trId);
+    }
+    else {
+	result = INDEX_ERROR;
+	return NULL;
+    }
+}
+
+%%INCLUDE(functionHead("%%(className)::open%%(attrName)"))
+%%(attrType)* %%(className)::open%%(attrName)(int index, DbResultCode& result,
+	%%(attrType)* dol)
+{
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+        DbTitle *title;
+        if (%%(attrName)_[index] != NULL)
+            title = %%(attrName)_[index]->getTitle();
+        else {
+            %%(attrName)_[index]->get(theObject, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), title, index, %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE));
+        }
+	if (dol == NULL)
+	    return %%(attrType)::open(title, result, OPEN, NULL);
+	else
+            return %%(attrType)::open(title, result, dol);
+    }
+    else {
+	result = INDEX_ERROR;
+	return NULL;
+    }
+}
+%%END(getAttrArrayRef)
+
+
+%%BEGIN(setAttrArrayRef)
+%%INCLUDE(functionHead("%%(className)::%%(attrName)"))
+void %%(className)::%%(attrName)(%%(attrType)* data, int index) // set
+{
+    if (operation == UPDATE || operation == CREATE) {
+        if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+	    if (%%(attrName)_[index] &&	%%(attrName)_[index]->getTitle()->getClassIdentity() != 0)     // 4f - Nil reference
+		delete %%(attrName)_[index];
+            %%(attrName)_[index] = new DbTitleRef(UPDATE, data->getTitle());
+	}
+        else error("%%(className)::%%(attrName) : 2");
+    }
+    else error("%%(className)::%%(attrName)  3");
+}
+%%END(setAttrArrayRef)
+
+
+%%BEGIN(getAttrSubobject)
+%%INCLUDE(functionHead("%%(className)::create%%(attrName)"))
+%%(attrType)* %%(className)::create%%(attrName)(DbResultCode& result)
+
+{
+   if (operation != CREATE && operation != UPDATE) {
+	result = FAILED;
+	return NULL;
+   }
+   return %%(attrName)_ = new %%(attrType) (%%(attrType)_CLASS_ID, result);
+}
+%%INCLUDE(functionHead("%%(className)::open%%(attrName)"))
+%%(attrType)* %%(className)::open%%(attrName)(DbResultCode& result)
+{
+   if (%%(attrName)_ != NULL) 
+      return %%(attrName)_;
+   else {
+      char* buf = new char[2*sizeof(int)];
+      theObject->getValue(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), buf);
+      LocalReferense* ref = (LocalReferense*) buf;
+      if (ref->clid == 0 && ref->lid == 0) {   // 4f - Nil reference
+	 result = OBJECT_NOT_FOUND;
+         return NULL;   	
+      }
+      DbTitle* title = new DbTitle(-1, -1, ref->clid, ref->lid);
+      return %%(attrName)_ = %%(attrType)::open(title, result, operation, NULL);
+   }
+}
+%%END(getAttrSubobject)
+
+%%BEGIN(getAttrRelation)
+%%INCLUDE(functionHead("%%(className)::create%%(attrName)"))
+%%(attrType)* %%(className)::create%%(attrName)(DbResultCode& result)
+
+{
+   if (operation != CREATE && operation != UPDATE) {
+	result = FAILED;
+	return NULL;
+   }
+   return %%(attrName)_ = new %%(attrType) (%%(attrType)_CLASS_ID, this, result);
+}
+%%INCLUDE(functionHead("%%(className)::open%%(attrName)"))
+%%(attrType)* %%(className)::open%%(attrName)(DbResultCode& result)
+{
+   if (%%(attrName)_ != NULL) {
+      result = SUCCEEDED;
+      return %%(attrName)_;
+   }
+   else {
+      char* buf = new char[2*sizeof(int)];
+      theObject->getValue(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), buf);
+      LocalReferense* ref = (LocalReferense*) buf;
+      if (ref->clid == 0 && ref->lid == 0) {    // 4f - Nil reference
+	 result = OBJECT_NOT_FOUND;
+         return NULL;   	
+      }
+      DbTitle* title = new DbTitle(-1, -1, ref->clid, ref->lid);
+      return %%(attrName)_ = new %%(attrType) (title, operation, this, result);
+   }
+}
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_OTHER_SIDE(?))
+%%INCLUDE(functionHead("%%(className)::%%(attrName)_inverse_add"))
+DbResultCode %%(className)::%%(attrName)_inverse_add(%%(RELATION_%%(attrType)_TO)* data)
+{
+    DbResultCode result;
+    %%(attrType)* set = open%%(attrName)(result);
+    if (result != SUCCEEDED)
+	set = create%%(attrName)(result);
+    if (result == SUCCEEDED)
+	set->add(data);
+    return result;
+}
+%%INCLUDE(functionHead("%%(className)::%%(attrName)_inverse_sub"))
+DbResultCode %%(className)::%%(attrName)_inverse_sub(%%(RELATION_%%(attrType)_TO)* data)
+{
+    DbResultCode result;
+    %%(attrType)* set = open%%(attrName)(result);
+    if (result != SUCCEEDED)
+	set = create%%(attrName)(result);
+    if (result == SUCCEEDED)
+	set->sub(data);
+    return result;
+}
+%%ENDIF
+
+
+%%END(getAttrRelation)
+
+%%BEGIN(getAttrArraySubobj)
+%%INCLUDE(functionHead("%%(className)::create%%(attrName)"))
+%%(attrType)* %%(className)::create%%(attrName)(DbResultCode& result, int index)
+{
+    if (operation != CREATE && operation != UPDATE) {
+	 result = FAILED;
+ 	 return NULL;
+    }
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE)))
+        return %%(attrName)_[index] = new %%(attrType) (%%(attrType)_CLASS_ID, result);
+    else {
+	result = INDEX_ERROR;
+	return NULL;
+    }
+}
+%%INCLUDE(functionHead("%%(className)::open%%(attrName)"))
+%%(attrType)* %%(className)::open%%(attrName)(DbResultCode& result, int index)
+{
+    if ((index >= 0) && (index < %%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))) {
+        if (%%(attrName)_[index] != NULL) 
+            return %%(attrName)_[index];
+        else {
+            char* buf = new char[2*sizeof(int)];
+            theObject->getSlice(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ATTR_NUMBER), index*2*sizeof(int), 2*sizeof(int), buf);
+            LocalReferense* ref = (LocalReferense*) buf;
+            if (ref->clid == 0 && ref->lid == 0) {   // 4f - Nil reference
+	        result = OBJECT_NOT_FOUND;
+                return NULL;   	
+            } 
+            DbTitle* title = new DbTitle(-1, -1, ref->clid, ref->lid);
+            return %%(attrName)_[index] = %%(attrType)::open(title, result, operation, NULL);
+            }
+        }
+    else {
+	result = INDEX_ERROR;
+	return NULL;
+    }
+}
+%%END(getAttrArraySubobj)
+
+
+%%------------------- attributeInterface --------------------------------
+%%BEGIN(attributeInterface)
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%IF (CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%INCLUDE(getAttrArrayRef)
+%%ELSE
+%%INCLUDE(getAttrArray)
+%%ENDIF
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+%%INCLUDE(getAttrRelation)
+%%ELSE
+%%INCLUDE(getAttrRef)
+%%ENDIF
+%%ELSE
+%%INCLUDE(getAttr)
+%%ENDIF
+
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(NOT CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+%%INCLUDE(setAttrArrayRef)
+%%ENDIF
+%%ELSE
+%%INCLUDE(setAttrArray)
+%%ENDIF
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%IF(NOT CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+%%INCLUDE(setAttrRef)
+%%ENDIF
+%%ELSE
+%%IF(NOT CLASS_%%(className)_KEY(%%(attrName)))
+%%INCLUDE(setAttr)
+%%ENDIF
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%INCLUDE(searchAttr)
+%%ENDIF
+%%ENDIF
+
+%%END(attributeInterface)
+
+
+%%BEGIN(loadFixAttribute)
+
+%%SET attrType(%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE))
+%%SET tag(%%(tag+1))
+%%-- tag
+%%(tag)
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY(?))
+%%IF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%-- Array of references
+%%-- Attribute type
+3
+%%-- Length of key in referenced object
+%%IF(CLASS_%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE)_KEY[0] > 0)
+%%(STRUCTURE_%%(CLASS_%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE)_KEY_TYPE)_DBSIZE)
+%%ELSE
+2
+%%ENDIF
+%%-- Length of array
+%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE)
+%%ELSE
+%%-- Array (same as simple attribute)
+%%-- Attribute type
+0
+%%-- length
+%%(STRUCTURE_%%(attrType)_DBSIZE*(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_ARRAY_SIZE))
+%%-- Persisent or dynamic
+%%IF(STRUCTURE_%%(attrType)_DYNAMIC_ELEMENTS[0]>0)
+1
+%%ELSE
+0
+%%ENDIF
+%%ENDIF
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_RELATION(?))
+%%-- Relation (same as reference)
+%%-- Attribute type
+2
+%%-- Length of key in referenced object
+0
+%%-- Cardinality
+%%IF(RELATION_%%(attrType)(?))
+2
+%%ELSE
+1
+%%ENDIF
+%%ELSIF(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_REFERENCE(?))
+%%-- Reference
+%%-- Attribute type 
+1
+%%-- Length of key in referenced object
+%%IF(CLASS_%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE)_KEY[0] > 0)
+%%(STRUCTURE_%%(CLASS_%%(CLASS_%%(className)_ATTRIBUTE_%%(attrName)_TYPE)_KEY_TYPE)_DBSIZE)
+%%ELSE
+2
+%%ENDIF
+%%-- Cardinality
+%%IF(RELATION_%%(attrType)(?))
+2
+%%ELSE
+1
+%%ENDIF
+%%ELSE
+%%-- Simple attribute
+%%-- Attribute type
+0
+%%-- length
+%%(STRUCTURE_%%(attrType)_DBSIZE)
+%%-- Persisent or dynamic
+%%IF(STRUCTURE_%%(attrType)_DYNAMIC_ELEMENTS[0]>0)
+1
+%%ELSE
+0
+%%ENDIF
+%%ENDIF
+%%-- Common fields:
+%%-- Attribute name
+%%(attrName)
+%%-- Attribute type 
+0
+%%END(loadFixAttribute)
+
+
+%%BEGIN(loadClassAttributes)
+%%SET saveClassName(%%(className))
+%%SET className(%%(loadClassAttributes[1]))
+%%LOOP(attrName, CLASS_%%(className)_ATTRIBUTES)
+%%IF(NOT CLASS_%%(className)_KEY(%%(attrName)) OR CLASS_%%(className)_KEY[0] = 0)
+%%INCLUDE(loadFixAttribute)
+%%ENDIF
+%%ENDLOOP(attrName)
+%%SET className(%%(saveClassName))
+%%END(loadClassAttributes)
+
+
+%%BEGIN(loadClass)
+%%SET className(%%(loadClass[1]))
+%%PROCESS(, "%%(className).dbLoad")
+%%----- Common information ------
+%%-- Number of fixed attributes
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%(CLASS_%%(className)_ATTRIBUTES[0] + CLASS_%%(className)_BASE_ATTRIBUTES)
+%%ELSE
+%%(CLASS_%%(className)_ATTRIBUTES[0] + CLASS_%%(className)_BASE_ATTRIBUTES + 1)
+%%ENDIF
+%%-- Number of keys
+1
+%%-- Superclass - 4f
+%%IF(CLASS_%%(className)_BASECLASSES[0] > 0)
+%%(%%(CLASS_%%(className)_BASECLASSES[1])_CLASS_ID)
+%%ELSE
+0
+%%ENDIF
+%%-- Number of keys with access in the own class
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%IF(CLASS_%%(className)_ATTRIBUTES(%%(CLASS_%%(className)_KEY[1])))
+1
+%%ELSE
+0
+%%ENDIF
+%%ELSE
+1
+%%ENDIF
+%%-- Version 
+0
+%%-- Set?
+0
+
+%%----- Keys ------
+%%SET tag(1)
+%%-- Tag 
+%%(tag)
+%%-- Length
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%(STRUCTURE_%%(CLASS_%%(className)_KEY_TYPE)_DBSIZE)
+%%ELSE
+2
+%%ENDIF
+%%-- Key attribute name
+%%IF(CLASS_%%(className)_KEY[0] > 0)
+%%(CLASS_%%(className)_KEY[1])
+%%ELSE
+_GEN_KEY_
+%%ENDIF
+%%-- Key attribute type
+0
+
+%%----- Fix attributes ------
+%%LOOP(classNo <= %%(CLASS_%%(className)_BASECLASSES[0]))
+%%INCLUDE(loadClassAttributes(%%(CLASS_%%(className)_BASECLASSES[%%(CLASS_%%(className)_BASECLASSES[0] - classNo + 1)])))
+%%ENDLOOP(classNo)
+%%INCLUDE(loadClassAttributes(%%(className)))
+%%END(loadClass)
+
+
+%%BEGIN(loadRelation)
+%%SET relName(%%(loadRelation[1]))
+%%PROCESS(, "%%(relName).dbLoad")
+0
+0
+0
+0
+0
+1
+%%END(loadRelation)

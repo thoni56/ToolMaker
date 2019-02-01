@@ -1,0 +1,9 @@
+########## common ##########
+%%set foo(fie)
+%%if (foo(*))
+Yes!
+%%else
+No!
+%%endif
+########## ../imp common.tst >common.tst.tmp; cat common.tst.tmp; rm common.tst.tmp ##########
+Yes!

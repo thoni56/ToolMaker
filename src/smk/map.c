@@ -1,0 +1,253 @@
+/*
+ * AUTHOR : Tony Olsson
+ * DATE   : 1993-04-30/tools@wolf
+ * CREATED: 1990-06-25
+ * 
+ * SoftLab ab (c) 1990
+ *
+ * $Header: /Repository/ToolMaker/src/smk/map.c,v 1.1 2002/06/25 20:04:45 Thomas Nilsson Exp $
+ *
+ * $Log: map.c,v $
+ * Revision 1.1  2002/06/25 20:04:45  Thomas Nilsson
+ * Initial version of ToolMaker source import
+ *
+ * Revision 1.2  1993/04/30 12:32:54  tools
+ * Adoption to ANSI-C completed.
+ * Explicit register allocation removed.
+ *
+ * Revision 1.1  1993/03/24  09:24:08  tools
+ * Ursprunglig version av smk testsvit
+ *
+ * Revision 1.5  1991/12/11  13:00:32  tools
+ * Not modified
+ *
+ * Revision 1.4  91/07/11  10:38:37  tools
+ * Added Inherited scanners and Undefined tokens
+ * 
+ * Revision 1.3  1991/07/10  14:20:01  tools
+ * New SET handling
+ *
+ * Revision 1.2  1991/07/09  07:33:35  tools
+ * Fix map bug and added mapping in DFA-table
+ *
+ * Revision 1.1  1991/01/10  13:37:57  tools
+ * Initial revision
+ *
+ *
+ */
+
+#include <stdio.h>
+#include "char.h"
+#include "lmprintf.h"
+#include "map.h"
+#include "smkList.h"
+#include "smk_i.h"
+
+short mapTable[256]={
+    0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+   16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+   32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+   48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+   64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+   80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+   96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,
+  112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,
+  128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,
+  144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,
+  160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,
+  176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,
+  192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,
+  208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,
+  224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,
+  240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255};
+
+short mapSkip=-1;
+short mapUsed=0;
+
+void mapPut(char *map1, char *map2)
+{
+  char *class1;
+  char *class2;
+  int rev1;
+  int rev2;
+  short p1;
+  short p2;
+  short p3;
+
+  class1=charClass(map1);
+  class2=charClass(map2);
+  rev1=charIsRevClass(map1);
+  rev2=charIsRevClass(map2);
+      
+
+ /* The code is devided into four parts depending on the order the */
+ /* character classes should be processed. */
+  
+  if(rev1)
+    if(rev2) {
+      p2=255;
+      for(p3=0;p3<256 && !class2[p3];p3++);
+      for(p1=255;p1>=0 && !class1[p1];p1--);
+      if(p1<0) { free(class1); free(class2); return; }
+#if 0
+/*
+ * ??? What in hell am I doing here
+ */
+      if(p3>255) 
+	if(mapSkip<0)
+	  class2[p3=mapSkip=p1];
+	else
+	  class2[p3=mapSkip];
+#else
+      if(p3>255) 
+	if(mapSkip<0)
+	  p3=mapSkip=p1;
+	else
+	  p3=mapSkip;
+#endif
+      for(;p1>=0;p1--)
+	if(class1[p1]) {
+	  while(!class2[p2] && p2>p3) p2--;
+	  mapTable[p1]=p2;
+	  if(p2>p3) p2--;
+	}
+    }
+    else {
+      p2=0;
+      for(p3=255;p3>=0 && !class2[p3];p3--);
+      for(p1=255;p1>=0 && !class1[p1];p1--);
+      if(p1<0) { free(class1); free(class2); return; }
+#if 0
+/*
+ * ??? What in hell am I doing here
+ */
+      if(p3<0) 
+	if(mapSkip<0)
+	  class2[p3=mapSkip=p1];
+	else
+	  class2[p3=mapSkip];
+#else
+      if(p3<0) 
+	if(mapSkip<0)
+	  p3=mapSkip=p1;
+	else
+	  p3=mapSkip;
+#endif
+      for(p1=255;p1>=0;p1--)
+	if(class1[p1]) {
+	  while(!class2[p2] && p2<p3) p2++;
+	  mapTable[p1]=p2;
+	  if(p2<p3) p2++;
+	}
+    }
+  else
+    if(rev2) {
+      p2=255;
+      for(p3=0;p3<256 && !class2[p3];p3++);
+      for(p1=0;p1<256 && !class1[p1];p1++);
+      if(p1>255) { free(class1); free(class2); return; }
+#if 0
+/*
+ * ??? What in hell am I doing here
+ */
+      if(p3>255) 
+	if(mapSkip<0)
+	  class2[p3=mapSkip=p1];
+	else
+	  class2[p3=mapSkip];
+#else
+      if(p3>255) 
+	if(mapSkip<0)
+	  p3=mapSkip=p1;
+	else
+	  p3=mapSkip;
+#endif
+      for(p1=0;p1<256;p1++)
+	if(class1[p1]) {
+	  while(!class2[p2] && p2>p3) p2--;
+	  mapTable[p1]=p2;
+	  if(p2>p3) p2--;
+	}
+    }
+    else {
+      p2=0;
+      for(p3=255;p3>=0 && !class2[p3];p3--);
+      for(p1=0;p1<256 && !class1[p1];p1++);
+      if(p1>255) { free(class1); free(class2); return; }
+#if 0
+/*
+ * ??? What in hell am I doing here
+ */
+      if(p3<0)
+      	if(mapSkip<0)
+	  class2[p3=mapSkip=p1];
+	else
+	  class2[p3=mapSkip];
+#else
+      if(p3<0) 
+	if(mapSkip<0)
+	  p3=mapSkip=p1;
+	else
+	  p3=mapSkip;
+#endif
+      for(p1=0;p1<256;p1++)
+	if(class1[p1]) {
+	  while(!class2[p2] && p2<p3) p2++;
+	  mapTable[p1]=p2;
+	  if(p2<p3) p2++;
+	}
+    }
+  { free(class1); free(class2); return; }
+}
+
+void mapDump()
+{
+  int r;
+  int c;
+  int ch;
+
+  printf("Map Table\n\n");
+  if(mapSkip>=0) {
+    printf(mapSkip<' ' || mapSkip>'~' ? "    Skip on %03X\n" : "    Skip on '%c'\n",mapSkip);
+  }
+  for(r=0;r<32;r++) {
+    printf("\n    ");
+    for(c=0;c<8;c++) {
+      ch=r*8+c;
+      printf(ch<' ' || ch>'~' ? "  %03X" : "  '%c'",ch);
+    }
+    printf("\n    ");
+    for(c=0;c<8;c++) {
+      ch=mapTable[r*8+c];
+      printf(ch<' ' || ch>'~' ? "  %03X" : "  '%c'",ch);
+    }
+    printf("\n");
+  }
+}
+
+void mapPrint()
+{
+  int r;
+  int c;
+  int ch;
+
+  smkSkipLines(getNumOpt(HEIGHT_OPT)-6);
+  lmPrintf("Map Table\n");
+  if(mapSkip>=0) {
+    lmPrintf(mapSkip<' ' || mapSkip>'~' ? "    Skip on %03X\n" : "    Skip on '%c'\n",mapSkip);
+  }
+  for(r=0;r<32;r++) {
+    lmPrintf("\n    ");
+    for(c=0;c<8;c++) {
+      ch=r*8+c;
+      lmPrintf(ch<' ' || ch>'~' ? "  %03X" : "  '%c'",ch);
+    }
+    lmPrintf("\n    ");
+    for(c=0;c<8;c++) {
+      ch=mapTable[r*8+c];
+      lmPrintf(ch<' ' || ch>'~' ? "  %03X" : "  '%c'",ch);
+    }
+    lmPrintf("\n");
+  }
+ lmFlush();
+}

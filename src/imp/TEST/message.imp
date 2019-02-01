@@ -1,0 +1,4 @@
+%%SET A (1)
+%%MESSAGE (1+2*9-9*A) Lite till i slutet
+%%MESSAGE (B*C+D)
+Inget f|re n{sta rad

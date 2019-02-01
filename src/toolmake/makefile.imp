@@ -1,0 +1,226 @@
+%%COMMENT
+   makefile.imp				     Date: 1993-10-28/reibert@roo
+
+   C/ANSI-C/C++ makefile imp script for ToolMaker
+
+   Written by Reibert Arbring, SoftLab ab.
+
+%%IF(USER(thoni))
+%%MESSAGE("_D = (%%(_D))")
+%%MESSAGE("_T = (%%(_T))")
+%%MESSAGE("_P = (%%(_P))")
+%%MESSAGE("_sN = (%%(_sN))")
+%%MESSAGE("_lN = (%%(_lN))")
+%%MESSAGE("_Lvl = (%%(_Lvl))")
+%%MESSAGE("_tOS = (%%(_tOS))")
+%%MESSAGE("_tL = (%%(_tL))")
+%%MESSAGE("_mm = (%%(_mm))")
+%%MESSAGE("_tX = (%%(_tX))")
+%%MESSAGE("_tD = (%%(_tD))")
+%%MESSAGE("_V = (%%(_V))")
+%%MESSAGE("_i = (%%(_i))")
+%%ENDIF
+%%ENDCOMMENT
+%%SET cleanFiles("*.o core ")
+# Makefile for %%(_sN)			Date: %%(_D)/%%(_P)
+#
+# ToolMaker tools must be accessible via the PATH environment variable.
+#
+# The various *Q-macros are intended for commandline additions to the
+# make invocation.
+#
+%%IF(_i(tm))
+# The environmental variable TMHOME should be set to the ToolMaker
+# home library, eg /usr/local/ToolMaker
+
+IMP	= imp $(IMPQ)
+%%ENDIF
+%%IF(_i(pm))
+PMK	= pmk $(PMQ)
+%%ENDIF
+%%IF(_i(sm))
+SMK	= smk $(SMQ)
+%%ENDIF
+%%IF(_i(lm))
+LMK	= lmk $(LMQ)
+%%ENDIF
+
+LDFLAGS	= $(LQ)
+
+%%IF(_tOS(SunOS))
+%%SET PLUS (" + ")
+%%  IF(_tL("C"))
+CFLAGS = $(DEBUG) $(CQ)
+%%  ELSIF(_tL("ANSI-C"))
+CC = acc -Xc
+CFLAGS = $(DEBUG) $(CQ)
+%%  ELSIF(_tL("C++"))
+
+CC = CC
+CFLAGS	= $(DEBUG) $(CQ)
+CCFLAGS	= $(DEBUG) $(CCQ)
+%%  ENDIF
+%%ELSE
+%%SET PLUS (" ")
+%%ENDIF
+
+%%IF(_i(sm) OR _i(lm) OR _i(pm) OR _mm(YES))
+OBJECTS = \
+%%ENDIF
+%%IF(_mm(YES))
+%%  IF(_i(sm) OR _i(lm) OR _i(pm))
+	%%(_sN).o \
+%%  ELSE
+	%%(_sN).o
+%%ENDIF
+%%ENDIF
+%%IF(_i(pm))
+	%%(_sN)PaSema.o %%(_sN)Parse.o \
+%%  IF(_i(sm) OR _i(lm))
+	%%(_sN)Err.o \
+%%  ELSE
+	%%(_sN)Err.o
+%%ENDIF
+%%  SET cleanFiles("%%(cleanFiles) *.pml")
+%%  SET voc("%%(_sN).voc")
+%%ELSE
+%%  IF(_i(voc))
+%%    SET voc("%%(_sN).voc")
+%%  ELSE
+%%    SET voc("")
+%%  ENDIF
+%%ENDIF
+%%IF(_i(sm))
+%%  IF(_i(lm))
+	%%(_sN)Scan.o %%(_sN)ScSema.o \
+%%  ELSE
+	%%(_sN)Scan.o %%(_sN)ScSema.o 
+%%  ENDIF
+%%  SET cleanFiles("%%(cleanFiles) *.sml")
+%%ENDIF
+%%IF(_i(lm))
+	%%(_sN)List.o
+%%ENDIF
+%%IF(_tOS(SunOS))
+
+.KEEP_STATE:
+%%ENDIF
+
+#--
+%%IF(_tOS(SunOS))
+all debug: %%IF(_i(tm))ToolMaker %%ENDIF%%(_sN)
+
+debug:=	DEBUG= -g
+
+%%  IF(_tL("C"))
+all:=	DEBUG= -O4
+%%  ELSE
+all:=	DEBUG= -O
+%%  ENDIF
+%%ELSE
+all: %%IF(_i(tm))ToolMaker %%ENDIF%%(_sN)
+%%ENDIF
+
+#--
+%%(_sN): $(OBJECTS)
+%%IF(_mm(YES))
+%%  IF(_tL("C++"))
+	$(LINK.cc) -o $@ $(OBJECTS) $(LDLIBS)
+%%  ELSE
+	$(CC) -o $@ $(CFLAGS) $(OBJECTS) $(LDFLAGS)
+%%  ENDIF
+%%ENDIF
+
+%%IF(_i(tm))
+#--
+ToolMaker: %%IF(_i(pm)).pmkstamp %%ENDIF%%IF(_i(sm)).smkstamp %%ENDIF%%IF(_i(lm)).lmkstamp %%ENDIF
+
+%%ENDIF
+%%IF(_i(pm))
+.pmkstamp: %%(_sN).pmk %%(_sN).tmk
+	$(PMK) %%(_sN)
+	@touch .pmkstamp
+
+%%ENDIF
+%%IF(_i(sm))
+.smkstamp: %%(_sN).smk %%(_sN).tmk %%(voc)
+	$(SMK) %%(_sN)
+	@touch .smkstamp
+
+%%ENDIF
+%%IF(_i(lm))
+.lmkstamp: %%(_sN).lmk %%(_sN).tmk
+	$(LMK) %%(_sN)
+	@touch .lmkstamp
+
+%%ENDIF
+
+%%IF(_i(tm))
+#-- Take care of disappeared files
+%%(_sN)Common.h:
+	@touch %%(_sN).tmk
+	make ToolMaker
+
+%%IF(_i(pm))
+%%(_sN)Parse.%%(_tX)%%(PLUS)%%(_sN)Parse.h%%(PLUS)%%(_sN)PaSema.%%(_tX)%%(PLUS)%%(_sN)Err.%%(_tX)%%(PLUS)%%(voc):
+	@touch %%(_sN).pmk
+	make .pmkstamp
+
+%%ENDIF
+%%IF(_i(sm))
+%%(_sN)Scan.%%(_tX)%%(PLUS)%%(_sN)Scan.h%%(PLUS)%%(_sN)ScSema.%%(_tX):
+	@touch %%(_sN).smk
+	make .smkstamp
+
+%%ENDIF
+%%IF(_i(lm))
+%%(_sN)List.%%(_tX)%%(PLUS)%%(_sN)List.h:
+	@touch %%(_sN).lmk
+	make .lmkstamp
+
+%%ENDIF
+%%ENDIF
+%%IF(_i(tm))
+#-- Dependencies between generated files
+%%IF(_i(pm))
+%%(_sN)Err.o: %%(_sN)Err.%%(_tX) %%(_sN)Common.h %%IF(_i(lm))%%(_sN)List.h%%ENDIF %%IF(_i(sm))%%(_sN)Scan.h%%ENDIF
+%%(_sN)Parse.o: %%(_sN)Parse.%%(_tX) %%(_sN)Common.h %%(_sN)Parse.h %%IF(_i(sm))%%(_sN)Scan.h%%ENDIF
+%%(_sN)PaSema.o: %%(_sN)PaSema.%%(_tX) %%(_sN)Common.h %%IF(_i(sm))%%(_sN)Scan.h%%ENDIF
+%%ENDIF
+%%IF(_i(sm))
+%%(_sN)Scan.o: %%(_sN)Scan.%%(_tX) %%(_sN)Common.h %%(_sN)Scan.h
+%%(_sN)ScSema.o: %%(_sN)ScSema.%%(_tX) %%(_sN)Common.h %%(_sN)Scan.h
+%%ENDIF
+%%IF(_i(lm))
+%%(_sN)List.o: %%(_sN)List.%%(_tX) %%(_sN)Common.h %%(_sN)List.h
+%%ENDIF
+
+%%ENDIF
+#--
+clean:
+	-rm %%(cleanFiles)
+
+%%COMMENT
+#--
+# The following rules are mainly for the first make,
+# otherwise .make.state copes with it
+
+%%IF(_mm(YES))
+%%(_sN).o: %%(_sN).%%(_tX)%%IF(_i(tm)) %%(_sN)Common.h%%ENDIF%%IF(_i(sm)) %%(_sN)Scan.h%%ENDIF%%IF(_i(pm)) %%(_sN)Parse.h%%ENDIF
+%%ENDIF
+%%IF(_i(pm))
+%%(_sN)Parse.o: %%(_sN)Parse.%%(_tX) %%(_sN)Common.h%%IF(_i(sm)) %%(_sN)Scan.h%%ENDIF
+%%(_sN)PaSema.o: %%(_sN)PaSema.%%(_tX) %%(_sN)Common.h%%IF(_i(sm)) %%(_sN)Scan.h%%ENDIF%%IF(_Lvl(EXAMPLE) AND _i(lm)) %%(_sN)List.h%%ENDIF
+%%(_sN)Err.o: %%(_sN)Err.%%(_tX) %%(_sN)Err.h %%(_sN)Common.h%%IF(_i(sm)) %%(_sN)Scan.h%%ENDIF%%IF(_i(lm)) %%(_sN)List.h%%ENDIF
+%%ENDIF
+%%IF(_i(sm))
+%%(_sN)Scan.o: %%(_sN)Scan.%%(_tX) %%(_sN)Common.h
+%%(_sN)ScSema.o: %%(_sN)ScSema.%%(_tX) %%(_sN)Common.h
+%%ENDIF
+%%IF(_i(lm))
+%%(_sN)List.o: %%(_sN)List.%%(_tX) %%(_sN)List.h %%(_sN)Common.h
+%%ENDIF
+%%ENDCOMMENT
+
+#-- EoF --
+

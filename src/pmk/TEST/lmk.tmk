@@ -1,0 +1,23 @@
+%%OPTIONS
+--	Os 'SunOS';
+	Prefix 'lmk';
+	Target 'c';
+%%IMPORT
+#include "tmkCommon.h"
+%%END
+%%TOKEN
+	NAME LmkToken;
+	CODE code   %% int %1%%;
+	SRCP srcp   %% TmkSrcp %1%%;
+	ATTRIBUTES
+	     sval   %% char *%1%%,
+	     ival   %% int %1%%,
+	     fpos   %% long %1%%,
+	     length %% long %1%%;
+%%END
+%%SRCP
+	NAME TmkSrcp;
+	COLUMN col;
+	ROW    line;
+	FILE   file;
+%%END

@@ -1,0 +1,8 @@
+########## emptystr ##########
+%%SET foo("")
+%%(foo)
+%%SET fie("""")
+%%(fie)
+########## ../imp emptystr.tst >emptystr.tst.tmp; cat emptystr.tst.tmp; rm emptystr.tst.tmp ##########
+
+"

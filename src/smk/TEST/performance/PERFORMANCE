@@ -1,0 +1,34 @@
+Den nya ScannerMaker finns nu s} pass f{rdig att jag kunnat g|ra
+tester p} den. Jag har ocks} gjort nya tester med flex (lex fick jag
+inte att fungera!) med -f och -s optioner.
+    Som indata anv{ndes en pascal fil p} 9736 rader med 43565 returnerade
+tokens (skip tokens ej medr{knade). Medell{ngden p} en rad {r drygt 22
+tecken och f|r ett token 5 tecken.
+    Varje f|rs|k {r gjord p} whoozle (SparcStation 1 med 16MB prim{r
+minne) med en process prioritet -20 (h|gsta prioritet). Resultaten {r
+ett medelv{rde av 20 f|rs|k direkt efter varandra 
+
+	repeat 20 nice -20 pas pascal.pas
+
+Programmen {r kompilerade med "gcc -traditional -O". Storleken som
+anges nedan {r det exekverbara programmets storlek (stripped) men
+observera att flex endast genererar tabeller f|r 7-bitars ASCII.
+
+Ingen packning av tabellerna och inga ber{kningar av
+k{lltextpositioner:
+
+    PROGRAM	TOKEN/S	    RADER/MIN		STORLEK
+	flex	 63.468	      851.048     0%	 90.112
+	smk	 73.776	      989.263   +13%	122.880
+ gammla smk	 74.944     1.004.920   +18%	
+
+Rad och column packning anv{nda:
+
+	smk	 65.286	      875.427	 +2%	 57.344
+ gammla smk	 68.091	      913.035	 +6%     49.152
+
+Rad och column packning samt ber{kningar av k{lltextpositioner (till
+ListerMaker)
+
+	smk	 44.469	      596.294	-43%	 57.344
+ gammla smk	 42.620       571.501   -49%     49.152

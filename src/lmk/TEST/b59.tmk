@@ -1,0 +1,10 @@
+%%OPTIONS
+
+    Prefix 'b59';
+    Library '%%(TMHOME)/lib/c';
+
+%%SRCP Name TmSrcp;
+    Row line %% int %1 %%;
+    Column col %% int %1 %%;
+    File file %% int %1 %%;
+

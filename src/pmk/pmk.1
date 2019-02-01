@@ -1,0 +1,56 @@
+.TH PMK 1L "1995 November 28"  "\fISoftLab ab\fP"	\"
+.SH NAME
+pmk \- ParserMaker, generate syntactical analysers
+
+.SH SYNOPSIS
+.B pmk
+[-help] [<option> ...] <file>
+
+.SH DESCRIPTION
+.PP
+.B pmk
+is the ParserMaker component in SoftLab's ToolMaker kit. ParserMaker
+is a general and advanced tool for the construction and maintainance
+of language processors - parsers. The ParserMaker system contains many
+facilities which makes it easy to use for various applications,
+facilities that are not common in similar systems.
+
+.PP
+Input is a file describing the grammar to be recognized, semantic
+actions etc. and output is generated source files ready for
+compilation.
+
+.PP
+ParserMaker is well integrated with the other components of the ToolMaker
+package.
+
+.SH ARGUMENTS
+.IP \fBfile\fP 10
+The name of the ParserMaker description file. Default extension is \fI.pmk\fP.
+
+.SH OPTIONS
+.IP \fB-help\fP
+Print a brief description of the parameters and the options. For further
+information about options refer to the \fIParserMaker Reference Manual\fP.
+
+.SH FILES
+.IP \fI<file>.tmk\fP 20
+The ToolMaker Common Description file. Contains common definitions for
+all the Makers in the ToolMaker package. <file> is the name of the
+description file with any \fI.pmk\fP extension removed.
+.IP \fI<file>.pml\fP 20
+The list file produced by \fBpmk\fP. <file> is the name of the
+description file with any \fI.pmk\fP extension removed.
+.IP \fI<file>.pmt\fP 20
+The intermediate tables produced used by \fBpmk\fP. <file> is the name of the
+description file with any \fI.pmk\fP extension removed.
+.SH SEE ALSO
+smk(1L), lmk(1L), toolmake(1L), imp(1L), 
+\fIParserMaker Reference Manual\fP 
+(part of the \fIToolMaker Reference Manual\fP)
+.SH AUTHOR
+Email to: tools@softlab.se
+.SH NOTES
+These manual pages corresponds to ToolMaker version 2.1.
+.PP
+Copyright \(co 1990-1995 SoftLab ab.

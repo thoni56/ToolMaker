@@ -1,0 +1,43 @@
+Things to do in IMP:
+====================
+
+Quoted strings in the insert-statement should
+remain as quoted in the incremental mode if
+the statement couldn't be fully evaluated.
+
+**********************
+
+Identifiers in IMP$SYSTEM and IMP$STRSEARCH
+should remain unquoted in the incremental mode
+if the expression couldn't be fully evaluated.
+
+**********************
+
+IMP$STRSEARCH should get the alternative name
+IMP$STR$SEARCH
+
+**********************
+
+Add new functionality:
+ IMP$STR$CAPITALIZE
+ IMP$STR$DECAPITALIZE
+ IMP$STR$UPPERCASE
+ IMP$STR$LOWERCASE
+
+ IMP$STR$EXPLODE
+ IMP$STR$IMPLODE
+
+ IMP$FILE$COPY
+ IMP$FILE$REMOVE
+ IMP$FILE$MOVE
+ IMP$FILE$MKDIR
+ IMP$FILE$CMP
+ IMP$FILE$MERGE
+
+ IMP$FILE$TEST
+ IMP$FILE$ISPLAIN
+ IMP$FILE$ISDIR
+ IMP$FILE$EXIST
+
+ IMP$DATE
+ IMP$SORT/IMP$STR$SORT/IMP$FILE$SORT

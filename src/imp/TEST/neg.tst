@@ -1,0 +1,10 @@
+%%BEGIN(comimIntToHex(num))
+%%(num)
+%%END(comimIntToHex)
+
+%%INCLUDE(comimIntToHex(100))
+%%INCLUDE(comimIntToHex(-100))
+%%SET f(-5)
+%%INCLUDE(comimIntToHex(%%(-f)))
+%%EINCLUDE(comimIntToHex(3--5*-3))
+%%INCLUDE(comimIntToHex(--7))

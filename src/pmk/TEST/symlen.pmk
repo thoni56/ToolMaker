@@ -1,0 +1,14 @@
+%%RULES
+
+<ci identifier>
+	= STRING 
+        %%
+		    /* ERROR: Could not decide which instruction file to 
+		       load for '%1'. */
+		    acLog(&%STRING.srcp, 315, sevERR, %STRING.strVal);
+                }
+              }
+            }
+          }
+	%%
+        ;

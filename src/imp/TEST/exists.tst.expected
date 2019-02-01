@@ -1,0 +1,15 @@
+########## exists ##########
+%%IF(foo(?))
+Set to <%%(foo)>
+%%ELSE
+Not set!
+%%ENDIF
+%%SET foo(1)
+%%IF(foo(?))
+Set to <%%(foo)>
+%%ELSE
+Not set!
+%%ENDIF
+########## ../imp exists.tst >exists.tst.tmp; cat exists.tst.tmp; rm exists.tst.tmp ##########
+Not set!
+Set to <1>

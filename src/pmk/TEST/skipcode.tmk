@@ -1,0 +1,32 @@
+----------------------------------------------------------------------------
+-- tt.tmk 			Date: 1993-06-07/toolmake
+-- 
+-- Common ANSI-C definitions for all ToolMaker tools.
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1993-06-07 14:36:09/toolmake v2,r0,c5
+----------------------------------------------------------------------------
+
+%%OPTIONS
+--	Os 'SunOS';
+
+%%IMPORT
+typedef int TmNatural;     /* A natural number of "reasonable" length. */
+typedef int TmCode;        /* The type of a token code. */
+%%END
+
+%%SRCP Name TmSrcp;
+    Row line %% TmNatural %1 %%;
+    Column col %% TmNatural %1 %%;
+    File file %% TmNatural %1 %%;
+%%END
+
+%%TOKEN Name TmToken;
+    Code code %% TmCode %1 %%;
+    Srcp srcp %% TmSrcp %1 %%;
+    Attributes
+        stringValue %% char %1[256] %%,
+        integerValue %% int %1 %%;
+%%END
+

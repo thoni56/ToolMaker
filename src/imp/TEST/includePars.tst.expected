@@ -1,0 +1,62 @@
+########## includePars ##########
+%%BEGIN(test)
+%%(test)
+%%(test[0])
+%%(test[1])
+%%(test[2])
+%%END(test)
+%%INCLUDE(test)
+%%INCLUDE(test(par11))
+%%INCLUDE(test(par21, par22))
+%%BEGIN(test2)
+>%%(test2)<
+%%END(test2)
+%%SET test2(1)
+%%INCLUDE(test2)
+%%INCLUDE(test2())
+%%INCLUDE(test2(2))
+########## ../imp includePars.tst >includePars.tst.tmp; cat includePars.tst.tmp; rm includePars.tst.tmp ##########
+
+
+includePars.tst
+
+    2.  %%(test)
+=====>     1
+
+  *1*   204 W : Variable "test" not set.
+
+    3.  %%(test[0])
+=====>     1
+
+  *1*   204 W : Variable "test" not set.
+
+    4.  %%(test[1])
+=====>     1
+
+  *1*   204 W : Variable "test" not set.
+
+    5.  %%(test[2])
+=====>     1    2
+
+  *1*   204 W : Variable "test" not set.
+  *2*   209 E : Index value "2" out of range.
+
+
+1 error(s) detected.
+4 warning(s) issued.
+
+%%(test)
+%%(test[0])
+%%(test[1])
+%%(test[2])
+par11
+1
+par11
+%%(test[2])
+par21,par22
+2
+par21
+par22
+>1<
+><
+>2<

@@ -1,0 +1,324 @@
+----------------------------------------------------------------------------
+-- tt.pmk			Date: 1993-06-07/toolmake
+--
+-- tt - ParserMaker grammar description file
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1993-06-07 14:36:09/toolmake v2,r0,c5
+----------------------------------------------------------------------------
+
+%%OPTIONS
+	Generate Tables, Source;
+	Library '..';
+%%END
+
+%%IMPORT
+#include <stdio.h>
+#include <strings.h>
+
+#include "ttParse.h"
+#include "ttList.h"
+#include "ttScan.h"
+extern ttScContext lexContext;
+
+%%EXPORT
+/* Semantic attribute interface */
+ 
+/* Internal node type */
+typedef struct Node {
+    char *string;
+    int value;
+    struct Node *next;
+} Node;
+ 
+%%INSERTSYMBOL
+
+    /* Make the requested token */
+    sym->code = code;
+
+%%DECLARATIONS
+
+/* Counters for the various contructs */
+static int constants, variables, procedures, statements;
+
+/* The node constituting the program */
+static Node *program;
+
+
+/*-----------------------------------------------------------------------------
+    makeNode()
+
+    Make a new list node and initialize it.
+
+ */
+static Node *makeNode(char *string, int value)
+{
+    Node *temp;
+
+    temp = (Node *)malloc(sizeof(Node));
+    temp->string = (char *)malloc(strlen(string) + 1);
+    strcpy(temp->string, string);
+    temp->value = value;
+    temp->next = NULL;
+    return temp;
+}
+
+
+/*-----------------------------------------------------------------------------
+    append()
+
+    Append two lists of nodes.
+
+ */
+static Node *append(Node *list1, Node *list2)
+{
+   if (list1->next) return append(list1->next, list2);
+    else {
+	list1->next = list2;
+	return list1;
+    }
+}
+
+
+/*-----------------------------------------------------------------------------
+    summary()
+
+    Print a summary of the PL/0 program using the Lister.
+
+ */
+void summary()
+{
+  Node *node;
+  char buf[256];
+
+  sprintf(buf, "Number of constants:  %u", constants);
+  ttLiPrint(buf);
+  for (node = program; node; node = node->next) {
+    sprintf(buf,"  %s = %d", node->string, node->value);
+    ttLiPrint(buf);
+  }
+  ttLiPrint("");
+  sprintf(buf, "Number of variables:  %u", variables);
+  ttLiPrint(buf);
+  sprintf(buf, "Number of procedures: %u", procedures);
+  ttLiPrint(buf);
+  sprintf(buf, "Number of statements: %u", statements);
+  ttLiPrint(buf);
+} 
+
+
+%%TERMINALS
+	IDENTIFIER	= 2,	1,1 => '<id>';
+	NUMBER		= 3,	1,1 => '0';
+	'.'		= 4;
+	';'		= 5;
+	','		= 6;
+	'='		= 7;
+	'<'		= 8;
+	'>'		= 9;
+	'<>'		= 10;
+	'<='		= 11;
+	'>='		= 12;
+	'('		= 13;
+	')'		= 14;
+	'+'		= 15;
+	'-'		= 16;
+	'*'		= 17;
+	'/'		= 18;
+	':='		= 33;
+	'IF'		= 34;
+	'DO'		= 35;
+	'CALL'		= 36;
+	'VAR'		= 25;
+	'END'		= 26;
+	'ODD'		= 27;
+	'THEN'		= 28;
+	'CONST'		= 29;
+	'BEGIN'		= 30;
+	'WHILE'		= 31;
+	'PROCEDURE'	= 32;
+
+%%ATTRIBUTES
+    srcp %% TmSrcp %1 %%,
+    -- Extra user-defined fields and attributes should be added here
+    list %% Node* %1 %%,
+    stringValue %% char %1[256] %%,
+    integerValue %% int %1 %%;
+
+%%RECOVERY
+   Fiducial('CONST', 'VAR', 'PROCEDURE', 'CALL', 'BEGIN', 'IF', 'WHILE');
+   Separator(',', ';');
+
+%%RULES
+
+<program>
+	=
+	  <block> '.'
+          %%
+            program = %<block>.list;
+          %%
+	;
+
+<block>
+	= <declarations> <statement>
+	  -- propagate the constant list
+	  %%
+	    %<block>.list = %<declarations>.list;
+	  %%
+	;
+
+<declarations>
+	= <constant declaration> <variable declaration> <procedure declarations>
+	  -- propagate the constant list
+	  %%
+	    %<declarations>.list = %<constant declaration>.list;
+	  %%
+	;
+
+<constant declaration>
+	= 'CONST' <constant definitions> ';'
+	  %%
+	    %<constant declaration>.list = %<constant definitions>.list;
+	  %%
+	! -- Empty
+	  %%
+	    %<constant declaration>.list = NULL;
+	  %%
+	;
+
+<constant definitions>
+	= <constant definitions> ',' <constant definition>
+	  %%
+	    %1<constant definitions>.list =
+		append(%2<constant definitions>.list,
+		       makeNode(%<constant definition>.stringValue,
+				%<constant definition>.integerValue));
+	  %%
+	! <constant definition>
+	  %%
+	    %<constant definitions>.list = 
+		makeNode(%<constant definition>.stringValue,
+			 %<constant definition>.integerValue);
+	  %%
+	;
+
+<constant definition>
+	= IDENTIFIER '=' NUMBER
+	  %%
+	    constants++;
+	    strcpy(%<constant definition>.stringValue, %IDENTIFIER.stringValue);
+	    %<constant definition>.integerValue = %NUMBER.integerValue;
+	  %%
+	;
+
+<variable declaration>
+	= 'VAR' <identifiers> ';'
+	! -- Empty
+	;
+
+<identifiers>
+	= <identifiers> ',' IDENTIFIER
+	  %%
+	    variables++;
+	  %%
+	! IDENTIFIER
+	  %%
+	    variables++;
+	  %%
+	;
+
+<procedure declarations>
+	= <procedure declarations> <procedure declaration>
+	! -- Empty
+	;
+
+<procedure declaration>
+	= 'PROCEDURE' IDENTIFIER ';' <block> ';'
+	  %%
+	    procedures++;
+	  %%
+	;
+
+<statement>
+	= <assignment statement>
+	  %%
+	    statements++;
+	  %%
+	! <call statement>
+	  %%
+	    statements++;
+	  %%
+	! <compound statement>
+	  %%
+	    statements++;
+	  %%
+	! <if statement>
+	  %%
+	    statements++;
+	  %%
+	! <while statement>
+	  %%
+	    statements++;
+	  %%
+	! -- Empty
+	;
+
+<assignment statement>
+	= IDENTIFIER ':=' <expression>
+	;
+
+<call statement>
+	= 'CALL' IDENTIFIER
+	;
+
+<compound statement>
+	= 'BEGIN' <statements> 'END'
+	;
+
+<statements>
+	= <statements> ';' <statement>
+	! <statement>
+	;
+
+<if statement>
+	= 'IF' <condition> 'THEN' <statement>
+	;
+
+<while statement>
+	= 'WHILE' <condition> 'DO' <statement> ;
+
+
+<condition>
+	= 'ODD' <expression>
+	! <expression> <relop> <expression>
+	;
+
+<relop> = '=' ! '<>' ! '<' ! '>' ! '<=' ! '>=' ;
+
+<expression>
+	= <optional sign> <terms>
+	;
+
+<terms>
+	= <terms> <addop> <term>
+	! <term>
+	;
+
+<term>
+	= <term> <mulop> <factor>
+	! <factor>
+	;
+
+<factor>
+	= IDENTIFIER
+	! NUMBER
+	! '(' <expression> ')'
+	;
+
+<optional sign> = '+' ! '-' ! ; -- Note the empty last alternative!
+
+<addop> = '+' ! '-' ;
+
+<mulop> = '*' ! '/' ;
+

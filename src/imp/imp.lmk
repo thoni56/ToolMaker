@@ -1,0 +1,49 @@
+%%OPTIONS
+  MESSAGE embedded;
+  LISTINGS single;
+%%END
+
+%%MESSAGES english
+0     'IMP -- Incremental Macro Processor %1';
+1     'No warnings or errors detected.';
+2     'No warnings issued.';
+3     'No errors detected.';
+4     '%1 informational message(s) produced.';
+5     '%1 warning(s) issued.';
+6     '%1 error(s) detected.';
+7     'Maximum number of messages exceeded.';
+
+100     'Parsing resumed.';
+101     '%1 inserted.';
+102     '%1 deleted.';
+103     '%1 replaced by %2.';
+104     'Syntax error, stack backed up.';
+105     'Syntax error.';
+106     'Parse stack overflow.';
+107     'Parse table error.';
+108     'Parsing terminated.';
+
+201     'File \"%1\" not found.';
+202     'No file(s) given, statement ignored.';
+203     'Label \"%1\" differs from corresponding BEGIN label.';
+204     'Variable \"%1\" not set.';
+205     'Label \"%1\" not defined.';
+206     'Unable to open file \"%1\" where label is defined.';
+207     'Unable to open output file \"%1\".';
+208     'Value \"%1\" of wrong type, must be INTEGER.';
+209     'Index value \"%1\" out of range.';
+210     'Operands must be of same type.';
+211     'Only variables may have index.';
+212     'Could not expand identifier %1';
+213     'Incorrect number of parameters given in INCLUDE statement';
+214     'Empty string not allowed as variable name';
+215     'More than %1 levels of evaluation, probably infinite loop';
+216	'Output file \"%1\" already open for writing.';
+217	'Input file \"%1\" already open for writing.';
+218	'Unable to open input file \"%1\".';
+
+301     'Erroneous argument to ast access routine : %1';
+302     'Erroneous node type found in %1';
+303     '%1 times';
+304     'Unable to allocate memory !';
+%%END

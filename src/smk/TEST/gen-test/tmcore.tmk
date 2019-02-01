@@ -1,0 +1,8 @@
+	%%TOKEN
+		CODE code;
+		NAME token;
+		ATTRIBUTES
+			x %% int %1%%;
+			y %% int %1%%;
+	%%END
+

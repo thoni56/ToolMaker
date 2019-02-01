@@ -1,0 +1,33 @@
+#!/bin/sh
+echo Använd STEAM!!!
+exit
+echo -n "Testing "
+../pmk -help 2> .revision
+head -1 .revision
+for f in lmk pmk smk tmk imp
+do
+    echo "-------------------------"
+    echo "Running pmk on $f.pmk"
+    echo "-------------------------"
+    ../pmk -generate tables -generate source -library .. $f
+    echo "-------------------------"
+    echo "Diffing $f.pmt"
+    echo "-------------------------"
+    cat $f.pmt | grep -v "%%SET pmHeader" | grep -v "%%SET pmCorrection" | grep -v "%%SET pmVersion" >$f.pmtmod
+    diff -b $f.pmt.ref $f.pmtmod 
+    echo "-------------------------"
+    echo "Diffing $f.voc"
+    echo "-------------------------"
+    diff -b $f.voc.ref $f.voc
+done >pmktest.log 2>&1
+for c in lmk pmk smk tmk imp
+do
+  for f in ${c}PaSema.c ${c}Parse.c ${c}Parse.h ${c}Err.c ${c}Common.h
+  do
+      echo "-------------------------"
+      echo "Diffing $f"
+      echo "-------------------------"
+      diff -b $f $f.ref
+  done >>pmktest.log 2>&1
+done >>pmktest.log 2>&1
+diff pmktest.log pmktest.ref

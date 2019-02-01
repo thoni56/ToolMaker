@@ -1,0 +1,9 @@
+#! /bin/csh -f
+
+cp $1.lmt $1.lmt.ref
+
+foreach f ($1List*)
+    cp $f $f.ref
+end
+rm *.ref.ref
+cp $1Common.h $1Common.h.ref

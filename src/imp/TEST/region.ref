@@ -1,0 +1,235 @@
+hejsan%%(R1)happ
+hejsan1hopp
+hejsan1hipp
+hejsanhupp
+hejsanhepp
+%%LOOP(L1,R2)
+Parameter nr 1 = %%(R2[1])
+%%ENDLOOP(L1)
+Parameter nr 1 = A
+Parameter nr 1 = A
+Parameter nr 2 = B
+Parameter nr 3 = 12
+Parameter nr 1 = A
+Parameter nr 2 = B
+Parameter nr 3 = 12
+
+
+
+%%INCLUDE(%%(G)PELLE (2,%%(VAR),%%(5+h*9)))
+%%INCLUDE(PELLE (2,VAR,%%(5+h*9)))
+
+
+  B = 13
+  Hej svejs
+
+
+
+Mary had a little lamb.
+Peter had a little cat.
+Mary had a little lamb
+Peter had a little cat
+
+
+
+
+1
+1
+1,2
+A
+1
+{1,2}
+1
+2
+{1,2}
+{3,4}
+LOCAL1                    V{rde p} P1 innan SET-satser
+LOCAL2                    V{rde p} P2 innan SET-satser
+LOCAL3                    V{rde p} P3 innan SET-satser
+LOCAL4                    V{rde p} P4 innan SET-satser
+                V{rde p} LOCAL1 innan SET-satser
+                V{rde p} LOCAL2 innan SET-satser
+                V{rde p} LOCAL3 innan SET-satser
+                V{rde p} LOCAL4 innan SET-satser
+LOCAL1                    V{rde p} P1 efter SET-satser
+LOCAL2                    V{rde p} P2 efter SET-satser
+LOCAL3                    V{rde p} P3 efter SET-satser
+LOCAL4                    V{rde p} P4 efter SET-satser
+Local1                V{rde p} LOCAL1 efter SET-satser
+Local2                V{rde p} LOCAL2 efter SET-satser
+Local3                V{rde p} LOCAL3 efter SET-satser
+Local4                V{rde p} LOCAL4 efter SET-satser
+%%(P1)                    V{rde p} P1 efter INCLUDE-satsen
+%%(P2)                    V{rde p} P2 efter INCLUDE-satsen
+%%(P3)                    V{rde p} P3 efter INCLUDE-satsen
+%%(P4)                    V{rde p} P4 efter INCLUDE-satsen
+Global1                V{rde p} LOCAL1 efter INCLUDE-satsen
+Global2                V{rde p} LOCAL2 efter INCLUDE-satsen
+Global3                V{rde p} LOCAL3 efter INCLUDE-satsen
+Global4                V{rde p} LOCAL4 efter INCLUDE-satsen
+Global1                    V{rde p} P1 innan SET-satser
+Global2                    V{rde p} P2 innan SET-satser
+Global3                    V{rde p} P3 innan SET-satser
+Global4                    V{rde p} P4 innan SET-satser
+                V{rde p} LOCAL1 innan SET-satser
+                V{rde p} LOCAL2 innan SET-satser
+                V{rde p} LOCAL3 innan SET-satser
+                V{rde p} LOCAL4 innan SET-satser
+Global1                    V{rde p} P1 efter SET-satser
+Global2                    V{rde p} P2 efter SET-satser
+Global3                    V{rde p} P3 efter SET-satser
+Global4                    V{rde p} P4 efter SET-satser
+Local1                V{rde p} LOCAL1 efter SET-satser
+Local2                V{rde p} LOCAL2 efter SET-satser
+Local3                V{rde p} LOCAL3 efter SET-satser
+Local4                V{rde p} LOCAL4 efter SET-satser
+%%(P1)                    V{rde p} P1 efter EINCLUDE-satsen
+%%(P2)                    V{rde p} P2 efter EINCLUDE-satsen
+%%(P3)                    V{rde p} P3 efter EINCLUDE-satsen
+%%(P4)                    V{rde p} P4 efter EINCLUDE-satsen
+Global1                V{rde p} LOCAL1 efter EINCLUDE-satsen
+Global2                V{rde p} LOCAL2 efter EINCLUDE-satsen
+Global3                V{rde p} LOCAL3 efter EINCLUDE-satsen
+Global4                V{rde p} LOCAL4 efter EINCLUDE-satsen
+Begin P1 = 0
+R1[1] = 0
+
+Local1 = 
+Local1 = 0
+
+Including with P1 = 1
+ Begin P1 = 1
+ R1[1] = 1
+
+ Local1 = 
+ Local1 = 1
+
+ Including with P1 = 2
+  Begin P1 = 2
+  R1[1] = 2
+
+  Local1 = 
+  Local1 = 2
+
+  Including with P1 = 3
+   Begin P1 = 3
+   R1[1] = 3
+
+   Local1 = 
+   Local1 = 3
+
+   Including with P1 = 4
+    Begin P1 = 4
+    R1[1] = 4
+
+    Local1 = 
+    Local1 = 4
+
+    Including with P1 = 5
+     Begin P1 = 5
+     R1[1] = 5
+
+     Local1 = 
+     Local1 = 5
+
+     Including with P1 = 6
+      Begin P1 = 6
+      R1[1] = 6
+
+      Local1 = 
+      Local1 = 6
+
+      Including with P1 = 7
+       Begin P1 = 7
+       R1[1] = 7
+
+       Local1 = 
+       Local1 = 7
+
+       Including with P1 = 8
+        Begin P1 = 8
+        R1[1] = 8
+
+        Local1 = 
+        Local1 = 8
+
+        Including with P1 = 9
+         Begin P1 = 9
+         R1[1] = 9
+
+         Local1 = 
+         Local1 = 9
+
+         Including with P1 = 10
+          Begin P1 = 10
+          R1[1] = 10
+
+          Local1 = 
+          Local1 = 10
+
+
+          Local1 = 10
+          Local1 = 10
+
+          R1[1] = 10
+          End P1 = 10
+
+         Local1 = 9
+         Local1 = 9
+
+         R1[1] = 10
+         End P1 = 9
+
+        Local1 = 8
+        Local1 = 8
+
+        R1[1] = 10
+        End P1 = 8
+
+       Local1 = 7
+       Local1 = 7
+
+       R1[1] = 10
+       End P1 = 7
+
+      Local1 = 6
+      Local1 = 6
+
+      R1[1] = 10
+      End P1 = 6
+
+     Local1 = 5
+     Local1 = 5
+
+     R1[1] = 10
+     End P1 = 5
+
+    Local1 = 4
+    Local1 = 4
+
+    R1[1] = 10
+    End P1 = 4
+
+   Local1 = 3
+   Local1 = 3
+
+   R1[1] = 10
+   End P1 = 3
+
+  Local1 = 2
+  Local1 = 2
+
+  R1[1] = 10
+  End P1 = 2
+
+ Local1 = 1
+ Local1 = 1
+
+ R1[1] = 10
+ End P1 = 1
+
+Local1 = 0
+Local1 = 0
+
+R1[1] = 10
+End P1 = 0

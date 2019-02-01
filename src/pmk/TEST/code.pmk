@@ -1,0 +1,36 @@
+----------------------------------------------------------------------------
+-- code.pmk			Date: 1996-08-28/toolmake
+--
+-- code - ParserMaker grammar description file
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1996-08-28 10:58:53/toolmake v2,r1,c5
+----------------------------------------------------------------------------
+
+%%OPTIONS
+	ErrorHandler;
+	Library '..';
+	Generate tables, source;
+
+%%IMPORT
+#include <stdio.h>
+
+%%DECLARATIONS
+
+static int noOfItems = 0;
+
+%%ATTRIBUTES
+    srcp %% TmSrcp %1 %%,
+    -- Extra user-defined fields and attributes should be added here
+    floatValue %% double %1 %%;
+
+%%RULES
+
+items = { ITEM 
+	%%
+        /* Semantic action */
+        noOfItems++;
+	%%
+	} %% printf("`%d items found!\n", noOfItems); %% ;
+

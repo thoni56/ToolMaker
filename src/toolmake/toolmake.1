@@ -1,0 +1,103 @@
+.TH TOOLMAKE 1L "1995 November 28" "\fISoftLab ab\fP"	\"
+.SH NAME
+toolmake \- create a ToolMaker subsystem
+.SH SYNOPSIS
+\fBtoolmake\fP [-help] [<option> ...] <name>
+.SH DESCRIPTION
+\fBToolmake\fP is a facility to help you to create a SoftLab ToolMaker
+subsystem, i.e. \fBtoolmake\fP will create the appropriate files for
+you in order to let you concentrate on the essential tasks when
+writing a ToolMaker subsystem.
+.PP
+\fBToolmake\fP currently supports \fIParserMaker\fP, \fIScannerMaker\fP and \fIListerMaker\fP.
+You can choose any combination of these to include into your
+subsystem. Furthermore \fBtoolmake\fP will offer you an example main
+module and a Makefile, all in order to make life easier for
+you as an application (or compiler) implementor.
+.PP
+Essentially what \fBtoolmake\fP will do is to generate a set of files,
+all under your supervision. \fBToolmake\fP will not overwrite anything
+unless you explicitly tells it to do so.
+.PP
+Normally \fBtoolmake\fP will ask you about the name of your subsystem, and
+then enter a "command loop". 
+In this command phase you can change the default settings
+for the coming generation phase, or just enter it.
+You can always give a single question mark
+(followed by carriage return) to \fBtoolmake\fP in order to
+get some brief help. In some cases you can get further help with a
+HELP command.
+.PP
+If you are familiar with the ToolMaker system \fBtoolmake\fP ought to
+be self explanatory.
+.SH ARGUMENTS
+.IP \fBname\fP
+The subsystem name, this is used as prefix for the generated files and
+all externally visible symbols in generated code.
+.SH OPTIONS
+.IP \fB-[-]go\fP
+[Do not] Enter the generation phase immediatly (default: off).
+.IP \fB-[-]verbose\fP
+Enable [disable] verbose output mode (default: off).
+.br
+Verbose mode will give some information regarding the actions choosen by
+\fBtoolmake\fP.
+.IP \fB-help\fP
+Gives you a brief but fresh help on the arguments and options to the
+\fBtoolmake\fP program.
+.SH FILES
+The files generated differs naturally depending on target language,
+wanted components and generation level.  For the default case and a
+subsystem called \fBx\fP, the following ToolMaker description files
+will be generated:
+.IP x.tmk
+The common ToolMaker description file.
+.IP x.smk
+The ScannerMaker description file.
+.IP x.pmk
+The ParserMaker description file.
+.IP x.lmk
+The ListerMaker description file.
+.PP
+And for your convience:
+.IP x.c
+An example main program.
+.IP Makefile
+A suitable file for make(1).
+.PP
+For the default case the following source code files will be generated
+empty by toolmake:
+.IP xCommon.h
+Subsystem common definitions, e.g. token definition.
+.IP "xScSema.c, xScan.c, xScan.h"
+The scanner.
+.IP "xPaSema.c, xParse.c, xParse.h"
+The parser.
+.IP "xList.c, xList.h"
+The lister.
+.IP "xErr.c, xErr.h"
+Error handler, interface between parser and lister.
+.PP
+Of course will they be filled when the proper makers are invoked.
+.PP
+To be able to use ToolMaker programs the environmental variable
+\fBTMHOME\fP should be set, probably to \fI/usr/local/ToolMaker\fP.
+The origin for the generated files will be found in a language
+subdirectory to \fI$TMHOME/lib\fP, like \fI$TMHOME/lib/ansi-c\fP.
+.SH DIAGNOSTICS
+A number of diagnostic messages can appear when running
+\fBtoolmake\fP. See your Toolmake Reference Manual for a detailed listing.
+.SH SEE ALSO
+\fBmake\fP(1), \fBpmk\fP(1), \fBsmk\fP(1), \fBlmk\fP(1), \fBimp\fP(1)
+.br
+.I "ToolMaker documentation"
+.SH BUGS
+Please contact SoftLab about bugs and wishes.
+.SH AUTHOR
+Reibert Arbring, SoftLab ab.
+.br
+Email to: tools@softlab.se
+.SH NOTES
+These manual pages corresponds to ToolMaker version 2.1.
+.PP
+Copyright (c) 1989 - 1995, SoftLab ab.

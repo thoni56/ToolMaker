@@ -1,0 +1,197 @@
+########## set ##########
+-- Vanlig tilldelning ett element
+%%SET V1 (11)
+%%(V1)
+11                                          * * * FACIT * * *   
+-- Ut|ka med tv} element
+%%SET V1 (,12,13)
+%%(V1)
+11,12,13                                    * * * FACIT * * *   
+-- Vanlig tilldelning ett element
+%%SET V1 (11)
+%%(V1)
+11                                          * * * FACIT * * *  
+%%SET NULL ()
+"%%(NULL)"
+""                                          * * * FACIT * * *
+%%SET STRINGS (A,B,"C","FLERA TECKEN", FLERA TECKEN)
+%%(STRINGS)
+A,B,C,FLERA TECKEN,FLERATECKEN              * * * FACIT * * *
+%%SET SUBLIST (1, {2,3},4)
+%%(SUBLIST)
+1,{2,3},4                                   * * * FACIT * * *
+%%SET V22 (12)
+%%SET A (%%(V1) ,%%(V22), %%(V3))
+%%(A)
+11,12,`%%(V3)                                * * * FACIT * * *
+%%SET V1 (21)
+%%SET V22 (22)
+%%(A)
+11,12,`%%(V3)                                * * * FACIT * * *
+%%SET V1 (31)
+%%SET V22 (32)
+%%(A)
+11,12,`%%(V3)                                * * * FACIT * * *
+%%SET V1 (1,2)
+%%SET V3 (V1)
+%%SET A (%%(V1), %%(V2), %%(V3))
+%%SET %%(VAR) (%%(V1), %%(V2), %%(V3))
+`%%SET `%%(VAR) (1,2,`%%(V2),V1)               * * * FACIT * * * 
+%%SET %%(VAR2) (%%(V1), %%(6*87+9-VAR3), %%(V3))
+`%%SET `%%(VAR2) (1,2,`%%(531-VAR3),V1)        * * * FACIT * * * 
+%%(A)
+1,2,`%%(V2),V1                               * * * FACIT * * *
+%%SET V2 (3)
+%%(A)
+1,2,3,V1                                    * * * FACIT * * *
+%%SET SUBLIST (1, %%(2), %%({3,4}))
+%%(SUBLIST)
+1,2,{3,4}                                   * * * FACIT * * *
+%%({1,2})
+{1,2}                                       * * * FACIT * * *
+%%({1,{3,4,fem},2})
+{1,{3,4,fem},2}                             * * * FACIT * * *
+%%SET SUBLIST (1, {2,3},4)
+%%(SUBLIST[0])
+3                                           * * * FACIT * * *
+%%(SUBLIST[1])
+1                                           * * * FACIT * * *
+%%(SUBLIST[2])
+{2,3}                                       * * * FACIT * * *
+%%(SUBLIST[3])
+4                                           * * * FACIT * * *
+%%(SUBLIST[4])
+`%%(SUBLIST[4])                              * * * FACIT * * *
+%%(SUBLIST[5])
+`%%(SUBLIST[5])                              * * * FACIT * * *
+%%(SUBLIST)
+1,{2,3},4                                   * * * FACIT * * *
+%%SET SUBLIST (1, %%(2), %%({3,4}))
+%%(SUBLIST[0])
+3                                           * * * FACIT * * *
+%%(SUBLIST[1])
+1                                           * * * FACIT * * *
+%%(SUBLIST[2])
+2                                           * * * FACIT * * *
+%%(SUBLIST[3])
+{3,4}                                       * * * FACIT * * *
+%%(SUBLIST[4])
+`%%(SUBLIST[4])                              * * * FACIT * * *
+%%(SUBLIST[5])
+`%%(SUBLIST[5])                              * * * FACIT * * *
+%%(SUBLIST)
+1,2,{3,4}                                   * * * FACIT * * *
+########## ../imp set.tst >set.tst.tmp; cat set.tst.tmp; rm set.tst.tmp ##########
+
+
+set.tst
+
+   23.  %%SET A (%%(V1) ,%%(V22), %%(V3))
+=====>                               1
+
+  *1*   204 W : Variable "V3" not set.
+
+   36.  %%SET A (%%(V1), %%(V2), %%(V3))
+=====>                      1
+
+  *1*   204 W : Variable "V2" not set.
+
+   37.  %%SET %%(VAR) (%%(V1), %%(V2), %%(V3))
+=====>           1                2
+
+  *1*   204 W : Variable "VAR" not set.
+  *2*   204 W : Variable "V2" not set.
+
+   39.  %%SET %%(VAR2) (%%(V1), %%(6*87+9-VAR3), %%(V3))
+=====>           1                        2
+
+  *1*   204 W : Variable "VAR2" not set.
+  *2*   204 W : Variable "VAR3" not set.
+
+   62.  %%(SUBLIST[4])
+=====>             1
+
+  *1*   209 E : Index value "4" out of range.
+
+   64.  %%(SUBLIST[5])
+=====>             1
+
+  *1*   209 E : Index value "5" out of range.
+
+   77.  %%(SUBLIST[4])
+=====>             1
+
+  *1*   209 E : Index value "4" out of range.
+
+   79.  %%(SUBLIST[5])
+=====>             1
+
+  *1*   209 E : Index value "5" out of range.
+
+
+4 error(s) detected.
+6 warning(s) issued.
+
+-- Vanlig tilldelning ett element
+11
+11                                          * * * FACIT * * *   
+-- Ut|ka med tv} element
+11,12,13
+11,12,13                                    * * * FACIT * * *   
+-- Vanlig tilldelning ett element
+11
+11                                          * * * FACIT * * *  
+""
+""                                          * * * FACIT * * *
+A,B,C,FLERA TECKEN,FLERATECKEN
+A,B,C,FLERA TECKEN,FLERATECKEN              * * * FACIT * * *
+1,{2,3},4
+1,{2,3},4                                   * * * FACIT * * *
+11,12,%%(V3)
+11,12,%%(V3)                                * * * FACIT * * *
+11,12,%%(V3)
+11,12,%%(V3)                                * * * FACIT * * *
+11,12,%%(V3)
+11,12,%%(V3)                                * * * FACIT * * *
+%%SET %%(VAR) (1,2,%%(V2),V1)
+%%SET %%(VAR) (1,2,%%(V2),V1)               * * * FACIT * * * 
+%%SET %%(VAR2) (1,2,%%(531-VAR3),V1)
+%%SET %%(VAR2) (1,2,%%(531-VAR3),V1)        * * * FACIT * * * 
+1,2,%%(V2),V1
+1,2,%%(V2),V1                               * * * FACIT * * *
+1,2,3,V1
+1,2,3,V1                                    * * * FACIT * * *
+1,2,{3,4}
+1,2,{3,4}                                   * * * FACIT * * *
+{1,2}
+{1,2}                                       * * * FACIT * * *
+{1,{3,4,fem},2}
+{1,{3,4,fem},2}                             * * * FACIT * * *
+3
+3                                           * * * FACIT * * *
+1
+1                                           * * * FACIT * * *
+{2,3}
+{2,3}                                       * * * FACIT * * *
+4
+4                                           * * * FACIT * * *
+%%(SUBLIST[4])
+%%(SUBLIST[4])                              * * * FACIT * * *
+%%(SUBLIST[5])
+%%(SUBLIST[5])                              * * * FACIT * * *
+1,{2,3},4
+1,{2,3},4                                   * * * FACIT * * *
+3
+3                                           * * * FACIT * * *
+1
+1                                           * * * FACIT * * *
+2
+2                                           * * * FACIT * * *
+{3,4}
+{3,4}                                       * * * FACIT * * *
+%%(SUBLIST[4])
+%%(SUBLIST[4])                              * * * FACIT * * *
+%%(SUBLIST[5])
+%%(SUBLIST[5])                              * * * FACIT * * *
+1,2,{3,4}
+1,2,{3,4}                                   * * * FACIT * * *

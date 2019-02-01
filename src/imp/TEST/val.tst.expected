@@ -1,0 +1,46 @@
+########## val ##########
+%%SET FOO("Foo string")%%SET FIE(FIE,"Hej hopp")
+%%(FOO),%%(FIE)
+%%IF (FOO(%%(FOO)))
+Yes! (FOO)
+%%ELSE
+No! (FOO)
+%%ENDIF
+%%IF (FIE(%%(FIE)))
+Yes! (FIE)
+%%ELSE
+No! (FIE)
+%%ENDIF
+%%IF (FOO(*))
+Yes! (FOO)
+%%ELSE
+No! (FOO)
+%%ENDIF
+%%IF (FIE(*))
+Yes! (FIE)
+%%ELSE
+No! (FIE)
+%%ENDIF
+%%SET FOO(Fum)%%SET FIE(Fum2)
+%%(FOO),%%(FIE)
+%%IF (FOO(%%(FOO)))
+Yes! (FOO)
+%%ELSE
+No! (FOO)
+%%ENDIF
+%%IF (FIE(%%(FIE)))
+Yes! (FIE)
+%%ELSE
+No! (FIE)
+%%ENDIF
+########## ../imp val.tst >val.tst.tmp; cat val.tst.tmp; rm val.tst.tmp ##########
+
+Foo string,FIE,Hej hopp
+Yes! (FOO)
+Yes! (FIE)
+Yes! (FOO)
+Yes! (FIE)
+
+Fum,Fum2
+Yes! (FOO)
+Yes! (FIE)

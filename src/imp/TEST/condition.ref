@@ -1,0 +1,51 @@
+  OK 1
+  OK 2
+  OK 3
+  OK 4
+  OK 5
+  OK 6
+  OK 7
+  OK 8
+  OK 9
+  OK 10
+  OK 11
+  OK 12
+  OK 13
+  OK 14
+  OK 15
+  OK 16
+  OK 17
+  OK 18
+  OK 19
+  OK 20
+  OK 21
+  OK 23
+  OK 24
+%%IF (5 = D[6])
+%%IF (5 = D[6])                                            * * * FACIT * * *
+%%ENDIF
+%%IF (D[6] # D[6])
+%%IF (D[6] # D[6])                                         * * * FACIT * * *
+%%ENDIF
+%%IF ({1,2,3}[5] < 7)
+%%IF ({1,2,3}[5] < 7)                                      * * * FACIT * * *
+%%ENDIF
+%%IF (UNDEF*UNDEF[7] > 3)
+%%IF (UNDEF*UNDEF[7] > 3)                                  * * * FACIT * * * 
+%%ENDIF
+%%IF (UNDEF <= 100)
+%%IF (UNDEF <= 100)                                        * * * FACIT * * *
+%%ENDIF
+%%IF (UNDEF >= UNDEF)
+%%IF (UNDEF >= UNDEF)                                      * * * FACIT * * *
+%%ENDIF
+%%IF (UNDEF > 3)
+%%IF (UNDEF > 3)                                           * * * FACIT * * *
+%%ELSE
+%%ELSE                                                     * * * FACIT * * *
+%%ENDIF
+%%IF ({1, 2, 3, 4, 5, 6, 7, 8, 9} (%%(VAR15), %%(VAR14)))
+%%IF ({1, 2, 3, 4, 5, 6, 7, 8, 9} (%%(VAR15), %%(VAR14)))  * * * FACIT * * *
+%%ENDIF
+  OK 25
+  OK 26

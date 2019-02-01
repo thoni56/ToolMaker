@@ -1,0 +1,14 @@
+########## addval ##########
+%%SET foo(FIE)
+%%(foo)
+%%SET foo(, FUM , FUM1 )
+%%(foo)
+%%SET foo( ,"fum2")
+%%(foo)
+%%SET foo(FUM3)
+%%(foo)
+########## ../imp addval.tst >addval.tst.tmp; cat addval.tst.tmp; rm addval.tst.tmp ##########
+FIE
+FIE,FUM,FUM1
+FIE,FUM,FUM1,fum2
+FUM3

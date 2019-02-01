@@ -1,0 +1,33 @@
+%%OPTIONS
+
+	Library '/home/projects/ToolMaker/lib/c/';
+
+%%MESSAGES english
+0     'ToolMaker 2.0';
+1     'No warnings or errors detected.';
+2     'No detected warnings.';
+3     'No detected errors.';
+4     '%1 informational message(s).';
+5     '%1 warning(s).';
+6     '%1 error(s).';
+7     'Maximum number of messages exceeded.';
+50    'Incorrect directive.';
+51    'Incorrect section.';
+60    'Section defined twice, new section skipped.';
+61    'Directive defined twice, new directive skipped.';
+62    'Token section must have a %1 directive.';
+63    'Srcp section must have a %1 directive.';
+67    'Option redefined, old option skipped.';
+
+100   'Parsing resumed.';
+101   '%1 inserted.';
+102   '%1 deleted.';
+103   '%1 replaced by %2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+
+199   'File not found, \"%1\".';
+%%END

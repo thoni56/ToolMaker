@@ -1,0 +1,290 @@
+%%COMMENT
+   smk.imp				     Date: 1993-06-22/reibert@roo
+
+   ScannerMaker 2.0 lexical script skeleton
+
+   Written by SoftLab ab (tools@softlab.se). 
+%%ENDCOMMENT
+----------------------------------------------------------------------------
+-- %%(_sN).smk			Date: %%(_D)/%%(_P)
+--
+-- %%(_sN) - ScannerMaker description file
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: %%(_D) %%(_T)/%%(_P) %%(_V)
+----------------------------------------------------------------------------
+%%IF(_Lvl(MINIMAL))
+
+%%  IF(_tL("C++"))
+`%%IMPORT
+
+#include <fcntl.h>
+#include <unistd.h>
+
+%%  ENDIF
+`%%CONTEXT
+    char *fileName;
+    int fd;
+
+`%%READER
+    return read(smThis->fd, (char *)smBuffer, smLength);
+
+`%%VOCABULARY main
+
+`%%SCANNER main `%%RULES
+    ITEM = [A-Z]+ ;
+    Unknown = _Unknown;
+    EndOfText = _EndOfText;
+
+`%%SKIP
+    Blank = [^A-Z]+;
+%%ELSIF(_Lvl(NORMAL))
+
+%%  IF(_tL("C++"))
+`%%IMPORT
+
+#include <fcntl.h>
+#include <unistd.h>
+
+%%  ENDIF
+`%%EXPORT
+
+extern %%(_sN)ScContext lexContext;
+
+`%%DECLARATIONS
+
+%%(_sN)ScContext lexContext;
+
+`%%CONTEXT
+    char *fileName;
+    int fd;
+
+`%%READER
+    return read(smThis->fd, (char *)smBuffer, smLength);
+
+`%%DEFINITIONS
+
+    White = [ \t\n];
+    NotWhite = [^ \t\n];
+
+`%%VOCABULARY main
+
+`%%SCANNER main `%%RULES
+
+    ITEM = NotWhite+
+	`%%
+		/* Semantic action */
+	`%%;
+
+    Unknown = _Unknown;
+    EndOfText = _EndOfText;
+
+`%%SKIP
+
+     Blank = White+;
+
+%%ELSIF(_Lvl(EXAMPLE))
+
+`%%OPTIONS
+	Verbose;
+
+`%%IMPORT
+
+#include <stdio.h>
+#include <string.h>
+%%IF(_tL("C++"))
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+
+%%ENDIF
+
+%%IF(_i(lm))
+#include "%%(_sN)List.h"
+%%ENDIF
+#include "%%(_sN)Scan.h"
+
+`%%EXPORT
+
+extern void scan(TmToken *token);
+extern int %%(_sN)ScanEnter(char *fileName);
+extern void %%(_sN)ScanTerminate(void);
+
+`%%CONTEXT
+  char *fileName;
+  int fd;
+  %%(_sN)ScContext previous;
+  int fileNo;
+
+`%%READER
+    return read(smThis->fd, (char *)smBuffer, smLength);
+
+`%%DECLARATIONS
+
+static %%(_sN)ScContext lexContext;
+
+static int fileNo = 0;		/* Count included files */
+
+%%IF(_tL("C"))
+int %%(_sN)ScanEnter(fnm)
+	char fnm[];		/* IN - Name of file to open */
+{
+%%ELSE
+int %%(_sN)ScanEnter(
+	char fnm[]		/* IN - Name of file to open */
+){
+%%ENDIF
+  %%(_sN)ScContext tmp;
+
+  tmp = %%(_sN)ScNew(%%(_sN)_MAIN_MAIN_Scanner);
+  if (fnm == NULL)
+    tmp->fd = 0;
+  else if ((tmp->fd = open(fnm,0)) < 0) {
+    %%(_sN)ScDelete(tmp);
+    return 0;
+  } else {
+    tmp->fileName = fnm;
+    tmp->fileNo = fileNo++;
+    tmp->previous = lexContext;
+    lexContext = tmp;
+  }
+  return 1;
+}
+
+/*----------------------------------------------------------------------
+
+  %%(_sN)ScanExit()
+
+  Terminate and delete the current lexical context.
+
+*/
+static void %%(_sN)ScanExit(
+			void
+){
+  %%(_sN)ScContext old;
+
+  close(lexContext->fd);
+  old = lexContext;
+  lexContext = lexContext->previous;
+  %%(_sN)ScDelete(old);
+}
+
+/*----------------------------------------------------------------------
+
+  %%(_sN)ScanTerminate()
+
+  Make sure all contexts are terminated (e.g. in case of parser abort).
+
+*/
+void %%(_sN)ScanTerminate(void)
+{
+  while (lexContext)
+    %%(_sN)ScanExit();
+}
+
+
+/*----------------------------------------------------------------------
+
+  scan()
+
+  Outer scanner called from the parser. Handles switching of contexts.
+
+*/
+void scan(
+  TmToken *token
+){
+  %%(_sN)Scan(lexContext, token);
+
+  while (lexContext && (token->code == %%(_sN)_MAIN_INCLUDE_Token ||
+			token->code == %%(_sN)_MAIN_ENDOFTEXT_Token))
+    switch (token->code) {
+
+    case %%(_sN)_MAIN_INCLUDE_Token:
+      if (%%(_sN)ScanEnter(token->stringValue)) {
+	TmSrcp srcp, start;
+  
+	srcp = token->srcp;
+	srcp.line++;		/* Make include start on next line */
+	srcp.col = 1;
+	start.file = lexContext->fileNo;
+	start.line = 0;
+%%IF(_i(lm))
+        %%(_sN)LiEnter(&srcp, &start, token->stringValue);
+%%ENDIF
+      } else {
+%%IF(_i(lm))
+        %%(_sN)Log(&token->srcp, 199, sevFAT, token->stringValue);
+%%ELSE
+        printf("Error: file not found ('%s')\n", token->stringValue);
+%%ENDIF
+      }
+      /* Get next token and return that instead of the INCLUDE */
+      %%(_sN)Scan(lexContext, token); 
+      break;
+
+    case %%(_sN)_MAIN_ENDOFTEXT_Token:
+      %%(_sN)ScanExit();
+      if (lexContext)		/* If still more input get next token */
+	%%(_sN)Scan(lexContext, token);
+      break;
+    }
+}
+
+`%%POSTHOOK
+
+  smToken->srcp.file = smThis->fileNo;
+
+`%%DEFINITIONS
+
+  Letter = [A-Za-z\xC0-\xD6\xD8-\xF6\xF8-\xFF];
+  Digit  = [0-9];
+  White  = [ \t\n];
+
+`%%VOCABULARY main
+
+`%%SCANNER main `%%RULES
+ 
+  NUMBER = Digit+
+	`%% 
+	  %%(_sN)ScCopy(smThis, (unsigned char *)smToken->stringValue, 0, smThis->smLength);
+	  smToken->stringValue[smThis->smLength] = 0;
+	  smToken->integerValue = atoi(smToken->stringValue);
+	`%%;
+
+  IDENTIFIER = Letter ('_' ? Letter ! '_' ? Digit)*
+	`%% 
+	  %%(_sN)ScCopy(smThis, (unsigned char *)smToken->stringValue, 0, smThis->smLength);
+	  smToken->stringValue[smThis->smLength] = 0;
+	`%%;
+
+  Include = '$INCLUDE' 
+    `%%
+      TmToken token;
+      int i;
+      char c;
+
+      %%(_sN)Scan(smThis, &token);		/* Get file name */
+      do {
+	  i = %%(_sN)ScSkip(smThis, 1);
+	  c = smThis->smText[smThis->smLength-1];
+      } while(c != '\n' && i != 0); /* Skip to end of line or EOF */
+      strcpy(smToken->stringValue, token.stringValue);
+    `%%;
+
+  Unknown = _Unknown;
+  EndOfText = _EndOfText;
+
+`%%SKIP
+
+  Blank = White+;			-- Skip any white space
+  Comment = '--' [^\n]*[\n];		-- and Ada style comments
+
+`%%END
+%%ENDIF
+%%-- Generating empty source code --
+%%--PROCESS(,"%%(_sN)Scan.%%(_tX)")
+%%--PROCESS(,"%%(_sN)Scan.h")
+%%--PROCESS(,"%%(_sN)ScSema.%%(_tX)")
+%%--PROCESS(,"%%(_sN)ScSema.h)

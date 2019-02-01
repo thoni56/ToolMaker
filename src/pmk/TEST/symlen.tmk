@@ -1,0 +1,18 @@
+%%OPTIONS
+--  Os 'SunOS';
+  PREFIX 'ac';
+  TARGET 'ansi-c';
+
+
+%%SRCP Name TmSrcp;
+    Row line %% TmNatural %1 %%;
+    Column col %% TmNatural %1 %%;
+    File file %% TmNatural %1 %%;
+
+
+%%TOKEN Name TmToken;
+    Code code %% TmCode %1 %%;
+    Srcp srcp %% TmSrcp %1 %%;
+    Attributes
+    	strVal %% char %1[AC_MAX_TOKEN_LENGTH + 1] %%,
+	intVal %% int %1 %%;

@@ -1,0 +1,42 @@
+#!/bin/sh
+echo Use STEAM!!!
+exit
+echo -n "Testing "
+../lmk -help 2> .revision
+head -1 .revision
+for f in lmk pmk smk imp ansi cpp
+do
+    echo "-------------------------"
+    echo "Running lmk on $f.lmk"
+    echo "-------------------------"
+    ../lmk -generate tables -generate source $f
+    echo "-------------------------"
+    echo "Diffing $f.lmt"
+    echo "-------------------------"
+    diff -b $f.lmt.ref $f.lmt
+    echo "-------------------------"
+    echo "Running imp on $f.lmt"
+    echo "-------------------------"
+    imp $f.lmt
+done >lmktest.log 2>&1
+for t in lmk pmk smk imp ansi
+do
+    for f in ${t}List.c ${t}List.h ${t}Common.h
+    do
+        echo "-------------------------"
+        echo "Diffing $f"
+        echo "-------------------------"
+        diff -b $f $f.ref
+    done >>lmktest.log 2>&1
+done >>lmktest.log 2>&1
+for t in cpp
+do
+    for f in ${t}List.cc ${t}List.h ${t}Common.h
+    do
+        echo "-------------------------"
+        echo "Diffing $f"
+        echo "-------------------------"
+        diff -b $f $f.ref
+    done >>lmktest.log 2>&1
+done >>lmktest.log 2>&1
+diff -b lmktest.log lmktest.ref

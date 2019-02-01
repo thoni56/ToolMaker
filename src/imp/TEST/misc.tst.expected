@@ -1,0 +1,37 @@
+########## misc ##########
+%%PROCESS()
+%%PROCESS("")
+%%PROCESS(,"")
+%%PROCESS("","")
+%%PROCESS("UNDEF")
+%%INCLUDE()
+%%INCLUDE("")
+%%INCLUDE(UNDEF)
+%%INCLUDE("UNDEF")
+########## ../imp misc.tst >misc.tst.tmp; cat misc.tst.tmp; rm misc.tst.tmp ##########
+
+
+misc.tst
+
+    5.  %%PROCESS("UNDEF")
+=====>            1
+
+  *1*   201 W : File "UNDEF" not found.
+
+    8.  %%INCLUDE(UNDEF)
+=====>            1
+
+  *1*   205 W : Label "UNDEF" not defined.
+
+    9.  %%INCLUDE("UNDEF")
+=====>            1
+
+  *1*   201 W : File "UNDEF" not found.
+
+
+No errors detected.
+3 warning(s) issued.
+
+%%PROCESS("UNDEF")
+%%INCLUDE(UNDEF)
+%%INCLUDE("UNDEF")

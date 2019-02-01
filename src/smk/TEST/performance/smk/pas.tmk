@@ -1,0 +1,8 @@
+%%OPTIONS
+	TARGET 'c';
+	PREFIX 'pas';
+	LIBRARY '/home/projects/ToolMaker/lib/c';
+%%TOKEN
+	NAME PasToken;
+	CODE code %% int %1%%;
+%%END

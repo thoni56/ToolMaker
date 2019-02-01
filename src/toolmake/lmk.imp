@@ -1,0 +1,56 @@
+%%COMMENT
+   lmk.imp				     Date: 1993-06-22/reibert@roo
+
+   ListerMaker skeleton
+
+   Written by Reibert Arbring, SoftLab ab (tools@softlab.se). 
+%%ENDCOMMENT
+----------------------------------------------------------------------------
+-- %%(_sN).lmk			Date: %%(_D)/%%(_P)
+--
+-- %%(_sN) - ListerMaker description file
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: %%(_D) %%(_T)/%%(_P) %%(_V)
+----------------------------------------------------------------------------
+%%IF(_Lvl(MINIMAL))
+%%ELSIF(_Lvl(NORMAL))
+
+%%ELSIF(_Lvl(EXAMPLE))
+
+`%%OPTIONS
+    Include;
+
+%%ENDIF
+`%%MESSAGES English
+%%IF(_Lvl(EXAMPLE))
+  0   'PL/0 Analysis Tool `%1';
+%%ELSE
+  0   'ToolMaker Lister 1.0';
+%%ENDIF
+  1   'No warnings or errors detected.';
+  2   'No warnings issued.';
+  3   'No errors detected.';
+  4   '`%1 informational message(s) produced.';
+  5   '`%1 warning(s) issued.';
+  6   '`%1 error(s) detected.';
+  7   'Maximum number of messages exceeded.';
+%%IF(_i(pm))
+100   'Parsing resumed.';
+101   '`%1 inserted.';
+102   '`%1 deleted.';
+103   '`%1 replaced by `%2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+%%ENDIF
+%%IF(_mm(YES))
+199   'File `\'%1\' could not be opened.';
+`%%END
+%%ENDIF
+%%-- Generating empty source code --
+%%--PROCESS(,"%%(_sN)List.%%(_tX)")
+%%--PROCESS(,"%%(_sN)List.h")

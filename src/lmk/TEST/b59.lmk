@@ -1,0 +1,17 @@
+%%OPTIONS
+
+  Library '..';
+  Generate Tables, Source;
+
+%%MESSAGES English
+  0   'ToolMaker Lister 1.0';
+  1   'No warnings or errors detected.';
+  2   'No warnings issued.';
+  3   'No errors detected.';
+  4   '%1 informational message(s) produced.';
+  5   '%1 warning(s) issued.';
+  6   '%1 error(s) detected.';
+  7   'Maximum number of messages exceeded.';
+100   'Message with one insert string: \"%1\"';
+199   'File \'%1\' could not be opened.';
+%%END

@@ -1,0 +1,18 @@
+########## neg ##########
+%%BEGIN(comimIntToHex(num))
+%%(num)
+%%END(comimIntToHex)
+
+%%INCLUDE(comimIntToHex(100))
+%%INCLUDE(comimIntToHex(-100))
+%%SET f(-5)
+%%INCLUDE(comimIntToHex(%%(-f)))
+%%EINCLUDE(comimIntToHex(3--5*-3))
+%%INCLUDE(comimIntToHex(--7))
+########## ../imp neg.tst >neg.tst.tmp; cat neg.tst.tmp; rm neg.tst.tmp ##########
+
+100
+-100
+5
+-12
+7

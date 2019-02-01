@@ -1,0 +1,6 @@
+%%IF (foo(fum))
+hej%%foohopp!
+%%ENDIF
+%%IF (%%foo(fum))
+Error!
+%%ENDIF

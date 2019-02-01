@@ -1,0 +1,23 @@
+#!/bin/sh
+for gcs in "" "-pack gcs" ; do
+  for les in "" "-pack les" ; do
+    for rds in "" "-pack rds" ; do
+      for err in "" "-pack error" ; do
+        for row in "" "-pack row" ; do
+          for col in "" "-pack col" ; do
+	    echo "######################################################################"
+	    echo "#"
+	    echo "# DATE: `date`"
+	    echo "# PACK OPTIONS: $gcs $les $rds $err $row $col" 
+	    echo "#"
+	    make "SMK=smk --pack $gcs $les $rds $err $row $col" && pas ../data/pascal.pas
+	    echo "#"
+	    echo "######################################################################"
+	  done
+	done
+      done
+    done
+  done
+done
+
+	

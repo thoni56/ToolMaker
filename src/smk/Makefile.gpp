@@ -1,0 +1,51 @@
+# Makefile for smk on DOS woth DJGPP
+#
+
+
+INCLUDE		= -I../license -I../tmk -I../imp
+LIBS    	= ../license/license.o ../tmk/libtmk.a ../imp/imp.a
+LDFLAGS		= -lnsl -lm
+
+VERSIONOBJECTS	= smkPaSema.o \
+	smkScSema.o \
+	smkParse.o \
+	smkErr.o \
+	smkScan.o \
+	smkList.o \
+	token.o \
+	scanner.o \
+	vocabulary.o \
+	definition.o \
+	rule.o \
+	ast.o \
+	lmprintf.o \
+	name.o \
+	char.o \
+	nfa.o \
+	lookahead.o \
+	dfa.o \
+	map.o \
+	pack.o \
+	write.o \
+	time.o \
+	action.o \
+	set.o \
+	screen.o \
+	smalloc.o \
+	nfas.o \
+	common.o \
+	smk.o
+
+
+OBJECTS	= $(VERSIONOBJECTS) version.o
+
+smk.exe: $(OBJECTS) $(LIBS)
+	$(CC) -o smk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS)
+
+depend:
+	@echo -n "Make depend "
+	@$(CC) $(INCLUDE) -MM *.c > depend.mk
+	@echo " done."
+
+include depend.mk
+

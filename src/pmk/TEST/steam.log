@@ -1,0 +1,50 @@
+Start 1997-01-15 14.52.51 /home/.disk1/project/ToolMaker/usr/thoni/src/pmk/TEST (thoni)
+Stop 14.52.51 0.020/0.035
+Start 1997-01-15 14.52.53 /home/.disk1/project/ToolMaker/usr/thoni/src/pmk/TEST (thoni)
+  code - failed 0.990/1.865
+  gep - failed 0.170/0.213
+  imp - failed 0.920/1.622
+  lmk - failed 1.020/1.652
+  pmk - failed 1.030/2.046
+  pos - failed 0.510/1.066
+  skipcode - failed 0.720/1.158
+  smk - failed 1.110/1.759
+  symlen - failed 0.490/1.016
+  tmk - failed 1.130/2.106
+Stop 14.53.13 10.800/20.246
+Start 1997-01-15 14.54.48 /home/.disk1/project/ToolMaker/usr/thoni/src/pmk/TEST (thoni)
+  code - passed 4.130/6.753
+  gep - passed 0.300/0.433
+  imp - passed 6.030/9.051
+  lmk - passed 4.090/6.684
+  pmk - passed 7.510/11.482
+  pos - passed 2.630/3.475
+  skipcode - passed 3.750/5.829
+  smk - passed 5.540/8.645
+  symlen - passed 0.580/1.408
+  tmk - passed 5.140/7.821
+Stop 14.55.54 41.870/1.05.440
+Start 1997-07-25 09.01.50 /home/.disk10/project/ToolMaker/usr/thoni/src/pmk/TEST (thoni)
+  code - passed 1.166/2.151
+  gep - passed 0.099/0.146
+  imp - passed 2.433/2.901
+  lmk - passed 1.149/1.618
+  pmk - passed 3.299/3.916
+  pos - passed 1.533/2.064
+  skipcode - passed 1.083/2.237
+  smk - passed 1.966/2.565
+  symlen - passed 0.216/0.320
+  tmk - passed 1.716/2.185
+Stop 09.02.13 15.249/22.479
+Start 1997-07-28 17.38.18 /home/.disk10/project/ToolMaker/usr/thoni/src/pmk/TEST (thoni)
+  code - failed 4.020/6.082
+  gep - passed 0.350/0.454
+  imp - failed 6.080/8.556
+  lmk - failed 4.090/6.073
+  pmk - failed 7.640/10.535
+  pos - failed 2.880/3.466
+  skipcode - failed 3.610/5.263
+  smk - failed 5.650/8.501
+  symlen - passed 0.730/1.038
+  tmk - failed 4.980/7.119
+Stop 17.39.19 42.390/1.01.779

@@ -1,0 +1,22 @@
+########## exit2 ##########
+Text f|re exit
+%%EXIT(1, %%(HasNoValue))
+Text efter exit
+########## ../imp exit2.tst >exit2.tst.tmp; cat exit2.tst.tmp; rm exit2.tst.tmp ##########
+%%(HasNoValue)
+
+
+exit2.tst
+
+    2.  %%EXIT(1, %%(HasNoValue))
+=====>            1  2
+
+  *1*   204 W : Variable "%%(HasNoValue)" not set.
+  *2*   204 W : Variable "HasNoValue" not set.
+
+
+No errors detected.
+2 warning(s) issued.
+
+  Result from evaluation of %%EXIT was 1
+Text f|re exit

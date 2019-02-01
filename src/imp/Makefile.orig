@@ -1,0 +1,299 @@
+# Makefile for imp		Date: 1991-09-06/tools@heffa 08:10:08/toolmake
+#
+# ToolMaker tools must be accessible via the PATH environment variable.
+#
+# The various xxQ-macros are intended for commandline additions to the
+# make invocation.
+#
+
+# The environmental variable TMHOME should be set to the ToolMaker
+# home library, eg /usr/local/ToolMaker
+
+ROOT	= /home/projects/ToolMaker
+TMBIN	= $(ROOT)/bin/bin-$(TMARCH)
+INTLIB  = $(ROOT)/library
+
+SUN3	= slug
+
+RELEASEROOT	= $(ROOT)
+RELEASELIB	= $(RELEASEROOT)/lib/c
+RELEASEBIN	= $(RELEASEROOT)/bin/bin-$(TMARCH)
+RELEASEMAN	= $(RELEASEROOT)/man/man1
+RELEASEINC	= $(RELEASEROOT)/include
+
+IMP	= $(TMBIN)/imp $(IMPQ)
+PMK	= $(TMBIN)/pmk $(PMQ)
+LMK	= $(TMBIN)/lmk $(LMQ)
+SMK	= $(TMBIN)/smk $(SMQ)
+
+#LDFLAGS	= $(LQ) -lm -L/usr/local/lib/4.1.2
+
+CC = $(GCC) -ansi -pedantic -Wall -Wno-switch
+
+CFLAGS	= -g $(CQ) $(INCLUDE)
+
+GCC		= gcc
+solaris1 sun4 solaris2:=	GCC=gcc2.6.0
+
+IMPLIB = imp.a
+
+.KEEP_STATE:
+
+#--
+
+VERSIONOBJECTS= impParse.o impPaSema.o impErr.o impList.o impScan.o impScSema.o \
+	ast.o name.o impMacro.o timing.o
+
+OBJECTS	= $(VERSIONOBJECTS) version.o
+
+CFLAGS= -O4 $(INCLUDE)
+debug	purify :=	CFLAGS= -g $(INCLUDE)
+
+all debug trace : imp
+
+both:	imp imp.a
+
+imp:	tm impobj
+
+
+release:
+	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
+		exit 1 ; \
+	fi
+	make newversion tm releaseARCH releaseSRC
+	cvs rtag imp`ls [0-9]*_[0-9]*_[0-9]*.* | sed s/\\\.//` imp
+
+releaseSRC:
+	chmod 664 impMacro.h
+	cp impMacro.h $(INTLIB)
+	install -m 664 impMacro.h $(RELEASEINC)/impMacro.h
+	install -m 664 imp.1 $(RELEASEMAN)/imp.1
+
+releaseARCH: impobj
+	chmod 664 $(IMPLIB)
+	cp $(IMPLIB) $(INTLIB)/bin-$(TMARCH)
+	-ranlib $(INTLIB)/bin-$(TMARCH)/$(IMPLIB)
+	-ranlib $(IMPLIB)
+	install -m 775 imp $(RELEASEBIN)/imp
+	install -m 664 $(IMPLIB) $(RELEASEBIN)/$(IMPLIB)
+	-ranlib $(RELEASEBIN)/$(IMPLIB)
+
+newversion:
+	@-\rm [0-9]*_[0-9]*_[0-9]*.*
+	@sh version.sh
+	venum +c
+	echo "cat > `ls [0-9]*_[0-9]*_[0-9]*.*` <<EOF" > version.sh
+	echo "IMP" >> version.sh
+	echo "Incremental Macro Processor" >> version.sh
+	echo "EOF" >> version.sh
+	cvs commit -m 'New Version' version.sh
+
+RELEASE:
+	@if test -r CVS/Tag ; then \
+	  : ; \
+	else \
+	  echo This tree is not checked out from a Tag! ; \
+	  echo RELEASE not allowed!! ; \
+	  exit 1 ; \
+	fi
+	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
+		exit 1 ; \
+	fi
+	make tm releaseARCH releaseSRC
+
+purify:	checkARCH $(IMPLIB) imp.o
+	purify $(CC) -o impp $(CFLAGS) imp.o $(IMPLIB) $(LDFLAGS)
+
+impobj:	checkARCH $(TMARCH)
+
+checkARCH:
+	if test -f .arch ; then :; else echo "none" > .arch; fi
+	-if test `cat .arch` != $(TMARCH); then \
+	    rm *.o *.a;\
+	    echo $(TMARCH) > .arch ; \
+	fi
+
+sun3 sun4 solaris1: $(IMPLIB) imp.o
+	$(CC) -o imp $(CFLAGS) imp.o $(IMPLIB) $(LDFLAGS)
+
+solaris2: $(IMPLIB) imp.o
+	$(CC) -o imp $(CFLAGS) imp.o $(IMPLIB) $(LDFLAGS)
+
+
+$(IMPLIB): $(OBJECTS)
+	ar rv $(IMPLIB) $(OBJECTS)
+	-ranlib $(IMPLIB)
+
+#-----------------------
+# ToolMaker generation
+
+tm: .pmkstamp .smkstamp .lmkstamp
+
+.smkstamp : .pmkstamp imp.smk imp.tmk
+	$(SMK) imp
+	touch .smkstamp
+
+.pmkstamp : imp.pmk imp.tmk
+	$(PMK) imp
+	touch .pmkstamp
+
+.lmkstamp : imp.lmk imp.tmk
+	$(LMK) imp
+	touch .lmkstamp
+
+impParse.o: impParse.c
+impPaSema.o: impPaSema.c
+impScan.o: impScan.c
+impScSema.o: impScSema.c
+impList.o: impList.c
+
+#-
+version.c: $(VERSIONOBJECTS)
+	@-\rm [0-9]*_[0-9]*_[0-9]*.*
+	sh version.sh
+	venum +t
+
+clean:
+	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt imp.voc impParse.* impScan.* \
+	impScSema.* impPaSema.* impCommon.* impList.* imp imp.a
+
+depend file:
+	@echo -n "Make depend "
+	@mv Makefile Makefile.~
+	@sed -n '1,/^# DO NOT DELETE THIS LINE -- make depend depends on it.$$/ p' Makefile.~ > Makefile
+	@for file in $(OBJECTS:.o=.c) ; do /lib/cpp $(INCLUDE) -M $$file | egrep -v '/usr/include|\.c$$' | cat >> Makefile ; echo -n . ; done
+	@echo "done."
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+impParse.o: ./ast.h
+$(IMPLIB)(impParse.o): ./ast.h
+impParse.o: ./impCommon.h
+$(IMPLIB)(impParse.o): ./impCommon.h
+impParse.o: ./impMacro.h
+$(IMPLIB)(impParse.o): ./impMacro.h
+impParse.o: ./impScan.h
+$(IMPLIB)(impParse.o): ./impScan.h
+impParse.o: ./impCommon.h
+$(IMPLIB)(impParse.o): ./impCommon.h
+impParse.o: ./impList.h
+$(IMPLIB)(impParse.o): ./impList.h
+impParse.o: ./impCommon.h
+$(IMPLIB)(impParse.o): ./impCommon.h
+impParse.o: ./impCommon.h
+$(IMPLIB)(impParse.o): ./impCommon.h
+impPaSema.o: ./ast.h
+$(IMPLIB)(impPaSema.o): ./ast.h
+impPaSema.o: ./impCommon.h
+$(IMPLIB)(impPaSema.o): ./impCommon.h
+impPaSema.o: ./impMacro.h
+$(IMPLIB)(impPaSema.o): ./impMacro.h
+impPaSema.o: ./impScan.h
+$(IMPLIB)(impPaSema.o): ./impScan.h
+impPaSema.o: ./impCommon.h
+$(IMPLIB)(impPaSema.o): ./impCommon.h
+impPaSema.o: ./impList.h
+$(IMPLIB)(impPaSema.o): ./impList.h
+impPaSema.o: ./impCommon.h
+$(IMPLIB)(impPaSema.o): ./impCommon.h
+impPaSema.o: ./impParse.h
+$(IMPLIB)(impPaSema.o): ./impParse.h
+impPaSema.o: ./ast.h
+$(IMPLIB)(impPaSema.o): ./ast.h
+impPaSema.o: ./impCommon.h
+$(IMPLIB)(impPaSema.o): ./impCommon.h
+impErr.o: ./ast.h
+$(IMPLIB)(impErr.o): ./ast.h
+impErr.o: ./impCommon.h
+$(IMPLIB)(impErr.o): ./impCommon.h
+impErr.o: ./impMacro.h
+$(IMPLIB)(impErr.o): ./impMacro.h
+impErr.o: ./impScan.h
+$(IMPLIB)(impErr.o): ./impScan.h
+impErr.o: ./impCommon.h
+$(IMPLIB)(impErr.o): ./impCommon.h
+impErr.o: ./impList.h
+$(IMPLIB)(impErr.o): ./impList.h
+impErr.o: ./impCommon.h
+$(IMPLIB)(impErr.o): ./impCommon.h
+impErr.o: ./impErr.h
+$(IMPLIB)(impErr.o): ./impErr.h
+impErr.o: ./impList.h
+$(IMPLIB)(impErr.o): ./impList.h
+impErr.o: ./impCommon.h
+$(IMPLIB)(impErr.o): ./impCommon.h
+impList.o: ./impList.h
+$(IMPLIB)(impList.o): ./impList.h
+impList.o: ./impCommon.h
+$(IMPLIB)(impList.o): ./impCommon.h
+impScan.o: ./impScan.h
+$(IMPLIB)(impScan.o): ./impScan.h
+impScan.o: ./impCommon.h
+$(IMPLIB)(impScan.o): ./impCommon.h
+impScPaSema.o: ./impScan.h
+$(IMPLIB)(impScPaSema.o): ./impScan.h
+impScPaSema.o: ./impCommon.h
+$(IMPLIB)(impScPaSema.o): ./impCommon.h
+impScPaSema.o: ./impMacro.h
+$(IMPLIB)(impScPaSema.o): ./impMacro.h
+impScPaSema.o: ./impList.h
+$(IMPLIB)(impScPaSema.o): ./impList.h
+impScPaSema.o: ./impCommon.h
+$(IMPLIB)(impScPaSema.o): ./impCommon.h
+version.o: ./version.h
+$(IMPLIB)(version.o): ./version.h
+ast.o: ./impList.h
+$(IMPLIB)(ast.o): ./impList.h
+ast.o: ./impCommon.h
+$(IMPLIB)(ast.o): ./impCommon.h
+ast.o: ./impMacro.h
+$(IMPLIB)(ast.o): ./impMacro.h
+ast.o: ./name.h
+$(IMPLIB)(ast.o): ./name.h
+ast.o: ./ast.h
+$(IMPLIB)(ast.o): ./ast.h
+ast.o: ./impCommon.h
+$(IMPLIB)(ast.o): ./impCommon.h
+ast.o: ./impMacro.h
+$(IMPLIB)(ast.o): ./impMacro.h
+ast.o: ./ast.h
+$(IMPLIB)(ast.o): ./ast.h
+name.o: ./name.h
+$(IMPLIB)(name.o): ./name.h
+name.o: ./ast.h
+$(IMPLIB)(name.o): ./ast.h
+name.o: ./impCommon.h
+$(IMPLIB)(name.o): ./impCommon.h
+name.o: ./impMacro.h
+$(IMPLIB)(name.o): ./impMacro.h
+name.o: ./ast.h
+$(IMPLIB)(name.o): ./ast.h
+name.o: ./impScan.h
+$(IMPLIB)(name.o): ./impScan.h
+name.o: ./impCommon.h
+$(IMPLIB)(name.o): ./impCommon.h
+name.o: ./impList.h
+$(IMPLIB)(name.o): ./impList.h
+name.o: ./impCommon.h
+$(IMPLIB)(name.o): ./impCommon.h
+impMacro.o: ./impMacro.h
+$(IMPLIB)(impMacro.o): ./impMacro.h
+impMacro.o: ./impList.h
+$(IMPLIB)(impMacro.o): ./impList.h
+impMacro.o: ./impCommon.h
+$(IMPLIB)(impMacro.o): ./impCommon.h
+impMacro.o: ./impScan.h
+$(IMPLIB)(impMacro.o): ./impScan.h
+impMacro.o: ./impCommon.h
+$(IMPLIB)(impMacro.o): ./impCommon.h
+impMacro.o: ./ast.h
+$(IMPLIB)(impMacro.o): ./ast.h
+impMacro.o: ./impCommon.h
+$(IMPLIB)(impMacro.o): ./impCommon.h
+impMacro.o: ./impMacro.h
+$(IMPLIB)(impMacro.o): ./impMacro.h
+impMacro.o: ./timing.h
+$(IMPLIB)(impMacro.o): ./timing.h
+impMacro.o: ./version.h
+$(IMPLIB)(impMacro.o): ./version.h
+timing.o: ./timing.h
+$(IMPLIB)(timing.o): ./timing.h

@@ -1,0 +1,229 @@
+########## elsif ##########
+%%LOOP (i <= 32)
+%%IF (i = 1)
+Ett
+%%ELSIF (i =  2)
+Två
+%%ELSIF (i =  3)
+Tre
+%%ELSIF (i =  4)
+Fyra
+%%ELSIF (i =  5)
+Fem
+%%ELSIF (i =  6)
+Sex rätt
+%%ELSIF (i =  6)
+Sex fel
+%%ELSIF (i =  7)
+Sju
+%%ELSIF (i =  8)
+Åtta
+%%ELSIF (i =  9)
+Nio
+%%ELSIF (i = 10)
+Tio
+%%ELSIF (i = 11)
+Elva
+%%ELSIF (i = 12)
+Tolv
+%%ELSIF (i = 13)
+Tretton
+%%ELSIF (i = 14)
+Fjorton
+%%ELSIF (i = 15)
+Femton
+%%ELSIF (i = 16)
+Sexton
+%%ELSIF (i = 17)
+Sjutton
+%%ELSIF (i = 18)
+Arton
+%%ELSIF (i = 19)
+Nitton
+%%ELSIF (i = 20)
+Tjugo
+%%ELSIF (i = 21)
+Tjugoett
+%%ELSIF (i = 22)
+Tjugotvå
+%%ELSIF (i = 23)
+Tjugotre
+%%ELSIF (i = 24)
+Tjugofyra
+%%ELSIF (i = 25)
+Tjugofem
+%%ELSIF (i = 26)
+Tjugosex
+%%ELSIF (i = 27)
+Tjugosju
+%%ELSIF (i = 28)
+Tjugoåtta
+%%ELSIF (i = 29)
+Tjugonio
+%%ELSIF (i = 30)
+Trettio
+%%ELSE
+Trettioett
+%%ENDIF
+%%ENDLOOP(i)
+%%LOOP (i <= 32)
+%%IF (i = 1)
+Ett
+%%ELSIF (i =  2)
+Två
+%%ELSIF (i =  3)
+Tre
+%%ELSIF (i =  4)
+Fyra
+%%ELSIF (i =  5)
+Fem
+%%ELSIF (i =  6)
+Sex rätt
+%%ELSIF (i =  6)
+Sex fel
+%%ELSIF (i =  7)
+Sju
+%%ELSIF (i =  8)
+Åtta
+%%ELSIF (i =  9)
+Nio
+%%ELSIF (i = 10)
+Tio
+%%ELSIF (i = 11)
+Elva
+%%ELSIF (i = 12)
+Tolv
+%%ELSIF (i = 13)
+Tretton
+%%ELSIF (i = 14)
+Fjorton
+%%ELSIF (i = 15)
+Femton
+%%ELSIF (i = 16)
+Sexton
+%%ELSIF (i = 17)
+Sjutton
+%%ELSIF (i = 18)
+Arton
+%%ELSIF (i = 19)
+Nitton
+%%ELSIF (i = 20)
+Tjugo
+%%ELSIF (i = 21)
+Tjugoett
+%%ELSIF (i = 22)
+Tjugotvå
+%%ELSIF (i = 23)
+Tjugotre
+%%ELSIF (i = 24)
+Tjugofyra
+%%ELSIF (i = 25)
+Tjugofem
+%%ELSIF (i = 26)
+Tjugosex
+%%ELSIF (i = 27)
+Tjugosju
+%%ELSIF (i = 28)
+Tjugoåtta
+%%ELSIF (i = 29)
+Tjugonio
+%%ELSIF (i = 30)
+Trettio
+%%ENDIF
+%%(i)
+%%ENDLOOP(i)
+########## ../imp elsif.tst >elsif.tst.tmp; cat elsif.tst.tmp; rm elsif.tst.tmp ##########
+Ett
+Två
+Tre
+Fyra
+Fem
+Sex rätt
+Sju
+Åtta
+Nio
+Tio
+Elva
+Tolv
+Tretton
+Fjorton
+Femton
+Sexton
+Sjutton
+Arton
+Nitton
+Tjugo
+Tjugoett
+Tjugotvå
+Tjugotre
+Tjugofyra
+Tjugofem
+Tjugosex
+Tjugosju
+Tjugoåtta
+Tjugonio
+Trettio
+Trettioett
+Trettioett
+Ett
+1
+Två
+2
+Tre
+3
+Fyra
+4
+Fem
+5
+Sex rätt
+6
+Sju
+7
+Åtta
+8
+Nio
+9
+Tio
+10
+Elva
+11
+Tolv
+12
+Tretton
+13
+Fjorton
+14
+Femton
+15
+Sexton
+16
+Sjutton
+17
+Arton
+18
+Nitton
+19
+Tjugo
+20
+Tjugoett
+21
+Tjugotvå
+22
+Tjugotre
+23
+Tjugofyra
+24
+Tjugofem
+25
+Tjugosex
+26
+Tjugosju
+27
+Tjugoåtta
+28
+Tjugonio
+29
+Trettio
+30
+31
+32

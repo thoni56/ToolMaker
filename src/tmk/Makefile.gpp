@@ -1,0 +1,16 @@
+# Makefile for tmk on DOS with DJGPP
+#
+
+SRC	= tmkPaSema.c tmkParse.c tmkErr.c tmkScan.c tmkScSema.c tmkOpts.c tmkCommon.c
+
+OBJECTS	= ${SRC:.c=.o}
+
+tmklib.a: $(OBJECTS)
+	ar r $@ tmklib.a
+
+depend file:
+	@echo -n "Make depend "
+	@$(CC) $(INCLUDE) -M *.c > depend.mk
+	@echo "done."
+
+include depend.mk

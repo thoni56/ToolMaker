@@ -1,0 +1,2679 @@
+%%COMMENTS
+LMK -- ListerMaker 2.1(26) (1998-04-15 18:35)
+
+ ListMaker: Lister skeleton file
+
+ Created:
+  1989-10-27/thoni@heffa
+
+ Modified:
+  1992-07-27/micke@winnie - adapted for tmk2
+  1991-12-04/reibert@roo - Possibility of compiled messages introduced
+  1989-12-28/thoni@heffa	/* Fixed to match with ListerMaker docs. */
+  1989-11-23/thoni@heffa
+
+
+%%ENDCOMMENT
+
+%%IF(NOT currentOs(?))
+%%SET currentOs(%%(lmkOs))
+%%ENDIF
+
+%%IF(lmkTarget("c++"))
+%%SET targetLanguageExtension("cc")
+%%ENDIF
+%%IF(NOT targetLanguageExtension(?))
+%%SET targetLanguageExtension("c")
+%%ENDIF
+%%IF(NOT lmkListings(?))
+%%SET lmkListings()
+%%ENDIF
+%%IF(tmkForce(0))
+%%  PROCESS(,"%%(lmkPrefix)List.%%(targetLanguageExtension).tmp")
+%%ELSE
+%%  PROCESS(,"%%(lmkPrefix)List.%%(targetLanguageExtension)")
+%%ENDIF
+/*----------------------------------------------------------------------*\
+
+	ListerMaker
+
+	Source file for ListerMaker generated listing handler
+
+\*----------------------------------------------------------------------*/
+
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+%%IF(lmkTarget("c++"))
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <ctype.h>
+%%ELSIF(lmkTarget("ansi-c"))
+#include <stdlib.h>
+#include <stdarg.h>
+#include <ctype.h>
+%%ELSIF(lmkTarget("c"))
+#include <stdlib.h>
+#include <ctype.h>
+%%ENDIF
+
+%%IF(lmkImport(?R))
+%%INCLUDE(lmkImport)
+%%ENDIF
+
+%%BEGIN(lmExports)
+
+/* Insert string separator */
+#define %%(lmkPrefix)SEPARATOR ((char)0xff)
+
+/* Severity type and codes */
+typedef int %%(lmkPrefix)Sev;
+#define sevNONE 0
+#define sevOK   (1<<0)
+#define sevINF  (1<<1)
+#define sevWAR  (1<<2)
+#define sevERR  (1<<3)
+#define sevFAT  (1<<4)
+#define sevSYS  (1<<5)
+
+#define sevALL (sevOK|sevINF|sevWAR|sevERR|sevFAT|sevSYS)
+
+
+/* Listing types */
+typedef int %%(lmkPrefix)Typ;
+#define liNONE  0
+#define liSUM   (1<<0)		/* Summary */
+#define liERR   (1<<1)		/* Erroneous source lines */
+#define liOK    (1<<2)		/* Correct source lines */
+#define liINCL  (1<<3)		/* Look also in PUSHed files */
+#define liHEAD  (1<<4)		/* Heading */
+
+#define liTINY (liSUM|liERR|liHEAD|liINCL)
+#define liFULL (liTINY|liOK)
+
+typedef enum %%(lmkPrefix)Messages {
+%%LOOP(i <= lmkMSectName[0]-1)
+    %%(lmkMSectName[i]),
+%%ENDLOOP(i)
+    %%(lmkMSectName[lmkMSectName[0]])
+} %%(lmkPrefix)Messages;
+
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+
+/* UNINITIALISED: */
+/* Initialise the %%(lmkPrefix)Lister System */
+extern void %%(lmkPrefix)LiInit(char header[],
+%%IF (lmkMessage(File))
+				 char srcf[],
+				 %%(lmkPrefix)Messages msect,
+				 char msgf[]);
+%%ELSE
+				 char src[],
+				 %%(lmkPrefix)Messages msect);
+%%ENDIF
+
+/* COLLECTING: */
+/* Log a message at a source position */
+extern void %%(lmkPrefix)Log(%%(tmkSrcpName) *pos,
+				int ecode,
+				%%(lmkPrefix)Sev sev,
+				char *istrs);
+
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+/* Log a message at a source position using va_arg handling */
+extern void %%(lmkPrefix)Logv(%%(tmkSrcpName) *pos,
+				int ecode,
+				%%(lmkPrefix)Sev sev,
+				...);
+%%ENDIF
+
+/* Turn listing completely off after a particular source position */
+extern void %%(lmkPrefix)LiOff(%%(tmkSrcpName) *pos);
+
+/* Turn listing on again at a particular source position */
+extern void %%(lmkPrefix)LiOn(%%(tmkSrcpName) *pos);
+
+%%IF(lmkInclude(On))
+/* Start reading an included file at a particular source position */
+extern void %%(lmkPrefix)LiEnter(%%(tmkSrcpName) *pos,
+				  %%(tmkSrcpName) *start,
+				  char fnm[]);
+
+/* Stop reading from an included file prematurely */
+extern void %%(lmkPrefix)LiExit(%%(tmkSrcpName) *pos);
+%%ENDIF
+
+/* (Un)conditionally skip to a new page at a source position */
+extern void %%(lmkPrefix)LiPage(%%(tmkSrcpName) *pos,
+				 int lins);
+
+/* Read worst severity logged so far */
+extern %%(lmkPrefix)Sev %%(lmkPrefix)Severity(void);
+extern %%(lmkPrefix)Sev %%(lmkPrefix)LocSeverity(void);
+extern void %%(lmkPrefix)ResLocSeverity(void);
+
+/* RETRIEVING: */
+%%IF(lmkListings(Single))
+/* Create a listing of a selected type in a file or the screen */
+extern void %%(lmkPrefix)List(char ofnm[],
+				 int lins,
+				 int cols,
+				 %%(lmkPrefix)Typ typ,
+				 %%(lmkPrefix)Sev sevs);
+%%ENDIF
+%%IF(lmkListings(Multiple))
+/* Create a listing of multiple input files in a listing file or on screen */
+extern void %%(lmkPrefix)Listm(char ofnm[],
+				  int lins,
+				  int cols,
+				  %%(lmkPrefix)Typ typ,
+				  %%(lmkPrefix)Sev sevs,
+				  char *fnms[]);
+%%ENDIF
+%%IF(lmkListings(Separate))
+extern void %%(lmkPrefix)Listsi(char ofnm[],
+				  int lins,
+				  int cols,
+				  %%(lmkPrefix)Typ typ);
+extern void %%(lmkPrefix)Lists(%%(lmkPrefix)Sev sevs,
+				  int fno,
+				  char *fnm);
+extern void %%(lmkPrefix)Listse(%%(lmkPrefix)Sev sevs);
+%%ENDIF
+
+/* Return the i'th formatted message, return 0 if not found */
+extern int %%(lmkPrefix)Msg(int i,
+			       %%(tmkSrcpName) *pos,
+			       char *msg);
+
+/* Print a string on a line in the output file */
+extern void %%(lmkPrefix)LiPrint(char str[]);
+
+/* (Un)conditionally skip to a new page in the output file */
+extern void %%(lmkPrefix)SkipLines(int lins);
+
+/* Terminate the %%(lmkPrefix)Lister system */
+extern void %%(lmkPrefix)LiTerminate(void);
+
+%%ELSE
+
+extern void %%(lmkPrefix)LiInit();
+extern void %%(lmkPrefix)Log();
+extern void %%(lmkPrefix)LiOff();
+extern void %%(lmkPrefix)LiOn();
+%%IF(lmkInclude(On))
+extern void %%(lmkPrefix)LiEnter();
+extern void %%(lmkPrefix)LiExit();
+%%ENDIF
+extern void %%(lmkPrefix)LiPage();
+extern %%(lmkPrefix)Sev %%(lmkPrefix)Severity();
+extern %%(lmkPrefix)Sev %%(lmkPrefix)LocSeverity();
+extern void %%(lmkPrefix)ResLocSeverity();
+%%IF(lmkListings(Single))
+extern void %%(lmkPrefix)List();
+%%ENDIF
+%%IF(lmkListings(Multiple))
+extern void %%(lmkPrefix)Listm();
+%%ENDIF
+%%IF(lmkListings(Separate))
+extern void %%(lmkPrefix)Listsi();
+extern void %%(lmkPrefix)Lists();
+extern void %%(lmkPrefix)Listse();
+%%ENDIF
+extern int %%(lmkPrefix)Msg();
+extern void %%(lmkPrefix)LiPrint();
+extern void %%(lmkPrefix)SkipLines();
+extern void %%(lmkPrefix)LiTerminate();
+
+%%ENDIF
+
+%%END(lmExports)
+
+#include "%%(lmkPrefix)List.h"
+
+
+/*****************
+ *               *
+ * Private Types *
+ *               *
+ *****************/
+#ifndef LMBOOL
+#define LMBOOL int
+#endif
+#ifndef TRUE
+#define TRUE (0==0)
+#define FALSE (0!=0)
+#endif
+
+#define sevPUSH (sevSYS<<1)	/* Private Severity code for PUSH msg */
+#define sevPOP  (sevSYS<<2)	/* Private Severity code for POP msg */
+#define sevPAGE (sevSYS<<3)	/* Private Severity code for PAGE msg */
+#define sevON   (sevSYS<<4)	/* Private Severity code for Listing On */
+#define sevOFF  (sevSYS<<5)	/* Private Severity code for Listing Off */
+
+
+typedef enum liPhase {
+  PH_NONE = 0,
+  PH_COLL = 1,
+  PH_RETR = 2
+} liPhase;
+
+#define INITINCLUDE 10
+#define INCINCLUDE  10
+#define OMARG 8			/* Output margin length */
+#define SRCWIDTH 1000
+#define MSGWIDTH 1000
+#define LSTWIDTH (SRCWIDTH+OMARG)
+#define INITMSG 100
+#define INCMSG  100
+%%IF (lmkMessagelimit(?))
+#define MAXMSG %%(lmkMessagelimit)
+%%ENDIF
+#define HEADERLINES 3
+#define ESCAPECHAR '%%(lmkEscape)'
+%%IF (NOT lmkPageNumberSize(?))
+%%SET lmkPageNumberSize(5)
+%%ENDIF
+
+/*********************
+ *                   *
+ *   INTERNAL DATA   *
+ *                   *
+ *********************/
+
+%%SET kommaWr(FALSE)
+static %%(tmkSrcpName) nulpos = {	/* Zero source position */
+  %%--
+%%LOOP(i, {tmkSrcpRow, tmkSrcpCol, tmkSrcpFile})
+%%IF (%%(i)(?))
+%%IF (kommaWr(TRUE)), %%ENDIF%%--
+%%SET kommaWr(TRUE)
+0%%--
+%%ENDIF%%--
+%%ENDLOOP(i)
+
+};
+
+static char *%%(lmkPrefix)NoIns = "<Missing insertstring>";
+
+%%IF (NOT lmkMessage(?))
+%%SET lmkMessage(Embedded)
+%%ENDIF
+%%IF (lmkMessage(File))
+static struct {			/* Message file */
+  char *name;			/* Name ... */
+  FILE *file;			/* and file descriptor */
+  LMBOOL open;			/* Is it open? */
+} msg;
+%%ELSE
+#define %%(lmkPrefix)MESSZ 2
+typedef char *%%(lmkPrefix)Msgs[%%(lmkPrefix)MESSZ];
+
+static %%(lmkPrefix)Msgs msg[] = {
+%%LOOP(i <= lmkMsgId[0])
+    { "%%(lmkMsgId[i])", "%%(lmkMsg[%%(i)])" },
+%%ENDLOOP(i)
+    { NULL }
+};
+%%ENDIF
+typedef struct MSect {
+  int offs;
+  int len;
+} MSect;
+
+static MSect msects[] = {
+%%LOOP(i <= lmkMSectOffs[0]-1)
+    {%%(lmkMSectOffs[i]), %%(lmkMSectLen[i])},
+%%ENDLOOP(i)
+    {%%(lmkMSectOffs[lmkMSectOffs[0]]), %%(lmkMSectLen[lmkMSectOffs[0]])}
+};
+static %%(lmkPrefix)Messages currMsect = (%%(lmkPrefix)Messages)0;
+
+typedef struct Srctyp {		/* Stack of source files */
+  char *fnm;			/* File name of source file */
+  LMBOOL printed;		/* Is name shown yet? */
+  FILE *file;			/* File descriptor */
+  int fno;			/* File number */
+  int lno;			/* Line number */
+  int mno;			/* Message number for PUSH from this file */
+  LMBOOL open;			/* Is it open? */
+} Srctyp;
+
+static Srctyp *src;
+static int srcEntries = 0;
+
+static int srclev;		/* Source file level */
+
+static struct {			/* Message counters */
+  int infos;
+  int warns;
+  int errs;
+  int msgs;
+} count;
+
+static struct {			/* Output file */
+  char *name;			/* Name ... */
+  FILE *file;			/* and file pointer */
+  LMBOOL open;			/* Is it open? */
+} out;
+
+static liPhase phase;	/* Phase of LIST */
+
+static char header[LSTWIDTH+1]; /* Constructed header string */
+
+static %%(lmkPrefix)Typ lsttyp; /* Requested listing type */
+static %%(lmkPrefix)Sev lstsev; /* and severities */
+
+static LMBOOL liston = TRUE;	/* Is listing turned on now? */
+static LMBOOL pageSkipped = FALSE;
+
+static char *lihdr;		/* The list header insert string */
+
+/* Sort part of message */
+typedef struct sortRec {
+  %%(tmkSrcpName) pos;		/* Source position */
+  %%(lmkPrefix)Sev sev;	/* Severity code */
+  int ref;			/* Reference to MSGREC record */
+} sortRec;
+
+/* Data part of message */
+typedef struct msgRec {
+  int code;			/* Error code */
+  %%(tmkSrcpName) start;		/* Possible start position (for PUSH) */
+  char *insert;			/* Insert string(s) */
+} msgRec;
+
+static %%(lmkPrefix)Sev maxsev;		/* Highest severity so far */
+static %%(lmkPrefix)Sev maxlocsev;	/* Highest local severity so far */
+
+static struct msgRec *mdarr;    /* Message data array */
+static int marrEntries;
+static struct sortRec *msarr;   /* Message sort array */
+
+/**********************
+ *                    *
+ * Listing Parameters *
+ *                    *
+ **********************/
+
+static int paglen;		/* Page length and */
+static int pagwdt;		/* ... width */
+
+static int pagnum;		/* Current page number */
+static int plnum;		/* Current page line number */
+
+
+/*******************
+ *                 *
+ * Static routines *
+ *                 *
+ *******************/
+
+#define inset(x,y)(x&y)
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prlin(char str[], LMBOOL cont, LMBOOL wrdwrp, int indent);
+%%ELSE
+static void prlin();
+%%ENDIF
+
+
+
+/*----------------------------------------------------------------------
+
+   error()
+
+   Internal or usage error. Print a message.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void error(
+     char str[]			/* IN - the error message */
+) {
+%%ELSE
+static void error(str)
+     char str[];		/* IN - the error message */
+{
+%%ENDIF
+  printf("\n***** %%(lmkPrefix)List - %s\n", str);
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   sortmsg()
+
+   Sort error messages in msarr[]
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void sortmsg(void)
+%%ELSE
+static void sortmsg()
+%%ENDIF
+{
+  int i;
+  LMBOOL swap, ready;
+  struct sortRec temp;		/* Temporary storage for sort record... */
+%%IF(tmkSrcpFile(?))
+  int f1, f2;			/* ... files, ... */
+%%ENDIF
+%%IF(tmkSrcpRow(?))
+  int l1, l2;			/* ... lines */
+%%ENDIF
+%%IF(tmkSrcpCol(?))
+  int c1, c2;			/* ... columns */
+%%ENDIF
+  int n1, n2;			/* Message reference numbers, ie. log order */
+  
+  /* Sort the error messages */
+  ready = FALSE;
+  while (!ready) {
+    ready = TRUE;
+%%IF(tmkSrcpFile(?))
+    f1 = msarr[0].pos.%%(tmkSrcpFile);
+%%ENDIF
+%%IF(tmkSrcpRow(?))
+    l1 = msarr[0].pos.%%(tmkSrcpRow);
+%%ENDIF
+%%IF(tmkSrcpCol(?))
+    c1 = msarr[0].pos.%%(tmkSrcpCol);
+%%ENDIF
+    n1 = msarr[0].ref;
+    for(i = 0; i < (count.msgs - 1); i++) {
+%%IF(tmkSrcpFile(?))
+      f2 = msarr[i+1].pos.%%(tmkSrcpFile);
+%%ENDIF
+%%IF(tmkSrcpRow(?))
+      l2 = msarr[i+1].pos.%%(tmkSrcpRow);
+%%ENDIF
+%%IF(tmkSrcpCol(?))
+      c2 = msarr[i+1].pos.%%(tmkSrcpCol);
+%%ENDIF
+      n2 = msarr[i+1].ref;	/* Use log order as last component */
+%%IF(tmkSrcpFile(?))
+      if (f2 != f1)
+	swap = (f2 <= f1);
+      else
+%%ENDIF
+%%IF(tmkSrcpRow(?))
+      if (l2 != l1)
+	swap = (l2 <= l1);
+      else 
+%%ENDIF
+%%IF(tmkSrcpCol(?))
+      if (c2 != c1)
+	swap = (c2 <= c1);
+      else
+%%ENDIF
+      swap = (n2 < n1);
+      if (swap) {
+	temp = msarr[i];
+	msarr[i] = msarr[i+1];
+	msarr[i+1] = temp;
+	ready = FALSE;
+      }
+%%IF(tmkSrcpFile(?))
+      f1 = f2;
+%%ENDIF
+%%IF(tmkSrcpRow(?))
+      l1 = l2;
+%%ENDIF
+%%IF(tmkSrcpCol(?))
+      c1 = c2;
+%%ENDIF
+      n1 = n2;
+    }
+  }
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   getmsg()
+
+   Get a message template from the ERRMSG file.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void getmsg(
+     int i,			/* IN - error/message code */
+     char mstr[]		/* OUT - the message for that code */
+)
+%%ELSE
+static void getmsg(i, mstr)
+     int i;			/* IN - error/message code */
+     char mstr[];		/* OUT - the message for that code */
+%%ENDIF
+{
+%%IF (lmkMessage(File))
+  int fi;			/* Message number read from file */
+  char line[MSGWIDTH + 1]; /* Line read from file */
+  int lineno = 0;            /* Line nr in message sector */
+  
+  if (!msg.open)
+    sprintf(mstr, "Lister: Could not open error message file (%s)!", msg.name);
+  else {
+    rewind(msg.file);		/* From beginning of file */
+    lineno = msects[currMsect].offs;
+    do {
+      /* Read message line */
+      if(fgets(line, MSGWIDTH, msg.file) == 0 ||
+	 lineno >= msects[currMsect].offs + msects[currMsect].len) {
+	sprintf(mstr, 
+                "Lister: No message for code %d found in error message file(%s)",
+                i, msg.name);
+	return;
+      }
+      sscanf(line, "%d", &fi); /* Get message number */
+    } while(i != fi);
+    
+    /* Remove NEWLINE in the end of line */
+    line[strlen(line)-1] = '\0';
+    
+    /* Copy message to caller */
+    strcpy(mstr, &line[6]);
+  }
+%%ELSE
+  int msgIx;		/* Message array index */
+  char msgId[16];	/* Requested message identity */
+
+  sprintf(msgId, "%-6d", i);
+  for (msgIx = msects[currMsect].offs; ; msgIx++) {
+    if (msg[msgIx][0] == NULL || 
+        msgIx >= msects[currMsect].offs + msects[currMsect].len) {
+      sprintf(mstr, "<< Lister: No message for code %d found >>", i);
+      return;
+    }
+
+    if (strcmp(msg[msgIx][0],msgId)==0) break;
+  }
+    
+  /* Copy message to caller */
+  strcpy(mstr, msg[msgIx][1]);
+%%ENDIF
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   insert()
+
+   Insert the insert string/s into textual message.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void insert(
+     char istr[],		/* IN - insert string/s */
+     char mstr[]		/* INOUT - the textual message */
+)
+%%ELSE
+static void insert(istr, mstr)
+     char istr[];		/* IN - insert string/s */
+     char mstr[];		/* INOUT - the textual message */
+%%ENDIF
+{
+  char *rb;			/* Result buffer */
+  char *s;			/* Insertion string pointer */
+  int rbidx = 0;		/* Result buffer index */
+  int msidx = 0;		/* Textual message (mstr) index */
+  int iptr;
+
+  /* Allocate temporary buffer */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  if ((rb = (char *) malloc((size_t)(istr? strlen(istr): 0) + 
+%%ELSE
+  if ((rb = (char *) malloc((istr? strlen(istr): 0) + 
+%%ENDIF
+      (mstr? strlen(mstr): 0) + 1)) == NULL) {
+    error("Out of memory.");
+    return;
+  }
+
+  /* Copy contents of mstr and istr into rb */
+  while(mstr[msidx] != '\0') {
+    if (mstr[msidx] == ESCAPECHAR && mstr[msidx+1]) {
+      /* escaped character */
+      msidx++;
+      rb[rbidx++] = mstr[msidx++];
+    } else if (mstr[msidx] == '%' && isdigit(mstr[msidx+1])) {
+      /* insertion string */
+      for (msidx++, iptr = 0; isdigit(mstr[msidx]); msidx++)
+        iptr = iptr * 10 + mstr[msidx] - '0';
+
+      if (iptr > 0) {
+        /* find the correct insertion string */
+        for (s = istr; iptr > 1 && *s; iptr--) {
+          for (; *s && *s != %%(lmkPrefix)SEPARATOR; s++);
+          if (*s) s++;
+	}
+
+        /* copy insertion string */
+        for (; *s && *s != %%(lmkPrefix)SEPARATOR; rb[rbidx++] = *(s++));
+      }
+    } else {
+      /* ordinary character */
+      rb[rbidx++] = mstr[msidx++];
+    }
+  }
+  rb[rbidx] = '\0';		/* Null terminate rb[] */
+  strcpy(mstr, rb);		/* Copy result to caller */
+  free(rb);
+}
+
+
+%%IF (lmkListings(*))
+/*----------------------------------------------------------------------
+
+   crehead()
+
+   Create list header string including date and page number padding
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void crehead(void)
+%%ELSE
+static void crehead()
+%%ENDIF
+{
+  char curtim[50];		/* Current time */
+  time_t ticks;			/* Time in seconds */
+  int i;			/* Loop */
+  
+  /* Create first part of header message from ERRMSG info */
+  getmsg(0, header);
+  insert(lihdr, header);	/* Insert the header insert string */
+  strcat(header, " - ");
+  
+  /* Copy top level source file name if there is room */
+  if (strlen(header) + strlen(src[0].fnm) + 2 < pagwdt - %%(lmkPageNumberSize) -2) {
+    strcat(header, src[0].fnm);
+    strcat(header, " - ");
+  }
+  
+  /* Get current time */
+  time(&ticks);
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  { struct tm* t; 
+    t = localtime(&ticks); 
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    strftime(curtim, (size_t)50, "%Y-%m-%d %H:%M", t); 
+%%ELSE
+    strftime(curtim, 50, "%Y-%m-%d %H:%M", t); 
+%%ENDIF
+  }
+  if (strlen(header) + strlen(curtim) < pagwdt - %%(lmkPageNumberSize) - 2)
+    strcat(header, curtim);
+%%ELSE
+  strcpy(curtim, ctime(&ticks));
+  curtim[strlen(curtim)-1] = '\0'; /* Remove NL character */
+  if (strlen(header) + strlen(&curtim[4]) < pagwdt)
+    strcat(header, &curtim[4]);
+%%ENDIF
+
+  /* Pad w.r.t. page width */
+  for (i = (pagwdt - %%(lmkPageNumberSize) - 2) - strlen(header); i > 0; i--)
+    strcat(header, " ");
+
+}
+%%ENDIF
+
+
+
+/*----------------------------------------------------------------------
+
+   prhead()
+
+   Print list header.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prhead(void)
+%%ELSE
+static void prhead()
+%%ENDIF
+{
+  int i;
+
+  fprintf(out.file, "%s `%%%(lmkPageNumberSize)d.", header, pagnum);
+  for (i = HEADERLINES; i>0; i--)
+    fprintf(out.file, "\n");
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   getsrc()
+
+   Get a source line from current source file.  Returns TRUE if end of
+   file.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static LMBOOL getsrc(
+     char *sline		/* INOUT - the source line */
+)
+%%ELSE
+static LMBOOL getsrc(sline)
+     char *sline;		/* INOUT - the source line */
+%%ENDIF
+{
+  static char oline[SRCWIDTH+1];	/* Overflow text line */
+  LMBOOL eof, tmpeof;		/* EOF indicators */
+
+  eof = !src[srclev].open || (fgets(sline, SRCWIDTH, src[srclev].file) == 0);
+
+  /* Remove NEWLINE at the end of source line */
+  if (!eof) {
+    /* Was there a newline last? */
+    if (sline[strlen(sline)-1] != '\n')
+      /* No, so find that or real end of file */
+      do {
+	/* Don't tell about the EOF yet! */
+	tmpeof = (fgets(oline, SRCWIDTH, src[srclev].file) == 0);
+      } while (!tmpeof && oline[strlen(oline)-1] != '\n');
+    else
+      sline[strlen(sline)-1] = '\0';
+  } else
+    sline[0] = '\0';		/* No more input */
+  return(eof);
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   geterr()
+
+   Get errors for a source line
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void geterr(
+%%IF(tmkSrcpFile(?))
+     int fil,			/* IN - source file number */
+%%ENDIF
+     int line,			/* IN - source line number */
+     int *first,		/* OUT - lines first error in msarr[] */
+     int *last,			/* OUT - lines last error in msarr[] */
+     %%(lmkPrefix)Sev *errflg /* OUT - set of severities found in line */
+)
+%%ELSE
+static void geterr(%%IF(tmkSrcpFile(?))fil,%%ENDIF line, first, last, errflg)
+%%IF(tmkSrcpFile(?))
+     int fil;			/* IN - source file number */
+%%ENDIF
+     int line;			/* IN - source line number */
+     int *first;		/* OUT - lines first error in msarr[] */
+     int *last;			/* OUT - lines last error in msarr[] */
+     %%(lmkPrefix)Sev *errflg; /* OUT - set of severities found in line */
+%%ENDIF
+{
+  /* initialize */
+  *errflg = sevNONE; 
+  *first=0;
+  *last = 0;
+  if (count.msgs <= 0)
+    return;
+
+%%IF(tmkSrcpFile(?))
+  /* First skip files (possibly) and lines with lower number */
+  while ((*first < count.msgs) && (msarr[*first].pos.%%(tmkSrcpFile) < fil))
+    (*first)++;
+  /* at correct file ? */
+  if (*first == count.msgs || msarr[*first].pos.%%(tmkSrcpFile) != fil)
+    return;
+%%ENDIF
+
+%%IF(tmkSrcpRow(?))
+  while ((*first < count.msgs) && (msarr[*first].pos.%%(tmkSrcpRow) < line))
+    (*first)++;
+  /* at correct line ? */
+  if (*first == count.msgs || msarr[*first].pos.%%(tmkSrcpRow) != line)
+    return;
+%%ENDIF
+
+  /* Find last error for the line */
+  for (*last = *first; (*last < count.msgs)
+       %%IF(tmkSrcpFile(?)) && (msarr[*last].pos.%%(tmkSrcpFile) == fil) %%ENDIF
+       %%IF(tmkSrcpRow(?)) && (msarr[*last].pos.%%(tmkSrcpRow) == line) %%ENDIF
+       ; (*last)++)
+    *errflg |= msarr[*last].sev; /* this severity was found */
+  (*last)--;
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   skippage()
+
+   Skip to next page on the list device 
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void skippage(void)
+%%ELSE
+static void skippage()
+%%ENDIF
+{
+  pageSkipped = TRUE;
+  if (paglen >= 20) {
+    pagnum = pagnum + 1;
+    if (pagnum > 1)
+      fprintf(out.file,"\f");	/* Form feed */
+    if (inset(liHEAD, lsttyp))
+      prhead();			/* Output page header ... */
+    plnum = HEADERLINES+1;	/* so now at some line on new page */
+  }
+
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   prlin()
+
+   Print line. Handles wrapping and page feeds.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prlin(
+     char str[],		/* IN - the string to print out */
+     LMBOOL cont,		/* IN - TRUE : equally sized line
+				   to follow on the same page */
+     LMBOOL wrdwrp,		/* IN - TRUE : wrap after BLANK or COMMA
+				   if possible. */
+     int indent			/* IN - possible prefix to indent split lines
+				   with */
+)
+%%ELSE
+static void prlin(str, cont, wrdwrp, indent)
+     char str[];		/* IN - the string to print out */
+     LMBOOL cont;		/* IN - TRUE : equally sized line
+				   to follow on the same page */
+     LMBOOL wrdwrp;		/* IN - TRUE : wrap after BLANK or COMMA
+				   if possible. */
+     int indent;		/* IN - possible prefix to indent split lines
+				   with */
+%%ENDIF
+{
+  static char obuf[LSTWIDTH + 1]; /* Output buffer */
+  int nline;			/* Number of sublines */
+  int i, wrap;			/* Index and wrap point */
+  char omarg[OMARG+1];		/* Output margin string */
+  char *indentation;
+  int omargLen;
+  
+  strcpy(omarg, "");		/* Init omarg[] */
+  omargLen = 0;
+  indentation = (char *)malloc(indent+1); /* and indentation */
+  for (i = 0; i < indent; i++) indentation[i] = ' ';
+  indentation[indent] = '\0';
+  indentation[0] = '\0';	/* No indent first line */
+
+  /* Get number of lines needed */
+  nline = (strlen(str)/(pagwdt-OMARG)) + 1;
+  
+  /* Do they fit on this page ? */
+  if (cont)			/* Line to come ? */
+    nline = nline * 2;
+  if (plnum + nline > paglen)	/* End of page? */
+    skippage();			/* Yes - skip to next page */
+
+  /* First line should always start at beginning of line */
+  /* Trailing lines should be OMARG shorter and start at OMARG */
+  i = 0;
+  omargLen = 0;
+  do {
+    if (strlen(&str[i]) > pagwdt-omargLen) {
+      wrap = pagwdt - omargLen;	/* Set default wrap point */
+      if (wrdwrp)		/* Try to find a space before 20 chars*/
+	while(str[i+wrap] != ' ' && str[i+wrap] != ',' && wrap > 20)
+	  wrap--;
+	if (wrap == 20)		/* else use default wrap point */
+	  wrap = pagwdt - omargLen;
+    } else
+      wrap = strlen(&str[i]);
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    strncpy(obuf, &str[i], (size_t)wrap); /* Copy the string */
+%%ELSE
+    strncpy(obuf, &str[i], wrap); /* Copy the string */
+%%ENDIF
+    obuf[wrap] = '\0';		/* Terminate it */
+    fprintf(out.file, "%s%s%s\n", omarg, indentation, obuf);
+    plnum++;			/* Increment number of lines on this page */
+    strcpy(omarg, "        ");	/* Start next line with a margin */
+    if (indent > 0)
+        indentation[0] = ' ';	/* And any possible indent */
+    omargLen = OMARG + indent;
+    i = i + wrap;		/* Move the input string pointer */
+    if (wrdwrp && str[i] != '\0')
+      if (str[i] == ' ') i++;
+  } while (str[i] != '\0');
+
+  free(indentation);
+}
+
+
+/*----------------------------------------------------------------------
+
+  prfnm()
+
+  Print the name of an include file as a kind of header.
+
+  */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prfnm(void)
+%%ELSE
+static void prfnm()
+%%ENDIF
+{
+  %%(lmkPrefix)SkipLines(6);
+  prlin("", FALSE, FALSE, 0);
+  prlin("", FALSE, FALSE, 0);
+  prlin(src[srclev].fnm, FALSE, FALSE, 0);
+  prlin("", FALSE, FALSE, 0);
+  src[srclev].printed = TRUE;
+}  
+
+
+/*----------------------------------------------------------------------
+
+   prsrcl()
+
+   Print a source line including line number
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prsrcl(
+     int sln,			/* IN - Source line number */
+     char slstr[],		/* IN - Source line string */
+     %%(lmkPrefix)Sev errflg 		/* IN - Set of errors on this line */
+)
+%%ELSE
+static void prsrcl(sln, slstr, errflg)
+     int sln;			/* IN - Source line number */
+     char slstr[];		/* IN - Source line string */
+     %%(lmkPrefix)Sev errflg;		/* IN - Set of errors on this line */
+%%ENDIF
+{
+  static char lbuf[SRCWIDTH + OMARG]; /* Line buffer */
+  
+  if (srclev == 0)
+    sprintf(lbuf,"%5d.  %s", sln, slstr);
+  else
+    sprintf(lbuf,"%5d.%1d %s", sln, srclev, slstr);
+  
+  /* Possibly output source if requested */
+  if (inset(errflg, lstsev)) {
+    if (inset(liERR, lsttyp)) {
+      if (!pageSkipped)
+	skippage();			/* Skip list to next page */
+      if (!src[srclev].printed)
+	prfnm();
+      prlin(lbuf, TRUE, FALSE, 0);	/* Error line to follow */
+    }
+  } else if (errflg == (%%(lmkPrefix)Sev) 0) {
+    if (inset(liOK, lsttyp)) {
+      if (!pageSkipped)
+	skippage();			/* Skip list to next page */
+      if (!src[srclev].printed)
+	prfnm();
+      prlin(lbuf, FALSE, FALSE, 0); /* Only line */
+    }
+  }
+  
+}
+
+
+
+/*----------------------------------------------------------------------
+
+  liFormatMsg()
+
+  Gets the message text for a message with a specified index in
+  msarr[]. NOTE the difference to %%(lmkPrefix)Msg()!!
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void liFormatMsg(
+     int i,			/* IN - Message index >= 0 */
+     char msgstr[]		/* OUT - Formatted message */
+)
+%%ELSE
+static void liFormatMsg(i, msgstr)
+     int i;			/* IN - Message index >= 0 */
+     char msgstr[];		/* OUT - Formatted message */
+%%ENDIF
+{
+  char svchar;			/* Severity character */
+  char errstr[MSGWIDTH+1]; /* Room for ERRMSG string */
+  int mdidx;			/* Index for mdarr[] */
+  
+
+%%IF (lmkMessage(File))
+  /* Open message file if not already open */
+  if (!msg.open) {
+    msg.file = fopen(msg.name, "r");
+    msg.open = (msg.file != NULL);
+  }
+%%ENDIF
+
+  if (phase == PH_COLL)
+      phase = PH_RETR;
+
+  if (count.msgs == 0)
+      return;
+
+  /* Check if message index out of range */
+  if (i < 0 || i >= count.msgs) {
+    error("liFormatMsg(): Message index out of range.");
+    strcpy(msgstr, "Message index out of range.");
+    return;
+  }
+
+  /* Create textual message prefix */
+  switch (msarr[i].sev) {
+  case sevOK:  svchar = 'O'; break;
+  case sevINF: svchar = 'I'; break;
+  case sevWAR: svchar = 'W'; break;
+  case sevERR: svchar = 'E'; break;
+  case sevFAT: svchar = 'F'; break;
+  case sevSYS: svchar = 'S'; break;
+  default:     svchar = '?'; break;
+  }
+  
+  /* Find index in mdarr[] */
+  mdidx = msarr[i].ref;		/* 1 indirection */
+  
+  /* Format text */
+  sprintf(msgstr, "%d %c : ", mdarr[mdidx].code, svchar);
+  
+  /* Get textual message from ERRMSG */
+  getmsg(mdarr[mdidx].code, errstr);
+
+  /* Add the message text, and expand it */
+  strcat(msgstr, errstr);
+  if (mdarr[mdidx].insert != NULL)
+    insert(mdarr[mdidx].insert, msgstr);
+}
+
+
+
+
+/*----------------------------------------------------------------------
+
+   prerrm()
+
+   Print column markers and error messages for a source line.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prerrm(
+     int first,			/* IN - First error to mark */
+     int last,			/* IN - Last error to mark */
+     char src[]			/* IN - Source line */
+)
+%%ELSE
+static void prerrm(first, last, src)
+     int first;			/* IN - First error to mark */
+     int last;			/* IN - Last error to mark */
+     char src[];		/* IN - Source line */
+%%ENDIF
+{
+  static char line[LSTWIDTH+1];	/* Output line buffer */
+  char *msg;			/* Message line buffer */
+  int *msgnum;			/* Message number for each message (malloc) */
+  int number;			/* Error number */
+  int msgIndex;			/* Message index */
+  int numberIndex;		/* Message number index */
+  int outIndex;			/* line[] index */
+  int preCol;			/* Previous column marked */
+  int i;			/* Loop */
+  LMBOOL anymsg;		/* TRUE : at least 1 message printed */
+  int indent;
+
+  number = 0;
+  outIndex = 0;
+  preCol = -1;			/* No prev column */
+  numberIndex = 0;
+
+  if (!pageSkipped)
+      skippage();			/* Skip list to next page */
+
+  /* Allocate message number array */
+  msgnum = (int *)malloc(sizeof(int)*(last-first+1));
+
+  strcpy(line, "=====>   ");	/* Init. line[] */
+
+  /* For all error messages */
+  for (msgIndex = first; msgIndex <= last; msgIndex++) {
+    /* First skip over unwanted and internal messages */
+    while ((!inset(msarr[msgIndex].sev, lstsev) ||
+	    msarr[msgIndex].sev > sevSYS) && (msgIndex <= last))
+      msgIndex++;
+    if (msgIndex > last)
+      break;
+
+%%IF (tmkSrcpCol(?))
+    /* Pad with SPACE or TAB to marker column (if it wasn't 0) */
+    if (msarr[msgIndex].pos.%%(tmkSrcpCol) != 0) {
+      while (outIndex < msarr[msgIndex].pos.%%(tmkSrcpCol)-1) {
+	if (outIndex >= SRCWIDTH) {
+	  line[outIndex] = '\0';
+	  break;
+	}
+	if (outIndex != preCol)	/* Don't overwrite a previous marker */
+	  /* If source contained TAB, pad with that instead */
+	  if (src[outIndex] == '\t')
+	    line[OMARG+outIndex] = '\t';
+	  else
+	    line[OMARG+outIndex] = ' ';
+	outIndex = outIndex + 1;		/* Next column */
+      }
+      
+      /* Set a new marker if not at the same column */
+      if (outIndex != preCol) {
+	/* Update error number */
+	if (number < 9)
+	  number++;
+	line[OMARG+outIndex] = (number + '0'); /* Convert to digit */
+	preCol = outIndex;
+      }
+    }
+    /* Remember which marker number this message had */
+    if(msarr[msgIndex].pos.%%(tmkSrcpCol) == 0)
+      msgnum[numberIndex] = 0;
+    else
+      msgnum[numberIndex] = number;
+%%ELSE
+    msgnum[numberIndex] = 0;
+%%ENDIF
+    numberIndex = numberIndex + 1;
+  }
+  line[OMARG+outIndex+1] = '\0'; /* Terminate line[] */
+  
+  /* Print column marker line - if it's not empty */
+  if (number > 0)
+    prlin(line, FALSE, FALSE, 0);
+  
+  /* Print empty line */
+  prlin("", FALSE, FALSE, 0);
+  
+  /* Print the error messages */
+  anymsg = FALSE;		/* To avoid double LF */
+  msgIndex = first;
+  for (i = 0; i < numberIndex; i++) {
+    anymsg = TRUE;
+    if (msgnum[i] == 0)
+      /* Prefix for unnumbered message */
+      strcpy(line, "        ");
+    else
+      /* Prefix for numbered message */
+      sprintf(line, "  *%d*   ", msgnum[i]);
+    indent = strlen(line);	/* Calculate indent for wrapping lines */
+
+    /* Again skip unwanted messages */
+    while ((!inset(msarr[msgIndex].sev, lstsev)
+	    || msarr[msgIndex].sev >= sevPUSH
+	    ) && (msgIndex <= last))
+      msgIndex++;
+    
+    /* Get formatted message text */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    msg = (char *) malloc((size_t)MSGWIDTH +
+%%ELSE
+    msg = (char *) malloc(MSGWIDTH +
+%%ENDIF
+			  (mdarr[msarr[msgIndex].ref].insert?
+			   strlen(mdarr[msarr[msgIndex].ref].insert): 0));
+    if (!msg)
+      error("Out of memory!");
+    else {
+      liFormatMsg(msgIndex, msg);
+
+      /* Merge prefix and textual message */
+      strcat(line, msg);
+    
+      /* Print the message, wrap between words if necessary */
+      prlin(line, FALSE, TRUE, indent);
+      msgIndex = msgIndex + 1;	/* Next message */
+      free(msg);
+    }
+  }
+  
+  /* Print empty line - if any message was printed */
+  if (anymsg)
+    prlin("", FALSE, FALSE, 0);
+
+  free((char *)msgnum);
+}
+
+
+
+/*----------------------------------------------------------------------
+
+  liOpenOutput()
+
+  Open the output file.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void liOpenOutput(
+     char ofnm[]		/* IN - Output file name string */
+)
+%%ELSE
+static void liOpenOutput(ofnm)
+     char ofnm[];		/* IN - Output file name string */
+%%ENDIF
+{
+  /* Open the output file/device, but first check if previously open */
+  if (out.open && strcmp(out.name, "") != 0)
+    fclose(out.file);
+  out.name = ofnm;
+  if (strcmp(out.name, "") == 0) /* Output to standard output */
+    out.file = stderr;
+  else {
+    out.file = fopen(out.name, "w");
+    if (out.file == NULL) {	/* Couldn't open list file */
+      out.file = stderr;	/* So list on stderr instead */
+      out.name = NULL;		/* Remember! */
+    }
+  }
+  out.open = (out.file != NULL);
+}
+
+
+/*----------------------------------------------------------------------
+
+  liOpenSrc()
+
+  Open a source file. Level will be srclev.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void liOpenSrc(
+     char srcfnm[],		/* IN - Source file name string */
+     int fno			/* IN - File number for this file */
+)
+%%ELSE
+static void liOpenSrc(srcfnm, fno)
+     char srcfnm[];		/* IN - Source file name string */
+     int fno;			/* IN - File number for this file */
+%%ENDIF
+{
+  src[srclev].fnm = srcfnm;
+  src[srclev].printed = FALSE;	/* Not shown yet */
+  src[srclev].file = fopen(srcfnm, "r"); /* Open it */
+  src[srclev].open = (src[srclev].file != NULL); /* OK? */
+  src[srclev].fno = fno;	/* Set file number */
+  src[srclev].lno = 0;
+  src[srclev].mno = 0;
+}
+
+
+/*----------------------------------------------------------------------
+
+   liPush()
+
+   Internal function to push to an include file. 
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void liPush(
+     int first,			/* IN - first ... */
+     int last			/* IN - ... and last error msgs */
+)
+%%ELSE
+static void liPush(first, last)
+     int first;			/* IN - first ... */
+     int last;			/* IN - ... and last error msgs */
+%%ENDIF
+{
+  int i;			/* Scratch error number */
+  static char srcline[SRCWIDTH]; /* Source line buffer for skipping */
+
+  /* extend src dynamic storage */
+  if (srclev == srcEntries-1) {
+    srcEntries += INCINCLUDE;
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    src = (Srctyp *) realloc((char *) src, (size_t)sizeof(Srctyp) * srcEntries);
+%%ELSE
+    src = (Srctyp *) realloc((char *) src, sizeof(Srctyp) * srcEntries);
+%%ENDIF
+  }
+
+  /* Find any previous push made from this line */
+  if (src[srclev].mno != 0)
+    first = src[srclev].mno;	/* Start at next message */
+
+  /* Then find next PUSH message */
+  for (i = first; i <= last; i++)
+    if (msarr[i].sev == sevPUSH)
+      break;
+
+  /* Found any more PUSH? */
+  if (i > last) {
+    /* No, so stay in the previous file! */
+    src[srclev].mno = 0;
+    return;
+  }
+
+  /* Remember which one to start at next */
+  src[srclev].mno = i+1;
+
+  /* Index into mdarr! */
+  i = msarr[i].ref;
+
+  /* Push one level */
+  srclev++;
+  
+  /* Open the source file */
+  liOpenSrc(mdarr[i].insert, mdarr[i].code);
+
+  /* Next line read is line 1 */
+  src[srclev].lno = 1;
+
+%%IF(tmkSrcpRow(?))
+  /* Start line at line 0 => line 1 */
+  if (mdarr[i].start.%%(tmkSrcpRow) == 0)
+    mdarr[i].start.%%(tmkSrcpRow) = 1;
+
+  /* If not start at first position, find start position */
+  while (src[srclev].lno < mdarr[i].start.%%(tmkSrcpRow)) {
+    (void) getsrc(srcline);
+    src[srclev].lno++;		/* Increment line number */
+  }
+%%ENDIF
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   liPop()
+
+   Pop the level of source files. If no more return TRUE (for actual
+   end of file).
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static LMBOOL liPop(void) {
+%%ELSE
+static LMBOOL liPop()
+{
+%%ENDIF
+  int lev;			/* Level loop variable */
+
+  if (srclev == 0)
+    return(TRUE);
+  else {
+    if (src[srclev].open) {
+      fclose(src[srclev].file);
+      src[srclev].open = FALSE;
+    }
+
+    /* If the file name was printed then we have shown something from */
+    /* the file so make an empty line and make sure previous file */
+    /* names are shown again when printed */
+    if (src[srclev].printed) {
+      prlin("", FALSE, FALSE, 0);	/* One empty line after shown file */
+      for (lev = srclev; lev >= 0; lev--)
+	  src[lev].printed = FALSE; /* Reset printed names on files below */
+    }
+    srclev--;			/* Pop one level */
+    src[srclev].lno--;		/* Rewind one line */
+    return(FALSE);
+  }
+
+}
+
+
+%%IF (tmkSrcpRow(?))
+/*----------------------------------------------------------------------
+
+   prpack()
+
+   Print a source package (= source line and error messages).
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prpack(
+    LMBOOL *eof			/* OUT - TRUE if eof */
+) {
+%%ELSE
+static void prpack(eof)
+    LMBOOL *eof;			/* OUT - TRUE if eof */
+{
+%%ENDIF
+  int first;			/* First error index for this line */
+  int last;			/* Last error index for this line */
+  int i;			/* Counter index */
+  %%(lmkPrefix)Sev msgflg; /* Set of msg severities found */
+  static char sline[SRCWIDTH+1]; /* Source line buffer */
+ 
+
+  src[srclev].lno++;	/* Increment source line number */
+
+  /* Any messages for this line ? */
+  geterr(%%IF(tmkSrcpFile(?)) src[srclev].fno, %%ENDIF
+	 src[srclev].lno, &first, &last, &msgflg);
+  
+  /* PUSH or POP from this line */
+  if (inset(msgflg, sevPUSH)) {
+    liPush(first, last);
+    geterr(%%IF(tmkSrcpFile(?)) src[srclev].fno, %%ENDIF
+	   src[srclev].lno, &first, &last, &msgflg);
+  }
+  if (inset(msgflg, sevPOP)) {
+    *eof = liPop();
+    return;
+  }
+
+  /* Check for PAGE, LISTON, LISTOFF */
+  if (inset(msgflg, sevOFF))
+    liston = FALSE;
+  if (inset(msgflg, sevON))
+    liston = TRUE;
+  if (inset(msgflg, sevPAGE)) {
+    for (i= first; i <= last; i++)
+      if (msarr[i].sev == sevPAGE)
+	break;
+    %%(lmkPrefix)SkipLines(mdarr[msarr[i].ref].code); /* code contains #lines */
+  }
+    
+
+  /* Now we can remove any possible internal error flags */
+  msgflg &= sevALL;
+  
+  /* Read next source line */
+  *eof = getsrc(sline);
+
+  /* Print source line if requested */
+  if (liston || inset(msgflg, lstsev))
+    prsrcl(src[srclev].lno, sline, msgflg);
+  
+  /* If line contained wanted errors... */
+  if (inset(msgflg, lstsev))
+    /* Print column markers and error messages */
+    prerrm(first, last, sline);
+
+}
+%%ENDIF
+
+
+/*----------------------------------------------------------------------
+
+   prupack()
+
+   Print the end package (the messages for the top level file but
+   without any line number).
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prupack(void)
+%%ELSE
+static void prupack()
+%%ENDIF
+{
+  int first, last;
+  %%(lmkPrefix)Sev errflg;
+
+  geterr(%%IF(tmkSrcpFile(?)) src[0].fno, %%ENDIF 0, &first, &last, &errflg);
+  if (inset(errflg, lstsev)) {
+    prlin("", FALSE, FALSE, 0);	/* Empty line before trail. errors */
+%%IF(lmkListings(Multiple) OR lmkListings(Separate))
+    if (!src[srclev].printed)
+      prfnm();
+%%ENDIF
+    prerrm(first, last, "");
+  }
+}
+
+%%IF(lmkListings(Multiple) OR lmkListings(Separate) OR (lmkListings(Single) AND tmkSrcpFile(?)))
+/*----------------------------------------------------------------------
+
+   prgpack()
+
+   Print the global package (the messages with no source position)
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prgpack(void)
+%%ELSE
+static void prgpack()
+%%ENDIF
+{
+  int first, last;
+  %%(lmkPrefix)Sev errflg;
+
+  geterr(-1, 0, &first, &last, &errflg);
+  if (inset(errflg, lstsev)) {
+    prlin("", FALSE, FALSE, 0);	/* Empty lines before global errors */
+    prlin("", FALSE, FALSE, 0);
+    prerrm(first, last, "");
+  }
+}
+%%ENDIF
+
+
+
+/*----------------------------------------------------------------------
+
+   prepi()
+
+   Print epilogue.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void prepi(void)
+%%ELSE
+static void prepi()
+%%ENDIF
+{
+  static char sbuf[SRCWIDTH+1];	/* String buffer */
+  char nstr[20];		/* Number string */
+  
+  if (!inset(liSUM, lsttyp))
+    return;
+  
+  prlin("", FALSE, FALSE, 0);
+  
+  if ((count.warns + count.errs) == 0) {
+    getmsg(1, sbuf);
+    prlin(sbuf, FALSE, FALSE, 0);
+  } else {
+    if (count.errs != 0) {
+      getmsg(6, sbuf);
+      sprintf(nstr, "%d", count.errs);
+      insert(nstr, sbuf);	/* Insert the number */
+      prlin(sbuf, FALSE, FALSE, 0);
+    } else {
+      getmsg(3, sbuf);
+      prlin(sbuf, FALSE, FALSE, 0);
+    }
+    if (count.warns != 0) {
+      getmsg(5, sbuf);
+      sprintf(nstr, "%d", count.warns);
+      insert(nstr, sbuf);	/* Insert the number */
+      prlin(sbuf, FALSE, FALSE, 0);
+    } else {
+      getmsg(2, sbuf);
+      prlin(sbuf, FALSE, FALSE, 0);
+    }
+  }
+  if (count.infos != 0) {	/* Any informational messages? */
+    getmsg(4, sbuf);
+    sprintf(nstr, "%d", count.infos);
+    insert(nstr, sbuf);		/* Insert the number */
+    prlin(sbuf, FALSE, FALSE, 0);
+  }
+  
+  prlin("", FALSE, FALSE, 0);
+
+}
+
+
+
+/*----------------------------------------------------------------------
+
+   liLog()
+
+   Internal routine for logging a message. Takes care of special format
+   messages like PUSH and POP messages.
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void liLog(
+     %%(tmkSrcpName) *srcp,	/* IN - source position for message */
+     %%(tmkSrcpName) *start,	/* IN - srcp for possible PUSH message */
+     int ecode,			/* IN - error code to log */
+     %%(lmkPrefix)Sev sev,	/* IN - severity to log */
+     char *istrs		/* IN - concatenated insert strings */
+) {
+%%ELSE
+static void liLog(srcp, start, ecode, sev, istrs)
+     %%(tmkSrcpName) *srcp;	/* IN - source position for message */
+     %%(tmkSrcpName) *start;	/* IN - srcp for possible PUSH message */
+     int ecode;			/* IN - error code to log */
+     %%(lmkPrefix)Sev sev;	/* IN - severity to log */
+     char *istrs;		/* IN - concatenated insert strings */
+{
+%%ENDIF
+%%IF (lmkMessagelimit(?))
+  /* Room for more messages ? */
+  if (count.msgs > MAXMSG)
+    return;
+%%ENDIF
+
+  /* extend mdarr & msarr dynamic storage */
+  if (count.msgs == marrEntries) {
+    marrEntries += INCMSG;
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    mdarr = (msgRec *) realloc((char *) mdarr, (size_t)sizeof(msgRec) * marrEntries);
+%%ELSE
+    mdarr = (msgRec *) realloc((char *) mdarr, sizeof(msgRec) * marrEntries);
+%%ENDIF
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    msarr = (sortRec *) realloc((char *) msarr, (size_t)sizeof(sortRec) * marrEntries);
+%%ELSE
+    msarr = (sortRec *) realloc((char *) msarr, sizeof(sortRec) * marrEntries);
+%%ENDIF
+  }
+  
+  /* Store the message data */
+  mdarr[count.msgs].code = ecode; /* store error code */
+
+  /* If a start-srcp was given, store it */
+  if (start != NULL)
+    mdarr[count.msgs].start = *start;
+
+  /* Allocate dynamic string storage */
+  if (istrs != NULL) {
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    mdarr[count.msgs].insert = (char *) malloc((size_t)strlen(istrs)+1);
+%%ELSE
+    mdarr[count.msgs].insert = (char *) malloc(strlen(istrs)+1);
+%%ENDIF
+    if (!mdarr[count.msgs].insert) {
+      error("Out of memory!");
+      mdarr[count.msgs].insert = %%(lmkPrefix)NoIns; 
+    } else
+      strcpy(mdarr[count.msgs].insert, istrs); /* Store insert string/s */
+  } else
+    mdarr[count.msgs].insert = NULL;
+  
+  /* Update sort record */
+  if (srcp != NULL)
+    msarr[count.msgs].pos = *srcp; /* Store source position */
+  else
+    msarr[count.msgs].pos = nulpos; /* Use zero source position */
+  msarr[count.msgs].ref = count.msgs; /* Reference to mdarr[] */
+  msarr[count.msgs].sev = sev;	/* Store severity code */
+  
+  count.msgs++;
+  
+%%IF (lmkMessagelimit(?))
+  /* Close error collection ? */
+  if (count.msgs == MAXMSG)
+    liLog(&nulpos, NULL, 7, sevWAR, 0);
+%%ENDIF
+}
+
+
+%%IF (lmkListings(*))
+/*----------------------------------------------------------------------
+
+  liInit()
+
+  Initialise for listing production.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+static void liInit(
+     %%(lmkPrefix)Typ typ,	/* IN - Listing type */
+     %%(lmkPrefix)Sev sevs,	/* IN - Severities to include */
+     int lins,			/* IN - Lines per page */
+     int cols			/* IN - Columns per line */
+)
+%%ELSE
+static void liInit(typ, sevs, lins, cols)
+     %%(lmkPrefix)Typ typ;	/* IN - Listing type */
+     %%(lmkPrefix)Sev sevs;  /* IN - Severities to include */
+     int lins;			/* IN - Lines per page */
+     int cols;			/* IN - Columns per line */
+%%ENDIF
+{
+  /* Init values */
+  lsttyp = typ;			/* Listing type */
+  lstsev = sevs;		/* and severities */
+  paglen = lins;		/* Lines per page */
+  if (cols == 0)		/* and columns */
+    pagwdt = 80;
+  else if (cols < 60)
+    pagwdt = 60;
+  else if (cols > LSTWIDTH)
+    pagwdt = LSTWIDTH;
+  else
+    pagwdt = cols;
+  pagnum = 0;			/* Current page number = 0 */
+}
+
+%%ENDIF
+
+
+/*======================================================================
+
+   %%(lmkPrefix)LiInit()
+
+   Init the Lister module
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiInit(
+     char header[],		/* IN - String to be inserted in header */
+     char srcf[],		/* IN - Name of top level source file */
+%%IF (lmkMessage(File))
+     %%(lmkPrefix)Messages msect,	/* IN - Message sector */
+     char msgf[]		/* IN - Name of message file */
+%%ELSE
+     %%(lmkPrefix)Messages msect	/* IN - Message sector */
+%%ENDIF
+) {
+%%ELSE
+%%IF (lmkMessage(File))
+void %%(lmkPrefix)LiInit(header, srcf, msect, msgf)
+     char header[];		/* IN - String to be inserted in header */
+     char srcf[];		/* IN - Name of top level source file */
+     %%(lmkPrefix)Messages msect;	/* IN - Message sector */
+     char msgf[];		/* IN - Name of message file */
+%%ELSE
+void %%(lmkPrefix)LiInit(header, srcf, msect)
+     char header[];		/* IN - String to be inserted in header */
+     char srcf[];		/* IN - Name of top level source file */
+     %%(lmkPrefix)Messages msect;	/* IN - Message sector */
+%%ENDIF
+{
+%%ENDIF
+  /* Create dynamic storage structures */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  src = (Srctyp *) malloc((size_t)sizeof(Srctyp) * INITINCLUDE);
+%%ELSE
+  src = (Srctyp *) malloc(sizeof(Srctyp) * INITINCLUDE);
+%%ENDIF
+  srcEntries = INITINCLUDE;
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  mdarr = (msgRec *) malloc((size_t)sizeof(msgRec) * INITMSG);
+%%ELSE
+  mdarr = (msgRec *) malloc(sizeof(msgRec) * INITMSG);
+%%ENDIF
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  msarr = (sortRec *) malloc((size_t)sizeof(sortRec) * INITMSG);
+%%ELSE
+  msarr = (sortRec *) malloc(sizeof(sortRec) * INITMSG);
+%%ENDIF
+  marrEntries = INITMSG;
+  
+  /* Save name of top level source and message file */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  src[0].fnm = (char *) malloc((size_t)strlen(srcf)+1);
+%%ELSE
+  src[0].fnm = (char *) malloc(strlen(srcf)+1);
+%%ENDIF
+  strcpy(src[0].fnm, srcf);
+  currMsect = msect;
+%%IF (lmkMessage(File))
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  msg.name = (char *) malloc((size_t)strlen(msgf)+1);
+%%ELSE
+  msg.name = (char *) malloc(strlen(msgf)+1);
+%%ENDIF
+  strcpy(msg.name, msgf);
+%%ENDIF
+  
+  /* Save header insert string */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  lihdr = (char *) malloc((size_t)strlen(header)+1);
+%%ELSE
+  lihdr = (char *) malloc(strlen(header)+1);
+%%ENDIF
+  strcpy(lihdr, header);
+  
+  /* Init static variables etc. */
+  count.msgs = 0;		/* number of messages so far is 0 */
+  count.errs = 0;		/* number of errors so far is 0 */
+  count.warns = 0;		/* number of warnings so far is 0 */
+  count.infos = 0;		/* number of infos so far is 0 */
+  phase = PH_COLL;		/* Message collection phase */
+  maxsev = sevOK;		/* Highest severity is OK!! */
+  maxlocsev = sevOK;		/* Highest local severity is OK!! */
+%%IF(tmkSrcpFile(?))
+  /* Initialize file field of nulpos */
+  nulpos.%%(tmkSrcpFile) = -1;
+%%ENDIF
+
+}
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)Log()
+
+   Log an error message, insert strings separatated using %(lmkPrefix)separator
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)Log(
+    %%(tmkSrcpName) *pos,		/* IN - Source position */
+    int ecode,				/* IN - The error code */
+    %%(lmkPrefix)Sev sev,		/* IN - Severity code */
+    char istrs[]			/* IN - Insert strings */
+) {
+%%ELSE
+void %%(lmkPrefix)Log(pos, ecode, sev, istrs)
+    %%(tmkSrcpName) *pos;		/* IN - Source position */
+    int ecode;				/* IN - The error code */
+    %%(lmkPrefix)Sev sev;		/* IN - Severity code */
+    char istrs[];			/* IN - Insert strings */
+{
+%%ENDIF
+    %%(tmkSrcpName) srcpos, *srcp = &srcpos;	/* Source position copy */
+    
+  /* Check phase */
+  if (phase != PH_COLL) {
+    error("%%(lmkPrefix)Log(): Phase error.");
+    return;
+  }
+  
+%%IF (tmkSrcpCol(?) OR tmkSrcpRow(?))
+  if (pos != NULL) {
+    /* check source position */
+    srcpos = *pos;
+%%IF (tmkSrcpCol(?))
+    if (srcp->%%(tmkSrcpCol) < 0) {
+      error("%%(lmkPrefix)Log(): Source position column < 0.");
+      srcp->%%(tmkSrcpCol) = 0;
+    }
+%%ENDIF
+%%IF (tmkSrcpRow(?))
+    if (srcp->%%(tmkSrcpRow) < 0) {
+      error("%%(lmkPrefix)Log(): Source position line < 0.");
+      srcp->%%(tmkSrcpRow) = 0;
+    }
+%%IF (tmkSrcpCol(?))
+    if (srcp->%%(tmkSrcpRow) == 0) {
+      srcp->%%(tmkSrcpCol) = 0;
+    }
+%%ENDIF
+%%ENDIF
+  } else
+    srcp = NULL;
+
+%%ENDIF
+  /* Update highest severity unless it was an internal severity code */
+  if(sev > maxsev && sev <= sevSYS)
+    maxsev = sev;
+  if(sev > maxlocsev && sev <= sevSYS)
+    maxlocsev = sev;
+  
+  /* Update warning and error counters */
+  switch (sev) {
+  case sevOK:  break;
+  case sevINF: count.infos++; break;
+  case sevWAR: count.warns++; break;
+  case sevERR:
+  case sevFAT:
+  case sevSYS: count.errs++; break;
+  }
+  
+  /* Log the message */
+  liLog(srcp, NULL, ecode, sev, istrs);
+
+}
+
+
+
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+/*======================================================================
+
+   %%(lmkPrefix)Logv()
+
+   Log an error message, insert strings using va_arg
+
+ */
+void %%(lmkPrefix)Logv(
+    %%(tmkSrcpName) *pos,		/* IN - Source position */
+    int ecode,			/* IN - The error code */
+    %%(lmkPrefix)Sev sev,	/* IN - Severity code */
+    ...
+) {
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  char *errorstring = (char *)malloc((size_t)256);
+%%ELSE
+  char *errorstring = (char *)malloc(256);
+%%ENDIF
+  int curlen = 256;
+  char *arg, *tmp;
+  int len = 0;
+  va_list ap;
+
+  /* Check errorstring */
+  if (!errorstring) {
+    error("Out of memory!");
+    return;
+  }
+
+  /* Check phase */
+  if (phase != PH_COLL) {
+    error("%%(lmkPrefix)Log(): Phase error.");
+    return;
+  }
+
+  va_start(ap, sev);
+  errorstring[0] = '\0';
+  while ((arg = va_arg(ap, char *))) {
+    if (len + strlen(arg) >= curlen) {
+      tmp = errorstring;
+      curlen += 256;
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+      errorstring = (char *)malloc((size_t)curlen);
+%%ELSE
+      errorstring = (char *)malloc(curlen);
+%%ENDIF
+      /* Check errorstring */
+      if (!errorstring) {
+	error("Out of memory!");
+	return;
+      }
+      strcpy(errorstring, tmp);
+      free(tmp);
+    }
+    strcat(errorstring, arg);
+    len = strlen(errorstring);
+    errorstring[len] = %%(lmkPrefix)SEPARATOR;
+    errorstring[len+1] = '\0';
+      
+  }
+
+  va_end(ap);
+
+  %%(lmkPrefix)Log(pos, ecode, sev, errorstring);
+  free(errorstring);
+}
+%%ENDIF
+
+
+/*======================================================================
+
+   %%(lmkPrefix)LiOff()
+
+   Turn listing off at source position.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiOff(
+    %%(tmkSrcpName) *srcp		/* IN - The first source position to exclude */
+) {
+%%ELSE
+void %%(lmkPrefix)LiOff(srcp)
+    %%(tmkSrcpName) *srcp;		/* IN - The first source position to exclude */
+{
+%%ENDIF
+    liLog(srcp, NULL, 0, sevOFF, NULL);
+}
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)LiOn()
+
+   Turn listing on again (if it was off).
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiOn(
+    %%(tmkSrcpName) *srcp		/* IN - The first source position to include */
+) {
+%%ELSE
+void %%(lmkPrefix)LiOn(srcp)
+    %%(tmkSrcpName) *srcp;		/* IN - The first source position to include */
+{
+%%ENDIF
+    liLog(srcp, NULL, 0, sevON, "");
+}
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)LiPage()
+
+   Skip to next page at source position. If 'lins' <> 0 then a form feed is
+   only inserted if less that 'lins' lines left on the page.
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiPage(
+     %%(tmkSrcpName) *srcp,	/* IN - Source position */
+     int lins			/* IN - Number of lines */
+) {
+%%ELSE
+void %%(lmkPrefix)LiPage(srcp, lins)
+     %%(tmkSrcpName) *srcp;	/* IN - Source position */
+     int lins;			/* IN - Number of lines */
+{
+%%ENDIF
+    liLog(srcp, NULL, lins, sevPAGE, "");
+}
+
+
+%%IF(lmkInclude(On))
+/*======================================================================
+
+   %%(lmkPrefix)LiEnter()
+
+   Push to an include file. Use error code to store file number,
+   severity to indicate a PUSH.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiEnter(
+    %%(tmkSrcpName) *srcp,		/* IN - Where to include the file */
+    %%(tmkSrcpName) *start,	/* IN - First position to include from file */
+    char fnm[]			/* IN - File name of file to include */
+) {
+%%ELSE
+void %%(lmkPrefix)LiEnter(srcp, start, fnm)
+    %%(tmkSrcpName) *srcp;		/* IN - Where to include the file */
+    %%(tmkSrcpName) *start;	/* IN - First position to include from file */
+    char fnm[];			/* IN - File name of file to include */
+{
+%%ENDIF
+    liLog(srcp, start, start->%%(tmkSrcpFile), sevPUSH, fnm);
+}
+
+
+/*======================================================================
+
+   %%(lmkPrefix)LiExit()
+
+   Prematurely pop from an include file at specified source position.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiExit(
+    %%(tmkSrcpName) *srcp		/* IN - Where to return from an include file */
+) {
+%%ELSE
+void %%(lmkPrefix)LiExit(srcp)
+    %%(tmkSrcpName) *srcp;		/* IN - Where to return from an include file */
+{
+%%ENDIF
+    liLog(srcp, NULL, 0, sevPOP, "");
+}
+%%ENDIF
+
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)Severity()
+
+   Return highest severity logged so far.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+%%(lmkPrefix)Sev %%(lmkPrefix)Severity(
+) {
+%%ELSE
+%%(lmkPrefix)Sev %%(lmkPrefix)Severity()
+{
+%%ENDIF
+  return (maxsev);
+}
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)LocSeverity()
+
+   Return highest local severity logged so far.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+%%(lmkPrefix)Sev %%(lmkPrefix)LocSeverity(
+) {
+%%ELSE
+%%(lmkPrefix)Sev %%(lmkPrefix)LocSeverity()
+{
+%%ENDIF
+  return (maxlocsev);
+}
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)ResLocSeverity()
+
+   Reset local severity.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)ResLocSeverity(void) {
+%%ELSE
+void %%(lmkPrefix)ResLocSeverity()
+{
+%%ENDIF
+  maxlocsev = sevOK;
+}
+
+
+
+/*======================================================================
+
+   %%(lmkPrefix)Msg()
+
+   Get a message with the specified number. Returns 0 if not found.
+   This is the public version of liFormatMsg(), but uses numbers of
+   actual user defined messages instead of indices in m?arr[].
+
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+int %%(lmkPrefix)Msg(
+     int msgno,			/* IN - Message number >= 1 */
+     %%(tmkSrcpName) *srcp,	/* OUT - Source position */
+     char msgstr[]		/* OUT - Formatted message */
+)
+%%ELSE
+int %%(lmkPrefix)Msg(msgno, srcp, msgstr)
+     int msgno;			/* IN - Message number >= 1 */
+     %%(tmkSrcpName) *srcp;	/* OUT - Source position */
+     char msgstr[];		/* OUT - Formatted message */
+%%ENDIF
+{
+  int number;			/* Counting user messages */
+  int index;			/* Index in msarr[] */
+
+  /* Check phase */
+  switch (phase) {
+  case PH_NONE:
+      error("%%(lmkPrefix)Msg(): Phase error.");
+      return(0);
+  case PH_COLL:
+      /* Sort messages, let liFormatMsg() alter phase and open msg file */
+      sortmsg();
+      liFormatMsg(0, msgstr);
+      break;
+  case PH_RETR:
+      break;
+  }
+
+  /* Find message index from number */
+  number = 1;
+  for (index = 0; index < count.msgs; index++) {
+      if (msarr[index].sev <= sevSYS)
+	  /* A user message */
+	  if (number++ == msgno) {	/* Found the requested message! */
+	      /* Return source position */
+	      *srcp = msarr[index].pos;
+	      /* Format the message text into the user area */
+	      liFormatMsg(index, msgstr);
+	      return(msgno);
+	  }
+  }
+
+  return(0);			/* Didn't find it! */
+}
+
+
+%%IF(lmkListings(Single))
+/*======================================================================
+
+   %%(lmkPrefix)List()
+
+   Create listing file.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)List(
+     char ofnm[],		/* IN - Output file name string */
+     int lins,			/* IN - Lines per page */
+     int cols,			/* IN - Columns per line */
+     %%(lmkPrefix)Typ typ,	/* IN - Listing type */
+     %%(lmkPrefix)Sev sevs	/* IN - Severities to include */
+)
+%%ELSE
+void %%(lmkPrefix)List(ofnm, lins, cols, typ, sevs)
+     char ofnm[];		/* IN - Output file name string */
+     int lins;			/* IN - Lines per page */
+     int cols;			/* IN - Columns per line */
+     %%(lmkPrefix)Typ typ;	/* IN - Listing type */
+     %%(lmkPrefix)Sev sevs;	/* IN - Severities to include */
+%%ENDIF
+{
+  char mess[MSGWIDTH+1];
+  LMBOOL seof;			/* TRUE - source end of file reached */
+  
+  /* First check phase */
+  if (phase == PH_NONE) {
+    error("%%(lmkPrefix)List(): Phase error.");
+    return;
+  }
+  
+  liInit(typ, sevs, lins, cols);
+  liOpenOutput(ofnm);
+
+  /* Open the source file */
+  srclev = 0;
+  liOpenSrc(src[0].fnm, 0);
+  
+  /* Sort messages, let liFormatMsg() alter phase and open msg file */
+  sortmsg();
+  liFormatMsg(0, mess);
+  
+  crehead();			/* Create list header string */
+  skippage();			/* Skip list to next page */
+  
+%%IF (tmkSrcpRow(?))
+  /* Until end of source file */
+  seof = !src[0].open;
+  while (!seof) {
+    /* Print next package, i.e. source line + error messages */
+    prpack(&seof);
+    if (seof)			/* End of this file? */
+      seof = liPop();		/* Try surrounding ... */
+  }
+%%ENDIF
+  prupack();			/* Print unnumbered messages */
+  
+%%IF (tmkSrcpFile(?))
+  /* Output the global messages */
+  prgpack();
+%%ENDIF
+
+  /* Print epilogue */
+  prepi();
+  
+  /* Close source file */
+  if (src[0].open)
+    fclose(src[0].file);
+}
+%%ENDIF
+
+
+%%IF(lmkListings(Multiple))
+/*======================================================================
+
+   %%(lmkPrefix)Listm()
+
+   Create listing of multiple files. A sequential range of filenumbers
+   is allocated to all the files to be listed. The filenames are sent
+   in the array of string pointers (fnms) which must be ordered in the
+   same order. Each file is listed in one list file with a page break
+   between them.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)Listm(
+     char ofnm[],		/* IN - Output file name string */
+     int lins,			/* IN - Lines per page */
+     int cols,			/* IN - Columns per line */
+     %%(lmkPrefix)Typ typ,	/* IN - Listing type */
+     %%(lmkPrefix)Sev sevs,	/* IN - Severities to include */
+     char *fnms[]		/* IN - Names of the files to list */
+) {
+%%ELSE
+void %%(lmkPrefix)Listm(ofnm, lins, cols, typ, sevs, fnms)
+     char ofnm[];		/* IN - Output file name string */
+     int lins;			/* IN - Lines per page */
+     int cols;			/* IN - Columns per line */
+     %%(lmkPrefix)Typ typ;	/* IN - Listing type */
+     %%(lmkPrefix)Sev sevs;	/* IN - Severities to include */
+     char *fnms[];		/* IN - Names of the files to list */
+{
+%%ENDIF
+  char mess[MSGWIDTH+1];
+  LMBOOL seof;			/* TRUE if end of source file reached */
+  int fno;
+  
+  /* First check phase */
+  if (phase == PH_NONE) {
+    error("%%(lmkPrefix)Listm(): Phase error.");
+    return;
+  }
+  
+  liInit(typ, sevs, lins, cols);
+  liOpenOutput(ofnm);
+
+  /* Sort messages, let liFormatMsg() alter phase and open msg file */
+  sortmsg();
+  liFormatMsg(0, mess);
+  
+  for (fno = 0; fnms[fno] != NULL; fno++) {
+    /* Make this main file name */
+    free(src[0].fnm);
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+    src[0].fnm = (char *) malloc((size_t)strlen(fnms[fno])+1);
+%%ELSE
+    src[0].fnm = (char *) malloc(strlen(fnms[fno])+1);
+%%ENDIF
+    if (!src[0].fnm) {
+      error("Out of memory!");
+      return;
+    }
+    strcpy(src[0].fnm, fnms[fno]);
+    
+    /* Open the source file */
+    srclev = 0;
+    liOpenSrc(src[0].fnm, fno);
+    
+    crehead();			/* Create list header string */
+    pageSkipped = FALSE;
+    
+%%IF (tmkSrcpRow(?))
+    /* Until source end of file */
+    seof = !src[0].open;
+    while (!seof) {
+      /* Print next package, i.e. source line + error messages */
+      prpack(&seof);
+      if (seof)
+	seof = liPop();
+    } 
+%%ENDIF
+    prupack();			/* Print unnumbered messages for this file */
+    
+    /* Close source file */
+    if (src[0].open)
+      fclose(src[0].file);
+  }
+  /* Output the global messages */
+  prgpack();
+
+  /* Print epilogue */
+  prepi();
+  
+}
+%%ENDIF
+
+
+%%IF(lmkListings(Separate))
+/*======================================================================
+
+   %%(lmkPrefix)Listsi()
+
+   Perform initializations for a separate listing.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)Listsi(
+     char ofnm[],		/* IN - Output file name string */
+     int lins,			/* IN - Lines per page */
+     int cols,			/* IN - Columns per line */
+     %%(lmkPrefix)Typ typ 	/* IN - Listing type */
+) {
+%%ELSE
+void %%(lmkPrefix)Listsi(ofnm, lins, cols, typ)
+     char ofnm[];		/* IN - Output file name string */
+     int lins;			/* IN - Lines per page */
+     int cols;			/* IN - Columns per line */
+     %%(lmkPrefix)Typ typ;	/* IN - Listing type */
+{
+%%ENDIF
+  char mess[MSGWIDTH+1];
+  
+  /* First check phase */
+  if (phase == PH_NONE) {
+    error("%%(lmkPrefix)Listm(): Phase error.");
+    return;
+  }
+  
+  liInit(typ, sevOK, lins, cols);
+  liOpenOutput(ofnm);
+
+  /* Sort messages, let liFormatMsg() alter phase and open msg file */
+  sortmsg();
+  liFormatMsg(0, mess);
+}
+
+  
+/*======================================================================
+
+   %%(lmkPrefix)Lists()
+
+   Print messages for a specified file in a separate listing.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)Lists(
+     %%(lmkPrefix)Sev sevs,	/* IN - Severities to include */
+     int fno,			/* IN - Number of the file to list */
+     char *fnm			/* IN - Name of the file to list */
+) {
+%%ELSE
+void %%(lmkPrefix)Lists(sevs, fno, fnm)
+     %%(lmkPrefix)Sev sevs;	/* IN - Severities to include */
+     int fno;			/* IN - Number of the file to list */
+     char *fnm;			/* IN - Name of the file to list */
+{
+%%ENDIF
+  LMBOOL seof;			/* TRUE if end of source file reached */
+
+  /* First check phase */
+  if (phase == PH_NONE) {
+    error("%%(lmkPrefix)Lists(): Phase error.");
+    return;
+  }
+  
+  /* Set severity */
+  lstsev = sevs;
+
+  /* Make this main file name */
+  free(src[0].fnm);
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  src[0].fnm = (char *) malloc((size_t)strlen(fnm)+1);
+%%ELSE
+  src[0].fnm = (char *) malloc(strlen(fnm)+1);
+%%ENDIF
+  if (!src[0].fnm) {
+    error("Out of memory!");
+    return;
+  }
+  strcpy(src[0].fnm, fnm);
+    
+  /* Open the source file */
+  srclev = 0;
+  liOpenSrc(src[0].fnm, fno);
+   
+  crehead();			/* Create list header string */
+  skippage();			/* Skip list to next page */
+    
+%%IF (tmkSrcpRow(?))
+  /* Until source end of file */
+  seof = !src[0].open;
+  while (!seof) {
+    /* Print next package, i.e. source line + error messages */
+    prpack(&seof);
+    if (seof)
+      seof = liPop();
+  } 
+%%ENDIF
+  prupack();			/* Print unnumbered messages for this file */
+    
+  /* Close source file */
+  if (src[0].open)
+    fclose(src[0].file);
+
+}
+
+/*======================================================================
+
+   %%(lmkPrefix)Listse()
+
+   Print global messages and epilogue in a separate listing.
+
+ */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)Listse(
+     %%(lmkPrefix)Sev sevs	/* IN - Severities to include */
+) {
+%%ELSE
+void %%(lmkPrefix)Listse(sevs)
+     %%(lmkPrefix)Sev sevs;	/* IN - Severities to include */
+{
+%%ENDIF
+  /* First check phase */
+  if (phase == PH_NONE) {
+    error("%%(lmkPrefix)Listse(): Phase error.");
+    return;
+  }
+  
+  /* Output the global messages */
+  lstsev = sevs;
+  prgpack();
+
+  /* Print epilogue */
+  prepi();
+  
+}
+%%ENDIF
+
+
+/*======================================================================
+
+  %%(lmkPrefix)LiPrint()
+
+  Print one supplimentary line in the output file.
+
+  */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiPrint(
+    char str[]			/* IN - the string to print */
+) {
+%%ELSE
+void %%(lmkPrefix)LiPrint(str)
+    char str[];			/* IN - the string to print */
+{
+%%ENDIF
+  if (phase != PH_RETR)
+    error("%%(lmkPrefix)Print(): Phase error.");
+  else
+    prlin(str, FALSE, FALSE, 0);
+}
+
+
+
+/*======================================================================
+  %%(lmkPrefix)SkipLines()
+
+  Skip to a new page if not enough number of lines left on the page.
+
+  */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)SkipLines(
+     int lins			/* IN - minimum number of lines left */
+) {
+%%ELSE
+void %%(lmkPrefix)SkipLines(lins)
+     int lins;			/* IN - minimum number of lines left */
+{
+%%ENDIF
+  if (phase != PH_RETR)
+    error("%%(lmkPrefix)SkipLines(): Phase error.");
+  else if ((lins == 0) || (plnum + lins > paglen+HEADERLINES))
+    skippage();
+}
+
+
+
+/*======================================================================
+  %%(lmkPrefix)LiTerminate()
+
+  Clean up after one session.
+
+  */
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+void %%(lmkPrefix)LiTerminate(
+) {
+%%ELSE
+void %%(lmkPrefix)LiTerminate()
+{
+%%ENDIF
+  int i;
+  
+  /* Free all allocated string areas */
+  if (src[0].fnm != NULL)
+    free(src[0].fnm);
+  free(src);
+%%IF (lmkMessage(File))
+  if (msg.name != NULL)
+    free(msg.name);
+%%ENDIF
+  
+  for (i=0; i < count.msgs; i++)
+    if (mdarr[i].insert != %%(lmkPrefix)NoIns && mdarr[i].insert != NULL)
+      free(mdarr[i].insert);
+  free(mdarr);
+  free(msarr);
+
+  free(lihdr);
+  
+  /* Close output file if it wasn't the terminal */
+  if (out.open && out.name && strcmp(out.name, "") != 0)
+    fclose(out.file);	
+  out.open = FALSE;
+  
+  phase = PH_NONE;
+}
+
+%%IF(tmkForce(0))
+%%  PROCESS(,"%%(lmkPrefix)List.h.tmp")
+%%ELSE
+%%  PROCESS(,"%%(lmkPrefix)List.h")
+%%ENDIF
+#ifndef _%%(lmkPrefix)List_H_
+#define _%%(lmkPrefix)List_H_
+/*----------------------------------------------------------------------*\
+
+	%%(lmkPrefix)List.h
+
+	Header file for ListerMaker generated error message and listing
+	handler
+
+\*----------------------------------------------------------------------*/
+
+#include "%%(tmkPrefix)Common.h"
+
+%%INCLUDE(lmExports)
+#endif
+%%IF (lmkMessage(File))
+%%PROCESS(,"%%(lmkPrefix).msg")
+%%LOOP(i <= lmkMsgId[0])
+%%(lmkMsgId[i])%%(lmkMsg[i])
+%%ENDLOOP(i)
+%%ENDIF
+
+%%IF({"SunOS", "HP", "Apollo", "VMS"} (%%(currentOs)))
+%%PROCESS(, "/dev/null")
+%%ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
+%%PROCESS(, "NUL")
+%%ELSE
+	Illegal OS option
+%%ENDIF
+%%IF(tmkForce(0))
+%%--
+%%-- Check generated files, discard them or replace the old files if
+%%-- new files are different
+%%--
+%%  ESET files ("%%(lmkPrefix)List.h", "%%(lmkPrefix)List.%%(targetLanguageExtension)")
+%%  LOOP(file, files)
+List.imp: %%(lmkOs)
+%%      IF({"SunOS", "HP", "Apollo", "VMS"} (%%(currentOs)))
+%%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
+%%	        IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
+%%	            EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
+%%	        ENDIF
+%%          ELSE
+%%	        IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
+%%	            EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%	        ENDIF
+%%          ENDIF
+%%      ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
+%%	    IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
+%%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%          ENDIF
+%%      ELSE
+	Illegal OS option
+%%      ENDIF
+%%  ENDLOOP(file)
+%%ENDIF

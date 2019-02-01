@@ -1,0 +1,32 @@
+----------------------------------------------------------------------------
+-- code.tmk 			Date: 1996-08-28/toolmake
+-- 
+-- Common ANSI-C definitions for all ToolMaker tools.
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1996-08-28 10:58:52/toolmake v2,r1,c5
+----------------------------------------------------------------------------
+
+%%OPTIONS
+--  OS 'SunOS';
+    Prefix 'code';
+
+
+%%IMPORT
+typedef int TmNatural;
+typedef int TmCode;
+%%END
+
+%%SRCP Name TmSrcp;
+    Row line %% TmNatural %1 %%;
+    Column col %% TmNatural %1 %%;
+    File file %% TmNatural %1 %%;
+
+%%TOKEN Name TmToken;
+    Code Code %% TmCode %1 %%;
+    Srcp srcp %% TmSrcp %1 %%;
+    Attributes
+	floatValue %% double %1 %%,
+    	stringValue %% char* %1 %%;
+

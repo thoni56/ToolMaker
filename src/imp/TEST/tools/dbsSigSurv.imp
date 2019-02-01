@@ -1,0 +1,767 @@
+DOCUMENT DBSSURVEY;
+SIGNALSURVEY;
+USE BLOCK DBS;
+%%SET dir()
+%%IF(sentSigs(CONTFS         ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(CONTFS         ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+CONTFS         ,%%(dir)       ,  666/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(CONTINUEC      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(CONTINUEC      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+CONTINUEC      ,%%(dir)       ,  707/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCOMDELKEY   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCOMDELKEY   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCOMDELKEY   ,%%(dir)       ,  636/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCOMINSKEY   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCOMINSKEY   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCOMINSKEY   ,%%(dir)       ,  635/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCOMSCH      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCOMSCH      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCOMSCH      ,%%(dir)       ,  637/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSCH      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSCH      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSCH      ,%%(dir)       ,  632/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWINSSCH      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWINSSCH      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWINSSCH      ,%%(dir)       ,  633/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWVERSCH      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWVERSCH      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWVERSCH      ,%%(dir)       ,  634/15514 - APZ211                ;
+%%ENDIF
+ 
+%%SET dir()
+%%IF(sentSigs(CONTFSEND      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(CONTFSEND      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+CONTFSEND      ,%%(dir)       ,  667/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DBTESTSTARTR   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DBTESTSTARTR   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DBTESTSTARTR   ,%%(dir)       ,    2/15514 - CNL3012001            ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHINITFIELD   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHINITFIELD   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHINITFIELD   ,%%(dir)       ,  623/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHINITFK      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHINITFK      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHINITFK      ,%%(dir)       ,  625/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHINITTABLE   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHINITTABLE   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHINITTABLE   ,%%(dir)       ,  621/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(GIVEFSEND      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(GIVEFSEND      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+GIVEFSEND      ,%%(dir)       ,  665/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(SETFSEND       ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(SETFSEND       ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+SETFSEND       ,%%(dir)       ,  669/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(STOREFUCODE    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(STOREFUCODE    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+STOREFUCODE    ,%%(dir)       ,  853/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(STTORRY        ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(STTORRY        ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+STTORRY        ,%%(dir)       ,  724/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCHALOCKACK  ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCHALOCKACK  ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCHALOCKACK  ,%%(dir) CB    ,  600/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCHAROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCHAROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCHAROWR     ,%%(dir)       ,  584/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCHAVOLROWR  ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCHAVOLROWR  ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCHAVOLROWR  ,%%(dir)       ,  580/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCLOSEACK    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCLOSEACK    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCLOSEACK    ,%%(dir) CB    ,  578/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCOMROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCOMROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCOMROWR     ,%%(dir)       ,  594/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWDELROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWDELROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWDELROWR     ,%%(dir)       ,  586/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFKINFACK ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFKINFACK ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFKINFACK ,%%(dir) CB    ,  631/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFKSACK   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFKSACK   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFKSACK   ,%%(dir) CB    ,  590/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFLDNAMACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFLDNAMACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFLDNAMACK,%%(dir) CB    ,  606/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFLTACK   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFLTACK   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFLTACK   ,%%(dir) CB    ,  620/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETKEYDATACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETKEYDATACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETKEYDATACK,%%(dir) CB    ,  614/15514 - APZ211                ;
+%%ENDIF
+
+%%SET dir()
+%%IF(sentSigs(TOWGETNUMFLDACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETNUMFLDACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETNUMFLDACK,%%(dir) CB    ,  610/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETPCKFLDACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETPCKFLDACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETPCKFLDACK,%%(dir) CB    ,  646/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETPREFLTACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETPREFLTACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETPREFLTACK,%%(dir) CB    ,  648/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETPRESYMACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETPRESYMACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETPRESYMACK,%%(dir) CB    ,  650/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETR        ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETR        ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETR        ,%%(dir)       ,  574/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSTRFLDACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSTRFLDACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSTRFLDACK,%%(dir) CB    ,  608/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSYMBOLACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSYMBOLACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSYMBOLACK,%%(dir) CB    ,  616/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSYMVALACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSYMVALACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSYMVALACK,%%(dir) CB    ,  618/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETTABDATACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETTABDATACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETTABDATACK,%%(dir) CB    ,  604/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETTABNAMACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETTABNAMACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETTABNAMACK,%%(dir) CB    ,  602/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWINSROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWINSROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWINSROWR     ,%%(dir)       ,  582/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWLETFLDR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWLETFLDR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWLETFLDR     ,%%(dir)       ,  588/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWOPENR       ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWOPENR       ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWOPENR       ,%%(dir)       ,  576/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWPOSTCOMROWR ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWPOSTCOMROWR ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWPOSTCOMROWR ,%%(dir)       ,  596/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWRESPARTR    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWRESPARTR    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWRESPARTR    ,%%(dir)       ,  628/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWROLLBCKR    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWROLLBCKR    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWROLLBCKR    ,%%(dir)       ,  598/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWVERROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWVERROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWVERROWR     ,%%(dir)       ,  592/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHCHAROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHCHAROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHCHAROW      ,%%(dir)       ,  552/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHCOMTRANS    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHCOMTRANS    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHCOMTRANS    ,%%(dir)       ,  554/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHDELROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHDELROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHDELROW      ,%%(dir)       ,  556/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHGETDBNO     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHGETDBNO     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHGETDBNO     ,%%(dir)       ,  558/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHINSROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHINSROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHINSROW      ,%%(dir)       ,  560/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHLETFLD      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHLETFLD      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHLETFLD      ,%%(dir)       ,  562/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHROLLBCK     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHROLLBCK     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHROLLBCK     ,%%(dir)       ,  564/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHSTATRANS    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHSTATRANS    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHSTATRANS    ,%%(dir)       ,  566/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHVERTRANS    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHVERTRANS    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHVERTRANS    ,%%(dir)       ,  568/15514 - APZ211                ;
+%%ENDIF
+ 
+%%SET dir()
+%%IF(sentSigs(DBTESTSTART    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DBTESTSTART    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DBTESTSTART    ,%%(dir)       ,    1/15514 - CNL3012001            ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHINITFIELDR  ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHINITFIELDR  ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHINITFIELDR  ,%%(dir)       ,  624/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHINITFKR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHINITFKR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHINITFKR     ,%%(dir)       ,  626/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHINITTABLER  ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHINITTABLER  ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHINITTABLER  ,%%(dir)       ,  622/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(GIVEFS         ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(GIVEFS         ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+GIVEFS         ,%%(dir)       ,  664/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(SETFS          ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(SETFS          ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+SETFS          ,%%(dir)       ,  668/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(STOREFUCODEACK ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(STOREFUCODEACK ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+STOREFUCODEACK ,%%(dir) CB    ,  854/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(STTOR          ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(STTOR          ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+STTOR          ,%%(dir)       ,  723/15514 - APZ210                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCHALOCK     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCHALOCK     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCHALOCK     ,%%(dir)       ,  599/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCHAROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCHAROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCHAROW      ,%%(dir)       ,  583/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCHAVOLROW   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCHAVOLROW   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCHAVOLROW   ,%%(dir)       ,  579/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCLOSE       ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCLOSE       ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCLOSE       ,%%(dir)       ,  577/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWCOMROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWCOMROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWCOMROW      ,%%(dir)       ,  593/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWDELROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWDELROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWDELROW      ,%%(dir)       ,  585/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFKINF    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFKINF    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFKINF    ,%%(dir)       ,  630/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFKS      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFKS      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFKS      ,%%(dir)       ,  589/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFLD      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFLD      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFLD      ,%%(dir)       ,  572/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFLDNAM   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFLDNAM   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFLDNAM   ,%%(dir)       ,  605/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETFLT      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETFLT      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETFLT      ,%%(dir)       ,  619/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETKEY      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETKEY      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETKEY      ,%%(dir)       ,  573/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETKEYDAT   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETKEYDAT   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETKEYDAT   ,%%(dir)       ,  613/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETKEYFLD   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETKEYFLD   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETKEYFLD   ,%%(dir)       ,  611/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETNUMFLD   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETNUMFLD   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETNUMFLD   ,%%(dir)       ,  609/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETPCKFLD   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETPCKFLD   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETPCKFLD   ,%%(dir)       ,  645/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETPREFLT   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETPREFLT   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETPREFLT   ,%%(dir)       ,  647/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETPRESYM   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETPRESYM   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETPRESYM   ,%%(dir)       ,  649/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETROW      ,%%(dir)       ,  571/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSTRFLD   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSTRFLD   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSTRFLD   ,%%(dir)       ,  607/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSYMBOL   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSYMBOL   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSYMBOL   ,%%(dir)       ,  615/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETSYMVAL   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETSYMVAL   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETSYMVAL   ,%%(dir)       ,  617/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETTABDAT   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETTABDAT   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETTABDAT   ,%%(dir)       ,  603/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWGETTABNAM   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWGETTABNAM   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWGETTABNAM   ,%%(dir)       ,  601/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWINSROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWINSROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWINSROW      ,%%(dir)       ,  581/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWLETFLD      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWLETFLD      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWLETFLD      ,%%(dir)       ,  587/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWLETFLDFK    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWLETFLDFK    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWLETFLDFK    ,%%(dir)       ,  629/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWOPEN        ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWOPEN        ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWOPEN        ,%%(dir)       ,  575/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWPOSTCOMROW  ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWPOSTCOMROW  ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWPOSTCOMROW  ,%%(dir)       ,  595/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWRESPART     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWRESPART     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWRESPART     ,%%(dir)       ,  627/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWROLLBCK     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWROLLBCK     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWROLLBCK     ,%%(dir)       ,  597/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TOWVERROW      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TOWVERROW      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TOWVERROW      ,%%(dir)       ,  591/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHCHAROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHCHAROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHCHAROWR     ,%%(dir)       ,  553/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHCOMTRANSR   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHCOMTRANSR   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHCOMTRANSR   ,%%(dir)       ,  555/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHDELROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHDELROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHDELROWR     ,%%(dir)       ,  557/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHGETDBNOACK  ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHGETDBNOACK  ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHGETDBNOACK  ,%%(dir) CB    ,  559/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHINSROWR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHINSROWR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHINSROWR     ,%%(dir)       ,  561/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHLETFLDR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHLETFLDR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHLETFLDR     ,%%(dir)       ,  563/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHROLLBCKR    ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHROLLBCKR    ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHROLLBCKR    ,%%(dir)       ,  565/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHSTATRANSR   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHSTATRANSR   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHSTATRANSR   ,%%(dir)       ,  567/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TRHVERTRANSR   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TRHVERTRANSR   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TRHVERTRANSR   ,%%(dir)       ,  569/15514 - APZ211                ;
+%%ENDIF
+ 
+%%SET dir()
+%%IF(sentSigs(DDHTABREF      ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHTABREF      ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHTABREF      ,%%(dir)       ,  651/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(DDHTABREFR     ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(DDHTABREFR     ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+DDHTABREFR     ,%%(dir)       ,  652/15514 - APZ211                ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TUSREALLPROT   ))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TUSREALLPROT   ))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TUSREALLPROT   ,%%(dir)       ,  664/15514 - APZ21102              ;
+%%ENDIF
+%%SET dir()
+%%IF(sentSigs(TUSREALLPROTACK))%%SET dir(,S)%%ENDIF
+%%IF(recSigs(TUSREALLPROTACK))%%SET dir(,R)%%ENDIF
+%%IF(dir(S,R))%%SET dir(T)%%ENDIF
+%%IF(dir[0] > 0)
+TUSREALLPROTACK,%%(dir)       ,  665/15514 - APZ21102              ;
+%%ENDIF
+END SIGNALSURVEY;
+*END;
+ID DBSSURVEY TYPE DOC;
+CLASS 15514;
+NUMBER CAA 107 3626;
+REVISION A;
+DATE 91-09-05;
+DESIGNED 1991 SOFTLAB/TOM;
+RESPONSIBLE ETX/TX/ZBE;
+APPROVED ETX/TX/ZBE;
+END ID;

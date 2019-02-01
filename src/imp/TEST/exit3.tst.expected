@@ -1,0 +1,21 @@
+########## exit3 ##########
+Text f|re exit
+%%EXIT("NonInteger", "Nu slutar jag")
+Text efter exit
+########## ../imp exit3.tst >exit3.tst.tmp; cat exit3.tst.tmp; rm exit3.tst.tmp ##########
+
+
+exit3.tst
+
+    2.  %%EXIT("NonInteger", "Nu slutar jag")
+=====>  1
+
+  *1*   208 E : Value "NonInteger" of wrong type, must be INTEGER.
+
+
+1 error(s) detected.
+No warnings issued.
+
+Text f|re exit
+%%EXIT(NonInteger, Nu slutar jag)
+Text efter exit

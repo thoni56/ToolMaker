@@ -1,0 +1,2 @@
+		%%if (foo(fie))
+%%endif

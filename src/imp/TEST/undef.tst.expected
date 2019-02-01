@@ -1,0 +1,27 @@
+########## undef ##########
+%%IF (E (1))
+%%ENDIF
+%%IF ({%%(UNDEF), 2} (%%(UNDEF)))
+%%ENDIF
+########## ../imp undef.tst >undef.tst.tmp; cat undef.tst.tmp; rm undef.tst.tmp ##########
+
+
+undef.tst
+
+    1.  %%IF (E (1))
+=====>        1
+
+  *1*   204 W : Variable "E" not set.
+
+    3.  %%IF ({%%(UNDEF), 2} (%%(UNDEF)))
+=====>            1              2
+
+  *1*   204 W : Variable "UNDEF" not set.
+  *2*   204 W : Variable "UNDEF" not set.
+
+
+No errors detected.
+3 warning(s) issued.
+
+%%IF (E(1))
+%%ENDIF

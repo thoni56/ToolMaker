@@ -1,0 +1,22 @@
+########## strlen ##########
+%%SET A(ASDFqw)
+%%SET B(JKLOqw)
+%%(IMP$STRLEN("%%(A)%%(B)"))
+%%(IMP$STRLEN("A"))
+%%IF((IMP$STRLEN("A")) = 1)
+%%("A")
+%%ELSE
+%%FEL!
+%%ENDIF
+%%((IMP$STRLEN("ABC")) + 2)
+%%IF((IMP$STRLEN(A)) = 6)
+%%(A)
+%%ELSE
+%%FEL!
+%%ENDIF
+########## ../imp strlen.tst >strlen.tst.tmp; cat strlen.tst.tmp; rm strlen.tst.tmp ##########
+12
+1
+A
+5
+ASDFqw

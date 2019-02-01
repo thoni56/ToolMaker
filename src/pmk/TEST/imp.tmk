@@ -1,0 +1,25 @@
+%%OPTIONS
+--  Os 'SunOS';
+  Target 'c';
+  Prefix 'imp';
+%%END
+%%IMPORT
+/* .tmk-import */
+typedef int TmNatural;
+%%END
+%%TOKEN
+  NAME TmToken;
+  CODE code %% int %1%%;
+  SRCP srcp %% TmSrcp %1%%;
+  ATTRIBUTES
+       text  %% char *%1%%,
+       begin %% int %1%%,
+       end   %% int %1%%;
+%%END
+%%SRCP
+  NAME   TmSrcp;
+  COLUMN col  %% TmNatural %1%%;
+  ROW    line %% TmNatural %1%%;
+  FILE   file %% TmNatural %1%%;
+%%END
+

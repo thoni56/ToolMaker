@@ -1,0 +1,30 @@
+----------------------------------------------------------------------------
+-- af.lmk			Date: 1997-01-20/toolmake
+--
+-- af - ListerMaker description file
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1997-01-20 18:40:40/toolmake v2,r1,c6
+----------------------------------------------------------------------------
+
+%%MESSAGES English
+  0   'ToolMaker Lister 1.0';
+  1   'No warnings or errors detected.';
+  2   'No warnings issued.';
+  3   'No errors detected.';
+  4   '%1 informational message(s) produced.';
+  5   '%1 warning(s) issued.';
+  6   '%1 error(s) detected.';
+  7   'Maximum number of messages exceeded.';
+100   'Parsing resumed.';
+101   '%1 inserted.';
+102   '%1 deleted.';
+103   '%1 replaced by %2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+199   'File \'%1\' could not be opened.';
+%%END

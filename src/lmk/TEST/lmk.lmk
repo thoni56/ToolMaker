@@ -1,0 +1,37 @@
+%%OPTIONS
+
+	GENERATE TABLES, SOURCE;
+	LIBRARY '../';
+	LISTINGS MULTIPLE;
+
+%%MESSAGES english
+0   'ToolMaker Lister 1.0';
+1   'No warnings or errors detected.';
+2   'No warnings issued.';
+3   'No errors detected.';
+4   '%1 informational message(s) produced.';
+5   '%1 warning(s) issued.';
+6   '%1 error(s) detected.';
+7   'Maximum number of messages exceeded.';
+50   'Incorrect option.';
+51   'Incorrect section.';
+52   '%1 section not allowed in this file when .tmk file exists';
+60   'Section defined twice, new section skipped.';
+61   'Directive defined twice, new directive skipped.';
+62   'Token section must have a %1 member.';
+63   'Srcp section must have a %1 member.';
+64   '%1 section not found';
+65   'If declaration is given in one %1 member it must be given in all';
+66   'Srcp section must have at least one member.';
+70   'File \"%1\" not found.';
+100   'Parsing resumed.';
+101   '%1 inserted.';
+102   '%1 deleted.';
+103   '%1 replaced by %2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+200   'Message section \"%1\" already defined.';
+%%END

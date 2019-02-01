@@ -1,0 +1,180 @@
+#
+# AUTHOR: Tony Olsson
+# DATE: 1993-08-20/tony@wolf
+# CREATE: 1990-04-11
+#
+# SoftLab ab (c) 1990
+# ---------------------------------------------------------------------
+# Modified 1995-01-20 by Thomas Lennartsson (thole@lion) to build on hp
+# with gmake.
+#
+# NOTE: This file is intended for use on HP ONLY. It does NOT support
+#       any other platform. Use gmake on this file.
+#
+# 
+
+ROOT		= /home/projects/ToolMaker
+RELEASEROOT	= $(ROOT)
+SHELL		= /bin/sh
+
+SERVER		= rpc.toolmaker
+CLIENT		= client
+PASSWD		= tmpasswd
+LICENSE		= license.o
+
+INTLIB		= $(ROOT)/library
+
+GCC		= gcc2.6.0 -pedantic -Wall
+
+# The special -D definitions for hp must be made to make the
+# types u_short, u_long etc in sys/types.h availible.
+
+CC		= $(GCC) -D__svr4__ # -D_INCLUDE_POSIX_SOURCE \
+		  -D_INCLUDE_HPUX_SOURCE -D_INCLUDE_XOPEN_SOURCE \
+		  -D_INCLUDE_AES_SOURCE
+
+CPP		= /lib/cpp
+INCLUDE		= -I../license
+LDFLAGS		= -static
+
+#LDFLAGS	= -lnsl -L/usr/local/lib/4.1.2
+
+SERVEROBJECTS	= license_rpc_svc.o readParam.o passwd.o version.o \
+		  common.o licenseServer.o 
+CLIENTOBJECTS	= client.o
+PASSWDOBJECTS	= getpasswd.o passwd.o version.o
+LICENSEOBJECTS	= licenseClient.o readParam.o passwd.o common.o
+VERSIONSRCS	= licenseServer.c readParam.c passwd.c \
+		  client.c getpasswd.c licenseClient.c common.c
+VERSIONOBJECTS	= ${VERSIONSRCS:.c=.o}
+
+# Set CFLAGS to default value. It is set to specific values in the 
+# debug and purify targets.
+
+CFLAGS		= -O4 $(CQ) $(INCLUDE)
+
+################################################################################
+#
+#
+
+
+.KEEP_STATE:
+
+debug:
+	@$(MAKE) CFLAGS='-g $(CQ) $(INCLUDE)' -f GNUMakefile licenseobj
+
+all: licenseobj
+
+purify: 
+	$(MAKE) CFLAGS='-g $(CQ) $(INCLUDE)' -f GNUMakefile purify_server purify_client
+
+clean:
+	-rm -f *.o *~ core license_rpc_svc.c license_rpc_clnt.c license_rpc.h license_rpc_svc_tmp.c .make_state
+
+veryclean: clean
+	-rm -f $(SERVER) $(CLIENT) $(PASSWD) $(LICENSE)
+
+file:
+	@echo -n "Make depend "
+	@mv Makefile Makefile.~
+	@sed -n '1,/^# DO NOT DELETE THIS LINE -- make depend depends on it.$$/ p' Makefile.~ > Makefile
+	@for file in *.c ; do /lib/cpp $(INCLUDE) -M $$file | egrep -v '/usr/include' | cat >> Makefile ; echo -n . ; done
+	@echo " done."
+
+release:
+	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
+	  exit 1 ; \
+	fi
+	$(MAKE) -f GNUMakefile newversion releaseARCH releaseSRC
+	cvs rtag license`ls [0-9]*_[0-9]*_[0-9]*.* | sed s/\\\.//` license
+
+releaseSRC:
+	chmod 664 license.h
+	-rm -f $(INTLIB)/license.h
+	cp -p license.h $(INTLIB)
+
+releaseARCH: licenseobj
+	chmod 664 license.o
+	-rm -f $(INTLIB)/bin-$(TMARCH)/license.o
+	cp -p license.o $(INTLIB)/bin-$(TMARCH)/
+	install -f $(RELEASEROOT)/bin/bin-$(TMARCH) $(SERVER)
+	chmod 755 $(RELEASEROOT)/bin/bin-$(TMARCH)/$(SERVER)
+	install -f  $(INTLIB)/bin-$(TMARCH) $(PASSWD)
+	chmod 664 $(INTLIB)/bin-$(TMARCH)/$(PASSWD)
+
+newversion:
+	@-\rm [0-9]*_[0-9]*_[0-9]*.*
+	@sh version.sh
+	remote heffa venum +c
+	echo "cat > `ls [0-9]*_[0-9]*_[0-9]*.*` <<EOF" > version.sh
+	echo "License Server" >> version.sh
+	echo "ToolMaker License Server" >> version.sh
+	echo "EOF" >> version.sh
+	cvs commit -m 'New Version' version.sh
+
+RELEASE:
+	@if test -r CVS/Tag ; then \
+	  : ; \
+	else \
+	  echo This tree is not checked out from a Tag! ; \
+	  echo RELEASE not allowed!! ; \
+	  exit 1 ; \
+	fi
+	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
+		exit 1 ; \
+	fi
+	$(MAKE) -f GNUMakefile releaseARCH releaseSRC
+
+
+################################################################################
+#
+#
+
+licenseobj: checkARCH $(TMARCH)
+
+checkARCH:
+	@if test -f .arch ; then :; else echo "none" > .arch; fi
+	@-if test `cat .arch` != $(TMARCH); then \
+	  echo "Previous build was not for $(TMARCH) - Removing .o files." ;\
+	  rm *.o; \
+	  $(MAKE) -f GNUMakefile rpc; \
+	  echo $(TMARCH) > .arch ; \
+	fi
+
+hp:	$(LICENSE) $(SERVER) $(CLIENT) $(PASSWD)
+
+$(SERVER): $(SERVEROBJECTS)
+	$(CC) $(CFLAGS) -o $(SERVER) $(SERVEROBJECTS) $(LDFLAGS)
+
+purify_server: $(SERVEROBJECTS)
+	purify $(CC) $(CFLAGS) -o $(SERVER) $(SERVEROBJECTS) $(LDFLAGS)
+
+
+$(CLIENT): $(CLIENTOBJECTS) $(LICENSE)
+	$(CC) $(CFLAGS) -o $(CLIENT) $(CLIENTOBJECTS) $(LICENSE) $(LDFLAGS)
+
+purify_client: $(CLIENTOBJECTS)
+	purify $(CC) $(CFLAGS) -o $(CLIENT) $(CLIENTOBJECTS) $(LICENSE) $(LDFLAGS)
+
+$(PASSWD): $(PASSWDOBJECTS)
+	$(CC) $(CFLAGS) -o $(PASSWD) $(PASSWDOBJECTS)
+
+license.o: $(LICENSEOBJECTS) license_rpc_clnt.o
+	$(LD) -r -o $(LICENSE) $(LICENSEOBJECTS) license_rpc_clnt.o
+
+#license_rpc_svc.c + license_rpc_clnt.c + license_rpc.h: license_rpc.x
+# We must force the rpcgeneration on the target system!!!
+rpc:
+	rpcgen license_rpc.x
+	@echo "Modifying license_rpc_svc.c ..."
+	@mv license_rpc_svc.c license_rpc_svc_tmp.c
+	@sed -e 's/svc_run();/licenseInit(argc,argv);licenseDelay();svc_run();/' license_rpc_svc_tmp.c |\
+	 sed -e 's/main()/int main(argc,argv) int argc;char **argv;/' > license_rpc_svc.c
+	@rm license_rpc_svc_tmp.c
+
+version.c: $(VERSIONSRCS)
+	@-\rm [0-9]*_[0-9]*_[0-9]*.*
+	sh version.sh
+	remote heffa venum +t
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

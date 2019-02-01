@@ -1,0 +1,27 @@
+#!/bin/sh
+echo "USE STEAM!!"
+#exit
+
+# Old contents:
+echo -n "Testing "
+../../smk -help 2> .revision
+head -1 .revision
+for f in lmk pmk smk tmk imp
+do
+    echo "-------------------------"
+    echo "Running smk on $f.smk"
+    echo "-------------------------"
+    ../../smk -generate tables -generate source $f
+    echo "-------------------------"
+    echo "Diffing $f.smt"
+    echo "-------------------------"
+    cat $f.smt | grep -v "%%SET smVersion" >$f.smt.mod
+    diff -b $f.smt.ref $f.smt.mod 
+done
+for f in tmkScSema.c tmkScan.c tmkScan.h tmkCommon.h impScSema.c impScan.c impScan.h impCommon.h pmkScSema.c pmkScan.c pmkScan.h pmkCommon.h lmkScSema.c lmkScan.c lmkScan.h lmkCommon.h smkScSema.c smkScan.c smkScan.h smkCommon.h
+do
+    echo "-------------------------"
+    echo "Diffing $f"
+    echo "-------------------------"
+    diff -b $f $f.ref
+done

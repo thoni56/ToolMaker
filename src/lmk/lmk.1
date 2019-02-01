@@ -1,0 +1,57 @@
+.TH LMK 1L "1995 November 28"  "\fISoftLab ab\fP"	\"
+.SH NAME
+lmk \- ListerMaker, generate message and list handlers
+
+.SH SYNOPSIS
+\fBlmk\fP [-help] [<option> ...] <file>
+
+.SH DESCRIPTION
+.LP
+\fBlmk\fP is a tool to generate Listers, program modules to handle
+error messages and to produce listings of input in an easy and elegant
+fashion. Input is a description file containing message templates and
+output is generated source file ready for compilation.
+
+.PP
+ListerMaker is well integrated with the other components of the ToolMaker
+package.
+
+.SH ARGUMENTS
+.IP \fBfile\fP 10
+The name of the ListerMaker description file. Default extension is
+\fI.lmk\fP .
+
+.SH OPTIONS
+.IP \fB-help\fP 10
+Gives a brief help on the arguments and options to the \fBlmk\fP
+program. For detailed information about options refer to the \fIListerMaker
+Reference Manual\fP .
+
+.SH FILES
+.IP \fI<file>.tmk\fP 20
+The ToolMaker Common Description file. Contains common definitions for
+all the Makers in the ToolMaker package. <file> is the name of the
+description file with any \fI.lmk\fP extension removed.
+.IP \fI<file>.lml\fP 20
+The list file produced by \fBlmk\fP. <file> is the name of the
+description file with any \fI.lmk\fP extension removed.
+.IP \fI<file>.lmt\fP 20
+The intermediate tables produced used by \fBlmk\fP. <file> is the name of the
+description file with any \fI.lmk\fP extension removed.
+
+.SH SEE ALSO
+pmk(1L), smk(1L), lmk(1L), toolmake(1L), imp(1L),
+\fIListerMaker Reference Manual\fP (part of the \fIToolMaker
+Reference Manual\fP )
+
+.SH BUGS
+Please contact SoftLab about bugs and enhancements.
+
+.SH AUTHOR
+Email to: tools@softlab.se
+
+.SH NOTES
+These manual pages corresponds to ToolMaker version 2.1.
+
+.PP
+Copyright \(co 1989-1995 SoftLab ab.

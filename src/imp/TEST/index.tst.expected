@@ -1,0 +1,100 @@
+########## index ##########
+%%SET foo(foo, fie, fum)
+%%(foo)
+%%(foo[0])
+%%( foo [ 0 ] )
+%%(foo[1])
+%%(foo[2])
+%%(foo[3])
+%%(foo[4])
+%%(foo[-1])
+%%(foo[ - 1 ])
+%%SET fie(2)
+%%(foo[fie])
+%%(foo[%%(fie)])
+%%SET fie(2, hej)
+%%(foo[fie])
+%%(foo[%%(fie)])
+%%SET fie(hej, hopp)
+%%(foo[fie])
+%%(foo[%%(fie)])
+%%(foo[fum])
+%%(1[5])
+%%(%%(fie)[6])
+########## ../imp index.tst >index.tst.tmp; cat index.tst.tmp; rm index.tst.tmp ##########
+
+
+index.tst
+
+    8.  %%(foo[4])
+=====>         1
+
+  *1*   209 E : Index value "4" out of range.
+
+    9.  %%(foo[-1])
+=====>         1
+
+  *1*   209 E : Index value "-1" out of range.
+
+   10.  %%(foo[ - 1 ])
+=====>          1
+
+  *1*   209 E : Index value "-1" out of range.
+
+   15.  %%(foo[fie])
+=====>         1
+
+  *1*   208 E : Value "2,hej" of wrong type, must be INTEGER.
+
+   16.  %%(foo[%%(fie)])
+=====>         1
+
+  *1*   204 W : Variable "2,hej" not set.
+
+   18.  %%(foo[fie])
+=====>         1
+
+  *1*   208 E : Value "hej,hopp" of wrong type, must be INTEGER.
+
+   19.  %%(foo[%%(fie)])
+=====>         1
+
+  *1*   204 W : Variable "hej,hopp" not set.
+
+   20.  %%(foo[fum])
+=====>         1
+
+  *1*   204 W : Variable "fum" not set.
+
+   21.  %%(1[5])
+=====>       1
+
+  *1*   211 E : Only variables may have index.
+
+   22.  %%(%%(fie)[6])
+=====>     1
+
+  *1*   204 W : Variable "hej,hopp" not set.
+
+
+6 error(s) detected.
+4 warning(s) issued.
+
+foo,fie,fum
+3
+3
+foo
+fie
+fum
+%%(foo[4])
+%%(foo[-1])
+%%(foo[-1])
+fie
+fie
+%%(foo[2,hej])
+%%(foo[2,hej])
+%%(foo[hej,hopp])
+%%(foo[hej,hopp])
+%%(foo[fum])
+%%(1[5])
+%%(hej,hopp[6])

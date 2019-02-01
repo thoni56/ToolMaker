@@ -1,0 +1,613 @@
+%%OPTIONS
+
+	Generate Tables, Source;
+	Library '..';
+
+%%IMPORT
+#include <stdio.h>
+#include "smk_i.h"
+#include "smkScan.h"
+#include "smkList.h"
+#include "ast.h"
+#include "definition.h"
+#include "name.h"
+#include "scanner.h"
+#include "token.h"
+#include "voc.h"
+#include "set.h"
+#include "map.h"
+#include "pack.h"
+#include "action.h"
+extern smkContext lexContext;
+%%END
+%%SCANNER smkScan(lexContext, token);
+%%INSERTSYMBOL
+    /* Make the requested token
+     */
+    sym->code = code;
+    sym->name=nameSearch("<PARSE ERROR>");
+    sym->srcp.file=1;
+%%END
+%%DECLARATIONS
+extern Scanner grmScanner;		/* Current scanner */
+extern TokenType grmTokenType;		/* Current token type */
+%%END
+%%ATTRIBUTES
+	srcp    %% TmkSrcp %1%%,
+	inumber %% int %1%%,
+	fnumber %% double %1%%,
+	name    %% Name %1%%,
+	ast     %% AST %1%%,
+	action  %% Action %1%%;
+%%RULES
+
+<goal> 
+  = <skip sections opt> 
+%%{
+  vocRead(optVocabulary);
+}%%
+    <code sections opt> <set section opt> 
+    <map section opt> <definition section opt> <scanner sections>
+  ;
+
+--: Sections
+
+<skip sections opt>
+  = <skip sections opt> <skip section>
+  !
+  ;
+
+<skip section>
+    = SKIPHEADER
+      -- Followed by language specific text skipped by the scanner.
+      <end opt>
+    ;
+
+<code sections opt>
+  = <code sections opt> <code section>
+  !
+  ;
+
+<set section opt>
+  = <set section>
+  !
+  ;
+
+<map section opt>
+  = <map section>
+  !
+  ;
+
+<definition section opt>
+  = <definition section>
+  !
+  ;
+
+<scanner sections>
+  = <scanner sections> <scanner section>
+  ! <scanner section>
+  ;
+
+<end opt>
+  = '%%END'
+  !
+  ;
+
+---: Code Section
+
+<code section>
+  = '%%DECLARATION'	<end opt>
+  ! '%%CONTEXT'		<end opt>
+  ! '%%EXPORT'		<end opt>
+  ! '%%CODE'		<end opt>
+  ! '%%READER'		<end opt>
+  ! '%%PREHOOK'		<end opt>
+  ! '%%ACTION'		<end opt>
+  ! '%%POSTHOOK'	<end opt>
+  ;
+
+
+---: Set Section
+
+<set section>
+  = '%%SET' <end opt>
+  ;
+
+
+---: Map Section
+
+<map section>
+  = '%%MAP' <maps> <end opt>
+%%{
+  mapUsed=1;
+}%%
+  ;
+
+<maps>
+  = <maps> <map>
+  ! <map>
+  ;
+
+<map>
+  = <class> '=' <class> ';'
+%%{
+  mapPut(%1<class>.name,%2<class>.name);
+}%%  
+  ;
+
+
+---: Definition Section
+
+<definition section>
+  = '%%DEFINITION' <definition rules> <end opt>
+  ;
+
+<definition rules>
+  = <definition rules> <definition rule>
+  ! <definition rule>
+  ;
+
+<definition rule>
+  = <identifier> '=' <selection rule opt> <action opt> ';'
+%%{
+  register Definition definition;
+
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL) definition=definitionPut(%<identifier>.name);
+  if(%<selection rule opt>.ast)
+    if(definition->ast)
+      smkLog(`&%<identifier>.srcp,233,sevERR,"");
+    else 
+      definition->ast=%<selection rule opt>.ast;
+  if(%<action opt>.action)
+    if(definition->action) 
+      smkLog(`&%<identifier>.srcp,246,sevERR,"");
+    else
+      definition->action=%<action opt>.action;
+}%%
+  ;
+
+<selection rule opt>
+  = <selection rule>
+%%{
+  %<selection rule opt>.ast=%<selection rule>.ast;
+}%%
+  !
+%%{
+  %<selection rule opt>.ast=NULL;
+}%%
+  ;
+
+---: Scanner Section
+
+<scanner section>
+  = '%%SCANNER' <scanner name> <auto opt> <vocabulary section opt> <screening section opt> <token sections>
+%%{
+  if(grmScanner) {
+    vocCheck(grmScanner);
+    tokenCheck(grmScanner);
+  }
+}%%
+  ! <scanner copy> <screening section opt> <token sections>
+%%{
+  if(grmScanner) {
+    vocCheck(grmScanner);
+    tokenCheck(grmScanner);
+  }
+}%%
+  ;
+
+<scanner name>
+  = <identifier>
+%%{
+  grmScanner=scannerPut(`&%<identifier>.srcp, %<identifier>.name);
+}%%
+  ;
+
+<scanner copy>
+  = '%%SCANNER' <scanner name> ':' <identifier> 
+%%{
+  register Scanner scanner;
+
+  if(grmScanner) {
+    scanner=scannerGet(%<identifier>.name);
+    if(scanner) {
+      vocCopyAll(grmScanner,scanner->voc);
+      tokenCopyAll(grmScanner,scanner->token);
+      grmScanner->vocLock=1;
+    }
+    else
+      smkLog(`&%<identifier>.srcp,234,sevERR,"");
+  }
+}%%
+  ;
+
+----: Auto keyword
+
+<auto opt>
+  = 'AUTO' 
+%%{
+  if(grmScanner) grmScanner->vocAuto=1;
+}%%
+  ! 'NO' 'AUTO'
+%%{
+  if(grmScanner) grmScanner->vocAuto=0;
+}%%
+  ! 
+%%{
+  if(grmScanner) grmScanner->vocAuto=1;
+}%%
+  ;
+  
+----: Vocabulary section
+
+<vocabulary section opt>
+  = '%%VOCABULARY' <token definitions>
+%%{
+  if(grmScanner) grmScanner->vocLock=1;
+}%%
+  ! '%%VOCABULARY' <identifier>
+%%{
+  register Scanner scanner;
+
+  if(grmScanner) {
+    scanner=scannerGet(%<identifier>.name);
+    if(scanner) {
+      vocCopyAll(grmScanner,scanner->voc);
+      grmScanner->vocLock=1;
+    }
+    else
+      smkLog(`&%<identifier>.srcp,234,sevERR,"");
+  }
+}%%
+  !
+  ;
+
+<token definitions>
+  = <token definitions> <token definition>
+  ! <token definition>
+  ;
+
+<token definition>
+  = <token name> '=' <number> ';'
+%%{
+  if(grmScanner) {
+    vocPut(grmScanner, `&%<token name>.srcp, %<token name>.name, `&%<number>.srcp, %<number>.inumber);
+  }
+}%%
+  ;
+
+----: Screening section
+
+<screening section opt>
+  = '%%SCREENING' <screening definitions>
+  !
+  ;
+
+<screening definitions>
+  = <screening definitions> <screening definition>
+  ! <screening definition>
+  ;
+
+<screening definition>
+  = <token name> 'NO' 'SCREENING' ';'
+%%{
+  register Voc voc;
+
+  voc=vocGet(grmScanner,%<token name>.name);
+  if(voc)
+    voc->screening=0;
+  else if((voc=vocPut(grmScanner, `&%<token name>.srcp, %<token name>.name, NULL, -1))==NULL)
+    smkLog(`&%<token name>.srcp,213,sevERR,"");
+  else
+    voc->screening=0;
+}%%
+  ! <token name> 'SCREENING' ';'
+%%{
+  register Voc voc;
+
+  voc=vocGet(grmScanner,%<token name>.name);
+  if(voc)
+    voc->screening=optScreen>0 ? 1 : 0;
+  else if((voc=vocPut(grmScanner, `&%<token name>.srcp, %<token name>.name, NULL, -1))==NULL)
+    smkLog(`&%<token name>.srcp,213,sevERR,"");
+  else
+    voc->screening=optScreen>0 ? 1 : 0;
+}%%
+  ;
+
+----: RULE and SKIP sections
+
+<token sections>
+  = <token sections> <token section>
+  ! <token section>
+  ;
+
+<token section>
+  = '%%RULE' %% grmTokenType=tokenRULE; %% <tokens opt> <end opt>
+  ! '%%SKIP' %% grmTokenType=tokenSKIP; %% <tokens opt> <end opt>
+  ;
+
+----: Tokens
+
+<tokens opt>
+  = <tokens opt> <token>
+  !
+  ;
+
+<token>
+  = <token name> '=' <lookahead rule> <action opt2> ';'
+%%{
+  if(grmScanner) {
+    register Token token;
+  
+    if(token=tokenPut(grmScanner,grmTokenType,`&%<token name>.srcp, %<token name>.name)) {
+      token->a.ast=%<lookahead rule>.ast;
+      token->action=%<action opt2>.action;
+      token->sequence=astToName(token->a.ast);
+    }
+  }
+}%%
+  ! <token name> '=' '_ENDOFTEXT' <action opt2> ';'
+%%{
+  if(grmScanner) {
+    register Token token;
+  
+    if(token=tokenPut(grmScanner,grmTokenType,`&%<token name>.srcp, %<token name>.name)) {
+      token->type|=tokenEOT;
+      token->a.ast=NULL;
+      token->action=%<action opt2>.action;
+    }
+  }
+}%%
+  ! <token name> '=' '_UNKNOWN' <action opt2> ';'
+%%{
+  if(grmScanner) {
+    register Token token;
+
+    if(token=tokenPut(grmScanner,grmTokenType,`&%<token name>.srcp, %<token name>.name)) {
+      token->type|=tokenUNKNOWN;
+      token->a.ast=NULL;
+      token->action=%<action opt2>.action;
+    }
+  }
+}%%
+  ! <token name> ';'
+%%{
+  if(tokenRemove(grmScanner,grmTokenType,%<token name>.name)<0)
+    smkLog(`&%<token name>.srcp,211,sevERR,"");
+}%%
+  ;
+
+
+<token name>
+  = <identifier>
+  ! <string>
+  ;
+
+
+----: Screen tokens
+
+<screen tokens opt>
+  = <screen tokens opt> <screen token>
+  !
+  ;
+
+<screen token>
+  = <screen token name> '=' <identifier> <action opt> ';'
+%%{
+  if(grmScanner) {
+    register Token token;
+    register Voc voc;
+
+    if(voc=vocGet(grmScanner,%<identifier>.name)) {
+      if(token=tokenPut(grmScanner,tokenSCREEN,`&%<screen token name>.srcp, %<screen token name>.name)) {
+	token->a.screen=voc;
+	token->action=%<action opt>.action;
+      }
+    }
+    else
+      smkLog(`&%<identifier>.srcp,236,sevERR,"");
+  }
+}%%
+  ;
+
+<screen token name>
+  = <string>
+  ;
+
+----: Action2
+
+<action opt2>
+  = '%%'
+%%{
+  %<action opt2>.action=%'%%'.action;
+}%%
+  ! '%%DO' <identifier>
+%%{
+  register Definition definition;
+  
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL || definition->action==NULL)
+    smkLog(`&%<identifier>.srcp,245,sevERR,"");
+  else
+    %<action opt2>.action=definition->action;
+}%%
+  !
+%%{
+  %<action opt2>.action=NULL;
+}%%
+  ;
+
+---: Action
+
+<action opt>
+  = '%%'
+%%{
+  %<action opt>.action=%'%%'.action;
+}%%
+  !
+%%{
+  %<action opt>.action=NULL;
+}%%
+  ;
+---: Regular expression description
+
+<lookahead rule>
+  = <selection rule> '/' <selection rule>
+%%{
+  %<lookahead rule>.ast=astLookahead(%1<selection rule>.ast, %2<selection rule>.ast);
+}%%
+  ! <selection rule>
+  ;
+
+<selection rule>
+  = <selection rule> '!' <concat rule>
+%%{
+  %1<selection rule>.ast=astSelect(%2<selection rule>.ast, %<concat rule>.ast);
+}%%
+  ! <concat rule>
+  ;
+
+<concat rule>
+  = <concat rule> <closure rule>
+%%{
+  %1<concat rule>.ast=astConcat(%2<concat rule>.ast, %<closure rule>.ast);
+}%%
+  ! <closure rule>
+  ;
+
+<closure rule>
+  = <operand> '*' 
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,0,-1);
+}%%
+  ! <operand> '+'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,1,-1);
+}%%
+  ! <operand> '?'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,0,1);
+}%%
+  ! <operand> '{' <number> '}'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,%<number>.inumber,%<number>.inumber);
+}%%
+  ! <operand> '{' '-' <number> '}'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,0,%<number>.inumber);
+}%%
+  ! <operand> '{' <number> '-' '}'
+%%{
+  %<closure rule>.ast=astClosure(%<operand>.ast,%<number>.inumber,-1);
+}%%
+  ! <operand> '{' <number> '-' <number> '}'
+%%{
+  if(%1<number>.inumber>%2<number>.inumber)
+    smkLog(`&%2<number>.srcp,237,sevERR,"");
+  else
+    %<closure rule>.ast=astClosure(%<operand>.ast,%1<number>.inumber,%2<number>.inumber);
+}%%
+  ! <operand>
+  ;
+
+<operand>
+  = <identifier>
+%%{
+  register Definition definition;
+  
+  definition=definitionGet(%<identifier>.name);
+  if(definition==NULL || definition->ast==NULL)
+    smkLog(`&%<identifier>.srcp,239,sevERR,"");
+  else
+    %<operand>.ast=definition->ast;
+}%%
+  ! <string>
+%%{
+  register AST ast;
+
+  if(ast=astString(%<string>.name))
+    %<operand>.ast=ast;
+  else
+    smkLog(`&%<string>.srcp,220,sevERR,"");
+}%%
+  ! <class>
+%%{
+  register AST ast;
+
+  if(ast=astClass(%<class>.name))
+    %<operand>.ast=ast;
+  else
+    smkLog(`&%<class>.srcp,238,sevERR,"");
+}%%
+  ! '.'
+%%{
+  %<operand>.ast=astCut();
+}%%
+  ! '(' <selection rule> ')'
+%%{
+  %<operand>.ast=%<selection rule>.ast;
+}%%
+  ;
+
+--: Lexemes
+
+<identifier>
+  = Identifier	%%{ %<identifier>.srcp=%Identifier.srcp; %<identifier>.name=%Identifier.name; }%%
+  ! 'ADA'	%%{ %<identifier>.srcp=%'ADA'.srcp; %<identifier>.name=%'ADA'.name; }%%
+  ! 'AUTO'	%%{ %<identifier>.srcp=%'AUTO'.srcp; %<identifier>.name=%'AUTO'.name; }%%
+  ! 'BYTE'	%%{ %<identifier>.srcp=%'BYTE'.srcp; %<identifier>.name=%'BYTE'.name; }%%
+  ! 'C'		%%{ %<identifier>.srcp=%'C'.srcp; %<identifier>.name=%'C'.name; }%%
+  ! 'COL'	%%{ %<identifier>.srcp=%'COL'.srcp; %<identifier>.name=%'COL'.name; }%%
+  ! 'DES'	%%{ %<identifier>.srcp=%'DES'.srcp; %<identifier>.name=%'DES'.name; }%%
+  ! 'DFA'	%%{ %<identifier>.srcp=%'DFA'.srcp; %<identifier>.name=%'DFA'.name; }%%
+  ! 'ERR'	%%{ %<identifier>.srcp=%'ERR'.srcp; %<identifier>.name=%'ERR'.name; }%%
+  ! 'ESCAPE'	%%{ %<identifier>.srcp=%'ESCAPE'.srcp; %<identifier>.name=%'ESCAPE'.name; }%%
+  ! 'EXCLUDE'	%%{ %<identifier>.srcp=%'EXCLUDE'.srcp; %<identifier>.name=%'EXCLUDE'.name; }%%
+  ! 'GCS'	%%{ %<identifier>.srcp=%'GCS'.srcp; %<identifier>.name=%'GCS'.name; }%%
+  ! 'K'		%%{ %<identifier>.srcp=%'K'.srcp; %<identifier>.name=%'K'.name; }%%
+  ! 'LES'	%%{ %<identifier>.srcp=%'LES'.srcp; %<identifier>.name=%'LES'.name; }%%
+  ! 'LIST'	%%{ %<identifier>.srcp=%'LIST'.srcp; %<identifier>.name=%'LIST'.name; }%%
+  ! 'M'		%%{ %<identifier>.srcp=%'M'.srcp; %<identifier>.name=%'M'.name; }%%
+  ! 'MAP'	%%{ %<identifier>.srcp=%'MAP'.srcp; %<identifier>.name=%'MAP'.name; }%%
+  ! 'NFA'	%%{ %<identifier>.srcp=%'NFA'.srcp; %<identifier>.name=%'NFA'.name; }%%
+  ! 'NO'	%%{ %<identifier>.srcp=%'NO'.srcp; %<identifier>.name=%'NO'.name; }%%
+  ! 'POS'	%%{ %<identifier>.srcp=%'POS'.srcp; %<identifier>.name=%'POS'.name; }%%
+  ! 'POSITION'	%%{ %<identifier>.srcp=%'POSITION'.srcp; %<identifier>.name=%'POSITION'.name; }%%
+  ! 'RDS'	%%{ %<identifier>.srcp=%'RDS'.srcp; %<identifier>.name=%'RDS'.name; }%%
+  ! 'ROWCOL'	%%{ %<identifier>.srcp=%'ROWCOL'.srcp; %<identifier>.name=%'ROWCOL'.name; }%%
+  ! 'ROW'	%%{ %<identifier>.srcp=%'ROW'.srcp; %<identifier>.name=%'ROW'.name; }%%
+  ! 'SCR'	%%{ %<identifier>.srcp=%'SCR'.srcp; %<identifier>.name=%'SCR'.name; }%%
+  ! 'SCREENING'	%%{ %<identifier>.srcp=%'SCREENING'.srcp; %<identifier>.name=%'SCREENING'.name; }%%
+  ! 'SET'	%%{ %<identifier>.srcp=%'SET'.srcp; %<identifier>.name=%'SET'.name; }%%
+  ! 'TOK'	%%{ %<identifier>.srcp=%'TOK'.srcp; %<identifier>.name=%'TOK'.name; }%%
+  ! 'TOKEN'	%%{ %<identifier>.srcp=%'TOKEN'.srcp; %<identifier>.name=%'TOKEN'.name; }%%
+  ! 'TRACE'	%%{ %<identifier>.srcp=%'TRACE'.srcp; %<identifier>.name=%'TRACE'.name; }%%
+  ! 'VERBOSE'	%%{ %<identifier>.srcp=%'VERBOSE'.srcp; %<identifier>.name=%'VERBOSE'.name; }%%
+  ;
+
+<string>
+  = String	
+%%{ 
+  %<string>.srcp=%String.srcp; 
+  %<string>.name=%String.name;
+}%%
+  ;
+
+<number>
+  = Number
+%%{ 
+  %<number>.srcp=%Number.srcp; 
+  %<number>.inumber=%Number.inumber; 
+}%%
+  ;
+
+<class>
+  = Class	
+%%{
+  %<class>.srcp=%Class.srcp;
+  %<class>.name=%Class.name;
+}%%
+  ;
+

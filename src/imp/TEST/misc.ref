@@ -1,0 +1,3 @@
+%%PROCESS("FOO")
+%%INCLUDE(FOO)
+%%INCLUDE("FOO")

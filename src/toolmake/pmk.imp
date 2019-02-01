@@ -1,0 +1,516 @@
+%%COMMENT
+   pmk.imp				     Date: 1993-06-22/reibert@roo
+
+   ParserMaker 2.0 grammar skeleton
+
+   Written by SoftLab ab  (tools@softlab.se).
+%%ENDCOMMENT
+----------------------------------------------------------------------------
+-- %%(_sN).pmk			Date: %%(_D)/%%(_P)
+--
+-- %%(_sN) - ParserMaker grammar description file
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: %%(_D) %%(_T)/%%(_P) %%(_V)
+----------------------------------------------------------------------------
+%%IF(_Lvl(MINIMAL))
+
+%%IF(NOT _i(lm))
+`%%OPTIONS
+	No ErrorHandler;
+%%ENDIF
+
+`%%IMPORT
+%%IF(_i(sm))
+#include "%%(_sN)Scan.h"
+extern %%(_sN)ScContext lexContext;
+%%ENDIF
+
+`%%INSERTSYMBOL
+    token->code = code;
+
+`%%RULES
+    top = {ITEM};
+
+%%ELSIF(_Lvl(NORMAL))
+
+%%IF(NOT _i(lm))
+`%%OPTIONS
+	No ErrorHandler;
+%%ENDIF
+
+`%%IMPORT
+#include <stdio.h>
+%%IF(_i(sm))
+
+#include "%%(_sN)Scan.h"
+extern %%(_sN)ScContext lexContext;
+%%ENDIF
+
+`%%DECLARATIONS
+
+static int noOfItems = 0;
+
+`%%ATTRIBUTES
+    srcp `%% TmSrcp `%1 `%%,
+    -- Extra user-defined fields and attributes should be added here
+    floatValue `%% double `%1 `%%;
+
+`%%RULES
+
+items = { ITEM 
+	`%%
+        /* Semantic action */
+        noOfItems++;
+	`%%
+	} `%% printf("```%d items found!\n", noOfItems); `%% ;
+
+%%ELSIF(_Lvl(EXAMPLE))
+
+`%%OPTIONS
+	Verbose;
+%%IF(NOT _i(lm))
+	No ErrorHandler;
+%%ENDIF
+`%%END
+
+`%%IMPORT
+#include <stdio.h>
+%%IF(_tL("ANSI-C") OR _tL("C++"))
+#include <string.h>
+%%ENDIF
+%%IF(_tL("C++"))
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+%%ENDIF
+
+#include "%%(_sN)Parse.h"
+%%IF(_i(lm))
+#include "%%(_sN)List.h"
+%%ENDIF
+%%IF(_i(sm))
+#include "%%(_sN)Scan.h"
+extern %%(_sN)ScContext lexContext;
+%%ENDIF
+
+`%%EXPORT
+/* Semantic attribute interface */
+ 
+/* Internal node type */
+typedef struct Node {
+    char *string;
+    int value;
+    struct Node *next;
+} Node;
+ 
+`%%DECLARATIONS
+
+/* Counters for the various contructs */
+static int constants, variables, procedures, statements;
+
+/* The node constituting the program */
+static Node *program;
+
+
+/*-----------------------------------------------------------------------------
+    makeNode()
+
+    Make a new list node and initialize it.
+
+ */
+%%IF(_tL("ANSI-C") OR _tL("C++"))
+static Node *makeNode(char *string, int value)
+%%ELSE
+static Node *makeNode(string, value)
+char *string;			/* IN the name of the constant */
+int value;			/* IN the value */
+				/* RET the newly created list node */
+%%ENDIF
+{
+    Node *temp;
+
+    temp = (Node *)malloc(sizeof(Node));
+    temp->string = (char *)malloc(strlen(string) + 1);
+    strcpy(temp->string, string);
+    temp->value = value;
+    temp->next = NULL;
+    return temp;
+}
+
+
+/*-----------------------------------------------------------------------------
+    append()
+
+    Append two lists of nodes.
+
+ */
+%%IF(_tL("ANSI-C") OR _tL("C++"))
+static Node *append(Node *list1, Node *list2)
+%%ELSE
+static Node *append(list1, list2)
+Node *list1;			/* IN the first list */
+Node *list2;			/* IN the second list */
+				/* RET list2 appended to list1 */
+%%ENDIF
+{
+   Node *l;
+
+   for (l = list1; l->next; l = l->next);
+   l->next = list2;
+   return list1;
+}
+
+
+/*-----------------------------------------------------------------------------
+    summary()
+
+    Print a summary of the PL/0 program using the Lister.
+
+ */
+void summary()
+{
+  Node *node;
+  char buf[256];
+
+  sprintf(buf, "Number of constants:  %u", constants);
+%%IF(_i(lm))
+  %%(_sN)LiPrint(buf);
+%%ELSE
+  printf("%s\n", buf);
+%%ENDIF
+  for (node = program; node; node = node->next) {
+    sprintf(buf,"  %s = %d", node->string, node->value);
+%%IF(_i(lm))
+    %%(_sN)LiPrint(buf);
+%%ELSE
+    printf("%s\n", buf);
+%%ENDIF
+  }
+%%IF(_i(lm))
+  %%(_sN)LiPrint("");
+%%ELSE
+  printf("\n");
+%%ENDIF
+  sprintf(buf, "Number of variables:  %u", variables);
+%%IF(_i(lm))
+  %%(_sN)LiPrint(buf);
+%%ELSE
+  printf("%s\n", buf);
+%%ENDIF
+  sprintf(buf, "Number of procedures: %u", procedures);
+%%IF(_i(lm))
+  %%(_sN)LiPrint(buf);
+%%ELSE
+  printf("%s\n", buf);
+%%ENDIF
+  sprintf(buf, "Number of statements: %u", statements);
+%%IF(_i(lm))
+  %%(_sN)LiPrint(buf);
+%%ELSE
+  printf("%s\n", buf);
+%%ENDIF
+} 
+
+
+`%%SCANNER
+
+	scan(token);
+
+`%%TERMINALS
+	IDENTIFIER	= 2,	1,1 => '<id>';
+	NUMBER		= 3,	1,1 => '0';
+	'.'		= 4;
+	';'		= 5;
+	','		= 6;
+	'='		= 7;
+	'<'		= 8;
+	'>'		= 9;
+	'<>'		= 10;
+	'<='		= 11;
+	'>='		= 12;
+	'('		= 13;
+	')'		= 14;
+	'+'		= 15;
+	'-'		= 16;
+	'*'		= 17;
+	'/'		= 18;
+	':='		= 33;
+	'IF'		= 34;
+	'DO'		= 35;
+	'CALL'		= 36;
+	'VAR'		= 25;
+	'END'		= 26;
+	'ODD'		= 27;
+	'THEN'		= 28;
+	'CONST'		= 29;
+	'BEGIN'		= 30;
+	'WHILE'		= 31;
+	'PROCEDURE'	= 32;
+	INCLUDE		= 37;	-- Include is allowed but handled by the scanner
+
+`%%ATTRIBUTES
+    srcp `%% TmSrcp `%1 `%%,
+    -- Extra user-defined fields and attributes should be added here
+    list `%% Node* `%1 `%%,
+    stringValue `%% char `%1[256] `%%,
+    integerValue `%% int `%1 `%%;
+
+`%%RECOVERY
+   Fiducial('CONST', 'VAR', 'PROCEDURE', 'CALL', 'BEGIN', 'IF', 'WHILE');
+   Separator(',', ';');
+
+`%%RULES
+
+<program>
+	=
+	  <block> '.'
+          `%%
+            program = %<block>.list;
+          `%%
+	;
+
+<block>
+	= <declarations> <statement>
+	  -- propagate the constant list
+	  `%%
+	    %<block>.list = %<declarations>.list;
+	  `%%
+	;
+
+<declarations>
+	= <constant declaration> <variable declaration> <procedure declarations>
+	  -- propagate the constant list
+	  `%%
+	    %<declarations>.list = %<constant declaration>.list;
+	  `%%
+	;
+
+<constant declaration>
+	= 'CONST' <constant definitions> ';'
+	  `%%
+	    %<constant declaration>.list = %<constant definitions>.list;
+	  `%%
+	! -- Empty
+	  `%%
+	    %<constant declaration>.list = NULL;
+	  `%%
+	;
+
+<constant definitions>
+	= <constant definitions> ',' <constant definition>
+	  `%%
+	    %1<constant definitions>.list =
+		append(%2<constant definitions>.list,
+		       makeNode(%<constant definition>.stringValue,
+				%<constant definition>.integerValue));
+	  `%%
+	! <constant definition>
+	  `%%
+	    %<constant definitions>.list = 
+		makeNode(%<constant definition>.stringValue,
+			 %<constant definition>.integerValue);
+	  `%%
+	;
+
+<constant definition>
+	= IDENTIFIER '=' NUMBER
+	  `%%
+	    constants++;
+	    strcpy(%<constant definition>.stringValue, %IDENTIFIER.stringValue);
+	    %<constant definition>.integerValue = %NUMBER.integerValue;
+	  `%%
+	;
+
+<variable declaration>
+	= 'VAR' <identifiers> ';'
+	! -- Empty
+	;
+
+<identifiers>
+	= <identifiers> ',' IDENTIFIER
+	  `%%
+	    variables++;
+	  `%%
+	! IDENTIFIER
+	  `%%
+	    variables++;
+	  `%%
+	;
+
+<procedure declarations>
+	= <procedure declarations> <procedure declaration>
+	! -- Empty
+	;
+
+<procedure declaration>
+	= 'PROCEDURE' IDENTIFIER ';' <block> ';'
+	  `%%
+	    procedures++;
+	  `%%
+	;
+
+<statement>
+	= <assignment statement>
+	  `%%
+	    statements++;
+	  `%%
+	! <call statement>
+	  `%%
+	    statements++;
+	  `%%
+	! <compound statement>
+	  `%%
+	    statements++;
+	  `%%
+	! <if statement>
+	  `%%
+	    statements++;
+	  `%%
+	! <while statement>
+	  `%%
+	    statements++;
+	  `%%
+	! -- Empty
+	;
+
+<assignment statement>
+	= IDENTIFIER ':=' <expression>
+	;
+
+<call statement>
+	= 'CALL' IDENTIFIER
+	;
+
+<compound statement>
+	= 'BEGIN' <statements> 'END'
+	;
+
+<statements>
+	= <statements> ';' <statement>
+	! <statement>
+	;
+
+<if statement>
+	= 'IF' <condition> 'THEN' <statement>
+	;
+
+<while statement>
+	= 'WHILE' <condition> 'DO' <statement> ;
+
+
+<condition>
+	= 'ODD' <expression>
+	! <expression> <relop> <expression>
+	;
+
+<relop> = '=' ! '<>' ! '<' ! '>' ! '<=' ! '>=' ;
+
+<expression>
+	= <optional sign> <terms>
+	;
+
+<terms>
+	= <terms> <addop> <term>
+	! <term>
+	;
+
+<term>
+	= <term> <mulop> <factor>
+	! <factor>
+	;
+
+<factor>
+	= IDENTIFIER
+	! NUMBER
+	! '(' <expression> ')'
+	;
+
+<optional sign> = '+' ! '-' ! ; -- Note the empty last alternative!
+
+<addop> = '+' ! '-' ;
+
+<mulop> = '*' ! '/' ;
+
+%%PROCESS(,"example.pl0")
+-------------------------------------------------------------------------------
+-- example.pl0 - Example program taken from "Algorithms + Data Structures =
+--		 Programs" by Niklaus Wirth.
+-------------------------------------------------------------------------------
+CONST m = 7, n = 85;
+
+VAR x, y, z, q, r;
+
+PROCEDURE multiply;
+VAR a, b;
+BEGIN
+    a := x;
+    b := y;
+    z := 0;
+    WHILE b > 0 DO BEGIN
+	IF ODD b THEN z := z + a;
+	a := 2 * a;
+	b := b / 2
+    END
+END;
+
+PROCEDURE divide;
+VAR w;
+BEGIN
+    r := x;
+    q := 0;
+    w := y;
+    WHILE w <= r DO w := 2 * w;
+    WHILE w > y DO BEGIN
+	q := 2 * q;
+	w := w / 2;
+	IF w <= r THEN BEGIN
+	    r := r - w;
+	    q := q + 1
+	END
+    END
+END;
+
+$INCLUDE gcd
+
+BEGIN
+    x := m;
+    y := n;
+    CALL multiply;
+
+    x := 25;
+    y := 3;
+    CALL divide;
+
+    x := 84;
+    y := 36;
+    CALL gcd;
+END.
+
+%%PROCESS(,"gcd")
+-------------------------------------------------------------------------------
+-- gcd - Example procedure taken from "Algorithms + Data Structures =
+--       Programs" by Niklaus Wirth.
+-------------------------------------------------------------------------------
+
+PROCEDURE gcd;
+VAR f, g;
+BEGIN
+    f := x;
+    g := y;
+    WHILE f <> g DO BEGIN
+	IF f < g THEN g := g - f;
+	IF g < f THEN f := f - g;
+    END;
+    z := f;
+END;
+
+%%ENDIF
+%%-- Generating empty source code --
+%%--PROCESS(,"%%(_sN)Parse.%%(_tX)")
+%%--PROCESS(,"%%(_sN)Parse.h")
+%%--PROCESS(,"%%(_sN)PaSema.%%(_tX)")
+%%--PROCESS(,"%%(_sN)PaSema.h)
+%%--PROCESS(,"%%(_sN)Err.%%(_tX)")
+%%--PROCESS(,"%%(_sN)Err.h")

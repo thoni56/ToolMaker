@@ -1,0 +1,22 @@
+%%OPTIONS
+--	OS 'SunOS';
+	PREFIX 'tmk';
+%%IMPORT
+typedef int TmkNatural;
+%%END
+%%TOKEN
+  NAME TmkToken;
+  CODE code %% int %1%%;
+  SRCP srcp %% TmkSrcp %1%%;
+  ATTRIBUTES
+	sval   %% char *%1				/* string value */%%,
+	ival   %% int %1				/* integer value */%%,
+	fpos   %% long %1				/* file pos of target language code */%%,
+	length %% long %1			     /* length of target language code */%%;
+%%END
+%%SRCP
+  NAME   TmkSrcp;
+  COLUMN col  %% TmkNatural %1%%;
+  ROW    line %% TmkNatural %1%%;
+  FILE   file %% TmkNatural %1%%;
+%%END

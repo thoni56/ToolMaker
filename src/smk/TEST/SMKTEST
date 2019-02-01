@@ -1,0 +1,12 @@
+#!/bin/sh
+echo -n "Testing "
+../smk -help 2> .revision
+head -1 .revision
+for d in gen-test
+do
+    echo "========================="
+    echo "Running tests in: $d"
+    echo "========================="
+    (cd $d ; SMKTEST)
+done >smktest.log 2>&1
+diff smktest.log smktest.ref

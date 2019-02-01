@@ -1,0 +1,18 @@
+  OK 1
+  OK 2
+  OK 3
+  OK 4
+  OK 5
+  OK 6
+%%IF (C(*))
+%%IF (C(*))         * * * FACIT * * *
+%%ENDIF
+%%IF ({1}[2](*))
+%%IF ({1}[2](*))    * * * FACIT * * *
+%%ENDIF
+%%IF (<NULL>(*))
+%%IF (<NULL>(*))    * * * FACIT * * *
+%%ENDIF
+%%IF (%%(C)(*))
+%%IF (%%(C)(*))     * * * FACIT * * *
+%%ENDIF

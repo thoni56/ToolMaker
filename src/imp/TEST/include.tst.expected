@@ -1,0 +1,10 @@
+########## include ##########
+%%SET GramName(M2)
+%%SET SemName("%%(GramName).SEM")
+%%(SemName)
+%%INCLUDE("%%(GramName).SEM")
+%%INCLUDE("%%(SemName)")
+########## ../imp include.tst >include.tst.tmp; cat include.tst.tmp; rm include.tst.tmp ##########
+M2.SEM
+Detta {r M2.SEM!
+Detta {r M2.SEM!

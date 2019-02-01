@@ -1,0 +1,30 @@
+# Makefile for lmk on DOS with DJGPP
+#
+
+INCLUDE	= -I../license -I../tmk -I../imp
+LDFLAGS	= -lm -lnsl
+
+LIBS    = ../license/license.o ../tmk/libtmk.a ../imp/imp.a
+
+CFLAGS = $(INCLUDE)
+
+VERSIONOBJECTS = \
+	lmkPaSema.o lmkParse.o \
+	lmkErr.o \
+	lmkScan.o \
+	lmkScSema.o \
+	lmkList.o \
+	lmkTab.o \
+	lmk.o
+
+OBJECTS = $(VERSIONOBJECTS) version.o 
+
+lmk.exe: $(OBJECTS) $(LIBS)
+	$(CC) -o lmk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS)
+
+depend file:
+	@echo -n "Make depend "
+	@$(CC) $(INCLUDE) -M `.c > depend.mk
+	@echo "done."
+
+include depend.mk

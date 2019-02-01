@@ -1,0 +1,158 @@
+# Makefile for tmk
+#
+# ToolMaker tools must be accessible via the PATH environment variable.
+#
+# The various xxQ-macros are intended for commandline additions to the
+# make invocation.
+#
+
+# The environmental variable TMHOME should be set to the ToolMaker
+# home library, eg /usr/local/ToolMaker
+
+# ---------------------------------------------------------------------
+# Modified 1995-01-20 by Thomas Lennartsson (thole@lion) to build on hp
+# with gmake.
+#
+# NOTE: This file is intended for use on HP ONLY. It does NOT support
+#       any other platform. Use gmake on this file.
+#
+# 
+
+ROOT		= /home/projects/ToolMaker
+TMLIB		= $(ROOT)/lib/c
+TMBIN		= $(ROOT)/bin/bin-$(TMARCH)
+INTLIB		= $(ROOT)/library
+
+RELEASEROOT	= $(ROOT)
+RELEASELIB	= $(RELEASEROOT)/lib/c
+RELEASEBIN	= $(RELEASEROOT)/bin/bin-$(TMARCH)
+
+IMP		= $(TMBIN)/imp $(IMPQ)
+PMK		= $(TMBIN)/pmk $(PMQ)
+SMK		= $(TMBIN)/smk $(SMQ)
+LMK		= $(TMBIN)/lmk $(LMQ)
+
+LIB     	= libtmk.a
+
+LDFLAGS		= $(LQ)
+
+CC 		= gcc2.4.5 -ansi -pedantic
+
+CFLAGS		= $(DEBUG) $(CQ)
+
+SRCS.c		= tmkPaSema.c tmkParse.c tmkErr.c tmkScan.c \
+		  tmkScSema.c tmkOpts.c tmkCommon.c
+
+OBJS.c		= ${SRCS.c:.c=.o}
+OBJS		= $(OBJS.c)
+
+.KEEP_STATE:
+
+.PRECIOUS: $(LIB)
+
+#--
+all debug: tm tmkobj
+
+release	releaseARCH RELEASE := CFLAGS= -O4 $(CQ) $(INCLUDE)
+all debug:=CFLAGS= -g $(CQ) $(INCLUDE)
+
+
+#-----------------------------------------------------
+# release tmklib.a, tmk.h,  tmkCommon.h & Common.imp
+
+release:
+	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
+		exit 1 ; \
+	fi
+	make newversion tm releaseARCH releaseSRC
+	cvs rtag tmk`ls [0-9]*_[0-9]*_[0-9]*.* | sed s/\\\.//` tmk
+
+releaseSRC:
+	chmod 664 tmkCommon.h tmk.h
+	rm -f $(INTLIB)/tmkCommon.h $(INTLIB)/tmk.h
+	cp -p tmkCommon.h tmk.h $(INTLIB)/
+	install -f $(RELEASELIB) Common.imp
+	chmod 664 $(RELEASELIB)/Common.imp
+
+releaseARCH: tmkobj
+	chmod 664 $(LIB)
+	rm -f $(INTLIB)/bin-$(TMARCH)/$(LIB)
+	cp -p $(LIB) $(INTLIB)/bin-$(TMARCH)
+
+newversion:
+	@-\rm [0-9]*_[0-9]*_[0-9]*.*
+	@sh version.sh
+	venum +c
+	echo "cat > `ls [0-9]*_[0-9]*_[0-9]*.*` <<EOF" > version.sh
+	echo "TMK" >> version.sh
+	echo "ToolMaker Common" >> version.sh
+	echo "EOF" >> version.sh
+	cvs commit -m 'New Version' version.sh
+
+RELEASE:
+	@if test -r CVS/Tag ; then \
+	  : ; \
+	else \
+	  echo This tree is not checked out from a Tag! ; \
+	  echo RELEASE not allowed!! ; \
+	  exit 1 ; \
+	fi
+	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
+		exit 1 ; \
+	fi
+	make tm releaseARCH releaseSRC
+
+version.c: $(SRCS)
+	@-\rm [0-9]*_[0-9]*_[0-9]*.*
+	@sh version.sh
+	venum +t
+
+$(LIB): $(OBJS)
+	ar r $(LIB) $?
+	-ranlib $(LIB)
+
+tmkobj: checkARCH $(LIB) version.c
+	-ranlib $(LIB)
+
+checkARCH:
+	if test -f .arch ; then :; else echo "none" > .arch; fi
+	-if test `cat .arch` != $(TMARCH); then \
+	    rm *.o *.a; \
+	    echo $(TMARCH) > .arch ; \
+	fi
+
+# ToolMaker generation
+tm: .pmkstamp .smkstamp .lmkstamp
+
+.smkstamp : tmk.smk tmk.tmk
+	$(SMK) tmk
+	@touch .smkstamp
+
+.pmkstamp : tmk.pmk tmk.tmk
+	$(PMK) tmk
+	@touch .pmkstamp
+
+.lmkstamp : tmk.lmk tmk.tmk
+	$(LMK) tmk
+	@touch .lmkstamp
+
+tmkParse.o: tmkParse.c
+tmkPaSema.o: tmkPaSema.c
+tmkErr.o: tmkErr.c
+tmkScan.o: tmkScan.c
+tmkScSema.o: tmkScSema.c
+tmkList.o: tmkList.c
+
+#--
+clean:
+	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt tmk.voc tmkParse.* tmkScan.* \
+	tmkScSema.* tmkPaSema.* tmkCommon.h tmkErr.* $(LIB)
+
+depend file:
+	@echo -n "Make depend "
+	@mv Makefile Makefile.~
+	@sed -n '1,/^# DO NOT DELETE THIS LINE -- make depend depends on it.$$/ p' Makefile.~ > Makefile
+	@for file in $(OBJS:.o=.c) ; do /lib/cpp $(INCLUDE) -M $$file | egrep -v '/usr/include|\.c$$' | cat >> Makefile ; echo -n . ; done
+	@echo "done."
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

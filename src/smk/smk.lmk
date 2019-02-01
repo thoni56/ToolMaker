@@ -1,0 +1,211 @@
+%%OPTIONS
+
+	Listings Multiple;
+	No Include;
+	Limit 300;
+
+%%MESSAGES english
+0  'ScannerMaker %1';
+1  'No warnings or errors detected.';
+2  'No detected warnings.';
+3  'No detected errors.';
+4  '%1 informational message(s).';
+5  '%1 warning(s).';
+6  '%1 error(s).';
+7  'Maximum number of messages exceeded.';
+
+50   'Incorrect option directive.';
+51   'Incorrect section.';
+52   '%1 section not allowed in this file when .tmk file exists.';
+
+60   'Section defined twice, new section skipped.';
+61   'Directive defined twice, new directive skipped.';
+62   'Token section must have a %1 member.';
+63   'Srcp section must have a %1 member.';
+64   '%1 section not found.';
+65   'If declaration is given in one %1 member it must be given in all.';
+66   'Srcp section must have at least one member.';
+67    'Option redefined, old option skipped.';
+
+70   'Could not open input file \"%1\".';
+71   'Could not open output file \"%1\".';
+
+100  'Parsing resumed.';
+101  '%1 inserted.';
+102  '%1 deleted.';
+103  '%1 replaced by %2.';
+104  'Syntax error, stack backed up.';
+105  'Syntax error.';
+106  'Parse stack overflow.';
+107  'Parse table error.';
+108  'Parsing terminated.';
+
+207  'Can not overwrite table file \"%1\".';
+208  'Can not overwrite list file \"%1\".';
+209  'Scanner \"%1\" already defined.';
+210  'Token \"%1\" already screened.';
+211  'Token \"%1\" not in vocabulary.';
+212  'External code already exist.';
+213  'Token name already exist.';
+214  'Multiple matches of END OF TEXT token in scanner.';
+215  'Multiple matches of UNKNOWN token in scanner.';
+216  'END OF TEXT token not defined.';
+218  'UNKNOWN token not defined.';
+220  'String contains mapped or excluded character, or a character not in the current character set.';
+221  'Automatically defined in %1.';
+222  'Not defined in %1.';
+223  'Vocabulary file \"%1\" not found.';
+224  'Line number expected.';
+225  'External code expected.';
+226  'Old end of text symbol, converting to END OF TEXT.';
+227  'Token name expected.';
+228  'Old format, using \"main\" as vocabulary.';
+229  'Scanner name expected.';
+230  'End of line expected.';
+231  'Must be one character long.';
+232  'Set not uniquely mapped.';
+233  'Token already defined.';
+234  'Scanner not found.';
+235  'Token reference not found in scanner \"%1\".';
+236  'Token not defined.';
+237  'Number must be greater than or equal to the first number.';
+238  'Class contain mapped or excluded characters.';
+239  'Token not defined.';
+240  'Scanner description file \"%1\" not found.';
+241  'The cut operator must lead to a final state.';
+242  'Not accepted by \"%1\".';
+243  '%1 definition takes precedence (ambiguous accepting state).';
+244  'Old format, defines UNKNOWN with external code 0.';
+245  'Action not defined.';
+246  'Action already defined.';
+247  'Name of set expected.';
+248  'Set already defined.';
+249  'Unexpected end of set.';
+250  'Character already defined.';
+251  'Unknown token, ignored.';
+252  'Character %1 multiply defined in %2 set.';
+253  'Token %1 can not be inherited .';
+254  'Specified character set \"%1\" not defined.';
+255  'Vocabulary already defined.';
+256  'Vocabulary not defined.';
+257  'Scanner already defined.';
+258  'Scanner not defined.';
+259  'Token is not defined in this vocabulary.';
+260  'Screening turned off, no other token may screen it.';
+261  'Token predefined in %1 scanner.';
+262  'Section already defined.';
+401  'Scanner description file \"%1\" not found.';
+402  'Trouble producing code.';
+405  'Target language \"%1\" not officially supported.';
+
+500  'License server: date expired.';
+501  'License server: no license available.';
+502  'License server: format error.';
+503  'License server: no contact.';
+504  'License server: license file missing.';
+505  'License server: illegal license key.';
+506  'License server: unknown error.';
+%%END
+
+%%MESSAGES amos
+0  'ScannerMaker %1';
+1  'No warnings or errors detected.';
+2  'No detected warnings.';
+3  'No detected errors.';
+4  '%1 informational message(s).';
+5  '%1 warning(s).';
+6  '%1 error(s).';
+7  'Maximum number of messages exceeded.';
+
+50   'Incorrect option directive.';
+51   'Incorrect section.';
+52   '%1 section not allowed in this file when .tmk file exists.';
+
+60   'Section defined twice, new section skipped.';
+61   'Directive defined twice, new directive skipped.';
+62   'Token section must have a %1 member.';
+63   'Srcp section must have a %1 member.';
+64   '%1 section not found.';
+65   'If declaration is given in one %1 member it must be given in all.';
+66   'Srcp section must have at least one member.';
+67    'Option redefined, old option skipped.';
+
+70   'Could not open input file \"%1\".';
+71   'Could not open output file \"%1\".';
+
+100  'Parsing resumed.';
+101  '%1 inserted.';
+102  '%1 deleted.';
+103  '%1 replaced by %2.';
+104  'Syntax error, stack backed up.';
+105  'Syntax error.';
+106  'Parse stack overflow.';
+107  'Parse table error.';
+108  'Parsing terminated.';
+
+207  'Can not overwrite table file \"%1\".';
+208  'Can not overwrite list file \"%1\".';
+209  'Scanner \"%1\" already defined.';
+210  'Token \"%1\" already screened.';
+211  'Token \"%1\" not in vocabulary.';
+212  'External code already exist.';
+213  'Token name already exist.';
+214  'Multiple matches of END OF TEXT token in scanner.';
+215  'Multiple matches of UNKNOWN token in scanner.';
+216  'END OF TEXT token not defined.';
+218  'UNKNOWN token not defined.';
+220  'String contains mapped or excluded character, or a character not in the current character set.';
+221  'Automatically defined in %1.';
+222  'Not defined in %1.';
+223  'Vocabulary file \"%1\" not found.';
+224  'Line number expected.';
+225  'External code expected.';
+226  'Old end of text symbol, converting to END OF TEXT.';
+227  'Token name expected.';
+228  'Old format, using \"main\" as vocabulary.';
+229  'Scanner name expected.';
+230  'End of line expected.';
+231  'Must be one character long.';
+232  'Set not uniquely mapped.';
+233  'Token already defined.';
+234  'Scanner not found.';
+235  'Token reference not found in scanner \"%1\".';
+236  'Token not defined.';
+237  'Number must be greater than or equal to the first number.';
+238  'Class contain mapped or excluded characters.';
+239  'Token not defined.';
+240  'Scanner description file \"%1\" not found.';
+241  'The cut operator must lead to a final state.';
+242  'Not accepted by \"%1\".';
+243  '%1 definition takes precedence (ambiguous accepting state).';
+244  'Old format, defines UNKNOWN with external code 0.';
+245  'Action not defined.';
+246  'Action already defined.';
+247  'Name of set expected.';
+248  'Set already defined.';
+249  'Unexpected end of set.';
+250  'Character already defined.';
+251  'Unknown token, ignored.';
+252  'Character %1 multiply defined in %2 set.';
+253  'Token %1 can not be inherited .';
+254  'Specified character set \"%1\" not defined.';
+255  'Vocabulary already defined.';
+256  'Vocabulary not defined.';
+257  'Scanner already defined.';
+258  'Scanner not defined.';
+259  'Token is not defined in this vocabulary.';
+260  'Screening turned off, no other token may screen it.';
+261  'Token predefined in %1 scanner.';
+262  'Section already defined.';
+401  'Scanner description file \"%1\" not found.';
+402  'Trouble producing code.';
+405  'Target language \"%1\" not officially supported.';
+
+500  'License server: date expired.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+501  'License server: no license available.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+502  'License server: format error\n        Please contact SoftLab ab at +46 (0) 13 23 57 00.';
+503  'License server: no contact.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+504  'License server: license file missing.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+505  'License server: illegal license key.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+506  'License server: unknown error.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+%%END

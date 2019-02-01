@@ -1,0 +1,339 @@
+.TH IMP 1L "1995 November 28" "\fISoftLab ab\fP"
+.SH NAME
+imp \- Incremental Macro Processor
+.SH SYNOPSIS
+.B imp
+[options] \fIinputFile\fP [\fIoutputFile\fP]
+.br
+.B imp
+\-h
+.SH DESCRIPTION
+.PP
+.B imp
+is a macro processor intended mainly for use with SoftLab's ToolMaker
+kit. It is however a general tool for processing text files in an
+incremental way, and may thus be useful for other purposes.
+.PP
+The first form of invocation will call the macro processor with
+\fIinputFile\fP as the "root" file to process. If \fIinputfile\fP has no
+extension \fBimp\fP adds the extension '.imp'. If \fIoutputFile\fP is
+given, any output resulting from the processing of \fIinputFile\fP
+will be written to the \fIoutputFile\fP. The default \fIoutputFile\fP
+is standard output.
+.PP
+The second form of invocation will give a brief description of the
+parameters and options available.
+.SH OPTIONS
+.IP \fB-e\fIc\fP
+Set the escape character to 'c'.
+.IP \fB--e\fP
+Set the default escape character '`'.
+.IP \fB-h\fP
+Print a brief description of the parameters and the options.
+.IP \fB-[-]i\fP
+Enable[disable] intermediate mode. In intermediate mode any undefined
+entities (variables, labels, ...)  in a macro statement will result in
+the statement being propagated to the output file without any
+warnings. By default intermediate mode is disabled.
+.IP \fB-[-]l\fP
+Enable[disable] listing to file. If enabled, a full list will be
+produced containing all source text and all error messages. The name
+of the list file will be the root of the infile name with the
+extension '.iml'. By default lisitng is disabled.
+.IP \fB-s\fIVar\fP(\fIVal\fR{\fB,\fIVal\fR}\fB)\fP
+Set the macro variable \fIVar\fP to the value list within parentheses
+prior to processing any input file. The syntax of the variable name
+and the values are described under the '\fB%%SET\fP'-statement.
+.IP \fB-[-]u\fP
+Enable[disable] use of environment variables. If this option is
+enabled, IMP will try to find any undefined variables in the
+environment before considering them as undefined. By default use of
+environment variables is disabled.
+.IP \fB-[-]v\fP
+Enable[disable] verbose mode. In verbose mode a banner and timing
+figures will be printed on standard output.  By default verbose mode
+is disabled.
+.SH MACRO STATEMENTS
+.IP \fB%%PROCESS(\fP[\fIinputFile\fP][\fB,\fP\ \fIoutputFile\fP]\fB)\fP
+Equivalent to the command line invocation of the macro processor
+except that it is given in a file. No options can be specified with
+this method, they can only be given "globally" when the Macro
+Processor is initially called.
+.IP
+If only an \fIinputFile\fP is given, \fIinputFile\fP becomes the new
+input stream and any output is inhibited. This means that the
+\fIinputFile\fP will be "processed", i.e. any definitions are
+evaluated, but no output is produced. When the end of \fIinputFile\fP
+is reached, the old input file is resumed, and any previously active
+output is resumed.
+.IP
+If only an \fIoutputFile\fP is given, the current output file is
+closed and any further output is directed to \fIoutputFile\fP.
+.IP
+If both an \fIinputFile\fP and an \fIoutputFile\fP is given, the
+\fIinputFile\fP is processed and any output is directed to the
+\fIoutputFile\fP. When the end of \fIinputFile\fP is reached, the old
+input and output files are resumed.
+.bp
+.IP \fB%%IF(\fIcondition\fB)\fR
+.PD 0
+.HP
+\fItext\fP
+.HP
+[\fB%%ELSIF(\fIcondition\fB)\fR
+.HP
+\fItext\fP]*
+.HP
+[\fB%%ELSE\fP
+.HP
+\fItext\fP]
+.HP
+\fB%%ENDIF\fP
+.IP
+\fIcondition\fP has the following syntax:
+.PD 1
+.IP \fIcondition\fP\ ::=
+.br
+\ \ \fIvariable\fP \fB(\fP \fIvalues\fP \fB)\fP
+.br
+| \fBNOT\fP \fIcondition\fP
+.br
+| \fIcondition\fP \fBAND\fP \fIcondition\fP
+.br
+| \fIcondition\fP \fBOR\fP \fIcondition\fP
+.br
+| \fIexpression\fP relop \fIexpression\fP
+.br
+| \fIsystem call\fP
+.br
+| \fB(\fP \fIcondition\fP \fB)\fP
+.IP \fIvalues\fP\ ::=\ \fB*\fP\ |\ \fB?\fP\ |\ \fIvalue\fP[\fB,\fP\ \fIvalue\fP]*
+.IP \fIvariable\fP\ ::=\ \fIidentifier\fP 
+.IP \fIvalue\fP\ ::=\ \fIinteger\fP\ |\ \fIidentifier\fP\ |\ \fIstring\fP 
+.IP \fIrelop\fP\ ::=\ \fB=\fP\ |\ \fB#\fP\ |\ \fB>\fP\ |\ \fB<\fP\ |\ \fB>=\fP\ |\ \fB<=\fP 
+.IP \fIsystem\ call\fP\ ::=\ \fBIMP$SYSTEM(\fP\ \fIcommand\fP\ \fB,\fP\ \fIidentifier\fP\ \fB)\fP
+.IP \fIcommand\fP\ ::= 
+.br
+\ \ \fIquoted\ string\fP
+.br
+| \fIidentifier\fP
+.IP
+The syntax for expression is described under the \fIexpression syntax\fP 
+header below
+.IP
+The \fIcondition\fP is (partially) evaluated, any non-defined
+variables have an undefined value and are not evaluated.
+.IP
+If the truth value is decidable, the text-parts are conditionally
+processed according to the truth value.
+.IP
+If the truth value is not decidable, the entire macrostatement will be
+copied including all the text parts. Any nested statements within the
+copied text will of course still be processed, e.g. a nested
+\fB%%IF\fP-statment with defined truth values. The original \fIcondition\fP
+will be replaced by the undecidable part of the \fIcondition\fP. If
+the undecidable \fIcondition\fP belongs to an \fB%%ELSIF\fP, the \fB%%ELSIF\fP
+will be converted to an \fB%%IF\fP. All subsequent conditions in all
+branches of an undecidable \fB%%IF\fP-statement will be evaluated as far as
+possible and short-circuited if appropriate. This mechanism is
+intended to be used when the processor is run in multiple passes with
+some filtering done in each pass.
+.IP
+The \fB%%IF\fP-statement can of course be nested.
+.IP
+The rule for evaluating a \fIvariable\fP(\fIvalues\fP) condition is
+set membership for single values and set subset for lists of values.
+'*' is a member of any defined set.
+.IP
+When a \fIsystem call\fP is evaluated first \fIcommand\fP is evaluted. The 
+resulting string is sent to the operating system for execution. If the execution of 
+the \fIcommand\fP was successful the \fIsystem call\fP returns the value TRUE, otherwise 
+FALSE. As a side effect the output from the \fIcommand\fP is assigned as a 
+text string to the variable named identifier. Output from the \fIcommand\fP 
+to stderr is directed to stderr and is not assigned to identifier.
+.IP
+The value '?' is used to test if a variable is defined or not. If the
+variable is defined, the value '?' will yield TRUE, otherwise FALSE.
+This implies that such an condition is never undefined.
+.IP \fB%%COMMENT\fP
+.PD 0
+.HP
+\fItext\fP
+.HP
+\fB%%ENDCOMMENT\fP
+.IP
+The macrolines and all text in between (including any %%-directives)
+are unconditionally removed. The comment blocks can be nested.
+.PD 1
+.IP \fB%%--\fP\ \fItext\fP\ \fInewline\fP
+A one line comment. If the comment starts in the leftmost column of a line
+the entire line (including the \fInewline\fP) will be
+removed. If \fI%%--\fP is directly followed by a \fInewline\fP the newline
+will be unconditionally removed regardless where on the line the \fI%%--\fP
+is located.
+.IP \fB%%KEEP\fB
+.PD 0
+.HP
+\fItext\fP
+.HP
+\fB%%ENDKEEP\fP
+.IP
+The macrolines are unconditionally removed, but all text in between
+is unconditionally copied to the output, including any %%-directives
+(even comments). Can be nested, i.e. any "inner" \fB%%KEEP\fP-\fB%%ENDKEEP\fP
+pairs are copied correctly.
+.PD 1
+.IP \fB%%SET\ \fIvariable\fB(\fIvalue\fR[\fB,\ \fIvalue\fR]*\fB)\fP\ \ \ \ \ \ (Format\ 1)
+.PD 0
+.HP
+\fB%%SET \fIvariable\fB(,\fR \fIvalue\fP[\fB, \fIvalue\fR]*\fB)\fP    (Format 2)
+.IP
+The \fIvariable\fP is defined and set to \fIvalue\fP or the list of
+values. In format 1, any old values are discarded, in format 2 the new
+values are appended to the old values. A defined variable is logically
+treated as a set (see the %%IF-statement).
+.PD 1
+.IP \fB%%ESET\ \fIvariable\fB(\fIexpression\fR[\fB,\ \fIexpression\fR]*\fB)\fP\ \ \ \ \ \ (Format\ 1)
+.PD 0
+.HP
+\fB%%ESET \fIvariable\fB(, \fIexpression\fR[\fB, \fIexpression\fR]*\fB)\fP    (Format 2)
+.IP
+All \fIexpression\fPs are evaluated and the \fIvariable\fP is defined and set to 
+the value or the list of values. In format 1, any old values are discarded,
+in format 2 the new values are appended to the old values. A defined variable
+is logically treated as a set (see the \fB%%IF\fP-statement).
+.PD 1
+.IP \fB%%BEGIN(\fIlabel\fR[\fB(\fIformalParameters\fB)\fR][\fIlocalVariables\fP]\fB)\fP
+.PD 0
+.HP
+\fItext\fP
+.HP
+\fB%%END(\fIlabel\fB)\fR
+.PD 1
+.IP \fIformalParameters\fP\ ::=\ \fIidentifier\fP\ [\fB,\fP\ \fIidentifier\fP]*
+.IP \fIlocalVariables\fP\ ::=\ [\fB,\fP\ \fIidentifier\fP]*
+.IP
+.PD 0
+The \fIlabel\fP is entered in the symbol table. The macrolines
+are removed and the \fItext\fP is regarded as a comment (not processed
+or copied in any way). The end-label must be the same label as the
+begin-label. 
+.PD 1
+.IP \fB%%INCLUDE(\fIlabel\fR[\fB(\fIactualParameter\fR[\fB,\ \fIactualParameter\fR]\fB)\fP]\fB)\fP
+.IP \fIactualParameter\fP\ =\ \fIvalue\fP
+Process the region labeled \fIlabel\fP. If one or more \fIactualParameter\fPs
+are given, these are passed as parameters to the region, and can be
+accessed through a variable with the name \fIlabel\fP. If formal parameters 
+were given when the region was defined they are inserted in the local symbol 
+table and initialized to the values of the actual parameters (there must be 
+exactly the same number of actual parameters as formal parameters). 
+All local variables defined when the region was defined are also inserted into
+the local symbol table and initialized to NULL.
+The \fItext\fP
+part in the region is processed regarding any commands. If the region
+contains any "inner" regions, these are processed as described for
+regions.
+.IP \fB%%EINCLUDE(\fIlabel\fR[\fB(\fIexpression\fR[\fB,\ \fIexpression\fR]\fB)\fP]\fB)\fP
+Works exactly the same as \fB%%INCLUDE\fP but the actual parameters are the values
+we get when the \fIexpression\fPs has been evaluated.
+.IP \fB%%INCLUDE("\fIfilename\fB")\fR
+.PD 0
+.HP
+\fB%%EINCLUDE("\fIfilename\fB")\fR
+.IP
+Process an entire file. This statement differs from \fB%%PROCESS\fP in
+that any processed text will be propagated to the output file.
+.PD 1
+.IP \fB%%(\fP\fIexpression\fB)\fR
+This is the "insert" statement. The macro command is replaced by the
+value (without parentheses) or the list of values (without parentheses
+and separated by commas) of the evaluated \fIexpression\fP. 
+.IP \fB%%LOOP(\fIloopVariable\fB\ <=\ \fIexpression\fB)\fR
+.PD 0
+.HP
+\fItext\fP
+.HP
+\fB%%ENDLOOP(\fIloopVariable\fB)\fR
+.IP
+The \fItext\fP in the loop is processed the value of \fIexpression\fP
+number of times.
+\fIloopVariable\fP takes on the values 1 upto and including
+\fIexpression\fP for each successive iteration. The name of the
+\fIloopVariable\fP must be the same at the beginning and at the end
+of the loop. The \fIexpression\fP must evaluate to an integer.
+.PD 1
+.IP \fB%%LOOP(\fIloopVariable\fB,\ \fIvariable\fB)\fR
+.PD 0
+.HP
+\fItext\fP
+.HP
+\fB%%ENDLOOP(\fIloopVariable\fB)\fR
+.IP
+The \fItext\fP in the loop is processed once for each element of the
+\fIvariable\fP which preferably should contain a list of values. The
+\fIloopVariable\fP will take on the first element of the
+\fIvariable\fP in the first iteration of the loop, the second element
+in the second iteration and so on until all the elements have been
+processed.
+.PD 1
+.IP \fB%%MESSAGE(\fIexpression\fB)\fR
+\fIexpression\fP is evaluated and the result 
+will be printed on the standard error stream.
+.PD 1
+.IP \fB%%EXIT(\fP\ \fIexpression\fp\ \fB,\fP\ \fIexpression\fP\ \fB)\fR
+IMP will exit with the value of the first \fIexpression\fP as exit status. 
+The second \fIexpression\fP is evaluated and the result will be printed on the standard error stream.
+.PD 1
+.IP \fBEXPRESSION\fP
+.IP \fIexpression\fP\ ::=
+.br
+\ \ \fIexpression \fB+ \fIterm\fR
+.br
+| \fIexpression \fB- \fIterm\fR
+.br
+| \fIterm\fP
+.IP \fIterm\fP\ ::=
+.br
+\ \ \fIterm \fB* \fIfactor\fR
+.br
+| \fIterm \fB/ \fIfactor\fR
+.br
+| \fIfactor\fP
+.IP \fIfactor\fP\ ::=
+.br
+\ \ \fIoperand\fP
+.br
+| \fB- \fIfactor\fR
+.IP \fIoperand\fP\ ::=
+\ \ \fIstring\fP
+.br
+| \fIvariable\fP
+.br
+| \fB( \fIexpression \fB)\fR
+.IP \fIvariable\fP\ ::= 
+.br
+\ \ \fIidentifier\fP
+.br
+\ \ \fIidentifier\fP '\fB[\fP' \fIindex\fP '\fB]\fP'
+.IP \fIindex\fP\ ::=\ \fIexpression\fP
+.IP
+If a \fIvariable\fP is used it is replaced by the value (without parentheses) or 
+the list of values (without parentheses and seperated by commas) of the 
+\fIvariable\fP. If an \fIindex\fP is given the \fIindex\fP must evaluate to an
+integer and only the value with the corresponding index in the list is
+retreived. The first value has index 1, index 0 gives the number of values the variable currently has.
+.IP
+If the intermediate flag is not set at invocation, any undefined
+variables will generate a warning.
+.IP
+Note that parts of, or all of, an \fIidentifier\fP or \fIstring\fP may be an
+insert statement!
+.PD 1
+.SH SEE ALSO
+toolmake(1L), pmk(1L), smk(1L), lmk(1L)
+.SH AUTHOR
+Email to: tools@softlab.se
+.SH NOTES
+These manual pages corresponds to \fBimp\fP version 2.1
+.PP
+Copyright \(co 1990-1995 SoftLab ab.

@@ -1,0 +1,138 @@
+-----------------------------------------------------------------------------
+--
+--
+-- lmk.pmk                      Date: 1992-07-08 16:05:35/toolmake
+--
+--
+-- lmk - ParserMaker description file
+--
+-----------------------------------------------------------------------------
+
+%%IMPORT
+
+#include "lmk_i.h"
+#include "lmkScan.h"
+#include "tmkCommon.h"
+
+extern lmkScContext lmkCtxt;
+
+%%END
+%%SCANNER lmkScan(lmkCtxt, token);
+%%DECLARATIONS
+
+#include <stdlib.h>
+#include <string.h>
+#include "lmk_i.h"
+#include "lmkCommon.h"
+#include "lmkList.h"
+
+static int messCnt = 0;
+
+static MessSectNodeP newMessSect(msNode)
+  MessSectNodeP msNode;
+{
+  MessSectNodeP p,q;
+
+  for (p = messSectRoot; p; q=p, p=p->next)
+    if (strcmp(p->name, msNode->name) == 0)
+      return NULL;
+  if (messSectRoot)
+    q->next = msNode;
+  else
+    messSectRoot = msNode;
+  return msNode;
+}
+
+%%ATTRIBUTES
+        sval %% char *%1%%,
+        ival %% int %1%%,
+        mline %% MessNodeP %1%%,
+        srcp %% TmkSrcp %1%%;
+
+%%RULES
+
+lmk_document
+    = other_sections
+    ;
+
+other_sections
+    = -- empty
+    ! other_sections other_section
+    ;
+
+other_section
+    = messages_section
+    ! skip_section
+    ;
+
+-----------------------------------------------------------------------------
+-- skip section
+-----------------------------------------------------------------------------
+
+skip_section
+    = SKIPHEADER
+      -- Followed by language specific text skipped by the scanner.
+      optional_end
+    ;
+
+-----------------------------------------------------------------------------
+-- messages section grammar
+-----------------------------------------------------------------------------
+
+messages_section
+    = messages_header message_lines optional_end
+        %%{
+          MessSectNodeP p = (MessSectNodeP) malloc(sizeof(MessSectNode));
+          p->name = %messages_header.sval;
+	  p->messCnt = messCnt;
+          p->messages = %message_lines.mline;
+          p->next = NULL;
+          if (!newMessSect(p))
+	    lmkLog(`&%messages_header.srcp, 200, sevERR, p->name);
+        }%%
+    ;
+
+messages_header
+    = '%%MESSAGES' IDENTIFIER
+	%%{
+	  messCnt = 0;
+	  %messages_header.sval = %IDENTIFIER.sval;
+	  %messages_header.srcp = %IDENTIFIER.srcp;
+	}%%
+    ;
+
+message_lines
+    = -- empty
+        %%{
+          %message_lines.mline = NULL;
+        }%%
+    ! message_lines message_line
+        %%{
+          MessNodeP p;
+
+          if (%2message_lines.mline == NULL)
+            %message_lines.mline = %message_line.mline;
+          else {
+            for (p = %2message_lines.mline; p->next; p = p->next);
+            p->next = %message_line.mline;
+            %message_lines.mline= %2message_lines.mline;
+          }
+	  messCnt++;
+        }%%
+    ;
+
+message_line
+    = NUMBER STRING ';'
+        %%{
+          MessNodeP p = (MessNodeP) malloc(sizeof(MessNode));
+          p->number = %NUMBER.ival;
+          p->text = %STRING.sval;
+          p->next = NULL;
+          %message_line.mline = p;
+        }%%
+    ;
+
+optional_end
+    = -- empty
+    ! '%%END'
+    ;

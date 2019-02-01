@@ -1,0 +1,107 @@
+%%OPTIONS
+
+	Listings multiple;
+	Library '.';
+
+%%MESSAGES english
+0  'ListerMaker %1';
+1  'No warnings or errors detected.';
+2  'No detected warnings.';
+3  'No detected errors.';
+4  '%1 informational message(s).';
+5  '%1 warning(s).';
+6  '%1 error(s).';
+7  'Maximum number of messages exceeded.';
+
+50   'Incorrect option directive.';
+51   'Incorrect section.';
+52   '%1 section not allowed in this file when .tmk file exists.';
+
+60   'Section defined twice, new section skipped.';
+61   'Directive defined twice, new directive skipped.';
+62   'Token section must have a %1 member.';
+63   'Srcp section must have a %1 member.';
+64   '%1 section not found';
+65   'If declaration is given in one %1 member it must be given in all.';
+66   'Srcp section must have at least one member.';
+67    'Option redefined, old option skipped.';
+
+70   'Could not open input file \"%1\".';
+71   'Could not open output file \"%1\".';
+
+100   'Parsing resumed.';
+101   '%1 inserted.';
+102   '%1 deleted.';
+103   '%1 replaced by %2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+
+200   'Message section \"%1\" already defined.';
+
+300   'At least one messages section is required.';
+
+405   'Target language \"%1\" not officially supported.';
+
+500   'License server: date expired.';
+501   'License server: no license available.';
+502   'License server: format error.';
+503   'License server: no contact.';
+504   'License server: license file missing.';
+505   'License server: illegal license key.';
+506   'License server: unknown error.';
+
+%%END
+
+%%MESSAGES amos
+0  'ListerMaker %1';
+1  'No warnings or errors detected.';
+2  'No detected warnings.';
+3  'No detected errors.';
+4  '%1 informational message(s).';
+5  '%1 warning(s).';
+6  '%1 error(s).';
+7  'Maximum number of messages exceeded.';
+
+50   'Incorrect option directive.';
+51   'Incorrect section.';
+52   '%1 section not allowed in this file when .tmk file exists.';
+
+60   'Section defined twice, new section skipped.';
+61   'Directive defined twice, new directive skipped.';
+62   'Token section must have a %1 member.';
+63   'Srcp section must have a %1 member.';
+64   '%1 section not found';
+65   'If declaration is given in one %1 member it must be given in all.';
+66   'Srcp section must have at least one member.';
+67    'Option redefined, old option skipped.';
+
+70   'Could not open input file \"%1\".';
+71   'Could not open output file \"%1\".';
+
+100   'Parsing resumed.';
+101   '%1 inserted.';
+102   '%1 deleted.';
+103   '%1 replaced by %2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+
+200   'Message section \"%1\" already defined.';
+
+300   'At least one messages section is required.';
+
+405   'Target language \"%1\" not officially supported.';
+
+500   'License server: date expired.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+501   'License server: no license available.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+502   'License server: format error.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+503   'License server: no contact.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+504   'License server: license file missing.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+505   'License server: illegal license key.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+506   'License server: unknown error.\n        Please contact SoftLab ab at +46 (0) 13 23 57 00';
+%%END
