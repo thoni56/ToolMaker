@@ -1,0 +1,2 @@
+.pmk : ../../pmk $1
+.pml : head -n-0 $2
