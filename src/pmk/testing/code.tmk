@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------
--- code.tmk 			Date: 1996-08-28/toolmake
--- 
+-- code.tmk             Date: 1996-08-28/toolmake
+--
 -- Common ANSI-C definitions for all ToolMaker tools.
 --
 ----------------------------------------------------------------------------
@@ -9,9 +9,8 @@
 ----------------------------------------------------------------------------
 
 %%OPTIONS
---  OS 'SunOS';
     Prefix 'code';
-
+    Library '/home/thomas/Utveckling/ToolMaker/lib/ansi-c';
 
 %%IMPORT
 typedef int TmNatural;
@@ -27,6 +26,5 @@ typedef int TmCode;
     Code Code %% TmCode %1 %%;
     Srcp srcp %% TmSrcp %1 %%;
     Attributes
-	floatValue %% double %1 %%,
-    	stringValue %% char* %1 %%;
-
+    floatValue %% double %1 %%,
+        stringValue %% char* %1 %%;

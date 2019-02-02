@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------*\
 
-	codePaSema.c
+    codePaSema.c
 
-	ParserMaker generated semantic actions
+    ParserMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
 

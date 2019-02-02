@@ -1,24 +1,24 @@
 #ifndef _pmk_i_h
 #define _pmk_i_h
-/*------------------------------------------------------------------- */ 
-/* TITLE                                                              */ 
-/* ------                                                             */ 
+/*------------------------------------------------------------------- */
+/* TITLE                                                              */
+/* ------                                                             */
 /* pmk_i.h                                                            */
-/*                                                                    */ 
+/*                                                                    */
 /* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* REVISION DATA                                                      */ 
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* REVISION DATA                                                      */
 /* -------------                                                      */
 /* CREATED:   92-08-26 H}kan Petersson                                */
 /* BASED ON:                                                          */
-/* MODIFIED:                                                          */ 
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* DESCRIPTION                                                        */ 
-/* -----------                                                        */ 
+/* MODIFIED:                                                          */
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* DESCRIPTION                                                        */
+/* -----------                                                        */
 /* Global definitions                                                 */
-/*                                                                    */ 
+/*                                                                    */
 /* ------------------------------------------------------------------ */
 
 /* IMPORT */
@@ -28,7 +28,7 @@
 #include <fcntl.h>
 
 #ifdef CYGWIN
-#define OFLAG _O_RAW
+#define OFLAG O_TEXT
 #define TARGETOS "cygwin"
 #else
 #ifdef MINGW
@@ -54,7 +54,7 @@ typedef struct StrList *StrListP;
 
 typedef enum OptTabKind {
   GENERATE_OPT, FORCE_OPT,
-  VERBOSE_OPT, TRACE_OPT, WIDTH_OPT, HEIGHT_OPT, LINE_OPT, STACKSIZE_OPT, 
+  VERBOSE_OPT, TRACE_OPT, WIDTH_OPT, HEIGHT_OPT, LINE_OPT, STACKSIZE_OPT,
   STACKLIMIT_OPT, LOOKAHEADMAX_OPT, SHIFTCOST_OPT, PMKTARGET_OPT,
   TMKTARGET_OPT, PMKOS_OPT, TMKOS_OPT, TMKESCAPE_OPT, PMKESCAPE_OPT,
   PMKPREFIX_OPT, LISTERPREFIX_OPT, TMKPREFIX_OPT, OPTIMIZE_OPT, PACK_OPT,
@@ -73,7 +73,7 @@ extern CodeNodeP importSection;
 
 extern StrListP grmAttrNames, grmAttrDecls;
 
-extern CodeNodeP 
+extern CodeNodeP
   pmkImportSection,
   exportSection,
   declSection,
