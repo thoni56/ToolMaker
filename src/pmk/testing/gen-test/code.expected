@@ -12,7 +12,7 @@
 
 %%OPTIONS
     Prefix 'code';
-    Library '/home/thomas/Utveckling/ToolMaker/lib/ansi-c';
+    Library '../../../../lib/ansi-c';
 
 %%IMPORT
 typedef int TmNatural;
@@ -54,8 +54,8 @@ typedef int TmCode;
 %%SET currentOs("cygwin")
 %%SET tmkTarget("ansi-c")
 %%SET pmkTarget("ansi-c")
-%%SET tmkLibrary("/home/thomas/Utveckling/ToolMaker/lib/ansi-c")
-%%SET pmkLibrary("..")
+%%SET tmkLibrary("../../../../lib/ansi-c")
+%%SET pmkLibrary("../..")
 %%SET tmkPrefix("code")
 %%SET parserPrefix("code")
 %%SET listerPrefix("code")
@@ -155,7 +155,7 @@ static int noOfItems = 0;
 
         /* Semantic action */
         noOfItems++;
-		break;}
+    	break;}
 %%END(pmSemantics)
 %%SET vocFileName ("code.voc")
 %%BEGIN (pmVoc)
@@ -478,7 +478,7 @@ int rule			/* IN production number */
 
         /* Semantic action */
         noOfItems++;
-		break;}
+    	break;}
     default: break; }
 }/*codePaSema()*/
 

@@ -10,7 +10,7 @@
 
 %%OPTIONS
     Prefix 'code';
-    Library '/home/thomas/Utveckling/ToolMaker/lib/ansi-c';
+    Library '../../../../lib/ansi-c';
 
 %%IMPORT
 typedef int TmNatural;
