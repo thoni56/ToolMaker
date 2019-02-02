@@ -1,0 +1,1329 @@
+########## pos ##########
+set os = "$argv[1]"
+if ("$os" == "PC") then
+  dos2unix -ascii pos.tst.win32 > pos.tmp
+  alias cat dos2unix -ascii
+else
+  ../pmk pos > pos.tmp
+endif
+echo +++++ pos.tmk +++++  >> pos.tmp
+\cat pos.tmk >> pos.tmp
+echo +++++ pos.pmt +++++ >> pos.tmp
+cat pos.pmt >> pos.tmp
+\cat pos.tmp
+\rm pos.tmp
+########## /bin/csh -f pos.tst UNIX ##########
+
+
+
+        231 I : ''%%CODE'' was not included in the TERMINAL SECTION.
+        231 I : ''%%DECLARATIONS'' was not included in the TERMINAL SECTION.
+        231 I : ''%%TERMINALS'' was not included in the TERMINAL SECTION.
+        231 I : ''='' was not included in the TERMINAL SECTION.
+        231 I : '';'' was not included in the TERMINAL SECTION.
+        231 I : '','' was not included in the TERMINAL SECTION.
+        231 I : ''=>'' was not included in the TERMINAL SECTION.
+        231 I : ''%%ATTRIBUTES'' was not included in the TERMINAL SECTION.
+        231 I : ''%%'' was not included in the TERMINAL SECTION.
+        231 I : ''%%RECOVERY'' was not included in the TERMINAL SECTION.
+        231 I : ''META'' was not included in the TERMINAL SECTION.
+        231 I : ''('' was not included in the TERMINAL SECTION.
+        231 I : '')'' was not included in the TERMINAL SECTION.
+        231 I : ''SEPARATOR'' was not included in the TERMINAL SECTION.
+        231 I : ''FIDUCIAL'' was not included in the TERMINAL SECTION.
+        231 I : ''SKIP'' was not included in the TERMINAL SECTION.
+        231 I : ''%%RULES'' was not included in the TERMINAL SECTION.
+        231 I : ''!'' was not included in the TERMINAL SECTION.
+        231 I : ''%+'' was not included in the TERMINAL SECTION.
+        231 I : ''%-'' was not included in the TERMINAL SECTION.
+        231 I : ''|'' was not included in the TERMINAL SECTION.
+        231 I : ''{'' was not included in the TERMINAL SECTION.
+        231 I : ''}'' was not included in the TERMINAL SECTION.
+        231 I : ''%%EXPORT'' was not included in the TERMINAL SECTION.
+        231 I : ''%%SCANNER'' was not included in the TERMINAL SECTION.
+        231 I : ''%%INSERTSYMBOL'' was not included in the TERMINAL SECTION.
+        231 I : 'SKIPHEADER' was not included in the TERMINAL SECTION.
+        231 I : ''%%END'' was not included in the TERMINAL SECTION.
+        302 I : Conflicts resolved by modifications.
+
+
+No warnings or errors detected.
+29 informational message(s).
+
++++++ pos.tmk +++++
+%%OPTIONS
+--	Os 'SunOS';
+	Prefix 'pmk';
+	Target 'c';
+
+%%IMPORT
+#include "tmkCommon.h"
+%%END
+%%TOKEN
+	NAME PmkToken;
+	CODE code   %% int %1%%;
+	SRCP srcp   %% TmkSrcp %1%%;
+	ATTRIBUTES
+	     sval   %% char *%1%%,
+	     ival   %% int %1%%,
+	     fpos   %% long %1%%,
+	     length %% long %1%%;
+%%END
+%%SRCP
+	NAME TmkSrcp;
+	COLUMN col %% int %1 %%;
+	ROW    line %% int %1 %%;
+	FILE   file %% int %1 %%;
+	POSITION   pos %% int %1 %%;
+%%END
++++++ pos.pmt +++++
+%%SET tmkTokenName("PmkToken")
+%%SET tmkTokenCode("code")
+%%SET tmkTokenSrcp("srcp")
+%%SET tmkTokenDecl (" int code", " TmkSrcp srcp", " char *sval", " int ival", " long fpos", " long length")
+%%SET tmkSrcpName("TmkSrcp")
+%%SET tmkSrcpRow("line")
+%%SET tmkSrcpCol("col")
+%%SET tmkSrcpFile("file")
+%%SET tmkSrcpPos("pos")
+%%SET tmkSrcpDecl(" int line ", " int col ", " int file ", " int pos ")
+%%BEGIN(tmkImport)
+
+#include "tmkCommon.h"
+%%END(tmkImport)
+%%SET tmkForce(0)
+%%SET tmkOs("SunOS")
+%%SET pmkOs("SunOS")
+%%SET currentOs("SunOS")
+%%SET tmkTarget("c")
+%%SET pmkTarget("c")
+%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET pmkLibrary("..")
+%%SET tmkPrefix("pmk")
+%%SET parserPrefix("pmk")
+%%SET listerPrefix("pmk")
+%%SET tmkCodeDecl(" int code")
+%%SET tmkGrmAttrDecl(" prod_elnode *rule_elnode_last", " prod_elnode *rule_elnode /* list of rhs elements (see prod_elnode's def) */", " rhs_node *rhslist_last /* last element in the list above. This used to
+                                        to avoid making a reversed list */", " rhs_node *rhslist /* list of alternative righthand sides */", " altr_lst *altr_last", " altr_lst *altr_node /* list of alternatives (in EBNF alternation) */", " SymSet nored_set /* modifier sets */", " SymSet red_set /* modifier sets */", " int code /* terminals code value given in TERMINAL section */", " int dcost /* Delete cost given in TERMINAL section */", " int icost /* Insert cost given in TERMINAL section */", " Boolean n
+ullf /* null flag */", " Boolean q_str /* quoted_ string flag */", " TmkSrcp srcp", " char *sval2", " char *sval", " int ival")
+%%SET tmkGrmAttrNames("rule_elnode_last", "rule_elnode", "rhslist_last", "rhslist", "altr_last", "altr_node", "nored_set", "red_set", "code", "dcost", "icost", "nullf", "q_str", "srcp", "sval2", "sval", "ival")
+%%BEGIN(pmkImport)
+
+
+#include <stdio.h>
+
+#include "pws.h"
+#include "pmkList.h"
+#include "pwsLexCode.h"
+#include "set.h"
+#include "pmk_i.h"
+#include "tmk.h"
+#include "pwSymSet.h"
+#include "pwsGrm.h"
+#include "pmkScan.h"
+extern pmkContext pmkCtxt;
+%%END(pmkImport)
+%%PROCESS("%%(tmkLibrary)/Common.imp")
+%%SET pmStackMax(32)
+%%SET pmLookAheadMax(5)
+%%SET pmCost(5)
+%%BEGIN(pmIScan)
+ pmkScan(pmkCtxt, token);
+%%END(pmIScan)
+%%BEGIN(pmISym)
+
+
+    /* Create the requested token */
+    sym->code = code;
+
+    switch (code) {
+
+    case 2:			/* IDENTIFIER */
+    case 3:			/* QUOTED_STRING */
+    case 4:			/* ANGLE_BRACKETED_STRING */
+	if (*pstr != '\0') {
+	    sym->sval = (char *)malloc(strlen(pstr) + 1);
+	    strcpy(sym->sval, pstr);
+	} else {
+	    sym->sval = (char *)malloc(strlen(sstr) + 1);
+	    strcpy(sym->sval, sstr);
+	}/*if*/
+	sym->ival = 0;
+	break;
+
+    case 5:			/* INTEGER */
+	sym->ival = 0;
+	break;
+    }/*switch*/
+
+%%END(pmISym)
+%%SET pmOptimize(Lr0)
+%%SET pmActPack(RDS)
+%%SET pmGtoPack(RDS)
+%%SET pmRec(Single, Multiple, Panic)
+%%BEGIN(pmDecl)
+static Boolean optimizeObsolete = FALSE;
+StrListP grmAttrDecls, grmAttrNames;
+CodeNodeP pmkImportSection = NULL,
+	  exportSection = NULL,
+	  declSection = NULL,
+	  scannerSection = NULL,
+	  insertSymbSection = NULL;
+
+static search_kind searchResult; /* Variable used for lookup calls */
+static SETDEF(sym_kind_set, unknown_symb + 1); /* For lookup calls */
+int symRef;        /* Variable used for lookup calls */
+
+static int i;
+static attr_kind reading_attr_class = nts_attr; /* Type of attributes when reading */
+                                     /* attribute section.              */
+static SymSet occupied_code_values = NULL; /* Occupied terminal code values */
+static SymSet terminals_set = NULL;        /* Variable used to read a list  */
+                                            /* of terminals.                 */
+static SymSet modify_intersect_set = NULL; /* Variable used to keep         */
+                                            /* intersection of red and nored */
+                                            /* sets modifiers.               */
+static prod_elnode * temp_lhs;              /* lhs of current production     */
+static char * syms_str;                  /* Variable used to construct    */
+                                            /* error messages.               */
+static char numStr[20];
+
+/*-----------------------------------------------------------------------------
+ * makeSymStr - makes a string of symbols in the set s separated by commas.
+ *-----------------------------------------------------------------------------
+ */
+static char *makeSymStr(s)
+SymSet s;
+{
+    char *temp;
+    int totlen = 0;
+    int nr = 0;
+    int i;
+
+    for (i = 0; i < SymSetSize(s); i++) {
+	if (SymSetMem(s,i)) {
+	    totlen += strlen(vocabulary[i]->name) + 3;
+	}/*if*/
+    }/*for*/
+
+    temp = (char *)calloc(totlen, sizeof(char));
+    nr=0;
+    for (i = 0; i < SymSetSize(s); i++) {
+	if (SymSetMem(s, i)) {
+	    if (nr > 0) strcat(temp, ", ");
+	    strcat(temp, vocabulary[i]->name);
+	    nr++;
+	}/*if*/
+    }/*for*/
+    return(temp);
+}/*makeSymStr()*/
+
+%%END(pmDecl)
+%%SET pmStates(83)
+%%SET pmStateTyp(1)
+%%SET pmTerms(33)
+%%SET pmTermTyp(1)
+%%SET pmActTyp(2)
+%%SET pmArgTyp(1)
+%%SET pmActRDSvectorLen(427)
+%%BEGIN(pmActTab)
+{4,627,627,627,755,154,627,162,627,627,627,627,627,627,227,627,627,627,603
+,603,603,755,609,603,762,603,603,603,603,603,603,474,603,666,682,755,610
+,153,690,666,682,762,755,755,202,755,755,195,755,755,755,755,755,755,755
+,762,755,755,553,755,755,170,755,755,755,755,755,755,755,154,146,162,179
+,577,762,755,755,442,755,755,19,755,755,755,755,755,755,522,762,755,755
+,105,755,755,59,755,755,755,755,755,755,19,19,122,19,19,441,19,19,19,19
+,19,19,593,491,59,59,449,641,665,361,649,59,59,59,633,657,627,627,627,154
+,146,162,185,627,627,65,627,627,283,283,627,627,627,563,563,563,218,290
+,211,89,563,563,394,563,563,458,211,563,666,682,154,146,162,154,146,162
+,521,233,627,393,627,201,505,513,627,627,627,563,563,563,154,146,162,329
+,563,563,521,563,563,0,0,563,666,682,154,146,162,371,154,146,162,233,627
+,555,627,201,243,555,627,627,627,0,690,666,682,371,371,371,0,371,371,0,0
+,371,154,146,162,0,243,627,169,233,674,627,243,201,489,0,627,627,627,563
+,563,563,0,169,563,377,563,618,563,249,563,427,0,563,563,563,563,563,563
+,481,169,563,409,563,169,563,658,563,0,0,563,563,563,627,627,627,154,146
+,162,0,627,627,0,627,627,0,0,627,627,627,154,146,162,154,146,162,0,233,154
+,146,162,201,627,0,627,627,627,627,627,627,154,146,162,0,627,299,0,0,627
+,627,0,627,627,627,563,563,563,755,154,146,162,563,154,146,162,563,563,299
+,563,666,682,755,0,314,43,0,0,762,755,755,154,146,162,0,169,755,465,755
+,0,417,482,762,323,755,466,625,43,450,762,755,755,755,43,43,43,0,755,755
+,755,0,323,323,323,83,323,323,0,154,323,162,579,762,579,755,755,0,690,666
+,682,755,755,755,587,0,587,83,0,0,690,666,682,83,98,83,762,0,755,154,146
+,162,0,169,755,345}
+%%END(pmActTab)
+%%SET pmActRDScheckLen(452)
+%%SET pmRDScheckTyp(1)
+%%SET pmActRowMapTyp(2)
+%%BEGIN(pmRDScheck)
+{1,15,15,15,8,8,15,8,15,15,15,15,15,15,74,15,15,15,16,16,16,79,74,16,8,16
+,16,16,16,16,16,50,16,16,16,80,27,17,27,27,27,79,79,79,71,79,79,71,79,79
+,79,79,79,79,81,80,80,80,67,80,80,68,80,80,80,80,80,80,82,59,59,59,69,69
+,81,81,81,42,81,81,0,81,81,81,81,81,81,11,82,82,82,11,82,82,2,82,82,82,82
+,82,82,0,0,70,0,0,53,0,0,0,0,0,0,72,6,2,2,54,2,2,43,2,2,2,2,2,2,30,30,30
+,22,22,22,21,30,30,6,30,30,64,64,30,30,30,31,31,31,73,64,73,9,31,31,58,31
+,31,46,73,31,31,31,32,32,32,65,65,65,60,32,32,47,32,32,61,61,32,32,32,34
+,34,34,75,75,75,39,34,34,63,34,34,83,83,34,34,34,35,35,35,52,52,52,52,35
+,35,14,35,35,4,14,35,35,35,83,14,14,14,52,52,52,83,52,52,83,83,52,13,13
+,13,83,4,13,23,13,23,13,4,13,4,83,13,13,13,10,10,10,83,45,10,45,10,29,10
+,29,10,57,83,10,10,10,12,12,12,57,49,12,49,12,19,12,19,12,83,83,12,12,12
+,28,28,28,18,18,18,83,28,28,83,28,28,83,83,28,28,28,26,26,26,40,40,40,83
+,26,44,44,44,26,26,83,26,26,26,24,24,24,48,48,48,83,24,5,83,83,24,24,83
+,24,24,24,25,25,25,66,66,66,66,25,51,51,51,25,25,5,25,25,25,38,83,5,76,83
+,83,66,78,66,20,20,20,83,56,66,56,66,83,38,38,38,37,38,38,76,76,38,78,78
+,78,77,76,76,76,83,78,78,78,83,37,37,37,3,37,37,83,7,37,7,36,77,36,77,62
+,83,36,36,36,77,77,77,33,83,33,3,83,83,33,33,33,3,3,3,62,83,62,55,55,55
+,83,41,62,41,83,83,83,83,83,83,83,83,83,83,83,83,83,83,83,83,83,83,83,83
+,83,83,83,83,83}
+%%END(pmRDScheck)
+%%BEGIN(pmActRowMap)
+{80,0,94,386,207,318,114,389,4,145,241,81,258,224,198,0,17,29,278,260,352
+,125,129,224,309,326,292,23,275,241,126,143,160,396,177,194,384,365,344
+,176,295,417,71,112,300,239,150,162,312,256,25,334,198,101,109,419,350,248
+,147,68,166,167,397,186,133,163,330,53,57,66,97,40,106,143,8,180,347,374
+,351,21,35,54,68}
+%%END(pmActRowMap)
+%%BEGIN(pmContTab)
+{{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{2,2}
+,{1,1}
+,{6,6}
+,{2,2}
+,{7,7}
+,{2,2}
+,{7,7}
+,{7,7}
+,{2,2}
+,{2,2}
+,{9,9}
+,{2,2}
+,{10,10}
+,{2,2}
+,{9,9}
+,{2,2}
+,{10,10}
+,{2,2}
+,{2,2}
+,{14,14}
+,{14,14}
+,{2,2}
+,{10,10}
+,{2,2}
+,{2,2}
+,{10,10}
+,{10,10}
+,{2,2}
+,{10,10}
+,{10,10}
+,{1,1}
+,{1,1}
+,{9,9}
+,{2,2}
+,{10,10}
+,{7,7}
+,{9,9}
+,{2,2}
+,{10,10}
+,{7,7}
+,{9,9}
+,{2,2}
+,{10,10}
+,{7,7}
+,{2,2}
+,{1,1}
+,{6,6}
+,{9,9}
+,{2,2}
+,{10,10}
+,{7,7}
+,{7,7}
+,{2,2}
+,{2,2}
+,{7,7}
+,{1,1}
+,{2,2}
+,{7,7}
+,{2,2}
+,{1,1}
+,{6,6}
+,{5,5}
+,{7,7}
+,{7,7}
+,{8,8}
+,{8,8}
+,{7,7}
+,{7,7}
+,{2,2}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+,{1,1}
+}
+%%END(pmContTab)
+%%BEGIN(pmSeparators)
+{0,0,0,0,0}
+%%END(pmSeparators)
+%%BEGIN(pmFiducials)
+{0,0,0,0,0}
+%%END(pmFiducials)
+%%BEGIN(pmSkips)
+{0,0,0,0,0}
+%%END(pmSkips)
+%%SET pmNonTerms(59)
+%%SET pmNonTermTyp(1)
+%%SET pmGtoTyp(2)
+%%SET pmGtoRDSvectorLen(203)
+%%BEGIN(pmGtoTab)
+{0,0,0,0,306,250,129,546,385,634,34,634,362,354,129,634,258,634,281,145
+,177,145,177,497,17,145,177,145,177,353,634,25,241,137,330,346,321,538,338
+,97,145,177,130,642,434,642,473,209,266,642,49,642,129,217,650,634,650,265
+,113,26,650,130,650,545,642,145,177,129,274,257,634,74,289,722,561,650,634
+,138,730,617,145,177,33,130,569,402,145,177,113,642,738,585,433,130,514
+,402,138,498,90,130,650,545,433,130,642,410,594,305,106,594,642,537,594
+,193,601,650,81,297,138,378,121,650,186,225,425,130,313,410,138,386,130
+,50,410,530,138,337,57,506,138,73,369,138,66,130,138,410,114,138,570,698
+,594,570,706,401,570,130,130,418,410,81,138,273,130,529,410,138,457,130
+,714,234,746,0,161,0,0,0,530,0,138,0,10,0,0,0,0,138,0,0,0,41,138,138,570
+,0,0,0,0,138,0,0,0,0,138}
+%%END(pmGtoTab)
+%%SET pmGtoRowMapTyp(1)
+%%BEGIN(pmGtoRowMap)
+{0,6,34,131,0,79,45,136,93,6,37,5,7,104,0,17,67,4,157,4,150,4,98,4,31,2
+,107,8,2,3,53,6,145,46,21,101,61,89,0,1,120,1,1,1,125,1,1,1,138,1,1,78,88
+,1,1,151,1,4,0,37,5,0,1,37,35,56,94,0,57,31,0,70,0,92,95,162,0,127,138,145
+,148,164,166}
+%%END(pmGtoRowMap)
+%%SET pmProds(95)
+%%SET pmLhsTyp(1)
+%%SET pmRhszTyp(1)
+%%BEGIN(pmLhs)
+{58,65,65,82,44,44,79,79,83,92,92,66,89,89,86,41,39,39,74,74,51,87,87,55
+,55,56,56,61,61,84,84,52,52,45,67,67,91,91,62,71,71,68,68,68,68,46,80,80
+,75,48,49,49,76,76,72,70,69,63,47,42,60,60,37,37,35,57,36,36,34,85,85,64
+,64,81,81,81,81,50,50,43,43,77,53,88,54,40,73,78,90,59,59,59,59,38,38}
+%%END(pmLhs)
+%%BEGIN(pmRhsz)
+{3,0,2,2,0,2,0,2,4,0,3,1,1,2,5,1,1,1,1,1,1,0,5,0,1,0,1,0,2,0,4,1,3,2,0,1
+,0,3,1,0,2,1,1,1,1,2,1,2,7,1,1,3,0,2,5,1,5,1,5,1,0,3,1,2,4,1,1,3,2,0,2,3
+,5,1,3,5,3,0,2,1,1,4,1,4,1,1,2,2,2,1,1,1,2,0,1}
+%%END(pmRhsz)
+%%SET pmSccMax(33)
+%%SET pmSccTyp(1)
+%%SET pmICostTyp(1)
+%%SET pmDCostTyp(1)
+%%BEGIN(pmVocTab)
+{{1,255,255,"EndOfText",""}
+,{2,1,1,"IDENTIFIER","identifier"}
+,{3,1,1,"STRING",""}
+,{4,1,1,"ANG_BRACK_STRING",""}
+,{5,1,1,"INTEGER",""}
+,{6,1,1,"'='",""}
+,{7,1,1,"';'",""}
+,{8,1,1,"','",""}
+,{9,1,1,"'('",""}
+,{10,1,1,"')'",""}
+,{11,1,1,"'!'",""}
+,{12,1,1,"'|'",""}
+,{13,1,1,"'{'",""}
+,{14,1,1,"'}'",""}
+,{15,1,1,"'=>'",""}
+,{16,1,1,"'`%`%'",""}
+,{17,1,1,"'`%+'",""}
+,{18,1,1,"'`%-'",""}
+,{19,1,1,"'META'",""}
+,{20,1,1,"'SKIP'",""}
+,{21,1,1,"'`%`%END'",""}
+,{22,1,1,"'`%`%CODE'",""}
+,{23,1,1,"'`%`%RULES'",""}
+,{24,1,1,"'FIDUCIAL'",""}
+,{25,1,1,"'`%`%EXPORT'",""}
+,{26,1,1,"SKIPHEADER",""}
+,{27,1,1,"'SEPARATOR'",""}
+,{28,1,1,"'`%`%SCANNER'",""}
+,{29,1,1,"'`%`%RECOVERY'",""}
+,{30,1,1,"'`%`%TERMINALS'",""}
+,{31,1,1,"'`%`%ATTRIBUTES'",""}
+,{32,1,1,"'`%`%DECLARATIONS'",""}
+,{33,1,1,"'`%`%INSERTSYMBOL'",""}
+}
+%%END(pmVocTab)
+%%SET pmSem(On)
+%%BEGIN(pmSemantics)
+    switch (rule) {
+          case 4: { /* program_paragraph = declaration_part code_part; */
+
+	    init_action_structs(TRUE);
+	  	break;}
+    case 8: { /* declaration_part = '`%`%DECLARATIONS' endOpt; */
+
+	  if (declSection)
+	    pmkLog(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 60, sevERR, "");
+	  else
+  	    declSection = tmkNewCode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].fpos, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].length);
+		break;}
+    case 9: { /* grammar_paragraph = scanner_interface_section attribute_section error_handling_section rule_section; */
+
+	    if (!SeriousErr) order_gram();
+	  	break;}
+    case 10: { /* scanner_interface_section =; */
+
+	    term_sec_given = FALSE;
+	  	break;}
+    case 12: { /* TERMINALS_aux = '`%`%TERMINALS'; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ival = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].ival;
+	    occupied_code_values = SymSetAlloc();
+	    SymSetIns(occupied_code_values, 0);
+	    SymSetIns(occupied_code_values, 1);
+	    term_sec_given = TRUE;
+	  	break;}
+    case 15: { /* terminal_definition = terminal '=' token_code error_recovery_data ';'; */
+
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    SetIns(sym_kind_set, t_symb);
+	    lookup(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval, sym_kind_set, &symRef, &searchResult);
+	    if (searchResult == new_search || searchResult == found_search) {
+		if (searchResult == found_search) {
+		    /* ERROR terminal defined twice, old definition overridden
+		     */
+		    pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 121, sevWAR,
+			  vocabulary[symRef]->name);
+		}/*if*/
+		vocabulary[symRef]->symbol_typ = t_symb;
+		vocabulary[symRef]->code = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ival;
+		SymSetIns(occupied_code_values, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ival);
+		if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ival > tc_val) tc_val = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ival;
+
+		if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].nullf)) {
+		    vocabulary[symRef]->syminfo.ter_info.icost =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].icost;
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].icost > icostMax) {
+			icostMax = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].icost;
+		    }/*if*/
+		    vocabulary[symRef]->syminfo.ter_info.dcost =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].dcost;
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].dcost > dcostMax) {
+			dcostMax = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].dcost;
+		    }/*if*/
+		    vocabulary[symRef]->syminfo.ter_info.psymb =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].sval;
+  		} else {
+		    vocabulary[symRef]->syminfo.ter_info.icost = 1;
+		    vocabulary[symRef]->syminfo.ter_info.dcost = 1;
+		    vocabulary[symRef]->syminfo.ter_info.psymb = NULL;
+		}/*if*/
+	    } else if (searchResult == confl_search) {
+		/* ERROR Ambiguous symbol, Terminal expected.
+		 * This error should'nt happen since no other
+		 * symbol kinds can ocurr before scanner interface.
+		 */
+     		pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 123, sevSYS,
+		      vocabulary[symRef]->name);
+	    }/*if*/
+	  	break;}
+    case 17: { /* symbol = term_or_nonterm; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].q_str = FALSE;
+	  	break;}
+    case 18: { /* symbol = STRING; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].q_str = TRUE;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	  	break;}
+    case 19: { /* term_or_nonterm = IDENTIFIER; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	  	break;}
+    case 20: { /* term_or_nonterm = ANG_BRACK_STRING; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	  	break;}
+    case 21: { /* token_code = INTEGER; */
+
+	    if (SymSetMem(occupied_code_values, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].ival)) {
+		/* ERROR Terminal code already in use
+		 */
+		sprintf(numStr, "`%u", %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].ival);
+		pmkLog(&%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 120, sevERR, numStr);
+	    } else {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].ival = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].ival;
+	    }/*if*/
+	  	break;}
+    case 22: { /* error_recovery_data =; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = TRUE;
+	  	break;}
+    case 23: { /* error_recovery_data = ',' insert_cost ',' delete_cost print_symbol; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].icost = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].icost;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].dcost = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].dcost;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].sval;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	  	break;}
+    case 24: { /* insert_cost =; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].icost = 1;
+	  	break;}
+    case 25: { /* insert_cost = INTEGER; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].icost = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].ival;
+	  	break;}
+    case 26: { /* delete_cost =; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].dcost = 1;
+	  	break;}
+    case 27: { /* delete_cost = INTEGER; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].dcost = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].ival;
+	  	break;}
+    case 28: { /* print_symbol =; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = NULL;
+	  	break;}
+    case 29: { /* print_symbol = '=>' terminal; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].sval;
+	  	break;}
+    case 32: { /* attributes = attribute; */
+
+	  grmAttrDecls = appendStrList(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval, NULL);
+	  grmAttrNames = appendStrList(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval2, NULL);
+		break;}
+    case 33: { /* attributes = attributes ',' attribute; */
+
+	  grmAttrDecls = appendStrList(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].sval, grmAttrDecls);
+	  grmAttrNames = appendStrList(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].sval2, grmAttrNames);
+		break;}
+    case 34: { /* attribute = IDENTIFIER optional_decl; */
+
+            %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].sval;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval2 = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval;
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    SetIns(sym_kind_set, attr_symb);
+	    lookup(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval, sym_kind_set, &symRef, &searchResult);
+	    if (new_search == searchResult) {
+		vocabulary[symRef]->symbol_typ = attr_symb;
+		vocabulary[symRef]->syminfo.attr_class = nts_attr;
+	    } else if (found_search == searchResult) {
+  		if (vocabulary[symRef]->syminfo.attr_class != nts_attr &&	
+		    vocabulary[symRef]->syminfo.attr_class != unk_attr)	{
+		    vocabulary[symRef]->syminfo.attr_class = voc_attr;
+		} else if (vocabulary[symRef]->syminfo.attr_class == nts_attr) {
+		    /* ERROR Attribute defined twice
+		     */
+		    pmkLog(&%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 119, sevWAR, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval);
+		}/*if*/
+	    } else {
+		/* ERROR Ambiguous symbol. Attribute expected.
+		 */
+    		pmkLog(&%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 118, sevERR, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval);
+	    }/*if*/
+	  	break;}
+    case 35: { /* optional_decl =; */
+
+	  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = NULL;
+		break;}
+    case 36: { /* optional_decl = '`%`%'; */
+
+	  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].sval;
+		break;}
+    case 51: { /* terminals = terminal; */
+
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    SetIns(sym_kind_set, t_symb);
+	    lookup(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval, sym_kind_set, &symRef, &searchResult);
+	    if (new_search == searchResult || searchResult == found_search) {
+		if (searchResult == new_search) {
+		    vocabulary[symRef]->symbol_typ = t_symb;
+		    vocabulary[symRef]->syminfo.ter_info.icost = 1;
+		    vocabulary[symRef]->syminfo.ter_info.dcost = 1;
+		    vocabulary[symRef]->syminfo.ter_info.psymb = NULL;
+		}/*if*/
+		SymSetIns(terminals_set, symRef);
+	    } else if (searchResult == confl_search) {
+		/* ERROR Ambiguous symbol, Terminal expected.
+		 */
+		pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 117, sevERR, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval);
+		SymSetIns(terminals_set, symRef);
+	    }/*if*/
+	  	break;}
+    case 52: { /* terminals = terminals ',' terminal; */
+
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    SetIns(sym_kind_set, t_symb);
+	    lookup(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].sval, sym_kind_set, &symRef, &searchResult);
+	    if (new_search == searchResult || searchResult == found_search) {
+		if (searchResult == new_search) {
+		    vocabulary[symRef]->symbol_typ = t_symb;
+		    vocabulary[symRef]->syminfo.ter_info.icost = 1;
+		    vocabulary[symRef]->syminfo.ter_info.dcost = 1;
+		    vocabulary[symRef]->syminfo.ter_info.psymb = NULL;
+		}/*if*/
+		SymSetIns(terminals_set, symRef);
+	    } else if (searchResult == confl_search) {
+		/* ERROR Ambiguous symbol, Terminal expected.
+		 */
+		pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp, 117, sevERR, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].sval);
+		SymSetIns(terminals_set, symRef);
+	    }/*if*/
+	  	break;}
+    case 55: { /* separator_part = separator_aux '(' terminals ')' ';'; */
+
+	    recovery_spec.separators = terminals_set;
+	  	break;}
+    case 56: { /* separator_aux = 'SEPARATOR'; */
+
+	    terminals_set = SymSetAlloc();
+	  	break;}
+    case 57: { /* fiducial_part = fiducial_aux '(' terminals ')' ';'; */
+
+	    recovery_spec.fiducials = terminals_set;
+	  	break;}
+    case 58: { /* fiducial_aux = 'FIDUCIAL'; */
+
+	    terminals_set = SymSetAlloc();
+	  	break;}
+    case 59: { /* skip_part = skip_aux '(' terminals ')' ';'; */
+
+	    recovery_spec.skips = terminals_set;
+	  	break;}
+    case 60: { /* skip_aux = 'SKIP'; */
+
+	    terminals_set = SymSetAlloc();
+	  	break;}
+    case 65: { /* rule = nonterminal '=' rhss ';'; */
+
+	    /* Main routine for analysis of rhss associated with a single lhs
+	     */
+	    if (!SeriousErr) analyze_rhss(temp_lhs, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rhslist);
+	  	break;}
+    case 66: { /* nonterminal = term_or_nonterm; */
+
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    SetIns(sym_kind_set, nts_symb);
+	    lookup(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval, sym_kind_set, &symRef,
+		   &searchResult);
+	    if (new_search == searchResult) {
+		vocabulary[symRef]->symbol_typ = nts_symb;
+		vocabulary[symRef]->syminfo.firstp = -1;
+	    }/*if*/
+	    temp_lhs = prod_elnodeAlloc();
+	    temp_lhs->node_kind = sym_node_kind;
+	    temp_lhs->node_info.sym_node.sym_ind = symRef;
+	    temp_lhs->node_info.sym_node.lhs_sym = TRUE;
+	    temp_lhs->node_info.sym_node.newnont = FALSE;
+	    if (confl_search == searchResult) {
+		pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 116, sevERR,
+		      %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval);
+	    }/*if*/
+	  	break;}
+    case 67: { /* rhss = rhs; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist;
+	  	break;}
+    case 68: { /* rhss = rhss '!' rhs; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist_last->nxtrhs = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rhslist;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rhslist;
+	  	break;}
+    case 69: { /* rhs = symbols_or_actions modifiers; */
+
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf) {
+		/* Allocated a null node
+		 */
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = null_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+	    }/*if*/
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nullf)) {
+		/* Allocate a modifier node
+		 */
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last->nxtnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+	    }/*if*/
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist = rhs_nodeAlloc();
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rhslist->rhs = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+	  	break;}
+    case 70: { /* symbols_or_actions =; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = TRUE;
+	  	break;}
+    case 71: { /* symbols_or_actions = symbols_or_actions symbol_or_action; */
+
+	    /* Make list
+	     */
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf) {
+		if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nullf) {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = TRUE;
+		} else {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last;
+		}/*if*/
+	    } else if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nullf) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last;
+	    } else {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last->nxtnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last;
+	    }/*if*/
+	  	break;}
+    case 73: { /* Alternatives = Alternatives '|' modifiers symbols_or_actions modifiers; */
+
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].nullf) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode->node_kind = null_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode;
+		if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].nullf) && !(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf)) {
+		    /* Test red and nored sets intersection
+		     */
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set != NULL &&
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].nored_set != NULL)
+		    {
+			if (modify_intersect_set == NULL) {
+			    modify_intersect_set = SymSetAlloc();
+			}/*if*/
+			SymSetClear(modify_intersect_set);
+			SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set,
+				    modify_intersect_set);
+			if (!(SymSetEmpty(modify_intersect_set))) {
+			    syms_str = makeSymStr(modify_intersect_set);
+			    pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].srcp, 113, sevERR, syms_str);
+			    free(syms_str);
+			    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set = NULL;
+			}/*if*/
+		    }/*if*/
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set != NULL &&
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].red_set != NULL)
+		    {
+			if (modify_intersect_set == NULL) {
+			    modify_intersect_set = SymSetAlloc();
+			}/*if*/
+			SymSetClear(modify_intersect_set);
+			SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set,
+				    modify_intersect_set);
+			if (!(SymSetEmpty(modify_intersect_set))) {
+			    syms_str = makeSymStr(modify_intersect_set);
+			    pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].srcp, 113, sevERR, syms_str);
+			    free(syms_str);
+			    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set = NULL;
+			}/*if*/
+		    }/*if*/
+		}/*if*/
+	    }/*if*/
+
+	    /* Make list
+	     */
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].nullf)) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode_last->nxtnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+5].rule_elnode;
+	    }/*if*/
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_last->nxtalt = altr_lstAlloc();
+
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf)) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->nxtnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_last->nxtalt->altr =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+	    } else {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_last->nxtalt->altr =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode;
+	    }/*if*/
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_node = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_node;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_last->nxtalt;
+	  	break;}
+    case 72: { /* Alternatives = modifiers symbols_or_actions modifiers; */
+
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nullf) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_kind = null_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf) && !(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf)) {
+		    /* Test red and nored sets intersection
+		     */
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set != NULL &&
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set != NULL)
+		    {
+			if (modify_intersect_set == NULL) {
+			    modify_intersect_set = SymSetAlloc();
+			}/*if*/
+			SymSetClear(modify_intersect_set);
+			SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set,
+				    modify_intersect_set);
+			if (!(SymSetEmpty(modify_intersect_set))) {
+			    syms_str = makeSymStr(modify_intersect_set);
+			    pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp, 113, sevERR, syms_str);
+			    free(syms_str);
+			    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = NULL;
+			}/*if*/
+		    }/*if*/
+
+		    /* Test red and nored sets intersection
+		     */
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set != NULL &&
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set != NULL)
+		    {
+			if (modify_intersect_set == NULL) {
+			    modify_intersect_set = SymSetAlloc();
+			}/*if*/
+			SymSetClear(modify_intersect_set);
+			SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set,
+				    modify_intersect_set);
+			if (!(SymSetEmpty(modify_intersect_set))) {
+			    syms_str = makeSymStr(modify_intersect_set);
+			    pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp,113,sevERR,syms_str);
+			    free(syms_str);
+			    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = NULL;
+			}/*if*/
+		    }/*if*/
+		}/*if*/
+	    }/*if*/
+
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf)) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last->nxtnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+	    }/*if*/
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_node = altr_lstAlloc();
+
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf)) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->nxtnode =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_node->altr = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+	    } else {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_node->altr =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+	    }/*if*/
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].altr_node;
+	  	break;}
+    case 74: { /* symbol_or_action = symbol; */
+
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].q_str) {
+		SetIns(sym_kind_set, t_symb);
+	    } else {
+		SetIns(sym_kind_set, t_symb);
+		SetIns(sym_kind_set, nts_symb);
+	    }/*if*/
+
+	    lookup(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval, sym_kind_set, &symRef, &searchResult);
+	    if (confl_search == searchResult) {
+		/* ERROR Ambiguous symbol Terminal or non terminal expected
+		 */
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = TRUE;
+		pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 115, sevERR, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval);
+	    } else {
+		SymSetIns(on_right, symRef);
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = sym_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.sym_ind =
+		    symRef;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.lhs_sym =
+		    FALSE;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.newnont =
+		    FALSE;
+		SymSetIns(on_right, symRef);
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	    }/*if*/
+	  	break;}
+    case 76: { /* symbol_or_action = '{' modifiers symbols_or_actions modifiers '}'; */
+
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf) {
+		/* ERROR Repetition of Null string ignored
+		 */
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = TRUE;
+		pmkLog(&%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp,114,sevWAR,"");
+	    } else {
+		/* Generate a new symbol node (with a new symbol).
+		 * Keep symbols_or_actions's rule_nodelist in the symbol node
+		 */
+		SetClear(sym_kind_set, unknown_symb + 1);
+		SetIns(sym_kind_set, nts_symb);
+		lookup(gensym(), sym_kind_set, &symRef, &searchResult);
+		vocabulary[symRef]->symbol_typ = nts_symb;
+		vocabulary[symRef]->syminfo.firstp = -1;
+		if (confl_search == searchResult ||
+		    found_search == searchResult)
+		{
+		    /* This should'nt happen
+		     */
+		    printf(
+"Non terminal generated by PMK is equal to user's symbol");
+		}/*if*/
+
+		/* Make list
+		 */
+		if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].nullf)) {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode = prod_elnodeAlloc();
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode->node_kind = mod_node_kind;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode->node_info.modify_node =
+			modify_recAlloc();
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode->node_info.modify_node->red =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].red_set;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode->node_info.modify_node->nored =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].nored_set;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode_last->nxtnode =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode_last =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].rule_elnode;
+		}/*if*/
+		SymSetIns(on_right, symRef);
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = sym_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.sym_ind =
+		    symRef;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.newnont =
+		    TRUE;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.rplc_info =
+		    rept_rplc;
+		if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nullf)) {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode = prod_elnodeAlloc();
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_kind = mod_node_kind;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_info.modify_node =
+			modify_recAlloc();
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_info.modify_node->red =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->node_info.modify_node->nored =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->nxtnode =
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.rplc_seq=
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		} else {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.rplc_seq=
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+		}/*if*/
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	    }/*if*/
+	  	break;}
+    case 77: { /* symbol_or_action = '(' Alternatives ')'; */
+
+	    /* Generate a new symbol node (with a new symbol)
+	     * keep symbols_or_actions's rule_nodelist in the symbol node
+	     */
+	    SetClear(sym_kind_set, unknown_symb + 1);
+	    SetIns(sym_kind_set, nts_symb);
+	    lookup(gensym(), sym_kind_set, &symRef, &searchResult);
+	    vocabulary[symRef]->symbol_typ = nts_symb;
+	    vocabulary[symRef]->syminfo.firstp = -1;
+	    if (confl_search == searchResult || found_search == searchResult) {
+		/* This should'nt happen
+		 */
+		printf(
+"Non terminal generated by PMK is equal to user's symbol");
+	    }/*if*/
+
+	    /* Make list
+	     */
+	    SymSetIns(on_right, symRef);
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = sym_node_kind;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.sym_ind = symRef;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.newnont = TRUE;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.rplc_info =
+		altrs_rplc;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.sym_node.altrs_seq =
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].altr_node;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	  	break;}
+    case 75: { /* symbol_or_action = modifiers action modifiers; */
+
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf) && !(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf)) {
+		/* Test red and nored sets intersection
+		 */
+		if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set != NULL &&
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set != NULL)
+		{
+		    if (modify_intersect_set == NULL) {
+			modify_intersect_set = SymSetAlloc();
+		    }/*if*/
+		    SymSetClear(modify_intersect_set);
+		    SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set,
+				modify_intersect_set);
+		    if (!(SymSetEmpty(modify_intersect_set))) {
+			syms_str = makeSymStr(modify_intersect_set);
+			pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp, 113, sevERR, syms_str);
+			free(syms_str);
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = NULL;
+		    }/*if*/
+		}/*if*/
+		if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set != NULL &&
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set != NULL)
+		{
+		    if (modify_intersect_set == NULL) {
+			modify_intersect_set = SymSetAlloc();
+		    }/*if*/
+		    SymSetClear(modify_intersect_set);
+		    SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set,
+				modify_intersect_set);
+		    if (!(SymSetEmpty(modify_intersect_set))) {
+			syms_str = makeSymStr(modify_intersect_set);
+			pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].srcp, 113, sevERR, syms_str);
+			free(syms_str);
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = NULL;
+		    }/*if*/
+		}/*if*/
+	    }/*if*/
+     
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nullf)) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode->nxtnode = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].rule_elnode;
+	    }/*if*/
+
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf)) {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = mod_node_kind;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.modify_node =
+		    modify_recAlloc();
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.modify_node->red =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.modify_node->nored =
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->nxtnode = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	    } else {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].rule_elnode_last;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	    }/*if*/
+	  	break;}
+    case 78: { /* modifiers =; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = TRUE;
+	  	break;}
+    case 79: { /* modifiers = modifiers modifier; */
+
+	    /* Merge modifier sets
+	     */
+	    if (!(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf)) {
+		if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set == NULL) {
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set != NULL) {
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set;
+		    }/*if*/
+		} else if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set == NULL) {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set;
+		} else {
+		    SymSetUnion(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set,
+				%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set);
+		}/*if*/
+		if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set == NULL) {
+		    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set != NULL) {
+			%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set;
+		    }/*if*/
+		} else if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set == NULL) {
+		    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set;
+		} else {
+		    SymSetUnion(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set,
+				%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set);
+		}/*if*/
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	    } else {
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].red_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].nored_set;
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nullf = FALSE;
+	    }/*if*/
+
+	    /* Test red and nored sets intersection
+	     */
+	    if (%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set != NULL &&
+		%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set != NULL)
+	    {
+		if (modify_intersect_set == NULL) {
+		    modify_intersect_set = SymSetAlloc();
+		}/*if*/
+		SymSetClear(modify_intersect_set);
+		SymSetInter(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set,
+			    modify_intersect_set);
+		if (!(SymSetEmpty(modify_intersect_set))) {
+		     syms_str = makeSymStr(modify_intersect_set);
+		     pmkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].srcp, 113, sevERR, syms_str);
+		     free(syms_str);
+		     %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = NULL;
+		}/*if*/
+	    }/*if*/
+	  	break;}
+    case 80: { /* modifier = reduce_modifier; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set = NULL;
+	  	break;}
+    case 81: { /* modifier = reduce_not_modifier; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = NULL;
+	  	break;}
+    case 82: { /* reduce_modifier = <+red_aux> '(' terminals ')'; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].red_set = terminals_set;
+	  	break;}
+    case 83: { /* <+red_aux> = '`%+'; */
+
+	    terminals_set = SymSetAlloc();
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	  	break;}
+    case 84: { /* reduce_not_modifier = <-red_aux> '(' terminals ')'; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].nored_set = terminals_set;
+	  	break;}
+    case 85: { /* <-red_aux> = '`%-'; */
+
+	    terminals_set = SymSetAlloc();
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	  	break;}
+    case 86: { /* action = '`%`%'; */
+
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode = prod_elnodeAlloc();
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_kind = act_node_kind;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.act_node.act_srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.act_node.act_start = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].fpos;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode->node_info.act_node.act_length = %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].length;
+	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode_last = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].rule_elnode;
+	  	break;}
+    case 87: { /* export_section = '`%`%EXPORT' endOpt; */
+
+	  if (exportSection)
+	    pmkLog(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 60, sevERR, "");
+	  else
+  	    exportSection = tmkNewCode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].fpos, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].length);
+		break;}
+    case 88: { /* scanner_section = '`%`%SCANNER' endOpt; */
+
+	  if (scannerSection)
+	    pmkLog(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 60, sevERR, "");
+	  else
+  	    scannerSection = tmkNewCode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].fpos, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].length);
+		break;}
+    case 89: { /* insertsymbol_section = '`%`%INSERTSYMBOL' endOpt; */
+
+	  if (insertSymbSection)
+	    pmkLog(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp, 60, sevERR, "");
+	  else
+  	    insertSymbSection = tmkNewCode(%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].fpos, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].length);
+		break;}
+%%END(pmSemantics)
+%%SET vocFileName ("pos.voc")
+%%BEGIN (pmVoc)
+   0    0 Unknown                   main
+   1    1 EndOfText                 main
+   2    2 IDENTIFIER                main
+   3    3 STRING                    main
+   4    4 ANG_BRACK_STRING          main
+   5    5 INTEGER                   main
+   6    6 '='                       main
+   7    7 ';'                       main
+   8    8 ','                       main
+   9    9 '('                       main
+  10   10 ')'                       main
+  11   11 '!'                       main
+  12   12 '|'                       main
+  13   13 '{'                       main
+  14   14 '}'                       main
+  15   15 '=>'                      main
+  16   16 '`%`%'                      main
+  17   17 '`%+'                      main
+  18   18 '`%-'                      main
+  19   19 'META'                    main
+  20   20 'SKIP'                    main
+  21   21 '`%`%END'                   main
+  22   22 '`%`%CODE'                  main
+  23   23 '`%`%RULES'                 main
+  24   24 'FIDUCIAL'                main
+  25   25 '`%`%EXPORT'                main
+  26   26 SKIPHEADER                main
+  27   27 'SEPARATOR'               main
+  28   28 '`%`%SCANNER'               main
+  29   29 '`%`%RECOVERY'              main
+  30   30 '`%`%TERMINALS'             main
+  31   31 '`%`%ATTRIBUTES'            main
+  32   32 '`%`%DECLARATIONS'          main
+  33   33 '`%`%INSERTSYMBOL'          main
+%%END (pmVoc)
+%%PROCESS("%%(pmkLibrary)/Parse.imp")
+%%PROCESS("%%(pmkLibrary)/Err.imp")
