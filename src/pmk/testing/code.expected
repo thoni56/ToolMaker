@@ -48,7 +48,7 @@ typedef int TmCode;
 typedef int TmNatural;
 typedef int TmCode;
 %%END(tmkImport)
-%%SET tmkForce(0)
+%%SET tmkForce(1)
 %%SET tmkOs("SunOS")
 %%SET pmkOs("SunOS")
 %%SET currentOs("cygwin")

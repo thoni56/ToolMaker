@@ -1,35 +1,9 @@
 ########## imp ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii imp.tst.win32 > imp.tmp
-  alias cat dos2unix -ascii
-else
-  ../pmk imp > imp.tmp
-endif
-echo +++++ imp.tmk +++++  >> imp.tmp
-\cat imp.tmk >> imp.tmp
-echo +++++ imp.pml +++++ >> imp.tmp
-cat imp.pml >> imp.tmp
-echo +++++ imp.pmt +++++ >> imp.tmp
-cat imp.pmt >> imp.tmp
-echo +++++ imp.voc +++++ >> imp.tmp
-cat imp.voc >> imp.tmp
-echo +++++ impCommon.h +++++ >> imp.tmp
-cat impCommon.h >> imp.tmp
-echo +++++ impPaSema.c +++++ >> imp.tmp
-cat impPaSema.c >> imp.tmp
-echo +++++ impParse.c +++++ >> imp.tmp
-cat impParse.c >> imp.tmp
-echo +++++ impParse.h +++++ >> imp.tmp
-cat impParse.h >> imp.tmp
-\cat imp.tmp
-\rm imp.tmp
-########## /bin/csh -f imp.tst UNIX ##########
-+++++ imp.tmk +++++
+==> imp.tmk <==
 %%OPTIONS
---  Os 'SunOS';
   Target 'c';
   Prefix 'imp';
+  Library '../../../lib/c';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -51,7 +25,7 @@ typedef int TmNatural;
   FILE   file %% TmNatural %1%%;
 %%END
 
-+++++ imp.pml +++++
+==> imp.pml <==
                                  T H E   V O C A B U L A R Y
 
 T E R M I N A L S
@@ -359,7 +333,8 @@ A T T R I B U T E S
 108.                    ! insert_statement 
                         ;
 
-+++++ imp.pmt +++++
+
+==> imp.pmt <==
 %%SET tmkTokenName("TmToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
@@ -377,11 +352,11 @@ typedef int TmNatural;
 %%SET tmkForce(0)
 %%SET tmkOs("SunOS")
 %%SET pmkOs("SunOS")
-%%SET currentOs("SunOS")
+%%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET pmkLibrary("%%(TMHOME)/lib/%%(pmkTarget)/")
+%%SET tmkLibrary("../../../lib/c")
+%%SET pmkLibrary("../../../lib/c")
 %%SET tmkPrefix("imp")
 %%SET parserPrefix("imp")
 %%SET listerPrefix("imp")
@@ -414,6 +389,9 @@ extern impContext impcontext;
 %%SET pmActPack(RDS)
 %%SET pmGtoPack(RDS)
 %%SET pmRec(Single, Multiple, Panic)
+%%SET pmHeader("PMK -- ParserMaker 2.1(17) (1997-07-28 17:52)")
+%%SET pmVersion("2.1")
+%%SET pmCorrection("17")
 %%BEGIN(pmDecl)
 /* .pmk-declarations */
 %%END(pmDecl)
@@ -1512,7 +1490,8 @@ extern impContext impcontext;
   45   45 UNQUOT_STRING        main
 %%END (pmVoc)
 %%PROCESS("%%(pmkLibrary)/Parse.imp")
-+++++ imp.voc +++++
+
+==> imp.voc <==
    0    0 Unknown              main
    1    1 EndOfText            main
    2    2 '('                  main
@@ -1559,7 +1538,8 @@ extern impContext impcontext;
   43   43 '%%EINCLUDE'         main
   44   44 'IMP$SYSTEM'         main
   45   45 UNQUOT_STRING        main
-+++++ impCommon.h +++++
+
+==> impCommon.h <==
 #ifndef _impCommon_H_
 #define _impCommon_H_
 /* impCommon.h
@@ -1596,7 +1576,9 @@ typedef struct TmToken {
 
 #endif
 
-+++++ impPaSema.c +++++
+
+
+==> impPaSema.c <==
 /*----------------------------------------------------------------------*\
 
 	impPaSema.c
@@ -2310,7 +2292,8 @@ int rule;			/* IN production number */
     default: break; }
 }/*impPaSema()*/
 
-+++++ impParse.c +++++
+
+==> impParse.c <==
 /*----------------------------------------------------------------------*\
 
 	impParse.c
@@ -3967,7 +3950,8 @@ void impParse()
     }/*while*/
 }/*impParse()*/
 
-+++++ impParse.h +++++
+
+==> impParse.h <==
 #ifndef _impParse_h_
 #define _impParse_h_
 /*----------------------------------------------------------------------*\
@@ -3991,3 +3975,4 @@ extern void impParse(); /* Parser */
 #include "ast.h"
 
 #endif
+head: cannot open 'impErr.c' for reading: No such file or directory
