@@ -29,6 +29,9 @@ VERSIONOBJECTS	= smkPaSema.o smkScSema.o smkParse.o smkErr.o smkScan.o smkList.o
 OBJECTS		= $(VERSIONOBJECTS) version.o
 
 
+test:
+	cd testing; jregr
+
 ################################################################################
 #
 #
