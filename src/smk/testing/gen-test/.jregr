@@ -1,0 +1,2 @@
+.smk : ../../smk -generate tables -generate source $1
+.smk : head -n-0 $1.smt $1Scan.h $1Scan.c $1ScSema.c $1.voc $1Common.h

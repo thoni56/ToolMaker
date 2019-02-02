@@ -1,24 +1,24 @@
 %%OPTIONS
---	OS 'SunOS';
-	PREFIX 'smk';
+    PREFIX 'smk';
+    LIBRARY '/home/Thomas/Utveckling/ToolMaker/lib/ansi-c';
 %%IMPORT
 #include "tmkCommon.h"
 #include "name.h"
 #include "action.h"
 %%END
 %%TOKEN
-	NAME SmkToken;
-	CODE code    %% int %1%%;
-	SRCP srcp    %% TmkSrcp %1%%;
-	ATTRIBUTES
-	     action  %% Action %1%%,
-	     name    %% Name %1%%,
-	     fnumber %% double %1%%,
-	     inumber %% int %1%%;
+    NAME SmkToken;
+    CODE code    %% int %1%%;
+    SRCP srcp    %% TmkSrcp %1%%;
+    ATTRIBUTES
+         action  %% Action %1%%,
+         name    %% Name %1%%,
+         fnumber %% double %1%%,
+         inumber %% int %1%%;
 %%END
 %%SRCP
-	NAME TmkSrcp;
-	COLUMN col;
-	ROW    line;
-	FILE   file;
+    NAME TmkSrcp;
+    COLUMN col;
+    ROW    line;
+    FILE   file;
 %%END

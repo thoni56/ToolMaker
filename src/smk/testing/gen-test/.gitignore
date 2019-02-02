@@ -1,0 +1,5 @@
+*.smt
+*Scan.h
+*Scan.c
+*ScSema.c
+*Common.h

@@ -1,25 +1,9 @@
 ########## tmk ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii tmk.tst.win32
-  alias cat dos2unix -ascii
-else
-  ../../smk -generate tables -generate source tmk
-endif
-echo "------- tmk.smt --------"
-cat tmk.smt
-echo "------- tmkScan.h --------"
-cat tmkScan.h
-echo "------- tmkScan.c --------"
-cat tmkScan.c
-echo "------- tmkScSema.c --------"
-cat tmkScSema.c
-########## /bin/csh tmk.tst UNIX ##########
-------- tmk.smt --------
+==> tmk.smt <==
 %%SET tmkTokenName("TmkToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
-%%SET tmkTokenDecl (" int code", " TmkSrcp srcp", " char *sval				/* string value */", " int ival				/* integer value */", " long fpos				/* file pos of target language code */", " long length			     /* length of target language code */")
+%%SET tmkTokenDecl (" int code", " TmkSrcp srcp", " char *sval				/* string value */", " int ival				/* integer value */", " long fpos				/* file pos of target language code */", " long length                /* length of target language code */")
 %%SET tmkSrcpName("TmkSrcp")
 %%SET tmkSrcpRow("line")
 %%SET tmkSrcpCol("col")
@@ -29,13 +13,14 @@ cat tmkScSema.c
 
 typedef int TmkNatural;
 %%END(tmkImport)
+%%SET smVersion("SMK -- ScannerMaker 2.1(25) (1997-07-28 17:55)")
 %%SET tmkForce(0)
 %%SET tmkOs("SunOS")
 %%SET smkOs("SunOS")
 %%SET currentOs("SunOS")
 %%SET tmkTarget("ansi-c")
 %%SET smkTarget("c")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET tmkLibrary("/home/Thomas/Utveckling/ToolMaker/lib/ansi-c")
 %%SET smkLibrary("../..")
 %%SET tmkPrefix("tmk")
 %%SET smkPrefix("tmk")
@@ -690,7 +675,8 @@ static char *newStr(this, skip)
 %%SET smDFAtyp(1)
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(smkLibrary)/Scan.imp")
-------- tmkScan.h --------
+
+==> tmkScan.h <==
 #ifndef _tmkScan_h_
 #define _tmkScan_h_
 
@@ -781,7 +767,8 @@ typedef struct tmkScContextItem {
 } tmkScContextItem;
 
 #endif
-------- tmkScan.c --------
+
+==> tmkScan.c <==
 /*----------------------------------------------------------------------*\
 
 	tmkScan.c
@@ -1609,7 +1596,8 @@ int tmkScan(smThis,smToken)
   } while(code<0);
   return smToken->code=code;
 }
-------- tmkScSema.c --------
+
+==> tmkScSema.c <==
 /*----------------------------------------------------------------------*\
 
 	tmkScSema.c
@@ -1771,5 +1759,68 @@ int tmkScAction(smThis,smInternalCode,smToken)
   }
   return smToken->code;
 }
+
+
+
+==> tmk.voc <==
+   1    1 $
+   2    2 ';'
+   3    3 ','
+   4    4 'NO'
+   5    5 '%%'
+   6    6 'ROW'
+   7    7 NUMBER
+   8    8 STRING
+   9    9 'NAME'
+  10   10 'CODE'
+  11   11 'SRCP'
+  12   12 'FILE'
+  13   13 '%%END'
+  14   14 '%%SRCP'
+  15   15 'COLUMN'
+  16   16 '%%TOKEN'
+  17   17 '%%IMPORT'
+  18   18 'POSITION'
+  19   19 SKIPHEADER
+  20   20 IDENTIFIER
+  21   21 '%%OPTIONS'
+  22   22 'ATTRIBUTES'
+
+==> tmkCommon.h <==
+#ifndef _tmkCommon_H_
+#define _tmkCommon_H_
+/* tmkCommon.h
+
+   Common definitions for tmk
+
+   This file is generated from information in 'tmk.tmk'
+
+*/
+
+/* The import section (%%IMPORT) */
+
+typedef int TmkNatural;
+
+/* The source position type (%%SRCP) */
+
+typedef struct TmkSrcp {
+    TmkNatural line;
+    TmkNatural col;
+    TmkNatural file;
+} TmkSrcp;
+
+
+/* The token type (%%TOKEN) */
+
+typedef struct TmkToken {
+    int code;
+    TmkSrcp srcp;
+    char *sval				/* string value */;
+    int ival				/* integer value */;
+    long fpos				/* file pos of target language code */;
+    long length                /* length of target language code */;
+} TmkToken;
+
+#endif
 
 

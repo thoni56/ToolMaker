@@ -1,21 +1,5 @@
 ########## lmk ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii lmk.tst.win32
-  alias cat dos2unix -ascii
-else
-  ../../smk -generate tables -generate source lmk
-endif
-echo "------- lmk.smt --------"
-cat lmk.smt
-echo "------- lmkScan.h --------"
-cat lmkScan.h
-echo "------- lmkScan.c --------"
-cat lmkScan.c
-echo "------- lmkScSema.c --------"
-cat lmkScSema.c
-########## /bin/csh lmk.tst UNIX ##########
-------- lmk.smt --------
+==> lmk.smt <==
 %%SET tmkTokenName("LmkToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
@@ -28,13 +12,14 @@ cat lmkScSema.c
 
 #include "tmkCommon.h"
 %%END(tmkImport)
+%%SET smVersion("SMK -- ScannerMaker 2.1(25) (1997-07-28 17:55)")
 %%SET tmkForce(0)
 %%SET tmkOs("SunOS")
 %%SET smkOs("SunOS")
 %%SET currentOs("SunOS")
 %%SET tmkTarget("ansi-c")
 %%SET smkTarget("ansi-c")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET tmkLibrary("/home/Thomas/Utveckling/ToolMaker/lib/ansi-c")
 %%SET smkLibrary("../..")
 %%SET tmkPrefix("lmk")
 %%SET smkPrefix("lmk")
@@ -372,7 +357,8 @@ static char *newStr(this, skip)
 %%SET smDFAtyp(1)
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(smkLibrary)/Scan.imp")
-------- lmkScan.h --------
+
+==> lmkScan.h <==
 #ifndef _lmkScan_h_
 #define _lmkScan_h_
 
@@ -449,7 +435,8 @@ typedef struct lmkScContextItem {
 } lmkScContextItem;
 
 #endif
-------- lmkScan.c --------
+
+==> lmkScan.c <==
 /*----------------------------------------------------------------------*\
 
 	lmkScan.c
@@ -1072,7 +1059,8 @@ int lmkScan(
   } while(code<0);
   return smToken->code=code;
 }
-------- lmkScSema.c --------
+
+==> lmkScSema.c <==
 /*----------------------------------------------------------------------*\
 
 	lmkScSema.c
@@ -1170,5 +1158,50 @@ int lmkScAction(
   }
   return smToken->code;
 }
+
+
+
+==> lmk.voc <==
+   1    1 $
+   2    2 ';'
+   3    3 NUMBER
+   4    4 STRING
+   5    5 '%%END'
+   6    6 SKIPHEADER
+   7    7 IDENTIFIER
+   8    8 '%%MESSAGES'
+
+==> lmkCommon.h <==
+#ifndef _lmkCommon_H_
+#define _lmkCommon_H_
+/* lmkCommon.h
+
+   Common definitions for lmk
+
+   This file is generated from information in 'lmk.tmk'
+
+*/
+
+/* The import section (%%IMPORT) */
+
+#include "tmkCommon.h"
+
+/* The source position type (%%SRCP) */
+
+      /* ... must be imported! */
+
+
+/* The token type (%%TOKEN) */
+
+typedef struct LmkToken {
+    int code;
+    TmkSrcp srcp;
+    char *sval;
+    int ival;
+    long fpos;
+    long length;
+} LmkToken;
+
+#endif
 
 

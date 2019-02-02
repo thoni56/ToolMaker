@@ -1,22 +1,22 @@
 %%OPTIONS
---	OS 'SunOS';
-	PREFIX 'pmk';
+    PREFIX 'pmk';
+    LIBRARY '/home/Thomas/Utveckling/ToolMaker/lib/ansi-c';
 %%IMPORT
 #include "tmkCommon.h"
 %%END
 %%TOKEN
-	NAME PmkToken;
-	CODE code   %% int %1%%;
-	SRCP srcp   %% TmkSrcp %1%%;
-	ATTRIBUTES
-	     sval   %% char *%1%%,
-	     ival   %% int %1%%,
-	     fpos   %% long %1%%,
-	     length %% long %1%%;
+    NAME PmkToken;
+    CODE code   %% int %1%%;
+    SRCP srcp   %% TmkSrcp %1%%;
+    ATTRIBUTES
+         sval   %% char *%1%%,
+         ival   %% int %1%%,
+         fpos   %% long %1%%,
+         length %% long %1%%;
 %%END
 %%SRCP
-	NAME TmkSrcp;
-	COLUMN col;
-	ROW    line;
-	FILE   file;
+    NAME TmkSrcp;
+    COLUMN col;
+    ROW    line;
+    FILE   file;
 %%END

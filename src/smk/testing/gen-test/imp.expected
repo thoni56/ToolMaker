@@ -1,21 +1,5 @@
 ########## imp ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii imp.tst.win32
-  alias cat dos2unix -ascii
-else
-  ../../smk -generate tables -generate source imp
-endif
-echo "------- imp.smt --------"
-cat imp.smt
-echo "------- impScan.h --------"
-cat impScan.h
-echo "------- impScan.c --------"
-cat impScan.c
-echo "------- impScSema.c --------"
-cat impScSema.c
-########## /bin/csh imp.tst UNIX ##########
-------- imp.smt --------
+==> imp.smt <==
 %%SET tmkTokenName("TmToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
@@ -30,13 +14,14 @@ cat impScSema.c
 /* .tmk-import */
 typedef int TmNatural;
 %%END(tmkImport)
+%%SET smVersion("SMK -- ScannerMaker 2.1(25) (1997-07-28 17:55)")
 %%SET tmkForce(0)
 %%SET tmkOs("SunOS")
 %%SET smkOs("SunOS")
 %%SET currentOs("SunOS")
 %%SET tmkTarget("c")
 %%SET smkTarget("c")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET tmkLibrary("/home/Thomas/Utveckling/ToolMaker/lib/ansi-c")
 %%SET smkLibrary("../..")
 %%SET tmkPrefix("imp")
 %%SET smkPrefix("imp")
@@ -1222,7 +1207,8 @@ static char *smDebugScanners[6]={
 %%SET smDFAtyp(1)
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(smkLibrary)/Scan.imp")
-------- impScan.h --------
+
+==> impScan.h <==
 #ifndef _impScan_h_
 #define _impScan_h_
 
@@ -1342,7 +1328,8 @@ typedef struct impScContextItem {
 } impScContextItem;
 
 #endif
-------- impScan.c --------
+
+==> impScan.c <==
 /*----------------------------------------------------------------------*\
 
 	impScan.c
@@ -2406,7 +2393,8 @@ int impScan(smThis,smToken)
   } while(code<0);
   return smToken->code=code;
 }
-------- impScSema.c --------
+
+==> impScSema.c <==
 /*----------------------------------------------------------------------*\
 
 	impScSema.c
@@ -2813,4 +2801,90 @@ int impScPostHook(smThis,smToken)
 
   return smToken->code;
 }
+
+
+==> imp.voc <==
+   1    1 $
+   2    2 '('
+   3    3 ')'
+   4    4 ','
+   5    5 '='
+   6    6 '#'
+   7    7 '>'
+   8    8 '<'
+   9    9 '?'
+  10   10 '*'
+  11   11 '+'
+  12   12 '-'
+  13   13 '/'
+  14   14 '['
+  15   15 ']'
+  16   16 '{'
+  17   17 '}'
+  18   18 TEXT
+  19   19 '<='
+  20   20 'OR'
+  21   21 '>='
+  22   22 '?R'
+  23   23 '?V'
+  24   24 '%%('
+  25   25 'AND'
+  26   26 'NOT'
+  27   27 '%%IF'
+  28   28 '%%SET'
+  29   29 '%%END'
+  30   30 INTEGER
+  31   31 '%%KEEP'
+  32   32 '%%ESET'
+  33   33 '%%ELSE'
+  34   34 '%%LOOP'
+  35   35 '%%ENDIF'
+  36   36 '%%ELSIF'
+  37   37 '%%BEGIN'
+  38   38 '%%ENDLOOP'
+  39   39 '%%MESSAGE'
+  40   40 '%%INCLUDE'
+  41   41 '%%PROCESS'
+  42   42 QUOT_STRING
+  43   43 '%%EINCLUDE'
+  44   44 'IMP$SYSTEM'
+  45   45 UNQUOT_STRING
+
+==> impCommon.h <==
+#ifndef _impCommon_H_
+#define _impCommon_H_
+/* impCommon.h
+
+   Common definitions for imp
+
+   This file is generated from information in 'imp.tmk'
+
+*/
+
+/* The import section (%%IMPORT) */
+
+/* .tmk-import */
+typedef int TmNatural;
+
+/* The source position type (%%SRCP) */
+
+typedef struct TmSrcp {
+    TmNatural line;
+    TmNatural col;
+    TmNatural file;
+} TmSrcp;
+
+
+/* The token type (%%TOKEN) */
+
+typedef struct TmToken {
+    int code;
+    TmSrcp srcp;
+    char *text;
+    int begin;
+    int end;
+} TmToken;
+
+#endif
+
 

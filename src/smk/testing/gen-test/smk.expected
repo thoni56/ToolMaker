@@ -1,21 +1,5 @@
 ########## smk ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii smk.tst.win32
-  alias cat dos2unix -ascii
-else
-  ../../smk -generate tables -generate source smk
-endif
-echo "------- smk.smt --------"
-cat smk.smt
-echo "------- smkScan.h --------"
-cat smkScan.h
-echo "------- smkScan.c --------"
-cat smkScan.c
-echo "------- smkScSema.c --------"
-cat smkScSema.c
-########## /bin/csh smk.tst UNIX ##########
-------- smk.smt --------
+==> smk.smt <==
 %%SET tmkTokenName("SmkToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
@@ -30,13 +14,14 @@ cat smkScSema.c
 #include "name.h"
 #include "action.h"
 %%END(tmkImport)
+%%SET smVersion("SMK -- ScannerMaker 2.1(25) (1997-07-28 17:55)")
 %%SET tmkForce(0)
 %%SET tmkOs("SunOS")
 %%SET smkOs("SunOS")
 %%SET currentOs("SunOS")
 %%SET tmkTarget("ansi-c")
 %%SET smkTarget("ansi-c")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET tmkLibrary("/home/Thomas/Utveckling/ToolMaker/lib/ansi-c")
 %%SET smkLibrary("../..")
 %%SET tmkPrefix("smk")
 %%SET smkPrefix("smk")
@@ -1629,7 +1614,8 @@ static double lexFloat(this)
 %%SET smDFAtyp(2)
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(smkLibrary)/Scan.imp")
-------- smkScan.h --------
+
+==> smkScan.h <==
 #ifndef _smkScan_h_
 #define _smkScan_h_
 
@@ -1794,7 +1780,8 @@ typedef struct smkScContextItem {
 } smkScContextItem;
 
 #endif
-------- smkScan.c --------
+
+==> smkScan.c <==
 /*----------------------------------------------------------------------*\
 
 	smkScan.c
@@ -3295,7 +3282,8 @@ int smkScan(
   } while(code<0);
   return smToken->code=code;
 }
-------- smkScSema.c --------
+
+==> smkScSema.c <==
 /*----------------------------------------------------------------------*\
 
 	smkScSema.c
@@ -3581,4 +3569,114 @@ int smkScPostHook(
 
   return smToken->code;
 }
+
+
+==> smk.voc <==
+   1    1 $
+   2    2 '='
+   3    3 ';'
+   4    4 ':'
+   5    5 '/'
+   6    6 '!'
+   7    7 '*'
+   8    8 '+'
+   9    9 '?'
+  10   10 '{'
+  11   11 '}'
+  12   12 '-'
+  13   13 '.'
+  14   14 '('
+  15   15 ')'
+  16   16 'C'
+  17   17 'K'
+  18   18 'M'
+  19   19 'NO'
+  20   20 '%%'
+  21   21 'ADA'
+  22   22 'COL'
+  23   23 'DES'
+  24   24 'DFA'
+  25   25 'ERR'
+  26   26 'GCS'
+  27   27 'LES'
+  28   28 'MAP'
+  29   29 'NFA'
+  30   30 'POS'
+  31   31 'RDS'
+  32   32 'ROW'
+  33   33 'SCR'
+  34   34 'SET'
+  35   35 'TOK'
+  36   36 Class
+  37   37 'AUTO'
+  38   38 '%%DO'
+  39   39 'BYTE'
+  40   40 'LIST'
+  41   41 String
+  42   42 Number
+  43   43 '%%END'
+  44   44 '%%SET'
+  45   45 '%%MAP'
+  46   46 'TOKEN'
+  47   47 'TRACE'
+  48   48 '%%CODE'
+  49   49 '%%RULE'
+  50   50 '%%SKIP'
+  51   51 'ESCAPE'
+  52   52 'ROWCOL'
+  53   53 'EXCLUDE'
+  54   54 'VERBOSE'
+  55   55 SKIPHEADER
+  56   56 '%%EXPORT'
+  57   57 '%%READER'
+  58   58 '%%ACTION'
+  59   59 '_UNKNOWN'
+  60   60 Identifier
+  61   61 'POSITION'
+  62   62 '%%CONTEXT'
+  63   63 '%%PREHOOK'
+  64   64 '%%SCANNER'
+  65   65 'SCREENING'
+  66   66 '%%POSTHOOK'
+  67   67 '_ENDOFTEXT'
+  68   68 '%%SCREENING'
+  69   69 '%%DEFINITION'
+  70   70 '%%VOCABULARY'
+  71   71 '%%DECLARATION'
+
+==> smkCommon.h <==
+#ifndef _smkCommon_H_
+#define _smkCommon_H_
+/* smkCommon.h
+
+   Common definitions for smk
+
+   This file is generated from information in 'smk.tmk'
+
+*/
+
+/* The import section (%%IMPORT) */
+
+#include "tmkCommon.h"
+#include "name.h"
+#include "action.h"
+
+/* The source position type (%%SRCP) */
+
+      /* ... must be imported! */
+
+
+/* The token type (%%TOKEN) */
+
+typedef struct SmkToken {
+    int code;
+    TmkSrcp srcp;
+    Action action;
+    Name name;
+    double fnumber;
+    int inumber;
+} SmkToken;
+
+#endif
+
 
