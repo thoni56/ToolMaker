@@ -12,9 +12,9 @@
 
 %%OPTIONS
 
-	Escape '`';
-	Generate Tables, Source;
-	Library '..';
+    Escape '`';
+    Generate Tables, Source;
+    Library '../..';
 
 %%IMPORT
 #include "tmkScan.h"
@@ -78,11 +78,11 @@ static OptNodeP newOpt(name, srcp)
 
 tmk_document
     = option_section other_sections
-	%%
+    %%
           if (!(srcpOptional || tmkEnv->srcpNode))
-	    /* SRCP section not found */
+        /* SRCP section not found */
             tmkLog(NULL, 64, sevERR, "SRCP");
-	%%
+    %%
     ;
 
 other_sections
@@ -103,16 +103,16 @@ other_section
 
 option_section
     = -- empty
-	%%
-	  srcpOptional = TRUE;
-	%%
+    %%
+      srcpOptional = TRUE;
+    %%
     ! '%%OPTIONS' option_directives optional_end
-	%%
-	  srcpOptional = TRUE;
+    %%
+      srcpOptional = TRUE;
           setOpts(tmkEnv->optTab, %option_directives.dir);
           setCliOpts(tmkEnv->cliTab, tmkEnv->argc, tmkEnv->argv, &dummy);
-	  tmkEscape = *getStrOpt(tmkEnv->escapeOpt);
-	%%
+      tmkEscape = *getStrOpt(tmkEnv->escapeOpt);
+    %%
     ;
 
 optional_end
@@ -120,95 +120,95 @@ optional_end
     ! '%%END'
     ;
 
-option_directives 
+option_directives
     = option_directive
-	%%
-	  %option_directives.dir = %option_directive.dir;
-	%%
+    %%
+      %option_directives.dir = %option_directive.dir;
+    %%
     ! option_directives option_directive
-	%%{
-	  TmoNodeP p;
+    %%{
+      TmoNodeP p;
 
-	  if (%2option_directives.dir == NULL)
-	    %option_directives.dir = %option_directive.dir;
-	  else {
-	    for (p = %2option_directives.dir; p->next; p = p->next);
-	    p->next = %option_directive.dir;
-	    %option_directives.dir= %2option_directives.dir;
-	  }
-	}%%
+      if (%2option_directives.dir == NULL)
+        %option_directives.dir = %option_directive.dir;
+      else {
+        for (p = %2option_directives.dir; p->next; p = p->next);
+        p->next = %option_directive.dir;
+        %option_directives.dir= %2option_directives.dir;
+      }
+    }%%
     ;
 
 option_directive
     = identifier ';'
-	%%{
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = %identifier.sval;
-	  p->srcp = %identifier.srcp;
-	  p->dirKind = BOOL_TMO;
-	  p->oval.bval = TRUE;
-	  p->next = NULL;
-	  %option_directive.dir = p;
-	}%%
+    %%{
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = %identifier.sval;
+      p->srcp = %identifier.srcp;
+      p->dirKind = BOOL_TMO;
+      p->oval.bval = TRUE;
+      p->next = NULL;
+      %option_directive.dir = p;
+    }%%
     ! 'NO' identifier ';'
-	%%{
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = %identifier.sval;
-	  p->srcp = %identifier.srcp;
-	  p->dirKind = BOOL_TMO;
-	  p->oval.bval = FALSE;
-	  p->next = NULL;
-	  %option_directive.dir = p;
-	}%%
+    %%{
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = %identifier.sval;
+      p->srcp = %identifier.srcp;
+      p->dirKind = BOOL_TMO;
+      p->oval.bval = FALSE;
+      p->next = NULL;
+      %option_directive.dir = p;
+    }%%
     ! identifier NUMBER ';'
-	%%{
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = %identifier.sval;
-	  p->srcp = %identifier.srcp;
-	  p->dirKind = NUM_TMO;
-	  p->oval.ival = %NUMBER.ival;
-	  p->next = NULL;
-	  %option_directive.dir = p;
-	}%%
+    %%{
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = %identifier.sval;
+      p->srcp = %identifier.srcp;
+      p->dirKind = NUM_TMO;
+      p->oval.ival = %NUMBER.ival;
+      p->next = NULL;
+      %option_directive.dir = p;
+    }%%
     ! identifier STRING ';'
-	%%{
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = %identifier.sval;
-	  p->srcp = %identifier.srcp;
-	  p->dirKind = STR_TMO;
-	  p->oval.sval = %STRING.sval;
-	  p->next = NULL;
-	  %option_directive.dir = p;
-	}%%
+    %%{
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = %identifier.sval;
+      p->srcp = %identifier.srcp;
+      p->dirKind = STR_TMO;
+      p->oval.sval = %STRING.sval;
+      p->next = NULL;
+      %option_directive.dir = p;
+    }%%
     ! identifier options ';'
-	%%{
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = %identifier.sval;
-	  p->srcp = %identifier.srcp;
-	  p->dirKind = SET_TMO;
-	  p->oval.opts = %options.opt;
-	  p->next = NULL;
+    %%{
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = %identifier.sval;
+      p->srcp = %identifier.srcp;
+      p->dirKind = SET_TMO;
+      p->oval.opts = %options.opt;
+      p->next = NULL;
           %option_directive.dir = p;
-	}%%
+    }%%
     ;
 
 options
     = identifier
-	%%
-	  %options.opt = newOpt(%identifier.sval, %identifier.srcp);
-	%%
+    %%
+      %options.opt = newOpt(%identifier.sval, %identifier.srcp);
+    %%
     ! options ',' identifier
-	%%{
-	  OptNodeP p;
+    %%{
+      OptNodeP p;
 
-	  if (%2options.opt == NULL)
-	    %options.opt = newOpt(%identifier.sval, %identifier.srcp);
-	  else {
-	    for (p = %2options.opt; p->next; p = p->next);
-	    p->next = newOpt(%identifier.sval, %identifier.srcp);
-	    %options.opt = %2options.opt;
-	  }
-	}%%
+      if (%2options.opt == NULL)
+        %options.opt = newOpt(%identifier.sval, %identifier.srcp);
+      else {
+        for (p = %2options.opt; p->next; p = p->next);
+        p->next = newOpt(%identifier.sval, %identifier.srcp);
+        %options.opt = %2options.opt;
+      }
+    }%%
     ;
 
 -----------------------------------------------------------------------------
@@ -219,12 +219,12 @@ import_section
     = '%%IMPORT'
       -- Followed by language specific text skipped by the scanner.
       optional_end
-	%%
-	  if (tmkEnv->importSection)
-	    tmkLog(%'%%IMPORT'.srcp, 60, sevERR, "");
-	  else
-  	    tmkEnv->importSection = tmkNewCode(%'%%IMPORT'.fpos, %'%%IMPORT'.length);
-	%%
+    %%
+      if (tmkEnv->importSection)
+        tmkLog(%'%%IMPORT'.srcp, 60, sevERR, "");
+      else
+        tmkEnv->importSection = tmkNewCode(%'%%IMPORT'.fpos, %'%%IMPORT'.length);
+    %%
     ;
 
 -----------------------------------------------------------------------------
@@ -233,18 +233,18 @@ import_section
 
 token_section
     = token_header token_decls optional_end
-  	%%{
+    %%{
           Boolean declFound = FALSE;
           Boolean declOmitted = FALSE;
           TokenAttrListP attrs;
 
-	  if (tmkEnv->tokenNode->name == NULL)
+      if (tmkEnv->tokenNode->name == NULL)
             /* Token type must have a name */
-	    tmkLog(%token_header.srcp, 62, sevERR, "NAME");
+        tmkLog(%token_header.srcp, 62, sevERR, "NAME");
 
-	  if (tmkEnv->tokenNode->code == NULL)
+      if (tmkEnv->tokenNode->code == NULL)
             /* Token must have a code part */
-	    tmkLog(%token_header.srcp, 62, sevERR, "CODE");
+        tmkLog(%token_header.srcp, 62, sevERR, "CODE");
 
           /* check declarations */
           if (tmkEnv->tokenNode->codeDecl)
@@ -255,12 +255,12 @@ token_section
           if (tmkEnv->tokenNode->srcpDecl)
             declFound = TRUE;
 
-          for (attrs = tmkEnv->tokenNode->attrs; 
-               attrs && (!declFound || !declOmitted); 
+          for (attrs = tmkEnv->tokenNode->attrs;
+               attrs && (!declFound || !declOmitted);
                attrs = attrs->next)
             if (attrs->nameDecl)
               declFound = TRUE;
-            else 
+            else
               declOmitted = TRUE;
 
           if (declFound && declOmitted)
@@ -268,15 +268,15 @@ token_section
             tmkLog(%token_header.srcp, 65, sevERR, "token");
 
           srcpOptional = (!declFound || tmkEnv->tokenNode->srcpDecl);
-	}%%
+    }%%
     ;
 
 token_header
     = '%%TOKEN'
-	%%
+    %%
           tmkEnv->tokenNode = (TokenNodeP) calloc(1,sizeof(TokenNode));
           %token_header.srcp = %'%%TOKEN'.srcp;
-	%%
+    %%
     ;
 
 token_decls
@@ -286,78 +286,78 @@ token_decls
 
 token_decl
     = 'NAME' identifier ';'
-	%%
-	  free(%'NAME'.sval);
-	  if (tmkEnv->tokenNode->name)
-	    tmkLog(%'NAME'.srcp, 61, sevERR, "");
-	  else
-	    tmkEnv->tokenNode->name = %identifier.sval;
-	%%
+    %%
+      free(%'NAME'.sval);
+      if (tmkEnv->tokenNode->name)
+        tmkLog(%'NAME'.srcp, 61, sevERR, "");
+      else
+        tmkEnv->tokenNode->name = %identifier.sval;
+    %%
     ! 'CODE' identifier optional_decl ';'
-	%%
-	  free(%'CODE'.sval);
-	  if (tmkEnv->tokenNode->code)
-	    tmkLog(%'CODE'.srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->tokenNode->code = %identifier.sval;
-	    tmkEnv->tokenNode->codeDecl = %optional_decl.sval;
-	  }
-	%%
+    %%
+      free(%'CODE'.sval);
+      if (tmkEnv->tokenNode->code)
+        tmkLog(%'CODE'.srcp, 61, sevERR, "");
+      else {
+        tmkEnv->tokenNode->code = %identifier.sval;
+        tmkEnv->tokenNode->codeDecl = %optional_decl.sval;
+      }
+    %%
     ! 'SRCP' identifier optional_decl ';'
-	%%
-	  free(%'SRCP'.sval);
-	  if (tmkEnv->tokenNode->srcp)
-	    tmkLog(%'SRCP'.srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->tokenNode->srcp = %identifier.sval;
-	    tmkEnv->tokenNode->srcpDecl = %optional_decl.sval;
-	  }
-	%%
+    %%
+      free(%'SRCP'.sval);
+      if (tmkEnv->tokenNode->srcp)
+        tmkLog(%'SRCP'.srcp, 61, sevERR, "");
+      else {
+        tmkEnv->tokenNode->srcp = %identifier.sval;
+        tmkEnv->tokenNode->srcpDecl = %optional_decl.sval;
+      }
+    %%
     ! 'ATTRIBUTES' token_attributes ';'
-	%%
-	  free(%'ATTRIBUTES'.sval);
-	  if (tmkEnv->tokenNode->attrs)
-	    tmkLog(%'ATTRIBUTES'.srcp, 61, sevERR, "");
-	  else
-	    tmkEnv->tokenNode->attrs = %token_attributes.attr;
-	%%
+    %%
+      free(%'ATTRIBUTES'.sval);
+      if (tmkEnv->tokenNode->attrs)
+        tmkLog(%'ATTRIBUTES'.srcp, 61, sevERR, "");
+      else
+        tmkEnv->tokenNode->attrs = %token_attributes.attr;
+    %%
     ;
 
 token_attributes
     = token_attribute
-	%%
-	  %token_attributes.attr = %token_attribute.attr;
-	%%
+    %%
+      %token_attributes.attr = %token_attribute.attr;
+    %%
     ! token_attributes ',' token_attribute
-	%%{
-	  TokenAttrListP p;
+    %%{
+      TokenAttrListP p;
 
-	  if (%2token_attributes.attr == NULL)
-	    %token_attributes.attr = %token_attribute.attr;
-	  else {
-	    for (p = %2token_attributes.attr; p->next; p = p->next);
-	    p->next = %token_attribute.attr;
-	    %token_attributes.attr = %2token_attributes.attr;
-	  }
-	}%%
+      if (%2token_attributes.attr == NULL)
+        %token_attributes.attr = %token_attribute.attr;
+      else {
+        for (p = %2token_attributes.attr; p->next; p = p->next);
+        p->next = %token_attribute.attr;
+        %token_attributes.attr = %2token_attributes.attr;
+      }
+    }%%
     ;
 
 token_attribute
     = identifier optional_decl
-	%%
-	  %token_attribute.attr = newAttr(%identifier.sval, %optional_decl.sval);
-	%%
+    %%
+      %token_attribute.attr = newAttr(%identifier.sval, %optional_decl.sval);
+    %%
     ;
 
 optional_decl
     = -- empty
-	%%
-	  %optional_decl.sval = NULL;
-	%%
+    %%
+      %optional_decl.sval = NULL;
+    %%
     ! '%%'
-	%%
-	  %optional_decl.sval = %'%%'.sval;
-	%%
+    %%
+      %optional_decl.sval = %'%%'.sval;
+    %%
     -- Followed by language specific text skipped by the scanner.
     ;
 
@@ -367,16 +367,16 @@ optional_decl
 
 srcp_section
     = srcp_header srcp_decls optional_end
-  	%%{
+    %%{
           Boolean declFound = FALSE;
           Boolean declOmitted = FALSE;
 
-	  if (tmkEnv->srcpNode->name == NULL)
+      if (tmkEnv->srcpNode->name == NULL)
             /* Source position type must have a name */
-	    tmkLog(%srcp_header.srcp, 63, sevERR, "NAME");
+        tmkLog(%srcp_header.srcp, 63, sevERR, "NAME");
 
           if (tmkEnv->srcpNode->row || tmkEnv->srcpNode->col ||
-	      tmkEnv->srcpNode->file || tmkEnv->srcpNode->pos) {
+          tmkEnv->srcpNode->file || tmkEnv->srcpNode->pos) {
             /* check declarations */
             if (tmkEnv->srcpNode->row)
               if (tmkEnv->srcpNode->rowDecl)
@@ -401,18 +401,18 @@ srcp_section
             if (declFound && declOmitted)
               /* If there exists declarations all fields must have it */
               tmkLog(%srcp_header.srcp, 65, sevERR, "srcp");
-	  } else
+      } else
             /* Source position must have at least one member */
-            tmkLog(%srcp_header.srcp, 66, sevERR, "");  
-	}%%
+            tmkLog(%srcp_header.srcp, 66, sevERR, "");
+    }%%
     ;
 
 srcp_header
     = '%%SRCP'
-	%%
+    %%
           tmkEnv->srcpNode = (SrcpNodeP) calloc(1,sizeof(SrcpNode));
           %srcp_header.srcp = %'%%SRCP'.srcp;
-	%%
+    %%
     ;
 
 srcp_decls
@@ -422,53 +422,53 @@ srcp_decls
 
 srcp_decl
     = 'NAME' identifier ';'
-	%%
-	  free(%'NAME'.sval);
-	  if (tmkEnv->srcpNode->name)
-	    tmkLog(%'NAME'.srcp, 61, sevERR, "");
-	  else
- 	    tmkEnv->srcpNode->name = %identifier.sval;
-	%%
+    %%
+      free(%'NAME'.sval);
+      if (tmkEnv->srcpNode->name)
+        tmkLog(%'NAME'.srcp, 61, sevERR, "");
+      else
+        tmkEnv->srcpNode->name = %identifier.sval;
+    %%
     ! 'ROW' identifier optional_decl ';'
-	%%
-	  free(%'ROW'.sval);
-	  if (tmkEnv->srcpNode->row)
-	    tmkLog(%'ROW'.srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->row = %identifier.sval;
-	    tmkEnv->srcpNode->rowDecl = %optional_decl.sval;
-	  }
-	%%
+    %%
+      free(%'ROW'.sval);
+      if (tmkEnv->srcpNode->row)
+        tmkLog(%'ROW'.srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->row = %identifier.sval;
+        tmkEnv->srcpNode->rowDecl = %optional_decl.sval;
+      }
+    %%
     ! 'COLUMN' identifier optional_decl ';'
-	%%
-	  free(%'COLUMN'.sval);
-	  if (tmkEnv->srcpNode->col)
-	    tmkLog(%'COLUMN'.srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->col = %identifier.sval;
-	    tmkEnv->srcpNode->colDecl = %optional_decl.sval;
-	  }
-	%%
+    %%
+      free(%'COLUMN'.sval);
+      if (tmkEnv->srcpNode->col)
+        tmkLog(%'COLUMN'.srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->col = %identifier.sval;
+        tmkEnv->srcpNode->colDecl = %optional_decl.sval;
+      }
+    %%
     ! 'FILE' identifier optional_decl ';'
-	%%
-	  free(%'FILE'.sval);
-	  if (tmkEnv->srcpNode->file)
-	    tmkLog(%'FILE'.srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->file = %identifier.sval;
-	    tmkEnv->srcpNode->fileDecl = %optional_decl.sval;
-	  }
-	%%
+    %%
+      free(%'FILE'.sval);
+      if (tmkEnv->srcpNode->file)
+        tmkLog(%'FILE'.srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->file = %identifier.sval;
+        tmkEnv->srcpNode->fileDecl = %optional_decl.sval;
+      }
+    %%
     ! 'POSITION' identifier optional_decl ';'
-	%%
-	  free(%'POSITION'.sval);
-	  if (tmkEnv->srcpNode->pos)
-	    tmkLog(%'POSITION'.srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->pos = %identifier.sval;
-	    tmkEnv->srcpNode->posDecl = %optional_decl.sval;
-	  }
-	%%
+    %%
+      free(%'POSITION'.sval);
+      if (tmkEnv->srcpNode->pos)
+        tmkLog(%'POSITION'.srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->pos = %identifier.sval;
+        tmkEnv->srcpNode->posDecl = %optional_decl.sval;
+      }
+    %%
     ;
 
 -----------------------------------------------------------------------------
@@ -491,54 +491,54 @@ skip_section
 
 identifier
     = IDENTIFIER
-	%%
-	  %identifier.sval = %IDENTIFIER.sval;
-	  %identifier.srcp = %IDENTIFIER.srcp;
+    %%
+      %identifier.sval = %IDENTIFIER.sval;
+      %identifier.srcp = %IDENTIFIER.srcp;
         %%
     ! 'ATTRIBUTES'
-	%%
-	  %identifier.sval = %'ATTRIBUTES'.sval;
-	  %identifier.srcp = %'ATTRIBUTES'.srcp;
-	%%
+    %%
+      %identifier.sval = %'ATTRIBUTES'.sval;
+      %identifier.srcp = %'ATTRIBUTES'.srcp;
+    %%
     ! 'NAME'
-	%%
-	  %identifier.sval = %'NAME'.sval;
-	  %identifier.srcp = %'NAME'.srcp;
-	%%
+    %%
+      %identifier.sval = %'NAME'.sval;
+      %identifier.srcp = %'NAME'.srcp;
+    %%
     ! 'CODE'
-	%%
-	  %identifier.sval = %'CODE'.sval;
-	  %identifier.srcp = %'CODE'.srcp;
-	%%
+    %%
+      %identifier.sval = %'CODE'.sval;
+      %identifier.srcp = %'CODE'.srcp;
+    %%
     ! 'SRCP'
-	%%
-	  %identifier.sval = %'SRCP'.sval;
-	  %identifier.srcp = %'SRCP'.srcp;
-	%%
+    %%
+      %identifier.sval = %'SRCP'.sval;
+      %identifier.srcp = %'SRCP'.srcp;
+    %%
     ! 'ROW'
-	%%
-	  %identifier.sval = %'ROW'.sval;
-	  %identifier.srcp = %'ROW'.srcp;
-	%%
+    %%
+      %identifier.sval = %'ROW'.sval;
+      %identifier.srcp = %'ROW'.srcp;
+    %%
     ! 'COLUMN'
-	%%
-	  %identifier.sval = %'COLUMN'.sval;
-	  %identifier.srcp = %'COLUMN'.srcp;
-	%%
+    %%
+      %identifier.sval = %'COLUMN'.sval;
+      %identifier.srcp = %'COLUMN'.srcp;
+    %%
     ! 'FILE'
-	%%
-	  %identifier.sval = %'FILE'.sval;
-	  %identifier.srcp = %'FILE'.srcp;
-	%%
+    %%
+      %identifier.sval = %'FILE'.sval;
+      %identifier.srcp = %'FILE'.srcp;
+    %%
     ! 'POSITION'
-	%%
-	  %identifier.sval = %'POSITION'.sval;
-	  %identifier.srcp = %'POSITION'.srcp;
-	%%
-    ! 'NO' %-(IDENTIFIER, 'ATTRIBUTES', 'NAME', 'CODE', 'SRCP', 
-	      'ROW', 'COLUMN', 'FILE', 'POSITION', 'NO')
-	%%
-	  %identifier.sval = %'NO'.sval;
-	  %identifier.srcp = %'NO'.srcp;
-	%%
+    %%
+      %identifier.sval = %'POSITION'.sval;
+      %identifier.srcp = %'POSITION'.srcp;
+    %%
+    ! 'NO' %-(IDENTIFIER, 'ATTRIBUTES', 'NAME', 'CODE', 'SRCP',
+          'ROW', 'COLUMN', 'FILE', 'POSITION', 'NO')
+    %%
+      %identifier.sval = %'NO'.sval;
+      %identifier.srcp = %'NO'.srcp;
+    %%
     ;
