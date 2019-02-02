@@ -29,13 +29,15 @@ VERSIONOBJECTS = \
 	lmkTab.o \
 	lmk.o
 
-OBJECTS = $(VERSIONOBJECTS) version.o 
+OBJECTS = $(VERSIONOBJECTS) version.o
 
 #
 # Normal compilation
 all debug opt: checkARCH $(TMARCH)
 	cp lmk.exe ../../bin/
 
+test:
+	cd testing; jregr
 
 # Miscellaneous targets down here
 
@@ -44,10 +46,12 @@ cygwin mingw sun3 sun4 solaris1 solaris2: ../license/license.h ../imp/impMacro.h
 
 #--
 clean:
-	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt lmk.voc lmkParse.* lmkScan.* \
-	lmkScSema.* lmkPaSema.* lmkCommon.h lmkList.* lmkErr.* lmk .???stamp
+	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt lmk
 
-FILETER = | sed -e "\,/usr/include, d" | sort -u 
+veryclean: clean
+	rm -f lmk.voc lmkParse.* lmkScan.* lmkScSema.* lmkPaSema.* lmkCommon.h lmkList.* lmkErr.*
+
+FILETER = | sed -e "\,/usr/include, d" | sort -u
 
 depend file:
 	@echo -n "Make depend "
