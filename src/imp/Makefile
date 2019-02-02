@@ -49,7 +49,7 @@ impList.o: impList.c
 #-
 
 test:
-	cd TEST; jregr
+	cd testing; jregr
 
 clean:
 	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt imp imp.a
