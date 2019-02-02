@@ -1,0 +1,10 @@
+*.pml
+*.pmt
+*.tmp
+*.output
+*.voc
+*Common.h
+*Err.c
+*PaSema.c
+*Parse.c
+*Parse.h
