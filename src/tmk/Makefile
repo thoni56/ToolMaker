@@ -47,8 +47,7 @@ tmkList.o: tmkList.c
 
 #--
 clean:
-	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt tmk.voc tmkParse.* tmkScan.* \
-	tmkScSema.* tmkPaSema.* tmkCommon.h tmkErr.* $(LIB)
+	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt $(LIB)
 
 depend file:
 	@echo -n "Make depend "

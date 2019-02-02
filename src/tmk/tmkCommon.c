@@ -1,26 +1,27 @@
-/*------------------------------------------------------------------- */ 
-/* TITLE                                                              */ 
-/* ------                                                             */ 
+/*------------------------------------------------------------------- */
+/* TITLE                                                              */
+/* ------                                                             */
 /* tmkCommon.c                                                        */
-/*                                                                    */ 
+/*                                                                    */
 /* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* REVISION DATA                                                      */ 
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* REVISION DATA                                                      */
 /* -------------                                                      */
 /* CREATED:   92-07-20  Micael Dahlgren                               */
 /* BASED ON:                                                          */
-/* MODIFIED:                                                          */ 
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* DESCRIPTION                                                        */ 
-/* -----------                                                        */ 
+/* MODIFIED:                                                          */
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* DESCRIPTION                                                        */
+/* -----------                                                        */
 /* Common functions for the ToolMaker system                          */
-/*                                                                    */ 
+/*                                                                    */
 /* ------------------------------------------------------------------ */
 /* IMPORT */
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <ctype.h>
 #ifdef WIN32
@@ -37,7 +38,7 @@ char tmkEscape = '`';
 #define MAXNOPH 3		/* max mumber of placeholders */
 
 #ifdef CYGWIN
-#define OFLAG _O_BINARY
+#define OFLAG O_TEXT
 #else
 #ifdef WIN32
 #define OFLAG _O_BINARY
@@ -84,7 +85,7 @@ void tmkSkipCode(skipType, this, fpos, length, escapeChar)
     skip = 0;
     stringSep1 = '\'';
     stringSep2 = '<';
-    break; 
+    break;
   case RULES_SKIP:
   case STRSKP_SKIP:
     skip = 2;
@@ -104,52 +105,52 @@ void tmkSkipCode(skipType, this, fpos, length, escapeChar)
     for (at = 2; at < this->smLength; at++, ch++)
       switch(state) {
       case 0:
-	if (*ch == escapeChar) state = 4;
-	else if (*ch == '%') state = 1;
-	else if ((*ch == stringSep1) && (skipType != SEM_SKIP) && (skipType != SUB_SKIP)) 
-	  state = 5;
-	else if ((*ch == stringSep2) && (skipType != SEM_SKIP) && (skipType != SUB_SKIP)) 
-	  state = 6;
-	break;
+    if (*ch == escapeChar) state = 4;
+    else if (*ch == '%') state = 1;
+    else if ((*ch == stringSep1) && (skipType != SEM_SKIP) && (skipType != SUB_SKIP))
+      state = 5;
+    else if ((*ch == stringSep2) && (skipType != SEM_SKIP) && (skipType != SUB_SKIP))
+      state = 6;
+    break;
       case 1:
-	if (*ch == escapeChar) state = 4;
-	else if (*ch == '%') state = 2;
-	else if (*ch == stringSep1) state = 5;
-	else if (*ch == stringSep2) state = 6;
-	else state = 0;
-	break;
+    if (*ch == escapeChar) state = 4;
+    else if (*ch == '%') state = 2;
+    else if (*ch == stringSep1) state = 5;
+    else if (*ch == stringSep2) state = 6;
+    else state = 0;
+    break;
       case 2:
-	if (skipType == SUB_SKIP) {
-	  stringSep1 = oldSep;
-	  skipType = oldSkip;
-	  state = 0;
-	} else if (skipType == SEM_SKIP) {
-	  goto Exit;
-	} else if (skipType == RULES_SKIP) {
-	  oldSep = stringSep1;
-	  oldSkip = RULES_SKIP;
-	  stringSep1 = '\0';
-	  skipType = SUB_SKIP;
-	  state = 0;
-	} else if (*ch == escapeChar) state = 4;
-	else if (*ch == '%') state = 2;
-	else if (*ch == stringSep1) state = 5;
-	else if (*ch == stringSep2) state = 6;
-	else if (isalpha(*ch)) goto Exit;
-	else state = 0;
-	break;
+    if (skipType == SUB_SKIP) {
+      stringSep1 = oldSep;
+      skipType = oldSkip;
+      state = 0;
+    } else if (skipType == SEM_SKIP) {
+      goto Exit;
+    } else if (skipType == RULES_SKIP) {
+      oldSep = stringSep1;
+      oldSkip = RULES_SKIP;
+      stringSep1 = '\0';
+      skipType = SUB_SKIP;
+      state = 0;
+    } else if (*ch == escapeChar) state = 4;
+    else if (*ch == '%') state = 2;
+    else if (*ch == stringSep1) state = 5;
+    else if (*ch == stringSep2) state = 6;
+    else if (isalpha(*ch)) goto Exit;
+    else state = 0;
+    break;
       case 3:
-	state = 5;
+    state = 5;
       case 4:
-	state = 0;
-	break;
+    state = 0;
+    break;
       case 5:
-	if (*ch == '\\') state = 3;
-	else if (*ch == stringSep1) state = 0;
-	break;
+    if (*ch == '\\') state = 3;
+    else if (*ch == stringSep1) state = 0;
+    break;
       case 6:
-	if (*ch == '>') state = 0;
-	break;
+    if (*ch == '>') state = 0;
+    break;
       }
   }
 
@@ -188,11 +189,11 @@ char* tmkReplPH(decl, attrName, new)
     switch (state) {
     case 0:
       if (decl[oldPtr] == tmkEscape)
-	state = 1;
+    state = 1;
       else if (decl[oldPtr] == '%')
-	state = 2;
+    state = 2;
       if (state != 2) {
-	new[newPtr++] = decl[oldPtr];
+    new[newPtr++] = decl[oldPtr];
       }
       oldPtr++;
       break;
@@ -202,29 +203,29 @@ char* tmkReplPH(decl, attrName, new)
       break;
     case 2:
       if (decl[oldPtr] == tmkEscape) {
-	state = 3;
-	oldPtr++;
+    state = 3;
+    oldPtr++;
       } else if (decl[oldPtr] == '1') {
-	state = 0;
-	strncpy(&new[newPtr], attrName, attrLen);
-	newPtr = newPtr + attrLen;
-	oldPtr++;
+    state = 0;
+    strncpy(&new[newPtr], attrName, attrLen);
+    newPtr = newPtr + attrLen;
+    oldPtr++;
       } else {
-	new[newPtr++] = '%';
-	new[newPtr++] = decl[oldPtr++];
-	state = 0;
+    new[newPtr++] = '%';
+    new[newPtr++] = decl[oldPtr++];
+    state = 0;
       }
       break;
     case 3:
       state = 0;
       if (decl[oldPtr] == '1') {
-	strncpy(&new[newPtr], attrName, attrLen);
-	newPtr = newPtr + attrLen;
-	oldPtr++;
+    strncpy(&new[newPtr], attrName, attrLen);
+    newPtr = newPtr + attrLen;
+    oldPtr++;
       } else {
-	new[newPtr++] = '%';
-	new[newPtr++] = tmkEscape;
-	new[newPtr++] = decl[oldPtr++];
+    new[newPtr++] = '%';
+    new[newPtr++] = tmkEscape;
+    new[newPtr++] = decl[oldPtr++];
       }
       break;
     }
@@ -233,7 +234,7 @@ char* tmkReplPH(decl, attrName, new)
   return new;
 }
 
-/*---------------------------------------------------------------------- 
+/*----------------------------------------------------------------------
   prWithPH()
 
   print a string with placeholders
@@ -245,7 +246,7 @@ static void prWithPH(outfile, decl, attrName)
      char *attrName;
 {
   char *buff = (char*) malloc(strlen(decl)+
-			      MAXNOPH * (attrName ? strlen(attrName) : 0)+1);
+                  MAXNOPH * (attrName ? strlen(attrName) : 0)+1);
   tmkReplPH(decl, attrName, buff);
   fpopt(outfile, buff);
   free(buff);
@@ -255,7 +256,7 @@ static void prWithPH(outfile, decl, attrName)
 /*======================================================================
     tmkCopyCode()
 
-    Copy a code segment with length "length" from position "pos" 
+    Copy a code segment with length "length" from position "pos"
     in "inFile" to "outFile". In "inFile" use the escape character
     "inEscape" and in "outFile" use "outEscape"
  */
@@ -269,14 +270,14 @@ void tmkCopyCode(inFile, pos, length, inEscape, outFile, outEscape)
 {
   int i;			/* Loop variable              */
   char ch;			/* Temporary character holder */
-  
+
   fseek(inFile, pos, 0);
   for (i = 0; i < length; i++) {
-    if ((ch = (char)getc(inFile)) == '%') 
+    if ((ch = (char)getc(inFile)) == '%')
       putc(outEscape, outFile);
     else if (ch == inEscape) {
-      if ((ch = (char)getc(inFile)) == '%') 
-	putc(outEscape, outFile);
+      if ((ch = (char)getc(inFile)) == '%')
+    putc(outEscape, outFile);
       i++;
     }
     putc(ch, outFile);
@@ -316,33 +317,33 @@ void tmkPCommon(outfile, tokenNode, srcpNode, importSection, escapeChar)
       fprintf(outfile, "%%%%SET tmkTokenDecl (\"");
       /* Declaration of CODE part */
       if (tokenNode->codeDecl) {
-	prWithPH(outfile, tokenNode->codeDecl, tokenNode->code);
-	if (tokenNode->srcpDecl || tokenNode->srcp || tokenNode->attrs)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    prWithPH(outfile, tokenNode->codeDecl, tokenNode->code);
+    if (tokenNode->srcpDecl || tokenNode->srcp || tokenNode->attrs)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       }
       /* Declaration of source position part */
       if (tokenNode->srcpDecl) {
-	prWithPH(outfile, tokenNode->srcpDecl, tokenNode->srcp);
-	if (tokenNode->attrs)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    prWithPH(outfile, tokenNode->srcpDecl, tokenNode->srcp);
+    if (tokenNode->attrs)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       } else if (tokenNode->srcp) {
-	fprintf(outfile, " %s %s", srcpNode->name, tokenNode->srcp);
-	if (tokenNode->attrs)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    fprintf(outfile, " %s %s", srcpNode->name, tokenNode->srcp);
+    if (tokenNode->attrs)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       }
       /* Declaration of attributes */
       for (p = tokenNode->attrs; p; p = p->next) {
-	prWithPH(outfile, p->nameDecl, p->name);
-	if (p->next)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    prWithPH(outfile, p->nameDecl, p->name);
+    if (p->next)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       }
     }
   }
@@ -358,52 +359,52 @@ void tmkPCommon(outfile, tokenNode, srcpNode, importSection, escapeChar)
       fpoptv(outfile, "tmkSrcpFile", srcpNode->file);
     if (srcpNode->pos)
       fpoptv(outfile, "tmkSrcpPos", srcpNode->pos);
-    if (srcpNode->rowDecl || srcpNode->colDecl || 
-	srcpNode->fileDecl || srcpNode->posDecl)  {
+    if (srcpNode->rowDecl || srcpNode->colDecl ||
+    srcpNode->fileDecl || srcpNode->posDecl)  {
       fprintf(outfile, "%%%%SET tmkSrcpDecl(\"");
       if (srcpNode->row) {
-	prWithPH(outfile, srcpNode->rowDecl, srcpNode->row);
-	if (srcpNode->col || srcpNode->file || srcpNode->pos)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    prWithPH(outfile, srcpNode->rowDecl, srcpNode->row);
+    if (srcpNode->col || srcpNode->file || srcpNode->pos)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       }
       if (srcpNode->col) {
-	prWithPH(outfile, srcpNode->colDecl, srcpNode->col);
-	if (srcpNode->file || srcpNode->pos)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    prWithPH(outfile, srcpNode->colDecl, srcpNode->col);
+    if (srcpNode->file || srcpNode->pos)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       }
       if (srcpNode->file) {
-	prWithPH(outfile, srcpNode->fileDecl, srcpNode->file);
-	if (srcpNode->pos)
-	  fprintf(outfile, "\", \"");
-	else
-	  fprintf(outfile, "\")\n");
+    prWithPH(outfile, srcpNode->fileDecl, srcpNode->file);
+    if (srcpNode->pos)
+      fprintf(outfile, "\", \"");
+    else
+      fprintf(outfile, "\")\n");
       }
       if (srcpNode->pos) {
-	prWithPH(outfile, srcpNode->posDecl, srcpNode->pos);
-	fprintf(outfile, "\")\n");
+    prWithPH(outfile, srcpNode->posDecl, srcpNode->pos);
+    fprintf(outfile, "\")\n");
       }
     }
   }
 
   /* tmk import section */
-  if (importSection && 
+  if (importSection &&
       (infile = fopen(importSection->fname, "rb")) != NULL) {
     fprintf(outfile, "%%%%BEGIN(tmkImport)\n");
-    tmkCopyCode(infile, importSection->fpos, importSection->length, 
-		escapeChar, outfile, '`');
+    tmkCopyCode(infile, importSection->fpos, importSection->length,
+        escapeChar, outfile, '`');
     fprintf(outfile, "%%%%END(tmkImport)\n");
   }
 
-/* This is perhaps optimal but failure to declare the %%import in the 
+/* This is perhaps optimal but failure to declare the %%import in the
    .tmk file causes problems (and it does'nt work with the current skeletons!!
   if (!importSection &&
       !(tokenNode && tokenNode->codeDecl) &&
       !(srcpNode && (srcpNode->rowDecl || srcpNode->colDecl ||
-		     srcpNode->fileDecl || srcpNode->posDecl)))
+             srcpNode->fileDecl || srcpNode->posDecl)))
     fprintf(outfile, "%%%%SET doNotGenerateTokenH(TRUE)\n");
 */
 }
@@ -428,8 +429,8 @@ CodeNodeP tmkNewCode(fpos, length)
     parse common segments in tmk or other files
 
 */
-Boolean tmkCParse(inFileName, optTab, cliTab, argc, argv, 
-		 tokenNode, srcpNode, importSection, fileNo, fileType, escapeOpt)
+Boolean tmkCParse(inFileName, optTab, cliTab, argc, argv,
+         tokenNode, srcpNode, importSection, fileNo, fileType, escapeOpt)
      char *inFileName;
      OptTabRec *optTab;
      OptTabRec *cliTab;
@@ -445,7 +446,7 @@ Boolean tmkCParse(inFileName, optTab, cliTab, argc, argv,
   tmkEscape = *getStrOpt(escapeOpt);
   tmkCext = tmkScNew(tmk_MAIN_MAIN_Scanner);
   if (!tmkCext)
-    return FALSE;  
+    return FALSE;
   else if ((tmkCext->fd = open(inFileName, OFLAG)) < 0) {
     tmkScDelete(tmkCext);
     return FALSE;

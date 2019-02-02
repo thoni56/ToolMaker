@@ -1,22 +1,22 @@
-/*------------------------------------------------------------------- */ 
-/* TITLE                                                              */ 
-/* ------                                                             */ 
+/*------------------------------------------------------------------- */
+/* TITLE                                                              */
+/* ------                                                             */
 /* tmkOpts.c                                                          */
-/*                                                                    */ 
+/*                                                                    */
 /* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* REVISION DATA                                                      */ 
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* REVISION DATA                                                      */
 /* -------------                                                      */
 /* CREATED:   92-04-30  Micael Dahlgren                               */
 /* BASED ON:                                                          */
-/* MODIFIED:                                                          */ 
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* DESCRIPTION                                                        */ 
-/* -----------                                                        */ 
+/* MODIFIED:                                                          */
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* DESCRIPTION                                                        */
+/* -----------                                                        */
 /* General option handler for the ToolMaker system                    */
-/*                                                                    */ 
+/*                                                                    */
 /* ------------------------------------------------------------------ */
 /* IMPORT */
 #include <stdio.h>
@@ -43,7 +43,7 @@ typedef struct OptDbRec {
   Boolean assigned;		/* Has an assignment been made */
   Boolean cliass;		/* Has an assignment been made on cli */
   union {
-    int ival;		 	/* Value of number option */
+    int ival;		    /* Value of number option */
     char *sval;			/* Value of string option */
     Boolean bval;		/* Value of boolean option */
     unsigned setval;		/* Value of set option */
@@ -83,7 +83,7 @@ static void perr(errmsg, arg)
 */
 static void pusage()
 {
-  if (helpopt)  
+  if (helpopt)
     fprintf(stderr, "Usage: %s [-%s] [options] <input file>\n", thisprg, helpopt);
   else
     fprintf(stderr, "Usage: %s [options] <input file>\n", thisprg);
@@ -149,10 +149,10 @@ static Boolean isOpt(argin, argout, bval)
     match strings (ignore case)
 
 */
-static MatchKind strmatch(s1, s2, prefix)
+static MatchKind strmatch(s1, s2)
   char *s1;			/* IN tab string */
   char *s2;			/* IN string to be checked */
-				/* RETURN MATCH_EXACT if exact match,
+                /* RETURN MATCH_EXACT if exact match,
                                  *        MATCH_PREFIX if only prefix match
                                  *    and MATCH_NOT if no match */
 {
@@ -173,15 +173,15 @@ static MatchKind strmatch(s1, s2, prefix)
 static Boolean dirmatch(tabopt, diropt)
   TmoKind tabopt;		/* IN directive in table */
   TmoKind diropt;		/* IN directive in option */
-				/* RETURN TRUE if directives matches */
+                /* RETURN TRUE if directives matches */
 {
   return ((tabopt == diropt) ||
-	  (tabopt == ENUM_TMO && diropt == SET_TMO) ||
-	  (tabopt == SET_TMO && diropt == BOOL_TMO) ||
-	  (tabopt == BOOLNUM_TMO && diropt == BOOL_TMO) ||
-	  (tabopt == BOOLNUM_TMO && diropt == NUM_TMO) ||
-	  (tabopt == BOOLSTR_TMO && diropt == BOOL_TMO) ||
-	  (tabopt == BOOLSTR_TMO && diropt == STR_TMO));
+      (tabopt == ENUM_TMO && diropt == SET_TMO) ||
+      (tabopt == SET_TMO && diropt == BOOL_TMO) ||
+      (tabopt == BOOLNUM_TMO && diropt == BOOL_TMO) ||
+      (tabopt == BOOLNUM_TMO && diropt == NUM_TMO) ||
+      (tabopt == BOOLSTR_TMO && diropt == BOOL_TMO) ||
+      (tabopt == BOOLSTR_TMO && diropt == STR_TMO));
 }
 
 /*----------------------------------------------------------------------
@@ -194,7 +194,7 @@ static Boolean calcSet(diritem, tabitems, setval)
   char *diritem;		/* IN itemvalue in directive */
   char *tabitems[];		/* IN allowed setitems */
   unsigned *setval;		/* OUT calculated set value */
-				/* RETURN TRUE if allowed setitem */
+                /* RETURN TRUE if allowed setitem */
 {
   int i;
 
@@ -216,7 +216,7 @@ static Boolean calcEnum(diritem, tabitems, enumval)
   char *diritem;		/* IN itemvalue in directive */
   char *tabitems[];		/* IN allowed enum items */
   unsigned *enumval;		/* OUT calculated enum value */
-				/* RETURN TRUE if allowed setitem */
+                /* RETURN TRUE if allowed setitem */
 {
   int i;
 
@@ -294,10 +294,10 @@ static void checkOptRedef(dirNode)
     foundRedef = FALSE;
     while (p && !foundRedef) {
       if (strmatch(dirNode->name, p->name) == MATCH_EXACT) {
-	/* Redefinition was found. Issue warning. */
-	/* WARNING: Option redefined, old option skipped. */
-	tmkLog(&p->srcp, 67, sevWAR, "");
-	foundRedef = TRUE;
+    /* Redefinition was found. Issue warning. */
+    /* WARNING: Option redefined, old option skipped. */
+    tmkLog(&p->srcp, 67, sevWAR, "");
+    foundRedef = TRUE;
       }
       else p = p->next;
     }
@@ -326,85 +326,85 @@ void setOpts(optTab, dirNode)
   for (; dirNode; dirNode = dirNode->next) {
     /* search for option in table */
     for (i = 0; optTab[i].optTabKind != locOptTabLast; i++) {
-      if (strmatch(optTab[i].optName, dirNode->name) == MATCH_EXACT && 
-	  dirmatch(optTab[i].dirKind, dirNode->dirKind)) {
+      if (strmatch(optTab[i].optName, dirNode->name) == MATCH_EXACT &&
+      dirmatch(optTab[i].dirKind, dirNode->dirKind)) {
 
-	switch (optTab[i].dirKind) {
-	case BOOL_TMO:
-	case STR_TMO:
-	  optDb[optTab[i].optTabKind].assigned = TRUE;
-	  optDb[optTab[i].optTabKind].oval.bval = dirNode->oval.bval;
-	  break;
+    switch (optTab[i].dirKind) {
+    case BOOL_TMO:
+    case STR_TMO:
+      optDb[optTab[i].optTabKind].assigned = TRUE;
+      optDb[optTab[i].optTabKind].oval.bval = dirNode->oval.bval;
+      break;
 
-	case NUM_TMO:
-	  /* check value against max/min */
-	  if (dirNode->oval.ival >= optTab[i].irange.mini &&
-	      dirNode->oval.ival <= optTab[i].irange.maxi) {
-	    optDb[optTab[i].optTabKind].assigned = TRUE;
-	    optDb[optTab[i].optTabKind].oval.ival = dirNode->oval.ival;
-	  } else
-	    tmkLog(&dirNode->srcp, 50, sevWAR, "");
-	  break;
+    case NUM_TMO:
+      /* check value against max/min */
+      if (dirNode->oval.ival >= optTab[i].irange.mini &&
+          dirNode->oval.ival <= optTab[i].irange.maxi) {
+        optDb[optTab[i].optTabKind].assigned = TRUE;
+        optDb[optTab[i].optTabKind].oval.ival = dirNode->oval.ival;
+      } else
+        tmkLog(&dirNode->srcp, 50, sevWAR, "");
+      break;
 
-	case SET_TMO:
-	  if (dirNode->dirKind == BOOL_TMO) {
-	    optDb[optTab[i].optTabKind].oval.setval =
-	      (dirNode->oval.bval ? optTab[i].defval : SET_EMPTY);
-	    optDb[optTab[i].optTabKind].assigned = TRUE;
-	  } else {
-	    optDb[optTab[i].optTabKind].oval.setval = SET_EMPTY;
-	    oldAss = optDb[optTab[i].optTabKind].assigned;
-	    optDb[optTab[i].optTabKind].assigned = TRUE;
-	    for (p = dirNode->oval.opts; p; p = p->next)
-	      if (!calcSet(p->name, optTab[i].sitems,
-		      &optDb[optTab[i].optTabKind].oval.setval)) {
-		tmkLog(&dirNode->srcp, 50, sevWAR, "");
-		optDb[optTab[i].optTabKind].assigned = oldAss;
-	      }
-	  }
-	  break;
+    case SET_TMO:
+      if (dirNode->dirKind == BOOL_TMO) {
+        optDb[optTab[i].optTabKind].oval.setval =
+          (dirNode->oval.bval ? optTab[i].defval : SET_EMPTY);
+        optDb[optTab[i].optTabKind].assigned = TRUE;
+      } else {
+        optDb[optTab[i].optTabKind].oval.setval = SET_EMPTY;
+        oldAss = optDb[optTab[i].optTabKind].assigned;
+        optDb[optTab[i].optTabKind].assigned = TRUE;
+        for (p = dirNode->oval.opts; p; p = p->next)
+          if (!calcSet(p->name, optTab[i].sitems,
+              &optDb[optTab[i].optTabKind].oval.setval)) {
+        tmkLog(&dirNode->srcp, 50, sevWAR, "");
+        optDb[optTab[i].optTabKind].assigned = oldAss;
+          }
+      }
+      break;
 
-	case ENUM_TMO:
-	  if (dirNode->oval.opts->next != NULL)
-	    tmkLog(&dirNode->srcp, 50, sevWAR, "");
-	  else
-	    if (!calcEnum(dirNode->oval.opts->name, optTab[i].sitems,
-			 &optDb[optTab[i].optTabKind].oval.setval))
-	      tmkLog(&dirNode->srcp, 50, sevWAR, "");
-	    else
-	      optDb[optTab[i].optTabKind].assigned = TRUE;
-	  break;
+    case ENUM_TMO:
+      if (dirNode->oval.opts->next != NULL)
+        tmkLog(&dirNode->srcp, 50, sevWAR, "");
+      else
+        if (!calcEnum(dirNode->oval.opts->name, optTab[i].sitems,
+             &optDb[optTab[i].optTabKind].oval.setval))
+          tmkLog(&dirNode->srcp, 50, sevWAR, "");
+        else
+          optDb[optTab[i].optTabKind].assigned = TRUE;
+      break;
 
-	case BOOLNUM_TMO:
-	  if (dirNode->dirKind == BOOL_TMO) {
-	    optDb[optTab[i].optTabKind].assigned = TRUE;
-	    optDb[optTab[i].optTabKind].oval.ival = 
-	      (dirNode->oval.bval ? optTab[i].defval : BOOLNUM_FALSE);
-	  } else
-	    /* check value against max/min */
-	    if (dirNode->oval.ival >= optTab[i].irange.mini &&
-		dirNode->oval.ival <= optTab[i].irange.maxi) {
-	      optDb[optTab[i].optTabKind].assigned = TRUE;
-	      optDb[optTab[i].optTabKind].oval.ival = dirNode->oval.ival;
-	    } else
-	      tmkLog(&dirNode->srcp, 50, sevWAR, "");
-	  break;
+    case BOOLNUM_TMO:
+      if (dirNode->dirKind == BOOL_TMO) {
+        optDb[optTab[i].optTabKind].assigned = TRUE;
+        optDb[optTab[i].optTabKind].oval.ival =
+          (dirNode->oval.bval ? optTab[i].defval : BOOLNUM_FALSE);
+      } else
+        /* check value against max/min */
+        if (dirNode->oval.ival >= optTab[i].irange.mini &&
+        dirNode->oval.ival <= optTab[i].irange.maxi) {
+          optDb[optTab[i].optTabKind].assigned = TRUE;
+          optDb[optTab[i].optTabKind].oval.ival = dirNode->oval.ival;
+        } else
+          tmkLog(&dirNode->srcp, 50, sevWAR, "");
+      break;
 
-	case BOOLSTR_TMO:
-	  if (dirNode->dirKind == BOOL_TMO) {
-	    optDb[optTab[i].optTabKind].assigned = TRUE;
-	    optDb[optTab[i].optTabKind].oval.sval = 
-	      (dirNode->oval.bval ? (char *) optTab[i].defval : BOOLSTR_FALSE);
-	  } else {
-	    optDb[optTab[i].optTabKind].assigned = TRUE;
-	    optDb[optTab[i].optTabKind].oval.sval = dirNode->oval.sval;
-	  }
-	  break;
+    case BOOLSTR_TMO:
+      if (dirNode->dirKind == BOOL_TMO) {
+        optDb[optTab[i].optTabKind].assigned = TRUE;
+        optDb[optTab[i].optTabKind].oval.sval =
+          (dirNode->oval.bval ? (char *) optTab[i].defval : BOOLSTR_FALSE);
+      } else {
+        optDb[optTab[i].optTabKind].assigned = TRUE;
+        optDb[optTab[i].optTabKind].oval.sval = dirNode->oval.sval;
+      }
+      break;
 
-	default:;
-	}
+    default:;
+    }
 
-	break;
+    break;
       }
     }
 
@@ -445,130 +445,130 @@ void setCliOpts(optTab, argc, argv, argout)
       /* search for option in table */
       noOfHits = 0;
       for (i = 0; optTab[i].optTabKind != locOptTabLast; i++) {
-	if ((mk = strmatch(optTab[i].cliName, arg)) == MATCH_EXACT) {
-	  noOfHits = 1;
-	  pos = i;
-	  break;
+    if ((mk = strmatch(optTab[i].cliName, arg)) == MATCH_EXACT) {
+      noOfHits = 1;
+      pos = i;
+      break;
         } else if (mk == MATCH_PREFIX) {
-	  noOfHits++;
-	  pos = i;
-	}
+      noOfHits++;
+      pos = i;
+    }
       }
 
       /* report error if this option is not found or found
          more than once */
       switch (noOfHits) {
       case 0:
-	perr("incorrect option:", arg);
+    perr("incorrect option:", arg);
       case 1:
-	break;
+    break;
       default:
-	perr("ambigious option:", arg);
+    perr("ambigious option:", arg);
       }
-      
+
       /* interpret option and set value */
       if (!bval && (optTab[pos].dirKind == STR_TMO ||
-		    optTab[pos].dirKind == NUM_TMO ||
-		    optTab[pos].dirKind == ENUM_TMO)) {
-	perr("not allowed to turn off option:", arg);
+            optTab[pos].dirKind == NUM_TMO ||
+            optTab[pos].dirKind == ENUM_TMO)) {
+    perr("not allowed to turn off option:", arg);
       } else {
-	/* check option with argument */
-	if (optTab[pos].dirKind != BOOL_TMO &&
-	    optTab[pos].dirKind != HELP_TMO && bval)
-	  if (++j >= argc)
-	    perr("missing value for option:", arg);
-	
-	switch (optTab[pos].dirKind) {
-	case BOOL_TMO:
-	  optDb[optTab[pos].optTabKind].oval.bval = bval;
-	  optDb[optTab[pos].optTabKind].assigned = TRUE;
-	  break;
-	  
-	case STR_TMO:
-	  optDb[optTab[pos].optTabKind].oval.sval = argv[j];
-	  optDb[optTab[pos].optTabKind].assigned = TRUE;
-	  break;
-	  
-	case NUM_TMO:
-	  if (sscanf(argv[j], "%i", &ival) != 1) {
-	    perr("incorrect numeric value:", argv[j]);
-	    
-	  } else {
-	    /* check value against max/min */
-	    if (ival >= optTab[pos].irange.mini && 
-		ival <= optTab[pos].irange.maxi) {
-	      optDb[optTab[pos].optTabKind].assigned = TRUE;
-	      optDb[optTab[pos].optTabKind].oval.ival = ival;
-	    } else
-	      perr("incorrect numeric value:", argv[j]);
-	  }
-	  break;
-	  
-	case SET_TMO:
-	  if (bval == FALSE) {
-	    optDb[optTab[pos].optTabKind].assigned = TRUE;
-	    optDb[optTab[pos].optTabKind].oval.setval = SET_EMPTY;
-	  } else {
-	    /* the first time a set option appears on cli,
-	       it's value will be reset */
-	    if (!optDb[optTab[pos].optTabKind].cliass)
-	      optDb[optTab[pos].optTabKind].oval.setval = SET_EMPTY;
-	    if (!calcSet(argv[j], optTab[pos].sitems, 
-			 &optDb[optTab[pos].optTabKind].oval.setval))
-	      perr("incorrect set value:", argv[j]);
-	    else
-	      optDb[optTab[pos].optTabKind].assigned = TRUE;
-	  }
-	  break;
-	  
-	case ENUM_TMO:
-	  if (!calcEnum(argv[j], optTab[pos].sitems, 
-			&optDb[optTab[pos].optTabKind].oval.eval))
-	    perr("incorrect enum value:", argv[j]);
-	  else
-	    optDb[optTab[pos].optTabKind].assigned = TRUE;
-	  break;
-	  
-	case BOOLNUM_TMO:
-	  if (bval == FALSE) {
-	    optDb[optTab[pos].optTabKind].assigned = TRUE;
-	    optDb[optTab[pos].optTabKind].oval.ival = BOOLNUM_FALSE;
-	  } else {
-	    if (sscanf(argv[j], "%i", &ival) != 1) {
-	      perr("incorrect numeric value:", argv[j]);
-	      
-	    } else {
-	      /* check value against max/min */
-	      if (ival >= optTab[pos].irange.mini && 
-		  ival <= optTab[pos].irange.maxi) {
-		optDb[optTab[pos].optTabKind].assigned = TRUE;
-		optDb[optTab[pos].optTabKind].oval.ival = ival;
-	      } else
-		perr("incorrect numeric value:", argv[j]);
-	    }
-	  }
-	  break;
-	  
-	case BOOLSTR_TMO:
-	  optDb[optTab[pos].optTabKind].assigned = TRUE;
-	  optDb[optTab[pos].optTabKind].oval.sval = 
-	    (bval ? argv[j] : BOOLSTR_FALSE);
-	  break;
-	  
-	case HELP_TMO:
-	  phelp(optTab);
-	  break;
-	}
-      } 
+    /* check option with argument */
+    if (optTab[pos].dirKind != BOOL_TMO &&
+        optTab[pos].dirKind != HELP_TMO && bval)
+      if (++j >= argc)
+        perr("missing value for option:", arg);
+
+    switch (optTab[pos].dirKind) {
+    case BOOL_TMO:
+      optDb[optTab[pos].optTabKind].oval.bval = bval;
+      optDb[optTab[pos].optTabKind].assigned = TRUE;
+      break;
+
+    case STR_TMO:
+      optDb[optTab[pos].optTabKind].oval.sval = argv[j];
+      optDb[optTab[pos].optTabKind].assigned = TRUE;
+      break;
+
+    case NUM_TMO:
+      if (sscanf(argv[j], "%i", &ival) != 1) {
+        perr("incorrect numeric value:", argv[j]);
+
+      } else {
+        /* check value against max/min */
+        if (ival >= optTab[pos].irange.mini &&
+        ival <= optTab[pos].irange.maxi) {
+          optDb[optTab[pos].optTabKind].assigned = TRUE;
+          optDb[optTab[pos].optTabKind].oval.ival = ival;
+        } else
+          perr("incorrect numeric value:", argv[j]);
+      }
+      break;
+
+    case SET_TMO:
+      if (bval == FALSE) {
+        optDb[optTab[pos].optTabKind].assigned = TRUE;
+        optDb[optTab[pos].optTabKind].oval.setval = SET_EMPTY;
+      } else {
+        /* the first time a set option appears on cli,
+           it's value will be reset */
+        if (!optDb[optTab[pos].optTabKind].cliass)
+          optDb[optTab[pos].optTabKind].oval.setval = SET_EMPTY;
+        if (!calcSet(argv[j], optTab[pos].sitems,
+             &optDb[optTab[pos].optTabKind].oval.setval))
+          perr("incorrect set value:", argv[j]);
+        else
+          optDb[optTab[pos].optTabKind].assigned = TRUE;
+      }
+      break;
+
+    case ENUM_TMO:
+      if (!calcEnum(argv[j], optTab[pos].sitems,
+            &optDb[optTab[pos].optTabKind].oval.eval))
+        perr("incorrect enum value:", argv[j]);
+      else
+        optDb[optTab[pos].optTabKind].assigned = TRUE;
+      break;
+
+    case BOOLNUM_TMO:
+      if (bval == FALSE) {
+        optDb[optTab[pos].optTabKind].assigned = TRUE;
+        optDb[optTab[pos].optTabKind].oval.ival = BOOLNUM_FALSE;
+      } else {
+        if (sscanf(argv[j], "%i", &ival) != 1) {
+          perr("incorrect numeric value:", argv[j]);
+
+        } else {
+          /* check value against max/min */
+          if (ival >= optTab[pos].irange.mini &&
+          ival <= optTab[pos].irange.maxi) {
+        optDb[optTab[pos].optTabKind].assigned = TRUE;
+        optDb[optTab[pos].optTabKind].oval.ival = ival;
+          } else
+        perr("incorrect numeric value:", argv[j]);
+        }
+      }
+      break;
+
+    case BOOLSTR_TMO:
+      optDb[optTab[pos].optTabKind].assigned = TRUE;
+      optDb[optTab[pos].optTabKind].oval.sval =
+        (bval ? argv[j] : BOOLSTR_FALSE);
+      break;
+
+    case HELP_TMO:
+      phelp(optTab);
+      break;
+    }
+      }
 
       /* indicate that this option has been assigned on cli */
       optDb[optTab[pos].optTabKind].cliass = TRUE;
     } else {
       /* argument */
       if (*argout)
-	perr("non-matching argument:", argv[j]);
+    perr("non-matching argument:", argv[j]);
       else
-	*argout = argv[j];
+    *argout = argv[j];
     }
   }
 
@@ -587,7 +587,7 @@ void setCliOpts(optTab, argc, argv, argout)
 */
 Boolean getBoolOpt(opt)
   int opt;			/* IN option */
-				/* RETURN option value */
+                /* RETURN option value */
 {
   if (opt <= locOptTabLast) {
     switch (optDb[opt].dirKind) {
@@ -612,7 +612,7 @@ Boolean getBoolOpt(opt)
 */
 int getNumOpt(opt)
   int opt;			/* IN option */
-				/* RETURN option value */
+                /* RETURN option value */
 
 {
   if (opt <= locOptTabLast) {
@@ -636,7 +636,7 @@ int getNumOpt(opt)
 */
 char *getStrOpt(opt)
   int opt;			/* IN option */
-				/* RETURN option value */
+                /* RETURN option value */
 
 {
   if (opt <= locOptTabLast) {
@@ -659,7 +659,7 @@ char *getStrOpt(opt)
 */
 unsigned getSetOpt(opt)
   int opt;			/* IN option */
-				/* RETURN option value */
+                /* RETURN option value */
 
 {
   if (opt <= locOptTabLast && optDb[opt].dirKind == SET_TMO)
@@ -675,7 +675,7 @@ unsigned getSetOpt(opt)
 */
 Boolean optAssigned(opt)
   int opt;			/* IN option */
-				/* RETURN TRUE if option assigned */
+                /* RETURN TRUE if option assigned */
 
 {
   if (opt <= locOptTabLast)
@@ -745,19 +745,19 @@ void mergeOptions(locOpt, globOpt, tmkExists)
       switch (optDb[locOpt].dirKind) {
       case STR_TMO:
       case BOOLSTR_TMO:
-	optDb[locOpt].oval.sval = getStrOpt(globOpt);
-	break;
+    optDb[locOpt].oval.sval = getStrOpt(globOpt);
+    break;
       case BOOL_TMO:
-	optDb[locOpt].oval.bval = getBoolOpt(globOpt);
-	break;
+    optDb[locOpt].oval.bval = getBoolOpt(globOpt);
+    break;
       case NUM_TMO:
       case ENUM_TMO:
       case BOOLNUM_TMO:
-	optDb[locOpt].oval.ival = getNumOpt(globOpt);
-	break;
+    optDb[locOpt].oval.ival = getNumOpt(globOpt);
+    break;
       case SET_TMO:
-	optDb[locOpt].oval.setval = getSetOpt(globOpt);
- 	break;
+    optDb[locOpt].oval.setval = getSetOpt(globOpt);
+    break;
       }
     }
   } else {
