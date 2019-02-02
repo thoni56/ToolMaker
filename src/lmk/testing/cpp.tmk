@@ -1,8 +1,8 @@
 %%OPTIONS
 
---  Os 'SunOS';
   Target 'c++';
   Prefix 'cpp';
+  Library '../../../lib/c++';
 
 %%END
 %%IMPORT
@@ -24,4 +24,3 @@ typedef int TmNatural;
   ROW    line %% TmNatural %1%%;
   FILE   file %% TmNatural %1%%;
 %%END
-

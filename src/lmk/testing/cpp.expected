@@ -1,30 +1,10 @@
 ########## cpp ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii cpp.tst.win32 > cpp.tmp
-  alias cat dos2unix -ascii
-else
-  ../lmk cpp > cpp.tmp
-endif
-echo +++++ cpp.tmk +++++  >> cpp.tmp
-\cat cpp.tmk >> cpp.tmp
-echo +++++ cpp.lmt +++++ >> cpp.tmp
-cat cpp.lmt >> cpp.tmp
-echo +++++ cppCommon.h +++++ >> cpp.tmp
-cat cppCommon.h >> cpp.tmp
-echo +++++ cppList.cc +++++ >> cpp.tmp
-cat cppList.cc >> cpp.tmp
-echo +++++ cppList.h +++++ >> cpp.tmp
-cat cppList.h >> cpp.tmp
-\cat cpp.tmp
-\rm cpp.tmp
-########## /bin/csh -f cpp.tst UNIX ##########
-+++++ cpp.tmk +++++
+==> cpp.tmk <==
 %%OPTIONS
 
---  Os 'SunOS';
   Target 'c++';
   Prefix 'cpp';
+  Library '../../../lib/c++';
 
 %%END
 %%IMPORT
@@ -47,7 +27,7 @@ typedef int TmNatural;
   FILE   file %% TmNatural %1%%;
 %%END
 
-+++++ cpp.lmt +++++
+==> cpp.lmt <==
 %%SET lmkInclude(On)
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Single)
@@ -56,8 +36,8 @@ typedef int TmNatural;
 %%SET lmkTarget("c++")
 %%SET tmkOs("SunOS")
 %%SET lmkOs("SunOS")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET lmkLibrary("../")
+%%SET tmkLibrary("../../../lib/c++")
+%%SET lmkLibrary("..")
 %%SET tmkPrefix("cpp")
 %%SET lmkPrefix("cpp")
 %%SET lmkEscape("`")
@@ -152,7 +132,8 @@ typedef int TmNatural;
 %%SET lmkMsg(, "Unable to allocate memory !")
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(lmkLibrary)/List.imp")
-+++++ cppCommon.h +++++
+
+==> cppCommon.h <==
 #ifndef _cppCommon_H_
 #define _cppCommon_H_
 /* cppCommon.h
@@ -190,7 +171,8 @@ typedef struct TmToken {
 #endif
 
 
-+++++ cppList.cc +++++
+
+==> cppList.cc <==
 /*----------------------------------------------------------------------*\
 
 	ListerMaker
@@ -1908,7 +1890,8 @@ void cppLiTerminate(
   phase = PH_NONE;
 }
 
-+++++ cppList.h +++++
+
+==> cppList.h <==
 #ifndef _cppList_H_
 #define _cppList_H_
 /*----------------------------------------------------------------------*\
