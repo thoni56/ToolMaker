@@ -1,7 +1,7 @@
 %%OPTIONS
 
-	Generate Tables, Source;
-	Library '..';
+    Generate Tables, Source;
+    Library '../..';
 
 %%IMPORT
 #include <stdio.h>
@@ -33,20 +33,20 @@ extern Scanner grmScanner;		/* Current scanner */
 extern TokenType grmTokenType;		/* Current token type */
 %%END
 %%ATTRIBUTES
-	srcp    %% TmkSrcp %1%%,
-	inumber %% int %1%%,
-	fnumber %% double %1%%,
-	name    %% Name %1%%,
-	ast     %% AST %1%%,
-	action  %% Action %1%%;
+    srcp    %% TmkSrcp %1%%,
+    inumber %% int %1%%,
+    fnumber %% double %1%%,
+    name    %% Name %1%%,
+    ast     %% AST %1%%,
+    action  %% Action %1%%;
 %%RULES
 
-<goal> 
-  = <skip sections opt> 
+<goal>
+  = <skip sections opt>
 %%{
   vocRead(optVocabulary);
 }%%
-    <code sections opt> <set section opt> 
+    <code sections opt> <set section opt>
     <map section opt> <definition section opt> <scanner sections>
   ;
 
@@ -132,7 +132,7 @@ extern TokenType grmTokenType;		/* Current token type */
   = <class> '=' <class> ';'
 %%{
   mapPut(%1<class>.name,%2<class>.name);
-}%%  
+}%%
   ;
 
 
@@ -157,10 +157,10 @@ extern TokenType grmTokenType;		/* Current token type */
   if(%<selection rule opt>.ast)
     if(definition->ast)
       smkLog(`&%<identifier>.srcp,233,sevERR,"");
-    else 
+    else
       definition->ast=%<selection rule opt>.ast;
   if(%<action opt>.action)
-    if(definition->action) 
+    if(definition->action)
       smkLog(`&%<identifier>.srcp,246,sevERR,"");
     else
       definition->action=%<action opt>.action;
@@ -205,7 +205,7 @@ extern TokenType grmTokenType;		/* Current token type */
   ;
 
 <scanner copy>
-  = '%%SCANNER' <scanner name> ':' <identifier> 
+  = '%%SCANNER' <scanner name> ':' <identifier>
 %%{
   register Scanner scanner;
 
@@ -225,7 +225,7 @@ extern TokenType grmTokenType;		/* Current token type */
 ----: Auto keyword
 
 <auto opt>
-  = 'AUTO' 
+  = 'AUTO'
 %%{
   if(grmScanner) grmScanner->vocAuto=1;
 }%%
@@ -233,12 +233,12 @@ extern TokenType grmTokenType;		/* Current token type */
 %%{
   if(grmScanner) grmScanner->vocAuto=0;
 }%%
-  ! 
+  !
 %%{
   if(grmScanner) grmScanner->vocAuto=1;
 }%%
   ;
-  
+
 ----: Vocabulary section
 
 <vocabulary section opt>
@@ -340,7 +340,7 @@ extern TokenType grmTokenType;		/* Current token type */
 %%{
   if(grmScanner) {
     register Token token;
-  
+
     if(token=tokenPut(grmScanner,grmTokenType,`&%<token name>.srcp, %<token name>.name)) {
       token->a.ast=%<lookahead rule>.ast;
       token->action=%<action opt2>.action;
@@ -352,7 +352,7 @@ extern TokenType grmTokenType;		/* Current token type */
 %%{
   if(grmScanner) {
     register Token token;
-  
+
     if(token=tokenPut(grmScanner,grmTokenType,`&%<token name>.srcp, %<token name>.name)) {
       token->type|=tokenEOT;
       token->a.ast=NULL;
@@ -402,8 +402,8 @@ extern TokenType grmTokenType;		/* Current token type */
 
     if(voc=vocGet(grmScanner,%<identifier>.name)) {
       if(token=tokenPut(grmScanner,tokenSCREEN,`&%<screen token name>.srcp, %<screen token name>.name)) {
-	token->a.screen=voc;
-	token->action=%<action opt>.action;
+    token->a.screen=voc;
+    token->action=%<action opt>.action;
       }
     }
     else
@@ -426,7 +426,7 @@ extern TokenType grmTokenType;		/* Current token type */
   ! '%%DO' <identifier>
 %%{
   register Definition definition;
-  
+
   definition=definitionGet(%<identifier>.name);
   if(definition==NULL || definition->action==NULL)
     smkLog(`&%<identifier>.srcp,245,sevERR,"");
@@ -478,7 +478,7 @@ extern TokenType grmTokenType;		/* Current token type */
   ;
 
 <closure rule>
-  = <operand> '*' 
+  = <operand> '*'
 %%{
   %<closure rule>.ast=astClosure(%<operand>.ast,0,-1);
 }%%
@@ -516,7 +516,7 @@ extern TokenType grmTokenType;		/* Current token type */
   = <identifier>
 %%{
   register Definition definition;
-  
+
   definition=definitionGet(%<identifier>.name);
   if(definition==NULL || definition->ast==NULL)
     smkLog(`&%<identifier>.srcp,239,sevERR,"");
@@ -588,26 +588,25 @@ extern TokenType grmTokenType;		/* Current token type */
   ;
 
 <string>
-  = String	
-%%{ 
-  %<string>.srcp=%String.srcp; 
+  = String
+%%{
+  %<string>.srcp=%String.srcp;
   %<string>.name=%String.name;
 }%%
   ;
 
 <number>
   = Number
-%%{ 
-  %<number>.srcp=%Number.srcp; 
-  %<number>.inumber=%Number.inumber; 
+%%{
+  %<number>.srcp=%Number.srcp;
+  %<number>.inumber=%Number.inumber;
 }%%
   ;
 
 <class>
-  = Class	
+  = Class
 %%{
   %<class>.srcp=%Class.srcp;
   %<class>.name=%Class.name;
 }%%
   ;
-

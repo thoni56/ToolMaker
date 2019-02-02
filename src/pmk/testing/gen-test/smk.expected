@@ -3,7 +3,7 @@
 %%OPTIONS
     Prefix 'smk';
     Target 'c';
-    Library '../../../lib/c';
+    Library '../../../../lib/c';
 %%IMPORT
 #include "tmkCommon.h"
 #include "name.h"
@@ -49,8 +49,8 @@
 %%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
-%%SET tmkLibrary("../../../lib/c")
-%%SET pmkLibrary("..")
+%%SET tmkLibrary("../../../../lib/c")
+%%SET pmkLibrary("../..")
 %%SET tmkPrefix("smk")
 %%SET parserPrefix("smk")
 %%SET listerPrefix("smk")
@@ -498,10 +498,10 @@ extern TokenType grmTokenType;		/* Current token type */
   if(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast)
     if(definition->ast)
       smkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp,233,sevERR,"");
-    else 
+    else
       definition->ast=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast;
   if(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].action)
-    if(definition->action) 
+    if(definition->action)
       smkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp,246,sevERR,"");
     else
       definition->action=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].action;
@@ -615,7 +615,7 @@ extern TokenType grmTokenType;		/* Current token type */
 {
   if(grmScanner) {
     register Token token;
-  
+
     if(token=tokenPut(grmScanner,grmTokenType,&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].name)) {
       token->a.ast=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].ast;
       token->action=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].action;
@@ -627,7 +627,7 @@ extern TokenType grmTokenType;		/* Current token type */
 {
   if(grmScanner) {
     register Token token;
-  
+
     if(token=tokenPut(grmScanner,grmTokenType,&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].name)) {
       token->type|=tokenEOT;
       token->a.ast=NULL;
@@ -660,8 +660,8 @@ extern TokenType grmTokenType;		/* Current token type */
 
     if(voc=vocGet(grmScanner,%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].name)) {
       if(token=tokenPut(grmScanner,tokenSCREEN,&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].name)) {
-	token->a.screen=voc;
-	token->action=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].action;
+    token->a.screen=voc;
+    token->action=%%(parserPrefix)SeSt[%%(parserPrefix)StkP+4].action;
       }
     }
     else
@@ -675,7 +675,7 @@ extern TokenType grmTokenType;		/* Current token type */
     case 76: { /* <action opt2> = '`%`%DO' <identifier>; */
 {
   register Definition definition;
-  
+
   definition=definitionGet(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].name);
   if(definition==NULL || definition->action==NULL)
     smkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].srcp,245,sevERR,"");
@@ -740,7 +740,7 @@ extern TokenType grmTokenType;		/* Current token type */
     case 93: { /* <operand> = <identifier>; */
 {
   register Definition definition;
-  
+
   definition=definitionGet(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].name);
   if(definition==NULL || definition->ast==NULL)
     smkLog(&%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp,239,sevERR,"");
@@ -836,14 +836,14 @@ extern TokenType grmTokenType;		/* Current token type */
     case 128: { /* <identifier> = 'VERBOSE'; */
 { %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp; %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].name=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].name; }	break;}
     case 129: { /* <string> = String; */
-{ 
-  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp; 
+{
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
   %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].name=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].name;
 }	break;}
     case 130: { /* <number> = Number; */
-{ 
-  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp; 
-  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].inumber=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].inumber; 
+{
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].srcp;
+  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].inumber=%%(parserPrefix)SySt[%%(parserPrefix)StkP+1].inumber;
 }	break;}
     case 131: { /* <class> = Class; */
 {
@@ -1356,10 +1356,10 @@ int rule;			/* IN production number */
   if(smkSeSt[smkStkP+3].ast)
     if(definition->ast)
       smkLog(&smkSeSt[smkStkP+1].srcp,233,sevERR,"");
-    else 
+    else
       definition->ast=smkSeSt[smkStkP+3].ast;
   if(smkSeSt[smkStkP+4].action)
-    if(definition->action) 
+    if(definition->action)
       smkLog(&smkSeSt[smkStkP+1].srcp,246,sevERR,"");
     else
       definition->action=smkSeSt[smkStkP+4].action;
@@ -1473,7 +1473,7 @@ int rule;			/* IN production number */
 {
   if(grmScanner) {
     register Token token;
-  
+
     if(token=tokenPut(grmScanner,grmTokenType,&smkSeSt[smkStkP+1].srcp, smkSeSt[smkStkP+1].name)) {
       token->a.ast=smkSeSt[smkStkP+3].ast;
       token->action=smkSeSt[smkStkP+4].action;
@@ -1485,7 +1485,7 @@ int rule;			/* IN production number */
 {
   if(grmScanner) {
     register Token token;
-  
+
     if(token=tokenPut(grmScanner,grmTokenType,&smkSeSt[smkStkP+1].srcp, smkSeSt[smkStkP+1].name)) {
       token->type|=tokenEOT;
       token->a.ast=NULL;
@@ -1518,8 +1518,8 @@ int rule;			/* IN production number */
 
     if(voc=vocGet(grmScanner,smkSeSt[smkStkP+3].name)) {
       if(token=tokenPut(grmScanner,tokenSCREEN,&smkSeSt[smkStkP+1].srcp, smkSeSt[smkStkP+1].name)) {
-	token->a.screen=voc;
-	token->action=smkSeSt[smkStkP+4].action;
+    token->a.screen=voc;
+    token->action=smkSeSt[smkStkP+4].action;
       }
     }
     else
@@ -1533,7 +1533,7 @@ int rule;			/* IN production number */
     case 76: { /* <action opt2> = '%%DO' <identifier>; */
 {
   register Definition definition;
-  
+
   definition=definitionGet(smkSeSt[smkStkP+2].name);
   if(definition==NULL || definition->action==NULL)
     smkLog(&smkSeSt[smkStkP+2].srcp,245,sevERR,"");
@@ -1598,7 +1598,7 @@ int rule;			/* IN production number */
     case 93: { /* <operand> = <identifier>; */
 {
   register Definition definition;
-  
+
   definition=definitionGet(smkSeSt[smkStkP+1].name);
   if(definition==NULL || definition->ast==NULL)
     smkLog(&smkSeSt[smkStkP+1].srcp,239,sevERR,"");
@@ -1694,14 +1694,14 @@ int rule;			/* IN production number */
     case 128: { /* <identifier> = 'VERBOSE'; */
 { smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp; smkSeSt[smkStkP+1].name=smkSySt[smkStkP+1].name; }	break;}
     case 129: { /* <string> = String; */
-{ 
-  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp; 
+{
+  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp;
   smkSeSt[smkStkP+1].name=smkSySt[smkStkP+1].name;
 }	break;}
     case 130: { /* <number> = Number; */
-{ 
-  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp; 
-  smkSeSt[smkStkP+1].inumber=smkSySt[smkStkP+1].inumber; 
+{
+  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp;
+  smkSeSt[smkStkP+1].inumber=smkSySt[smkStkP+1].inumber;
 }	break;}
     case 131: { /* <class> = Class; */
 {
