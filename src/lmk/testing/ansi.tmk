@@ -1,7 +1,7 @@
 %%OPTIONS
---  OS 'SunOS';
   TARGET 'ansi-c';
   PREFIX 'ansi';
+  LIBRARY '../../../lib/ansi-c';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -22,4 +22,3 @@ typedef int TmNatural;
   ROW    line %% TmNatural %1%%;
   FILE   file %% TmNatural %1%%;
 %%END
-

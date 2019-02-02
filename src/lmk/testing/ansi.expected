@@ -1,29 +1,9 @@
 ########## ansi ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii ansi.tst.win32 > ansi.tmp
-  alias cat dos2unix -ascii
-else
-  ../lmk ansi > ansi.tmp
-endif
-echo +++++ ansi.tmk +++++  >> ansi.tmp
-\cat ansi.tmk >> ansi.tmp
-echo +++++ ansi.lmt +++++ >> ansi.tmp
-cat ansi.lmt >> ansi.tmp
-echo +++++ ansiCommon.h +++++ >> ansi.tmp
-cat ansiCommon.h >> ansi.tmp
-echo +++++ ansiList.c +++++ >> ansi.tmp
-cat ansiList.c >> ansi.tmp
-echo +++++ ansiList.h +++++ >> ansi.tmp
-cat ansiList.h >> ansi.tmp
-\cat ansi.tmp
-\rm ansi.tmp
-########## /bin/csh -f ansi.tst UNIX ##########
-+++++ ansi.tmk +++++
+==> ansi.tmk <==
 %%OPTIONS
---  OS 'SunOS';
   TARGET 'ansi-c';
   PREFIX 'ansi';
+  LIBRARY '../../../lib/ansi-c';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -45,7 +25,7 @@ typedef int TmNatural;
   FILE   file %% TmNatural %1%%;
 %%END
 
-+++++ ansi.lmt +++++
+==> ansi.lmt <==
 %%SET lmkInclude(On)
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Single)
@@ -54,8 +34,8 @@ typedef int TmNatural;
 %%SET lmkTarget("ansi-c")
 %%SET tmkOs("SunOS")
 %%SET lmkOs("SunOS")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET lmkLibrary("../")
+%%SET tmkLibrary("../../../lib/ansi-c")
+%%SET lmkLibrary("..")
 %%SET tmkPrefix("ansi")
 %%SET lmkPrefix("ansi")
 %%SET lmkEscape("`")
@@ -150,7 +130,8 @@ typedef int TmNatural;
 %%SET lmkMsg(, "Unable to allocate memory !")
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(lmkLibrary)/List.imp")
-+++++ ansiCommon.h +++++
+
+==> ansiCommon.h <==
 #ifndef _ansiCommon_H_
 #define _ansiCommon_H_
 /* ansiCommon.h
@@ -188,7 +169,8 @@ typedef struct TmToken {
 #endif
 
 
-+++++ ansiList.c +++++
+
+==> ansiList.c <==
 /*----------------------------------------------------------------------*\
 
 	ListerMaker
@@ -1904,7 +1886,8 @@ void ansiLiTerminate(
   phase = PH_NONE;
 }
 
-+++++ ansiList.h +++++
+
+==> ansiList.h <==
 #ifndef _ansiList_H_
 #define _ansiList_H_
 /*----------------------------------------------------------------------*\
