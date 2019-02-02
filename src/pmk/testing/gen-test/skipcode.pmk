@@ -10,7 +10,7 @@
 
 %%OPTIONS
     Generate Tables, Source;
-    Library '..';
+    Library '../..';
 %%END
 
 %%IMPORT
