@@ -29,9 +29,6 @@ VERSIONOBJECTS	= smkPaSema.o smkScSema.o smkParse.o smkErr.o smkScan.o smkList.o
 OBJECTS		= $(VERSIONOBJECTS) version.o
 
 
-test:
-	cd testing; jregr
-
 ################################################################################
 #
 #
@@ -48,13 +45,16 @@ mingw cygwin sun3 sun4 solaris1 solaris2: $(OBJECTS) $(LIBS)
 	$(CC) -o smk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS) $(MALLOCDEBUG)
 
 
+test:
+	cd testing; jregr
+	cd testing/gen-test; jregr
+
 #--
 clean:
-	-rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt smk.voc smkParse.* smkScan.* \
-	smkScSema.* smkPaSema.* smkCommon.h smkList.* smkErr.* .stamp_???
+	-rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt
 
 veryclean: clean
-	-rm -f smk
+	-rm -f smk smk.voc smkParse.* smkScan.* smkScSema.* smkPaSema.* smkCommon.h smkList.* smkErr.*
 
 depend file: depend.gcc
 

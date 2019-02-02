@@ -1,24 +1,24 @@
 #ifndef _smk_i_h
 #define _smk_i_h
-/*------------------------------------------------------------------- */ 
-/* TITLE                                                              */ 
-/* ------                                                             */ 
+/*------------------------------------------------------------------- */
+/* TITLE                                                              */
+/* ------                                                             */
 /* smk_i.h                                                            */
-/*                                                                    */ 
+/*                                                                    */
 /* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* REVISION DATA                                                      */ 
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* REVISION DATA                                                      */
 /* -------------                                                      */
 /* CREATED:   92-08-26 H}kan Petersson                                */
 /* BASED ON:                                                          */
-/* MODIFIED:                                                          */ 
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* DESCRIPTION                                                        */ 
-/* -----------                                                        */ 
+/* MODIFIED:                                                          */
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* DESCRIPTION                                                        */
+/* -----------                                                        */
 /* Global definitions                                                 */
-/*                                                                    */ 
+/*                                                                    */
 /* ------------------------------------------------------------------ */
 
 /* IMPORT */
@@ -27,7 +27,7 @@
 #include "name.h"
 
 #ifdef CYGWIN
-#define OFLAG _O_BINARY
+#define OFLAG O_TEXT
 #else
 #ifdef WIN32
 #define OFLAG _O_BINARY
@@ -60,7 +60,7 @@
 typedef enum OptTabKind {
   VERBOSE_OPT, TRACE_OPT, WIDTH_OPT, HEIGHT_OPT, SMKTARGET_OPT, TMKTARGET_OPT,
   SMKOS_OPT, TMKOS_OPT, TMKESCAPE_OPT, SMKESCAPE_OPT, SMKPREFIX_OPT,
-  TMKPREFIX_OPT, PACK_OPT, SMKLIBRARY_OPT, TMKLIBRARY_OPT, ERRORHANDLER_OPT, 
+  TMKPREFIX_OPT, PACK_OPT, SMKLIBRARY_OPT, TMKLIBRARY_OPT, ERRORHANDLER_OPT,
   OPTIMIZE_OPT, LIST_OPT, GENERATE_OPT, FORCE_OPT, HELP_OPT, VOC_OPT, SMT_OPT, SML_OPT, TMK_OPT,
   SCREENING_OPT, SET_OPT, TOKENSIZE_OPT, TOKENLIMIT_OPT, EXCLUDE_OPT,
   LAST_OPT
