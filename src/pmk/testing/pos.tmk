@@ -1,25 +1,24 @@
 %%OPTIONS
---	Os 'SunOS';
-	Prefix 'pmk';
-	Target 'c';
-
+    Prefix 'pmk';
+    Target 'c';
+    Library '../../../lib/c';
 %%IMPORT
 #include "tmkCommon.h"
 %%END
 %%TOKEN
-	NAME PmkToken;
-	CODE code   %% int %1%%;
-	SRCP srcp   %% TmkSrcp %1%%;
-	ATTRIBUTES
-	     sval   %% char *%1%%,
-	     ival   %% int %1%%,
-	     fpos   %% long %1%%,
-	     length %% long %1%%;
+    NAME PmkToken;
+    CODE code   %% int %1%%;
+    SRCP srcp   %% TmkSrcp %1%%;
+    ATTRIBUTES
+         sval   %% char *%1%%,
+         ival   %% int %1%%,
+         fpos   %% long %1%%,
+         length %% long %1%%;
 %%END
 %%SRCP
-	NAME TmkSrcp;
-	COLUMN col %% int %1 %%;
-	ROW    line %% int %1 %%;
-	FILE   file %% int %1 %%;
-	POSITION   pos %% int %1 %%;
+    NAME TmkSrcp;
+    COLUMN col %% int %1 %%;
+    ROW    line %% int %1 %%;
+    FILE   file %% int %1 %%;
+    POSITION   pos %% int %1 %%;
 %%END

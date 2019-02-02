@@ -1,18 +1,4 @@
 ########## pos ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii pos.tst.win32 > pos.tmp
-  alias cat dos2unix -ascii
-else
-  ../pmk pos > pos.tmp
-endif
-echo +++++ pos.tmk +++++  >> pos.tmp
-\cat pos.tmk >> pos.tmp
-echo +++++ pos.pmt +++++ >> pos.tmp
-cat pos.pmt >> pos.tmp
-\cat pos.tmp
-\rm pos.tmp
-########## /bin/csh -f pos.tst UNIX ##########
 
 
 
@@ -50,7 +36,7 @@ cat pos.pmt >> pos.tmp
 No warnings or errors detected.
 29 informational message(s).
 
-+++++ pos.tmk +++++
+==> pos.tmk <==
 %%OPTIONS
 --	Os 'SunOS';
 	Prefix 'pmk';
@@ -76,7 +62,26 @@ No warnings or errors detected.
 	FILE   file %% int %1 %%;
 	POSITION   pos %% int %1 %%;
 %%END
-+++++ pos.pmt +++++
+
+==> pos.pml <==
+*******  Shift-Reduce conflict in state   17 Symbol: '%+' Production:   75
+         Resolved by modification (Shift: '%+')
+*******  Shift-Reduce conflict in state   17 Symbol: '%-' Production:   75
+         Resolved by modification (Shift: '%-')
+*******  Shift-Reduce conflict in state   26 Symbol: '%+' Production:   70
+         Resolved by modification (Shift: '%+')
+*******  Shift-Reduce conflict in state   26 Symbol: '%-' Production:   70
+         Resolved by modification (Shift: '%-')
+*******  Shift-Reduce conflict in state   32 Symbol: '%+' Production:   70
+         Resolved by modification (Shift: '%+')
+*******  Shift-Reduce conflict in state   32 Symbol: '%-' Production:   70
+         Resolved by modification (Shift: '%-')
+*******  Shift-Reduce conflict in state   35 Symbol: '%+' Production:   70
+         Resolved by modification (Shift: '%+')
+*******  Shift-Reduce conflict in state   35 Symbol: '%-' Production:   70
+         Resolved by modification (Shift: '%-')
+
+==> pos.pmt <==
 %%SET tmkTokenName("PmkToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
@@ -91,10 +96,10 @@ No warnings or errors detected.
 
 #include "tmkCommon.h"
 %%END(tmkImport)
-%%SET tmkForce(0)
+%%SET tmkForce(1)
 %%SET tmkOs("SunOS")
 %%SET pmkOs("SunOS")
-%%SET currentOs("SunOS")
+%%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
 %%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
@@ -104,8 +109,7 @@ No warnings or errors detected.
 %%SET listerPrefix("pmk")
 %%SET tmkCodeDecl(" int code")
 %%SET tmkGrmAttrDecl(" prod_elnode *rule_elnode_last", " prod_elnode *rule_elnode /* list of rhs elements (see prod_elnode's def) */", " rhs_node *rhslist_last /* last element in the list above. This used to
-                                        to avoid making a reversed list */", " rhs_node *rhslist /* list of alternative righthand sides */", " altr_lst *altr_last", " altr_lst *altr_node /* list of alternatives (in EBNF alternation) */", " SymSet nored_set /* modifier sets */", " SymSet red_set /* modifier sets */", " int code /* terminals code value given in TERMINAL section */", " int dcost /* Delete cost given in TERMINAL section */", " int icost /* Insert cost given in TERMINAL section */", " Boolean n
-ullf /* null flag */", " Boolean q_str /* quoted_ string flag */", " TmkSrcp srcp", " char *sval2", " char *sval", " int ival")
+                                        to avoid making a reversed list */", " rhs_node *rhslist /* list of alternative righthand sides */", " altr_lst *altr_last", " altr_lst *altr_node /* list of alternatives (in EBNF alternation) */", " SymSet nored_set /* modifier sets */", " SymSet red_set /* modifier sets */", " int code /* terminals code value given in TERMINAL section */", " int dcost /* Delete cost given in TERMINAL section */", " int icost /* Insert cost given in TERMINAL section */", " Boolean nullf /* null flag */", " Boolean q_str /* quoted_ string flag */", " TmkSrcp srcp", " char *sval2", " char *sval", " int ival")
 %%SET tmkGrmAttrNames("rule_elnode_last", "rule_elnode", "rhslist_last", "rhslist", "altr_last", "altr_node", "nored_set", "red_set", "code", "dcost", "icost", "nullf", "q_str", "srcp", "sval2", "sval", "ival")
 %%BEGIN(pmkImport)
 
@@ -161,6 +165,9 @@ extern pmkContext pmkCtxt;
 %%SET pmActPack(RDS)
 %%SET pmGtoPack(RDS)
 %%SET pmRec(Single, Multiple, Panic)
+%%SET pmHeader("PMK -- ParserMaker 2.1(17) (1997-07-28 17:52)")
+%%SET pmVersion("2.1")
+%%SET pmCorrection("17")
 %%BEGIN(pmDecl)
 static Boolean optimizeObsolete = FALSE;
 StrListP grmAttrDecls, grmAttrNames;
