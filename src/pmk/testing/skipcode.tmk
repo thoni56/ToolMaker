@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------
--- tt.tmk 			Date: 1993-06-07/toolmake
--- 
+-- tt.tmk           Date: 1993-06-07/toolmake
+--
 -- Common ANSI-C definitions for all ToolMaker tools.
 --
 ----------------------------------------------------------------------------
@@ -9,8 +9,8 @@
 ----------------------------------------------------------------------------
 
 %%OPTIONS
---	Os 'SunOS';
-
+    Library '../../../lib/ansi-c';
+    Prefix 'skipcode';
 %%IMPORT
 typedef int TmNatural;     /* A natural number of "reasonable" length. */
 typedef int TmCode;        /* The type of a token code. */
@@ -29,4 +29,3 @@ typedef int TmCode;        /* The type of a token code. */
         stringValue %% char %1[256] %%,
         integerValue %% int %1 %%;
 %%END
-

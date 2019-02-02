@@ -9,8 +9,8 @@
 ----------------------------------------------------------------------------
 
 %%OPTIONS
-	Generate Tables, Source;
-	Library '..';
+    Generate Tables, Source;
+    Library '..';
 %%END
 
 %%IMPORT
@@ -24,14 +24,14 @@ extern ttScContext lexContext;
 
 %%EXPORT
 /* Semantic attribute interface */
- 
+
 /* Internal node type */
 typedef struct Node {
     char *string;
     int value;
     struct Node *next;
 } Node;
- 
+
 %%INSERTSYMBOL
 
     /* Make the requested token */
@@ -75,8 +75,8 @@ static Node *append(Node *list1, Node *list2)
 {
    if (list1->next) return append(list1->next, list2);
     else {
-	list1->next = list2;
-	return list1;
+    list1->next = list2;
+    return list1;
     }
 }
 
@@ -105,39 +105,39 @@ void summary()
   ttLiPrint(buf);
   sprintf(buf, "Number of statements: %u", statements);
   ttLiPrint(buf);
-} 
+}
 
 
 %%TERMINALS
-	IDENTIFIER	= 2,	1,1 => '<id>';
-	NUMBER		= 3,	1,1 => '0';
-	'.'		= 4;
-	';'		= 5;
-	','		= 6;
-	'='		= 7;
-	'<'		= 8;
-	'>'		= 9;
-	'<>'		= 10;
-	'<='		= 11;
-	'>='		= 12;
-	'('		= 13;
-	')'		= 14;
-	'+'		= 15;
-	'-'		= 16;
-	'*'		= 17;
-	'/'		= 18;
-	':='		= 33;
-	'IF'		= 34;
-	'DO'		= 35;
-	'CALL'		= 36;
-	'VAR'		= 25;
-	'END'		= 26;
-	'ODD'		= 27;
-	'THEN'		= 28;
-	'CONST'		= 29;
-	'BEGIN'		= 30;
-	'WHILE'		= 31;
-	'PROCEDURE'	= 32;
+    IDENTIFIER	= 2,	1,1 => '<id>';
+    NUMBER		= 3,	1,1 => '0';
+    '.'		= 4;
+    ';'		= 5;
+    ','		= 6;
+    '='		= 7;
+    '<'		= 8;
+    '>'		= 9;
+    '<>'		= 10;
+    '<='		= 11;
+    '>='		= 12;
+    '('		= 13;
+    ')'		= 14;
+    '+'		= 15;
+    '-'		= 16;
+    '*'		= 17;
+    '/'		= 18;
+    ':='		= 33;
+    'IF'		= 34;
+    'DO'		= 35;
+    'CALL'		= 36;
+    'VAR'		= 25;
+    'END'		= 26;
+    'ODD'		= 27;
+    'THEN'		= 28;
+    'CONST'		= 29;
+    'BEGIN'		= 30;
+    'WHILE'		= 31;
+    'PROCEDURE'	= 32;
 
 %%ATTRIBUTES
     srcp %% TmSrcp %1 %%,
@@ -153,172 +153,171 @@ void summary()
 %%RULES
 
 <program>
-	=
-	  <block> '.'
+    =
+      <block> '.'
           %%
             program = %<block>.list;
           %%
-	;
+    ;
 
 <block>
-	= <declarations> <statement>
-	  -- propagate the constant list
-	  %%
-	    %<block>.list = %<declarations>.list;
-	  %%
-	;
+    = <declarations> <statement>
+      -- propagate the constant list
+      %%
+        %<block>.list = %<declarations>.list;
+      %%
+    ;
 
 <declarations>
-	= <constant declaration> <variable declaration> <procedure declarations>
-	  -- propagate the constant list
-	  %%
-	    %<declarations>.list = %<constant declaration>.list;
-	  %%
-	;
+    = <constant declaration> <variable declaration> <procedure declarations>
+      -- propagate the constant list
+      %%
+        %<declarations>.list = %<constant declaration>.list;
+      %%
+    ;
 
 <constant declaration>
-	= 'CONST' <constant definitions> ';'
-	  %%
-	    %<constant declaration>.list = %<constant definitions>.list;
-	  %%
-	! -- Empty
-	  %%
-	    %<constant declaration>.list = NULL;
-	  %%
-	;
+    = 'CONST' <constant definitions> ';'
+      %%
+        %<constant declaration>.list = %<constant definitions>.list;
+      %%
+    ! -- Empty
+      %%
+        %<constant declaration>.list = NULL;
+      %%
+    ;
 
 <constant definitions>
-	= <constant definitions> ',' <constant definition>
-	  %%
-	    %1<constant definitions>.list =
-		append(%2<constant definitions>.list,
-		       makeNode(%<constant definition>.stringValue,
-				%<constant definition>.integerValue));
-	  %%
-	! <constant definition>
-	  %%
-	    %<constant definitions>.list = 
-		makeNode(%<constant definition>.stringValue,
-			 %<constant definition>.integerValue);
-	  %%
-	;
+    = <constant definitions> ',' <constant definition>
+      %%
+        %1<constant definitions>.list =
+        append(%2<constant definitions>.list,
+               makeNode(%<constant definition>.stringValue,
+                %<constant definition>.integerValue));
+      %%
+    ! <constant definition>
+      %%
+        %<constant definitions>.list =
+        makeNode(%<constant definition>.stringValue,
+             %<constant definition>.integerValue);
+      %%
+    ;
 
 <constant definition>
-	= IDENTIFIER '=' NUMBER
-	  %%
-	    constants++;
-	    strcpy(%<constant definition>.stringValue, %IDENTIFIER.stringValue);
-	    %<constant definition>.integerValue = %NUMBER.integerValue;
-	  %%
-	;
+    = IDENTIFIER '=' NUMBER
+      %%
+        constants++;
+        strcpy(%<constant definition>.stringValue, %IDENTIFIER.stringValue);
+        %<constant definition>.integerValue = %NUMBER.integerValue;
+      %%
+    ;
 
 <variable declaration>
-	= 'VAR' <identifiers> ';'
-	! -- Empty
-	;
+    = 'VAR' <identifiers> ';'
+    ! -- Empty
+    ;
 
 <identifiers>
-	= <identifiers> ',' IDENTIFIER
-	  %%
-	    variables++;
-	  %%
-	! IDENTIFIER
-	  %%
-	    variables++;
-	  %%
-	;
+    = <identifiers> ',' IDENTIFIER
+      %%
+        variables++;
+      %%
+    ! IDENTIFIER
+      %%
+        variables++;
+      %%
+    ;
 
 <procedure declarations>
-	= <procedure declarations> <procedure declaration>
-	! -- Empty
-	;
+    = <procedure declarations> <procedure declaration>
+    ! -- Empty
+    ;
 
 <procedure declaration>
-	= 'PROCEDURE' IDENTIFIER ';' <block> ';'
-	  %%
-	    procedures++;
-	  %%
-	;
+    = 'PROCEDURE' IDENTIFIER ';' <block> ';'
+      %%
+        procedures++;
+      %%
+    ;
 
 <statement>
-	= <assignment statement>
-	  %%
-	    statements++;
-	  %%
-	! <call statement>
-	  %%
-	    statements++;
-	  %%
-	! <compound statement>
-	  %%
-	    statements++;
-	  %%
-	! <if statement>
-	  %%
-	    statements++;
-	  %%
-	! <while statement>
-	  %%
-	    statements++;
-	  %%
-	! -- Empty
-	;
+    = <assignment statement>
+      %%
+        statements++;
+      %%
+    ! <call statement>
+      %%
+        statements++;
+      %%
+    ! <compound statement>
+      %%
+        statements++;
+      %%
+    ! <if statement>
+      %%
+        statements++;
+      %%
+    ! <while statement>
+      %%
+        statements++;
+      %%
+    ! -- Empty
+    ;
 
 <assignment statement>
-	= IDENTIFIER ':=' <expression>
-	;
+    = IDENTIFIER ':=' <expression>
+    ;
 
 <call statement>
-	= 'CALL' IDENTIFIER
-	;
+    = 'CALL' IDENTIFIER
+    ;
 
 <compound statement>
-	= 'BEGIN' <statements> 'END'
-	;
+    = 'BEGIN' <statements> 'END'
+    ;
 
 <statements>
-	= <statements> ';' <statement>
-	! <statement>
-	;
+    = <statements> ';' <statement>
+    ! <statement>
+    ;
 
 <if statement>
-	= 'IF' <condition> 'THEN' <statement>
-	;
+    = 'IF' <condition> 'THEN' <statement>
+    ;
 
 <while statement>
-	= 'WHILE' <condition> 'DO' <statement> ;
+    = 'WHILE' <condition> 'DO' <statement> ;
 
 
 <condition>
-	= 'ODD' <expression>
-	! <expression> <relop> <expression>
-	;
+    = 'ODD' <expression>
+    ! <expression> <relop> <expression>
+    ;
 
 <relop> = '=' ! '<>' ! '<' ! '>' ! '<=' ! '>=' ;
 
 <expression>
-	= <optional sign> <terms>
-	;
+    = <optional sign> <terms>
+    ;
 
 <terms>
-	= <terms> <addop> <term>
-	! <term>
-	;
+    = <terms> <addop> <term>
+    ! <term>
+    ;
 
 <term>
-	= <term> <mulop> <factor>
-	! <factor>
-	;
+    = <term> <mulop> <factor>
+    ! <factor>
+    ;
 
 <factor>
-	= IDENTIFIER
-	! NUMBER
-	! '(' <expression> ')'
-	;
+    = IDENTIFIER
+    ! NUMBER
+    ! '(' <expression> ')'
+    ;
 
 <optional sign> = '+' ! '-' ! ; -- Note the empty last alternative!
 
 <addop> = '+' ! '-' ;
 
 <mulop> = '*' ! '/' ;
-

@@ -1,26 +1,8 @@
 ########## skipcode ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii skipcode.tst.win32 > skipcode.tmp
-  alias cat dos2unix -ascii
-else
-  ../pmk skipcode > skipcode.tmp
-endif
-echo +++++ skipcode.tmk +++++  >> skipcode.tmp
-\cat skipcode.tmk >> skipcode.tmp
-echo +++++ skipcode.pml +++++ >> skipcode.tmp
-cat skipcode.pml >> skipcode.tmp
-echo +++++ skipcode.pmt +++++ >> skipcode.tmp
-cat skipcode.pmt >> skipcode.tmp
-echo +++++ skipcode.voc +++++ >> skipcode.tmp
-cat skipcode.voc >> skipcode.tmp
-\cat skipcode.tmp
-\rm skipcode.tmp
-########## /bin/csh -f skipcode.tst UNIX ##########
-+++++ skipcode.tmk +++++
+==> skipcode.tmk <==
 ----------------------------------------------------------------------------
--- tt.tmk 			Date: 1993-06-07/toolmake
--- 
+-- tt.tmk           Date: 1993-06-07/toolmake
+--
 -- Common ANSI-C definitions for all ToolMaker tools.
 --
 ----------------------------------------------------------------------------
@@ -29,8 +11,8 @@ cat skipcode.voc >> skipcode.tmp
 ----------------------------------------------------------------------------
 
 %%OPTIONS
---	Os 'SunOS';
-
+    Library '../../../lib/ansi-c';
+    Prefix 'skipcode';
 %%IMPORT
 typedef int TmNatural;     /* A natural number of "reasonable" length. */
 typedef int TmCode;        /* The type of a token code. */
@@ -50,8 +32,9 @@ typedef int TmCode;        /* The type of a token code. */
         integerValue %% int %1 %%;
 %%END
 
-+++++ skipcode.pml +++++
-+++++ skipcode.pmt +++++
+==> skipcode.pml <==
+
+==> skipcode.pmt <==
 %%SET tmkTokenName("TmToken")
 %%SET tmkTokenCode("code")
 %%SET tmkTokenSrcp("srcp")
@@ -66,17 +49,17 @@ typedef int TmCode;        /* The type of a token code. */
 typedef int TmNatural;     /* A natural number of "reasonable" length. */
 typedef int TmCode;        /* The type of a token code. */
 %%END(tmkImport)
-%%SET tmkForce(0)
+%%SET tmkForce(1)
 %%SET tmkOs("SunOS")
 %%SET pmkOs("SunOS")
-%%SET currentOs("SunOS")
+%%SET currentOs("cygwin")
 %%SET tmkTarget("ansi-c")
 %%SET pmkTarget("ansi-c")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
+%%SET tmkLibrary("../../../lib/ansi-c")
 %%SET pmkLibrary("..")
-%%SET tmkPrefix("tm")
-%%SET parserPrefix("pm")
-%%SET listerPrefix("tm")
+%%SET tmkPrefix("skipcode")
+%%SET parserPrefix("skipcode")
+%%SET listerPrefix("skipcode")
 %%SET tmkCodeDecl(" TmCode code ")
 %%SET tmkGrmAttrDecl(" int integerValue ", " char stringValue[256] ", " Node* list ", " TmSrcp srcp ")
 %%SET tmkGrmAttrNames("integerValue", "stringValue", "list", "srcp")
@@ -94,14 +77,14 @@ extern ttScContext lexContext;
 %%BEGIN(pmkExport)
 
 /* Semantic attribute interface */
- 
+
 /* Internal node type */
 typedef struct Node {
     char *string;
     int value;
     struct Node *next;
 } Node;
- 
+
 %%END(pmkExport)
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%SET pmStackMax(32)
@@ -118,6 +101,9 @@ typedef struct Node {
 %%SET pmActPack(RDS)
 %%SET pmGtoPack(RDS)
 %%SET pmRec(Single, Multiple, Panic)
+%%SET pmHeader("PMK -- ParserMaker 2.1(17) (1997-07-28 17:52)")
+%%SET pmVersion("2.1")
+%%SET pmCorrection("17")
 %%BEGIN(pmDecl)
 
 /* Counters for the various contructs */
@@ -156,8 +142,8 @@ static Node *append(Node *list1, Node *list2)
 {
    if (list1->next) return append(list1->next, list2);
     else {
-	list1->next = list2;
-	return list1;
+    list1->next = list2;
+    return list1;
     }
 }
 
@@ -186,7 +172,7 @@ void summary()
   ttLiPrint(buf);
   sprintf(buf, "Number of statements: `%u", statements);
   ttLiPrint(buf);
-} 
+}
 
 
 %%END(pmDecl)
@@ -358,71 +344,71 @@ void summary()
           	break;}
     case 2: { /* <block> = <declarations> <statement>; */
 
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list;
-	  	break;}
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list;
+      	break;}
     case 3: { /* <declarations> = <constant declaration> <variable declaration> <procedure declarations>; */
 
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list;
-	  	break;}
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list;
+      	break;}
     case 5: { /* <constant declaration> = 'CONST' <constant definitions> ';'; */
 
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].list;
-	  	break;}
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].list;
+      	break;}
     case 4: { /* <constant declaration> =; */
 
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = NULL;
-	  	break;}
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = NULL;
+      	break;}
     case 7: { /* <constant definitions> = <constant definitions> ',' <constant definition>; */
 
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list =
-		append(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list,
-		       makeNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].stringValue,
-				%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].integerValue));
-	  	break;}
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list =
+        append(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list,
+               makeNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].stringValue,
+                %%(parserPrefix)SeSt[%%(parserPrefix)StkP+3].integerValue));
+      	break;}
     case 6: { /* <constant definitions> = <constant definition>; */
 
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list = 
-		makeNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].stringValue,
-			 %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].integerValue);
-	  	break;}
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].list =
+        makeNode(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].stringValue,
+             %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].integerValue);
+      	break;}
     case 8: { /* <constant definition> = IDENTIFIER '=' NUMBER; */
 
-	    constants++;
-	    strcpy(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].stringValue, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].stringValue);
-	    %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].integerValue = %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].integerValue;
-	  	break;}
+        constants++;
+        strcpy(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].stringValue, %%(parserPrefix)SySt[%%(parserPrefix)StkP+1].stringValue);
+        %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].integerValue = %%(parserPrefix)SySt[%%(parserPrefix)StkP+3].integerValue;
+      	break;}
     case 12: { /* <identifiers> = <identifiers> ',' IDENTIFIER; */
 
-	    variables++;
-	  	break;}
+        variables++;
+      	break;}
     case 11: { /* <identifiers> = IDENTIFIER; */
 
-	    variables++;
-	  	break;}
+        variables++;
+      	break;}
     case 15: { /* <procedure declaration> = 'PROCEDURE' IDENTIFIER ';' <block> ';'; */
 
-	    procedures++;
-	  	break;}
+        procedures++;
+      	break;}
     case 19: { /* <statement> = <assignment statement>; */
 
-	    statements++;
-	  	break;}
+        statements++;
+      	break;}
     case 17: { /* <statement> = <call statement>; */
 
-	    statements++;
-	  	break;}
+        statements++;
+      	break;}
     case 18: { /* <statement> = <compound statement>; */
 
-	    statements++;
-	  	break;}
+        statements++;
+      	break;}
     case 20: { /* <statement> = <if statement>; */
 
-	    statements++;
-	  	break;}
+        statements++;
+      	break;}
     case 21: { /* <statement> = <while statement>; */
 
-	    statements++;
-	  	break;}
+        statements++;
+      	break;}
 %%END(pmSemantics)
 %%SET vocFileName ("skipcode.voc")
 %%BEGIN (pmVoc)
@@ -460,7 +446,8 @@ void summary()
 %%END (pmVoc)
 %%PROCESS("%%(pmkLibrary)/Parse.imp")
 %%PROCESS("%%(pmkLibrary)/Err.imp")
-+++++ skipcode.voc +++++
+
+==> skipcode.voc <==
    0    0 Unknown                  main
    1    1 EndOfText                main
    2    2 IDENTIFIER               main
@@ -492,3 +479,1952 @@ void summary()
   28   34 'IF'                     main
   29   35 'DO'                     main
   30   36 'CALL'                   main
+
+==> skipcodeCommon.h <==
+#ifndef _skipcodeCommon_H_
+#define _skipcodeCommon_H_
+/* skipcodeCommon.h
+
+   Common definitions for skipcode
+
+   This file is generated from information in 'skipcode.tmk'
+
+*/
+
+/* The import section (%%IMPORT) */
+
+typedef int TmNatural;     /* A natural number of "reasonable" length. */
+typedef int TmCode;        /* The type of a token code. */
+
+/* The source position type (%%SRCP) */
+
+typedef struct TmSrcp {
+    TmNatural line ;
+    TmNatural col ;
+    TmNatural file ;
+} TmSrcp;
+
+
+/* The token type (%%TOKEN) */
+
+typedef struct TmToken {
+    TmCode code ;
+    TmSrcp srcp ;
+    char stringValue[256] ;
+    int integerValue ;
+} TmToken;
+
+#endif
+
+
+
+==> skipcodeErr.c <==
+/*----------------------------------------------------------------------*\
+
+  skipcodeErr.c
+
+  Parser error handler 
+
+\*----------------------------------------------------------------------*/
+
+/* %%IMPORT */
+
+#include <stdio.h>
+#include <strings.h>
+
+#include "ttParse.h"
+#include "ttList.h"
+#include "ttScan.h"
+extern ttScContext lexContext;
+
+/* END %%IMPORT */
+
+#include <string.h>
+#include <stdlib.h>
+#include "skipcodeList.h"
+#include "skipcodeCommon.h"
+
+#define MaxTokens 5
+
+
+static char insStr[101] = "";	/* Inserted symbol strings */
+static int insToks = 0;
+
+static char delStr[201] = "";	/* Deleted symbol strings */
+static int delToks = 0;
+
+/*-----------------------------------------------------------------------------
+ * skipcodeRPoi - Recovery point, output a message indicating the position.
+ *-----------------------------------------------------------------------------
+ */
+void skipcodeRPoi(
+    TmToken *token		/* IN the restart symbol */
+)
+{
+    if (delToks > MaxTokens) {
+       /* Output a recovery point error message
+       */
+       skipcodeLog(&(token->srcp), 100, sevINF, "");
+    }/*if*/
+
+    /* Clear both token print strings */
+    insStr[0] = '\0';
+    delStr[0] = '\0';
+
+    insToks = 0;
+    delToks = 0;
+}/*skipcodeRPoi()*/
+
+
+/*-----------------------------------------------------------------------------
+ * skipcodeISym - A symbol is to be inserted, collect it for later output, and
+ *	    construct the requested token for use by the parser.
+ *-----------------------------------------------------------------------------
+ */
+void skipcodeISym(
+     TmCode code ,	/* IN terminal code number */
+    char *symString,			/* IN terminal string */
+    char *printString,			/* IN the terminals print symbol */
+    TmToken *token		/* OUT the created scanner symbol */
+)
+{
+    if (insToks < MaxTokens) {
+	/* Concatenate the token string
+	 */
+	if (insToks > 0) strcat(insStr, " ");
+	if (code == 0) strcat(insStr, "Unknown Token");
+	else if (code == 1) strcat(insStr, "End Of File");
+	else if (*printString != '\0') strcat(insStr, printString);
+	else strcat(insStr, symString);
+    } else if (insToks == MaxTokens) {
+	strcat(insStr, " ...");
+    }/*if*/
+    insToks++;
+#define sym token
+#define sstr symString
+#define pstr printString
+
+
+    /* Make the requested token */
+    sym->code = code;
+
+#undef sym
+#undef sstr
+#undef pstr
+}/*skipcodeISym()*/
+
+
+/*-----------------------------------------------------------------------------
+ * skipcodeDSym - The indicated symbol is deleted by the parser, collect its string
+ *	    for later output.
+ *-----------------------------------------------------------------------------
+ */
+void skipcodeDSym(
+    TmToken *token,		/* IN terminal */
+    char *symString,			/* IN terminal string */
+    char *printString			/* IN terminals print string */
+)
+{
+    if (delToks < MaxTokens) {
+	/* Concatenate the symbol strings */
+	if (delToks > 0) strcat(delStr, " ");
+	if (token->code == 0) strcat(delStr, "Unknown Token");
+	else if (token->code == 1) strcat(delStr, "End Of File");
+	else if (*printString != '\0') strcat(delStr, printString);
+	else strcat(delStr, symString);
+    } else if (delToks == MaxTokens) {
+	strcat(delStr, " ...");
+    }/*if*/
+    delToks++;
+}/*skipcodeDSym()*/
+
+
+/*-----------------------------------------------------------------------------
+ * skipcodeMess - An error message should be output, symbol indicates point of error.
+ *-----------------------------------------------------------------------------
+ * Method:	1 = Symbol(s) insertion	       Message:	% inserted
+ *		2 = Symbol(s) deletion			% deleted
+ *		3 = Symbol(s) replacement		% replaced by %
+ *	        4 = Stack backup			Malformed phrase
+ *		5 = Halted				%. System halted
+ *
+ * Code:	1 = Unknown token (error token from scanner)
+ *		2 = Syntax error
+ *		3 = Parse stack overflow
+ *		4 = Table error
+ *
+ * Severity:	1 = Warning
+ *		2 = Error (repairable)
+ *		3 = Fatal error
+ *		4 = System error & Limit error
+ *-----------------------------------------------------------------------------
+ */
+void skipcodeMess(
+    TmToken *sym,		/* IN error token */
+    int method,			/* IN recovery method */
+    int code,			/* IN error classification */
+    int severity		/* IN error severity code */
+)
+{
+    skipcodeSev sev;
+
+    switch (severity) {
+    case 1: sev = sevWAR; break;
+    case 2: sev = sevERR; break;
+    case 3: sev = sevFAT; break;
+    case 4: sev = sevSYS; break;
+    default: sev = sevSYS; break;
+    }
+
+    switch (code) {
+
+    case 1:
+	/* Unknown symbol, deleted */
+	skipcodeLog(&(sym->srcp), 102, sev, "Unknown Token");
+	break;
+
+    case 2:
+	/* Syntax Error */
+	switch (method) {
+
+	case 1:
+	    /* Insert */
+	    skipcodeLog(&(sym->srcp), 101, sev, insStr);
+	    break;
+
+	case 2:
+	    /* Delete */
+	    skipcodeLog(&(sym->srcp), 102, sev, delStr);
+	    break;
+
+	case 3:
+	    /* Replace */
+	    delStr[strlen(delStr)+1] = '\0';
+	    delStr[strlen(delStr)] = skipcodeSEPARATOR; /* Separator */
+	    strcat(delStr, insStr);
+	    skipcodeLog(&(sym->srcp), 103, sev, delStr);
+	    break;
+
+	case 4:
+	    /* Stack backed up */
+	    skipcodeLog(&(sym->srcp), 104, sev, "");
+	    break;
+
+	case 5:
+	    /* Syntax error, system halted */
+	    skipcodeLog(&(sym->srcp), 105, sev, "");
+	    break;
+	}
+	break;
+
+    case 3:
+	/* Parse stack overflow */
+	skipcodeLog(&(sym->srcp), 106, sev, "");
+	break;
+
+    case 4:
+	/* Parse table error */
+	skipcodeLog(&(sym->srcp), 107, sev, "");
+	break;
+    }
+
+    if (method == 5) {
+	/* System halted, output informational message */
+	skipcodeLog(&(sym->srcp), 108, sevINF, "");
+    }
+}/*skipcodeMess()*/
+
+==> skipcodePaSema.c <==
+/*----------------------------------------------------------------------*\
+
+    skipcodePaSema.c
+
+    ParserMaker generated semantic actions
+
+\*----------------------------------------------------------------------*/
+
+/* %%IMPORT */
+
+#include <stdio.h>
+#include <strings.h>
+
+#include "ttParse.h"
+#include "ttList.h"
+#include "ttScan.h"
+extern ttScContext lexContext;
+
+/* END %%IMPORT */
+
+/* System dependencies
+ * -------------------
+ */
+
+/* These datatypes should be defined to be unsigned integers of length 1, 2
+ * and 4 bytes respectively.
+ */
+typedef unsigned char UByte1;
+typedef unsigned short UByte2;
+typedef unsigned int UByte4;
+
+/* Token and Srcp definition */
+#include "skipcodeCommon.h"
+
+/* Attribute stacks *\
+\* ---------------- */
+/* %%ATTRIBUTES */
+/* The semantic attributes for grammar symbols */
+typedef struct skipcodeGrammar {
+    int integerValue ;
+    char stringValue[256] ;
+    Node* list ;
+    TmSrcp srcp ;
+} skipcodeGrammar;
+
+/* END %%ATTRIBUTES */
+
+extern short skipcodeStkP;
+extern TmToken skipcodeSySt[];
+extern skipcodeGrammar skipcodeSeSt[];
+
+/* %%DECLARATIONS - User data and routines */
+
+
+/* Counters for the various contructs */
+static int constants, variables, procedures, statements;
+
+/* The node constituting the program */
+static Node *program;
+
+
+/*-----------------------------------------------------------------------------
+    makeNode()
+
+    Make a new list node and initialize it.
+
+ */
+static Node *makeNode(char *string, int value)
+{
+    Node *temp;
+
+    temp = (Node *)malloc(sizeof(Node));
+    temp->string = (char *)malloc(strlen(string) + 1);
+    strcpy(temp->string, string);
+    temp->value = value;
+    temp->next = NULL;
+    return temp;
+}
+
+
+/*-----------------------------------------------------------------------------
+    append()
+
+    Append two lists of nodes.
+
+ */
+static Node *append(Node *list1, Node *list2)
+{
+   if (list1->next) return append(list1->next, list2);
+    else {
+    list1->next = list2;
+    return list1;
+    }
+}
+
+
+/*-----------------------------------------------------------------------------
+    summary()
+
+    Print a summary of the PL/0 program using the Lister.
+
+ */
+void summary()
+{
+  Node *node;
+  char buf[256];
+
+  sprintf(buf, "Number of constants:  %u", constants);
+  ttLiPrint(buf);
+  for (node = program; node; node = node->next) {
+    sprintf(buf,"  %s = %d", node->string, node->value);
+    ttLiPrint(buf);
+  }
+  ttLiPrint("");
+  sprintf(buf, "Number of variables:  %u", variables);
+  ttLiPrint(buf);
+  sprintf(buf, "Number of procedures: %u", procedures);
+  ttLiPrint(buf);
+  sprintf(buf, "Number of statements: %u", statements);
+  ttLiPrint(buf);
+}
+
+
+
+/* END %%DECLARATIONS */
+
+
+/*----------------------------------------------------------------------------
+ * skipcodePaSema - The semantic actions
+ *----------------------------------------------------------------------------
+ */
+void skipcodePaSema(
+int rule			/* IN production number */
+)
+{
+    switch (rule) {
+          case 1: { /* <program> = <block> '.'; */
+
+            program = skipcodeSeSt[skipcodeStkP+1].list;
+          	break;}
+    case 2: { /* <block> = <declarations> <statement>; */
+
+        skipcodeSeSt[skipcodeStkP+1].list = skipcodeSeSt[skipcodeStkP+1].list;
+      	break;}
+    case 3: { /* <declarations> = <constant declaration> <variable declaration> <procedure declarations>; */
+
+        skipcodeSeSt[skipcodeStkP+1].list = skipcodeSeSt[skipcodeStkP+1].list;
+      	break;}
+    case 5: { /* <constant declaration> = 'CONST' <constant definitions> ';'; */
+
+        skipcodeSeSt[skipcodeStkP+1].list = skipcodeSeSt[skipcodeStkP+2].list;
+      	break;}
+    case 4: { /* <constant declaration> =; */
+
+        skipcodeSeSt[skipcodeStkP+1].list = NULL;
+      	break;}
+    case 7: { /* <constant definitions> = <constant definitions> ',' <constant definition>; */
+
+        skipcodeSeSt[skipcodeStkP+1].list =
+        append(skipcodeSeSt[skipcodeStkP+1].list,
+               makeNode(skipcodeSeSt[skipcodeStkP+3].stringValue,
+                skipcodeSeSt[skipcodeStkP+3].integerValue));
+      	break;}
+    case 6: { /* <constant definitions> = <constant definition>; */
+
+        skipcodeSeSt[skipcodeStkP+1].list =
+        makeNode(skipcodeSeSt[skipcodeStkP+1].stringValue,
+             skipcodeSeSt[skipcodeStkP+1].integerValue);
+      	break;}
+    case 8: { /* <constant definition> = IDENTIFIER '=' NUMBER; */
+
+        constants++;
+        strcpy(skipcodeSeSt[skipcodeStkP+1].stringValue, skipcodeSySt[skipcodeStkP+1].stringValue);
+        skipcodeSeSt[skipcodeStkP+1].integerValue = skipcodeSySt[skipcodeStkP+3].integerValue;
+      	break;}
+    case 12: { /* <identifiers> = <identifiers> ',' IDENTIFIER; */
+
+        variables++;
+      	break;}
+    case 11: { /* <identifiers> = IDENTIFIER; */
+
+        variables++;
+      	break;}
+    case 15: { /* <procedure declaration> = 'PROCEDURE' IDENTIFIER ';' <block> ';'; */
+
+        procedures++;
+      	break;}
+    case 19: { /* <statement> = <assignment statement>; */
+
+        statements++;
+      	break;}
+    case 17: { /* <statement> = <call statement>; */
+
+        statements++;
+      	break;}
+    case 18: { /* <statement> = <compound statement>; */
+
+        statements++;
+      	break;}
+    case 20: { /* <statement> = <if statement>; */
+
+        statements++;
+      	break;}
+    case 21: { /* <statement> = <while statement>; */
+
+        statements++;
+      	break;}
+    default: break; }
+}/*skipcodePaSema()*/
+
+
+==> skipcodeParse.c <==
+/*----------------------------------------------------------------------*\
+
+    skipcodeParse.c
+
+    ParserMaker generated parser
+
+\*----------------------------------------------------------------------*/
+
+/* %%IMPORT */
+
+#include <stdio.h>
+#include <strings.h>
+
+#include "ttParse.h"
+#include "ttList.h"
+#include "ttScan.h"
+extern ttScContext lexContext;
+
+/* END %%IMPORT */
+
+#include <string.h>
+#include <setjmp.h>
+
+#include "skipcodeParse.h"
+
+#define PMTRUE 1
+#define PMFALSE 0
+typedef unsigned char PmBoolean; /* For logical values */
+
+/* System dependencies */
+
+/* These datatypes should be defined to be unsigned integers of length 1, 2
+ * and 4 bytes respectively.
+ */
+typedef unsigned char UByte1;
+typedef unsigned short UByte2;
+typedef unsigned int UByte4;
+
+/* Token definition */
+#include "skipcodeCommon.h"
+
+/* %%ATTRIBUTES - The semantic attributes for grammar symbols */
+typedef struct skipcodeGrammar {
+    int integerValue ;
+    char stringValue[256] ;
+    Node* list ;
+    TmSrcp srcp ;
+} skipcodeGrammar;
+
+/* END %%ATTRIBUTES */
+
+/* Parser constants *\
+\* ---------------- */
+#define ERROR_ACT 0			/* Action - Error */
+#define SHIFT_ACT 1			/* Action - Shift */
+#define SHIFTRED_ACT 2		/* Action - Shift_Reduce */
+#define REDUCE_ACT 3		/* Action - Reduce */
+#define ACCEPT_ACT 4		/* Action - Accept */
+
+#define ERR_SYM 0		/* Error token */
+#define ENDMARK 1		/* End of file token code */
+
+/* Recovery method *\
+\* --------------- */
+#define NONE_REC 0		/* No recovery found */
+#define IN_REC 1		/* Insertion of symbol(s) */
+#define DEL_REC 2		/* Deletion of symbol(s) */
+#define REP_REC 3		/* Replacement of symbol(s) */
+#define BAK_REC 4		/* Stack backup */
+#define HALT_REC 5		/* System halted */
+
+/* Error class *\
+\* ----------- */
+#define LEX_ERR 1		/* Non valid scanner symbol found */
+#define SYN_ERR 2		/* Normal syntax error */
+#define OFLW_ERR 3		/* Parse stack overflow */
+#define TAB_ERR 4		/* Parse table error */
+
+/* Error severity *\
+\* -------------- */
+#define WAR_SEV 1		/* Warnings */
+#define ERR_SEV 2		/* Repairable error */
+#define FAT_SEV 3		/* Fatal error */
+#define SYS_SEV 4		/* System & limit error */
+
+/* Parser constants *\
+\* ---------------- */
+#define SccMax 36		/* Max scanner code value */
+#define TermMin 1		/* Minimum terminal number */
+#define Terms 30		/* Number of terminals in grammar */
+#define StateMin 1		/* Minimum state number */
+#define States 42		/* Number of states */
+#define ProdMin 1		/* Minimum production number */
+#define Prods 51		/* Number of productions */
+#define PmStkMax 32		/* Parse stack size */
+#define	PmLaMax 5		/* Look-ahead length */
+#define	PmCost 5		/* Shifting cost */
+
+/* Types *\
+\* ----- */
+typedef unsigned char TermSet[(Terms + TermMin + 7) >> 3]; /* Terminal set */
+typedef UByte1 ParseStack[PmStkMax]; /* Parse stack */
+
+/* Terminal table *\
+\* -------------- */
+
+typedef struct {
+    UByte1 tsym;		/* Normal continuation */
+    UByte1 ssym;		/* Separator continuation */
+} ContRec;
+
+typedef struct {
+    ContRec cont[42];		/* Continuation function */
+    TermSet sepa;		/* Separator symbols */
+    TermSet fiduc;		/* Fiducial symbols */
+    TermSet skip;		/* Symbols to skip */
+} RecTab;
+
+typedef struct  {
+    UByte2 act[251];		/* Action table */
+    UByte1 actCheck[265];	/* Row Displacement Check Vector*/
+    UByte1 actRix[42];		/* Action row mapping */
+    RecTab recover;		/* Error recovery info */
+} TermTab;
+
+static TermTab act = {
+{4,338,346,315,315,65,315,315,315,315,315,315,129,315,315,315,402,410,186
+,315,194,315,42,297,338,346,307,307,315,307,307,307,307,307,307,129,307
+,307,307,402,410,169,307,193,307,82,337,338,346,299,299,307,299,299,299
+,299,299,299,129,299,386,394,35,257,35,299,265,299,354,122,75,305,75,75
+,299,81,305,313,35,35,66,35,90,281,35,35,35,321,35,10,35,98,75,75,75,35
+,75,0,75,281,35,35,35,0,35,73,35,131,131,0,0,0,107,0,107,107,0,0,0,27,0
+,27,27,131,0,0,0,49,177,0,0,153,0,41,107,107,107,0,107,0,107,27,27,249,0
+,27,73,27,131,131,0,0,0,73,0,131,131,0,0,0,73,0,0,131,131,0,0,73,49,177
+,131,0,153,0,41,49,177,0,131,153,0,41,49,177,0,131,153,0,41,49,177,363,363
+,153,0,41,250,266,274,258,282,290,363,0,370,378,363,363,0,0,201,0,0,363
+,363,0,0,363,0,370,378,363,363,0,363,201,370,378,363,363,0,0,363,0,370,378
+,363,363,0,363,0,370,378,0,0,0,0,363,0,370,378}
+,
+{1,10,10,13,13,6,13,13,13,13,13,13,10,13,13,13,13,13,4,13,6,13,35,35,14
+,14,17,17,13,17,17,17,17,17,17,14,17,17,17,17,17,19,17,22,17,40,40,12,12
+,11,11,17,11,11,11,11,11,11,12,11,11,11,0,30,0,11,31,11,16,33,27,34,27,27
+,11,8,36,37,32,0,38,32,39,0,0,0,0,27,0,2,0,41,27,27,27,32,27,42,27,32,32
+,32,32,42,32,20,32,20,20,42,42,42,28,42,28,28,42,42,42,29,42,29,29,20,42
+,42,42,20,20,42,42,20,42,20,28,28,28,42,28,42,28,29,29,29,42,29,23,29,23
+,23,42,42,42,3,42,3,3,42,42,42,5,42,42,5,23,42,42,7,23,23,7,42,23,42,23
+,3,3,42,5,3,42,3,5,5,42,7,5,42,5,7,7,18,18,7,42,7,25,25,25,25,25,25,18,42
+,18,18,21,21,42,42,18,42,42,9,9,42,42,21,42,21,21,24,24,42,9,21,9,9,15,15
+,42,42,24,42,24,24,26,26,42,15,42,15,15,42,42,42,42,26,42,26,26,42,42,42
+,42,42,42,42,42,42,42,42,42,42,42}
+,
+{61,0,86,152,17,159,1,166,49,212,0,46,46,0,23,227,55,23,190,20,104,205,15
+,145,220,190,235,69,111,118,62,62,77,65,70,18,75,71,78,81,41,90}
+,
+{
+{{2,2}
+,{1,1}
+,{4,4}
+,{4,5}
+,{2,2}
+,{5,5}
+,{20,5}
+,{5,5}
+,{27,27}
+,{2,2}
+,{2,2}
+,{4,5}
+,{2,2}
+,{4,5}
+,{2,2}
+,{2,2}
+,{14,14}
+,{4,5}
+,{21,21}
+,{22,22}
+,{4,5}
+,{21,21}
+,{29,29}
+,{4,5}
+,{2,2}
+,{7,7}
+,{2,2}
+,{2,5}
+,{2,5}
+,{2,5}
+,{2,2}
+,{5,5}
+,{2,5}
+,{5,5}
+,{2,2}
+,{5,6}
+,{2,2}
+,{7,7}
+,{3,3}
+,{2,2}
+,{5,6}
+,{2,2}
+}
+,
+{6,0,0,0}
+,
+{0,0,17,234}
+,
+{0,0,0,0}
+}
+};
+
+
+/* Non terminal table *\
+\* ------------------ */
+typedef  struct {
+    UByte2 gto[73];		/* Goto table */
+    UByte1 gtoRix[42];		/* Goto row mapping */
+    UByte1 lhs[51];		/* Left hand side symbols */
+    UByte1 rhsz[51];		/* Size of the RHS */
+} NonTermTab;
+
+static NonTermTab gto = {
+{145,25,217,97,105,121,322,17,202,185,209,57,330,33,162,89,138,170,146,18
+,225,137,233,154,114,162,89,138,170,146,210,161,209,241,154,121,162,89,138
+,170,146,218,58,178,329,154,0,162,89,138,170,146,226,273,234,0,154,0,162
+,89,138,170,146,242,113,33,50,154,89,289,322,0,225}
+,
+{0,6,6,11,6,0,3,22,3,33,0,0,64,0,6,11,1,30,22,1,33,0,1,44,44,0,53,1,8,0
+,0,0,52,0,47,0,23,0,0,32,0,0}
+,
+{38,32,44,51,51,53,53,50,52,52,43,43,56,56,55,39,39,39,39,39,39,54,47,49
+,42,42,45,48,40,40,33,33,33,33,33,33,41,34,34,31,31,37,37,37,46,46,46,35
+,35,36,36}
+,
+{2,2,3,0,3,1,3,3,0,3,1,3,0,2,5,0,1,1,1,1,1,3,2,3,1,3,4,4,2,3,1,1,1,1,1,1
+,2,1,3,1,3,1,1,3,0,1,1,1,1,1,1}
+};
+
+
+/* Vocabulary *\
+\* ---------- */
+typedef struct {
+    UByte1 scc;			/* Scanner code value */
+    UByte1 iCost;		/* Insertion cost */
+    UByte1 dCost;		/* Deletion cost */
+    char *name;			/* Name string */
+    char *psym;			/* Print name */
+} VocTab[30];
+
+static VocTab voc = {{1,255,255,"EndOfText",""}
+,{2,1,1,"IDENTIFIER","<id>"}
+,{3,1,1,"NUMBER","0"}
+,{4,1,1,"'.'",""}
+,{5,1,1,"';'",""}
+,{6,1,1,"','",""}
+,{7,1,1,"'='",""}
+,{8,1,1,"'<'",""}
+,{9,1,1,"'>'",""}
+,{10,1,1,"'<>'",""}
+,{11,1,1,"'<='",""}
+,{12,1,1,"'>='",""}
+,{13,1,1,"'('",""}
+,{14,1,1,"')'",""}
+,{15,1,1,"'+'",""}
+,{16,1,1,"'-'",""}
+,{17,1,1,"'*'",""}
+,{18,1,1,"'/'",""}
+,{25,1,1,"'VAR'",""}
+,{26,1,1,"'END'",""}
+,{27,1,1,"'ODD'",""}
+,{28,1,1,"'THEN'",""}
+,{29,1,1,"'CONST'",""}
+,{30,1,1,"'BEGIN'",""}
+,{31,1,1,"'WHILE'",""}
+,{32,1,1,"'PROCEDURE'",""}
+,{33,1,1,"':='",""}
+,{34,1,1,"'IF'",""}
+,{35,1,1,"'DO'",""}
+,{36,1,1,"'CALL'",""}
+}
+;
+
+
+/* Variables used in the parsing process *\
+\* ------------------------------------- */
+short skipcodeStkP;			/* Stack pointer */
+TmToken skipcodeSySt[PmStkMax];	/* Symbol stack */
+skipcodeGrammar skipcodeSeSt[PmStkMax];	/* Semantic stack */
+static UByte1 currstat;		/* Current state number */
+static UByte1 arg;		/* Argument */
+static UByte1 action;		/* Action type */
+static PmBoolean endparse;	/* Termination flag */
+static ParseStack parsStk;	/* Parse stack */
+static UByte1 scIndex[36 + 1]; /* Converts scanner code to internal value */
+static TmToken tokenBuf;	/* Scanner token buffer */
+static TmToken *token = &tokenBuf;	/* Pointer to it for readsymb */
+
+
+/* Error recovery look-ahead buffer *\
+\* -------------------------------- */
+static TmToken la_buff[PmLaMax + 1]; /* Buffer */
+static int la_ptr;		/* Current pointer */
+static int la_end;		/* Last item */
+
+static jmp_buf pmJmpB;		/* Buffer for long jump */
+
+/* Interface routines *\
+\* ------------------ */
+#include "skipcodeScan.h"
+
+extern void skipcodeRPoi(	/* Error recovery - restart point  */
+TmToken *sym			/* IN the restart symbol */
+);
+extern void skipcodeISym(	/* Error recovery - insert symbol  */
+ TmCode code ,			/* IN terminal code number */
+char *sstr,			/* IN terminal string */
+char *pstr,			/* IN the terminals print symbol */
+TmToken *sym			/* OUT the created scanner symbol */
+);
+extern void skipcodeDSym(	/* Error recovery - delete symbol  */
+TmToken *sym,			/* IN terminal code number */
+char *sstr,			/* IN terminal string */
+char *pstr			/* IN terminals print string */
+);
+extern void skipcodeMess(	/* Error recovery - error message  */
+TmToken *sym,			/* IN error token */
+int method,			/* IN recovery method */
+int code,			/* IN error classification */
+int severity			/* IN error severity code */
+);
+
+/* External functions */
+extern void skipcodePaSema(
+int rule			/* IN production number */
+);
+
+/*----------------------------------------------------------------------------
+ * paAbort - Abort the parsing process
+ *----------------------------------------------------------------------------
+ */
+static void paAbort(
+TmToken *token,		/* IN current token */
+short eClass,			/* IN error classification */
+short severity			/* IN error severity code */
+)
+{
+    skipcodeMess(token, HALT_REC, eClass, severity);
+    longjmp(pmJmpB, PMTRUE);	/* Jump out to top level */
+}/*paAbort()*/
+
+
+/*----------------------------------------------------------------------------
+ * SetIns - Add one element to a set
+ *----------------------------------------------------------------------------
+ */
+#define SetIns(set, n) ((set)[(n) >> 3] |= (0x80 >> ((n) & 0x7)))
+
+
+/*----------------------------------------------------------------------------
+ * SetClear - Clear a ParserMaker set
+ *----------------------------------------------------------------------------
+ */
+#define SetClear(set, length) memset((void *)set, 0, (size_t)((length) + 7) >> 3)
+
+/*----------------------------------------------------------------------------
+ * SetMem - Check member inclusion
+ *----------------------------------------------------------------------------
+ */
+#define SetMem(set, n) ((set)[(n) >> 3] & (0x80 >> ((n) & 0x7)))
+
+
+/*----------------------------------------------------------------------------
+ * paInit - Initialize the parsing process
+ *----------------------------------------------------------------------------
+ */
+static void paInit(void)
+{
+    short i;
+
+    la_ptr = 0;
+    la_end = 0;
+    skipcodeStkP = 0;
+    currstat = 1;
+    endparse = PMFALSE;
+    parsStk[0] = 1;
+
+    /* Scanner interface */
+    for (i = 0; i <= SccMax; i++) scIndex[i] = ERR_SYM;
+    for (i = TermMin; i <= Terms; i++) scIndex[voc[i - TermMin].scc] = (UByte1)i;
+}/*paInit()*/
+
+
+/*----------------------------------------------------------------------------
+ * pushStat[Tok] - Push the current state on the stack and possibly push current
+ *        token on the symbol stack.
+ *----------------------------------------------------------------------------
+ */
+#define MOVETOKEN skipcodeSySt[skipcodeStkP] = *token
+#define pushStatTok()\
+{\
+    if (++skipcodeStkP < PmStkMax) {\
+    parsStk[skipcodeStkP] = currstat;\
+    MOVETOKEN;\
+    } else {\
+    token->code = voc[token->code-TermMin].scc;\
+    paAbort(token, OFLW_ERR, SYS_SEV);\
+    }\
+}
+
+#define pushStat()\
+{\
+    if (++skipcodeStkP < PmStkMax) {\
+    parsStk[skipcodeStkP] = currstat;\
+    } else {\
+    token->code = voc[token->code-TermMin].scc;\
+    paAbort(token, OFLW_ERR, SYS_SEV);\
+    }\
+}
+
+
+
+/*----------------------------------------------------------------------------
+ * actTbl - Do a look-up in the action table
+ *----------------------------------------------------------------------------
+ */
+#define actTbl(st, sy, action, arg)\
+{\
+    register int actEnt;\
+    register int actSt;\
+    register int actSy;\
+    actSt = st - StateMin;\
+    actSy = sy - TermMin;\
+    if (act.actCheck[act.actRix[actSt] + actSy] == actSt)\
+    actEnt = act.act[act.actRix[actSt] + actSy];\
+    else actEnt = ERROR_ACT;\
+    *action = actEnt & 0x7;\
+    *arg = actEnt >> 3;\
+}/*actTbl()*/
+
+
+/*----------------------------------------------------------------------------
+ * gtoTbl - Do a look-up in the goto table
+ *----------------------------------------------------------------------------
+ */
+#define gtoTbl(st, sy, action, arg)\
+{\
+    register int gtoEnt;\
+    register int gtoSt;\
+    register int gtoSy;\
+    gtoSt = st - StateMin;\
+    gtoSy = sy - Terms - 1;\
+    gtoEnt = gto.gto[gto.gtoRix[gtoSt] + gtoSy];\
+    *action = gtoEnt & 0x7;\
+    *arg = gtoEnt >> 3;\
+}/*gtoTbl()*/
+
+
+/*----------------------------------------------------------------------------
+ * E R R O R   R E C O V E R Y
+ * ---------------------------
+ *
+ * The error recovery algorithm tries to modify current configuration in such
+ * a way that parsing can be resumed correctly. Current configuration is
+ * characterized by:
+ *
+ * w = x t y, where  x = parsed input
+ *           t = current token
+ *           y = unprocessed input
+ *----------------------------------------------------------------------------
+ */
+
+typedef struct {
+    TmToken err_tok;
+    TmToken res_tok;
+    short method;
+    short eClass;
+    short severity;
+} ERR_REC;
+
+static ERR_REC errdescr;
+
+
+/*----------------------------------------------------------------------------
+ * ePush - Push a state during error recovery
+ *----------------------------------------------------------------------------
+ */
+static void ePush(
+UByte1 state,			/* IN state to push */
+UByte1 stack[],			/* INOUT parser stack */
+short *sp			/* INOUT current stack pointer */
+)
+{
+    if (++(*sp) < PmStkMax) stack[*sp] = state;
+    else paAbort(&errdescr.err_tok, OFLW_ERR, SYS_SEV);
+}/*ePush()*/
+
+
+/*----------------------------------------------------------------------------
+ * legalAct - Check if a symbol is legal to shift in current state
+ *----------------------------------------------------------------------------
+ */
+static PmBoolean legalAct(
+UByte1 stack[],			/* IN current stack */
+short stack_p,			/* IN current stack pointer */
+UByte1 sym			/* IN symbol code */
+)				/* RET true if "symbol" is read (shifted) */
+                /*     in current state */
+{
+    UByte1 state;		/* Current state */
+    UByte1 action;		/* Current parser action */
+    UByte1 arg;			/* Current parser argument */
+
+    ParseStack t_stk;		/* Temporary parser stack */
+    int i;			/* For loop index */
+
+    /* Copy stack
+     */
+    for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i];
+
+    state = stack[stack_p];
+
+    for (;;) {
+    actTbl(state, sym, &action, &arg);
+    switch (action) {
+
+    case ERROR_ACT:
+        return(PMFALSE);
+
+    case SHIFT_ACT:
+    case SHIFTRED_ACT:
+    case ACCEPT_ACT:
+        return(PMTRUE);
+
+    case REDUCE_ACT:
+        do {
+        stack_p = stack_p - gto.rhsz[arg - ProdMin];
+        gtoTbl(t_stk[stack_p], gto.lhs[arg - ProdMin], &action, &arg);
+        ePush(state, t_stk, &stack_p);
+        } while (action != SHIFT_ACT);
+        state = arg; t_stk[stack_p] = state;
+        break;
+
+    }/*switch*/
+    }/*for*/
+}/*legalAct()*/
+
+
+/*----------------------------------------------------------------------------
+ * gLegSym - Get legal symbols
+ *----------------------------------------------------------------------------
+ */
+static void gLegSym(
+ParseStack stack,		/* IN current stack */
+short stack_p,			/* IN current stack pointer */
+TermSet legals			/* OUT legal symbols in current state */
+)
+{
+    short sym;			/* Loop index */
+
+    SetClear(legals, Terms + 1);
+    for (sym = 1; sym <= Terms; sym++) {
+    if (legalAct(stack, stack_p, sym)) SetIns(legals, sym);
+    }/*for*/
+}/*gLegSym()*/
+
+
+/*----------------------------------------------------------------------------
+ * backup - Backup the parse stack until current symbol is accepted (shifted)
+ *      or the parse stack becomes empty
+ *----------------------------------------------------------------------------
+ */
+static short backup(
+ParseStack stack,		/* IN current stack */
+short stack_p,			/* IN current stack pointer */
+UByte1 sym	/* IN recovery symbol */
+)				/* RET new stack pointer, 0 if symbol is */
+                /*     not accepted */
+{
+    while ((stack_p > 0) && (!legalAct(stack, stack_p, sym))) stack_p--;
+    return(stack_p);
+}/*backup()*/
+
+
+/*----------------------------------------------------------------------------
+ * delSym - Delete a symbol in the input stream
+ *----------------------------------------------------------------------------
+ */
+static void delSym(
+TmToken *token			/* INOUT symbol to delete, new symbol */
+)
+{
+    short  t;
+
+    t = token->code - TermMin;
+    token->code = voc[t].scc;
+    skipcodeDSym(token, voc[t].name, voc[t].psym);
+{
+    if (la_ptr < la_end) {
+    la_ptr++;
+    *token = la_buff[la_ptr];
+    } else {
+    do {
+        skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else token->code = scIndex[token->code];
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }
+    } while (token->code == ERR_SYM);
+    }
+}
+    if (errdescr.method == IN_REC) errdescr.method = REP_REC;
+    else if (errdescr.method != REP_REC) errdescr.method = DEL_REC;
+}/*delSym()*/
+
+
+/*----------------------------------------------------------------------------
+ * inSym - Insert a symbol in the input stream
+ *----------------------------------------------------------------------------
+ */
+static void inSym(
+short isym,			/* IN symbol code to insert */
+TmToken *gen_symb		/* OUT created symbol */
+)
+{
+    skipcodeISym(voc[isym - TermMin].scc, voc[isym - TermMin].name,
+       voc[isym - TermMin].psym, gen_symb);
+    if (errdescr.method == DEL_REC) errdescr.method = REP_REC;
+    else if (errdescr.method != REP_REC) errdescr.method = IN_REC;
+
+    gen_symb->code = isym;
+}/*inSym()*/
+
+
+/*----------------------------------------------------------------------------
+ * M U L T I P L E   R E C O V E R Y
+ * ---------------------------------
+ *
+ * The multiple symbols recovery technique is a "true local corrector", i.e.
+ * it will always return a legal configuration for any input. Logically the
+ * algorithm can be described as follows:
+ *
+ * 1) Roerich method (Karlsruhe):
+ *    a. Find a continuation "u" of "x", such that "xu" is accepted.
+ *    b. De composite "ty" into "qsy'", where q is a string.
+ *    c. Delete "q".
+ *    d. Insert u' (a prefix of u) between "x" and "sy'" giving xu' s y'.
+ *
+ * 2) Panic mode:
+ *    If "q" contains a fiducial symbol "a"  then:
+ *    a. Pop stack until "a" is accepted.
+ *    b. If not succeeded resume at step 1.
+ *----------------------------------------------------------------------------
+ */
+
+typedef struct {
+    UByte1 r_state;		/* Recovery state */
+    PmBoolean r_sepa;		/* Insert separator? */
+    UByte1 r_sstat;		/* Where to insert separator */
+} REC_POI;
+
+
+/*----------------------------------------------------------------------------
+ * acceptbl - Check whether "symbol" is reachable from current state using
+ *        the continuation grammar.
+ *----------------------------------------------------------------------------
+ */
+static void acceptbl(
+UByte1 sym,			/* IN terminal symbol code */
+ParseStack stack,		/* IN parse stack */
+short stack_p,			/* IN stack pointer */
+TmToken *token,			/* IN current token */
+PmBoolean *found,		/* OUT "symbol" accepted? */
+REC_POI *point			/* OUT recovery point description */
+)
+{
+    PmBoolean done;		/* Terminator flag */
+    UByte1 state;		/* Current state */
+    UByte1 action;		/* Parser action */
+    UByte1 sep_act;		/* Parser action separator test */
+    UByte1 arg;			/* Parser prod/state */
+    UByte1 sep_arg;		/* Parser prod/state separator test */
+    PmBoolean sepa_acc;		/* Separator is accepted? */
+    ParseStack t_stk;		/* Temporary parser stack */
+    short i;			/* Copy loop index */
+
+    for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i];
+
+    state = t_stk[stack_p];
+    done = PMFALSE;
+
+    while (!done) {
+    actTbl(state, sym, &action, &arg);
+    if (legalAct(t_stk, stack_p, sym)) {
+        /* Symbol is directly accepted */
+        done = PMTRUE;
+        *found = PMTRUE;
+        point->r_state = state;
+    } else {
+        /* Use the continuation grammar */
+        actTbl(state, act.recover.cont[state - StateMin].tsym, &action,
+           &arg);
+        actTbl(state, act.recover.cont[state - StateMin].ssym, &sep_act,
+           &sep_arg);
+        if ((action != sep_act) || (arg != sep_arg)) {
+        /* A separator is legal. Check if current symbol is accepted
+         * behind the separator
+         */
+            ParseStack stk;	/* Temporary stack */
+            short sp;	/* Temporary stack pointer */
+
+        sp = stack_p;
+        for (i = 0; i <= stack_p; i++) stk[i] = t_stk[i];
+        sepa_acc = PMFALSE;
+
+        while (!sepa_acc) {
+          actTbl(stk[sp], act.recover.cont[state - StateMin].ssym,
+             &sep_act, &sep_arg);
+            switch (sep_act) {
+
+            case ERROR_ACT:
+            case ACCEPT_ACT:
+            sepa_acc = PMTRUE;
+            break;
+
+            case SHIFT_ACT:
+            sepa_acc = PMTRUE;
+            ePush(sep_arg, stk, &sp);
+            break;
+
+            case SHIFTRED_ACT:
+            ePush(1, stk, &sp);
+            sepa_acc = PMTRUE;
+            goto reduce;
+
+            case REDUCE_ACT:
+              reduce:
+            do {
+                sp -= gto.rhsz[sep_arg-ProdMin];
+                gtoTbl(stk[sp], gto.lhs[sep_arg-ProdMin], &sep_act,
+                   &sep_arg);
+                ePush(1, stk, &sp);
+            } while (sep_act != SHIFT_ACT);
+
+            stk[sp] = sep_arg;
+            break;
+            }/*switch*/
+        }/*while*/
+
+        if ((sep_act == SHIFT_ACT) || (sep_act == SHIFTRED_ACT)) {
+            if (legalAct(stk, sp, sym)) {
+            /* Separator is to be inserted */
+            point->r_state = stk[sp];
+            point->r_sepa = PMTRUE;
+            point->r_sstat = state;
+            done = PMTRUE;
+            *found = PMTRUE;
+            }/*if*/
+        }/*if*/
+        }/*if*/
+
+        if (!*found) {
+        switch (action) {
+
+        case ERROR_ACT:
+            paAbort(token, TAB_ERR, SYS_SEV);
+            break;
+
+        case ACCEPT_ACT:
+            done = PMTRUE;
+            break;
+
+        case SHIFT_ACT:
+            state = arg;
+            ePush(state, t_stk, &stack_p);
+            break;
+
+        case SHIFTRED_ACT:
+            ePush(state, t_stk, &stack_p);
+            goto reduce2;
+
+        case REDUCE_ACT:
+          reduce2:
+            do {
+            stack_p -= gto.rhsz[arg-ProdMin];
+            gtoTbl(t_stk[stack_p], gto.lhs[arg-ProdMin], &action,
+                   &arg);
+            ePush(state, t_stk, &stack_p);
+            } while (action != SHIFT_ACT);
+
+            state = arg;
+            t_stk[stack_p] = state;
+            break;
+
+        }/*switch*/
+        }/*if*/
+    }/*if*/
+    }/*while*/
+}/*acceptbl()*/
+
+
+/*----------------------------------------------------------------------------
+ * search - Search recovery point
+ *----------------------------------------------------------------------------
+ */
+static void search(
+ParseStack stack,		/* IN current stack */
+short *stack_p,			/* INOUT current stack pointer */
+TmToken *token,			/* INOUT current symbol */
+REC_POI *point			/* OUT descriptor of where to restart */
+                /*     the parser */
+)
+{
+    UByte1 state;		/* Current state */
+    PmBoolean rp_found;		/* Recovery point found? */
+    short new_stkp;		/* Temp stack pointer */
+
+    state = stack[*stack_p];
+    point->r_state = state;
+    point->r_sepa = PMFALSE;
+    point->r_sstat = 1;
+    rp_found = PMFALSE;
+
+    do {
+    if (!SetMem(act.recover.skip, token->code)) {
+        acceptbl(token->code, stack, *stack_p, token, &rp_found, point);
+    }/*if*/
+
+    if (!rp_found) {
+        new_stkp = 0;
+        if (SetMem(act.recover.fiduc, token->code)) {
+        new_stkp = backup(stack, *stack_p, token->code);
+        }/*if*/
+        if (new_stkp > 0) {
+        rp_found = PMTRUE;
+        *stack_p = new_stkp;
+        point->r_state = stack[*stack_p];
+        errdescr.method = BAK_REC;
+        } else
+            delSym(token);
+    }/*if*/
+    } while (!rp_found);
+}/*search()*/
+
+
+/*----------------------------------------------------------------------------
+ * reach - Use the continuation functions and insert symbols upto curr token.
+ *----------------------------------------------------------------------------
+ */
+static void reach(
+ParseStack stack,		/* INOUT current stack */
+short *stack_p,			/* INOUT current stack pointer */
+TmToken *token,			/* INOUT current symbol */
+REC_POI *point			/* IN recovery point descriptor */
+)
+{
+    UByte1 state;		/* Current state */
+    UByte1 cont_sym;		/* Continuation symbol */
+    TmToken gen_symb;		/* Generated symbol */
+    UByte1 action;		/* Current parser action */
+    UByte1 arg;			/* Current prod/state */
+    PmBoolean sepaAccept;	/* Separator accepted yet? */
+    PmBoolean useSepa;		/* Use the separator now? */
+
+    state = stack[*stack_p];
+    gen_symb = *token;
+    useSepa = PMFALSE;
+    while (state != point->r_state) {
+    if (point->r_sepa)
+        if (state == point->r_sstat) {
+        /* Separator state reached, remember to use separator */
+        cont_sym = act.recover.cont[state-StateMin].ssym;
+        useSepa = PMTRUE;
+        } else cont_sym = act.recover.cont[state-StateMin].tsym;
+    else cont_sym = act.recover.cont[state-StateMin].tsym;
+    sepaAccept = PMFALSE;
+
+    do {
+      actTbl(state, cont_sym, &action, &arg);
+      switch (action) {
+
+      case ERROR_ACT:
+        paAbort(token, TAB_ERR, SYS_SEV);
+        break;
+
+      case ACCEPT_ACT:
+        break;
+
+      case SHIFT_ACT:
+        sepaAccept = PMTRUE;
+        state = arg;
+        inSym(cont_sym, &gen_symb);
+        ePush(state, stack, stack_p);
+        skipcodeSySt[*stack_p] = gen_symb;
+        break;
+
+      case SHIFTRED_ACT:
+        sepaAccept = PMTRUE;
+        inSym(cont_sym, &gen_symb);
+        ePush(state, stack, stack_p);
+        skipcodeSySt[*stack_p] = gen_symb;
+        goto reduce;
+
+      case REDUCE_ACT:
+        reduce:
+        do {
+        *stack_p = *stack_p - gto.rhsz[arg-ProdMin];
+        skipcodePaSema(arg);
+        gtoTbl(stack[*stack_p], gto.lhs[arg-ProdMin], &action, &arg);
+        ePush(state, stack, stack_p);
+        } while (action != SHIFT_ACT);
+        state = arg;
+        stack[*stack_p] = state;
+      }/*switch*/
+    } while (useSepa && !sepaAccept);
+    }/*while*/
+}/*reach()*/
+
+
+/*----------------------------------------------------------------------------
+ * global - Global error recovery
+ *----------------------------------------------------------------------------
+ */
+static void multiple(
+ParseStack err_stk,		/* INOUT current parse stack */
+short *err_stkp,		/* INOUT current stack pointer */
+TmToken *err_tok,		/* INOUT current token */
+UByte1 *newstat		/* OUT state after recovery */
+)
+{
+    REC_POI  point;		/* Recovery point descriptor */
+
+    search(err_stk, err_stkp, err_tok, &point);
+    reach(err_stk, err_stkp, err_tok, &point);
+    *newstat = err_stk[*err_stkp];
+}/*multiple()*/
+
+
+/*----------------------------------------------------------------------------
+ * S I N G L E   R E C O V E R Y
+ * -----------------------------
+ *
+ * The single recovery technique tries to REPAIR the error by finding the
+ * least cost single symbol correction. One single symbol of:
+ * - insertion
+ * - deletion
+ * - replacement
+ * is concidered. The cost of the repair is the sum of the ADAPTION cost and
+ * the MODIFICATION cost. The adaption cost indicates how well a correction
+ * fits in the context. The modification cost is based on the
+ * insertion/deletion cost given in the input. A correction is applied if
+ * the cost is below a predefined threshold value.
+ *----------------------------------------------------------------------------
+ */
+
+#define ShiftCost (PmCost)	/* The cost of shifting one symbol */
+#define InfCost (ShiftCost * (PmLaMax)) /* Infinity */
+#define Thresh (((PmLaMax) - 3) * ShiftCost) /* Acceptance cost */
+
+
+/*----------------------------------------------------------------------------
+ * readLa - Read tokens to the look-ahead buffer
+ *----------------------------------------------------------------------------
+ */
+static void readLa(
+TmToken *curtok			/* IN current token */
+)
+{
+    int i;
+    TmToken tokbuf;
+    TmToken *token = &tokbuf;
+
+    la_buff[0] = *curtok;
+    *token = *curtok;
+    for (i = la_ptr + 1; i <= la_end; i++) {
+    /* Move old look_ahead to the beginning of the buffer */
+    la_buff[i - la_ptr] = la_buff[i];
+    }/*for*/
+    la_end = la_end - la_ptr;
+    la_ptr = -1;
+
+    while ((la_buff[la_end].code != ENDMARK) && (la_end < PmLaMax)) {
+    la_end++;
+    do {
+            skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else {
+        token->code = scIndex[token->code];
+        }/*if*/
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }/*if*/
+    } while (token->code == ERR_SYM);
+    la_buff[la_end] = *token;
+    }/*while*/
+}/*readLa()*/
+
+
+/*----------------------------------------------------------------------------
+ * rdLaSym - Fetches the i:th look-ahead symbol code from the look-ahead set
+ *----------------------------------------------------------------------------
+ */
+static UByte1 rdLaSym(
+char index			/* IN i:th look-ahead symbol */
+)				/* RET token code */
+{
+    if (index > la_end) return(ENDMARK);
+    else return(la_buff[(int)index].code);
+}/*rdLaSym()*/
+
+
+/*----------------------------------------------------------------------------
+ * laParse - Continue the parsing process by reading tokens from the
+ *       look-ahead set. The parse is terminated when:
+ *       - out of read ahead
+ *       - a new error is encountered
+ *       Note! No semantic actions are carried out
+ *----------------------------------------------------------------------------
+ */
+static void laParse(
+UByte1 sym,			/* IN current terminal symbol */
+char next_la,			/* IN index to next look-ahead symbol */
+ParseStack stack,		/* IN parse stack */
+short stack_p,			/* IN current stack pointer */
+short *cost			/* OUT adaption cost */
+)
+{
+    PmBoolean done ;		/* Terminator flag */
+    char sh_cnt;		/* Number of shifted symbols */
+    UByte1 state;		/* Current state number */
+    UByte1 action;		/* Parser action */
+    UByte1 arg;      /* Parser argument */
+    short i;			/* Loop index */
+    ParseStack t_stk;		/* Temporary stack */
+
+    /* Copy stack
+     */
+    for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i];
+
+    done = PMFALSE;
+    sh_cnt = 0;
+    state = t_stk[stack_p];
+
+    while (!done) {
+    actTbl(state, sym, &action, &arg);
+
+    switch (action) {
+
+    case ERROR_ACT:
+        done = PMTRUE;
+        break;
+
+    case SHIFT_ACT:
+        state = arg;
+        ePush(state, t_stk, &stack_p);
+        sh_cnt++;
+        if (sh_cnt == PmLaMax) done = PMTRUE;
+        else {
+        sym = rdLaSym(next_la);
+        next_la++;
+        }/*if*/
+        break;
+
+    case SHIFTRED_ACT:
+        ePush(state, t_stk, &stack_p);
+        sh_cnt++;
+        if (sh_cnt == PmLaMax) done = PMTRUE;
+        else {
+        sym = rdLaSym(next_la);
+        if (next_la < PmLaMax) next_la++;
+        }/*if*/
+        goto reduce;
+
+    case REDUCE_ACT:
+      reduce:
+        do {
+        stack_p -= gto.rhsz[arg-ProdMin];
+        gtoTbl(t_stk[stack_p], gto.lhs[arg-ProdMin], &action, &arg);
+        ePush(state, t_stk, &stack_p);
+        } while (action != SHIFT_ACT);
+
+        state = arg;
+        t_stk[stack_p] = state;
+        break;
+
+    case ACCEPT_ACT:
+        done = PMTRUE;
+        sh_cnt = PmLaMax;
+        break;
+
+    }/*switch*/
+    }/*while*/
+
+    *cost = InfCost - (sh_cnt*ShiftCost);
+}/*laParse()*/
+
+
+/*----------------------------------------------------------------------------
+ * tryIn - Tries to insert a symbol from the legal set in front of current
+ *	   token: x t y  => x st y, where s becomes current symbol
+ *----------------------------------------------------------------------------
+ */
+static void tryIn(
+TermSet legals,			/* IN set of legal symbols */
+ParseStack stack,		/* IN current parser stack */
+short stack_p,			/* IN current stack pointer */
+UByte1 *sym,			/* OUT best insertion symbol */
+short *cost,			/* OUT best cost so far */
+short *choice			/* OUT best choice so far */
+)
+{
+    short i;
+    short mod_cost;		/* Modification cost */
+    short ad_cost;		/* Adaption cost */
+    short tot_cost;		/* Total insertion cost */
+
+    for (i = 1; i <= Terms; i++) {
+    /* For all legal symbols
+     */
+    if (SetMem(legals, i)) {
+        mod_cost = voc[i - TermMin].iCost;
+        if (mod_cost < *cost) {
+        laParse(i, 0, stack, stack_p, &ad_cost);
+        tot_cost = ad_cost + mod_cost;
+        if (tot_cost < *cost) {
+            *cost = tot_cost;
+            *choice = IN_REC;
+            *sym = (UByte1)i;
+        }/*if*/
+        }/*if*/
+    }/*if*/
+    }/*for*/
+}/*tryIn()*/
+
+
+/*----------------------------------------------------------------------------
+ * tryRep - Tries to replace currrent symbol with a new terminal:
+ *      x t y  => x s y, where s becomes current symbol
+ *----------------------------------------------------------------------------
+ */
+static void tryRep(
+TermSet legals,			/* IN set of legal symbols */
+ParseStack stack,		/* IN current parser stack */
+short stack_p,			/* IN current stack pointer */
+UByte1 *sym,			/* OUT best replacement symbol */
+short *cost,			/* OUT best cost so far */
+short *choice			/* OUT best choice so far */
+)
+{
+    short i;
+    short mod_cost;		/* Modification cost */
+    short ad_cost;		/* Adaption cost */
+    short tot_cost;		/* Total replacment cost */
+
+    for (i = 1; i <= Terms; i++) {
+    /* For all legal symbols
+     */
+    if (SetMem(legals, i)) {
+        mod_cost = (short) (voc[i-TermMin].iCost +
+            voc[rdLaSym(0)-TermMin].dCost) / 2 + 1;
+        if (mod_cost < *cost) {
+        laParse(i, 1, stack, stack_p, &ad_cost);
+        tot_cost = ad_cost + mod_cost;
+        if (tot_cost < *cost) {
+            *cost = tot_cost;
+            *choice = REP_REC;
+            *sym = (UByte1)i;
+        }/*if*/
+        }/*if*/
+    }/*if*/
+    }/*for*/
+}/*tryRep()*/
+
+
+/*----------------------------------------------------------------------------
+ * tryDel - Tries to delete current symbol: x t y  => x y
+ *----------------------------------------------------------------------------
+ */
+static void tryDel(
+ParseStack stack,		/* IN current parser stack */
+short stack_p,			/* IN current stack pointer */
+short *cost,			/* INOUT best cost so far */
+short *choice			/* INOUT best choice so far */
+)
+{
+    short mod_cost;		/* Modification cost */
+    short ad_cost;          /* Adaption cost */
+    short tot_cost;		/* Total deletion cost */
+
+    mod_cost = voc[rdLaSym(0) - TermMin].dCost;
+    if (mod_cost < *cost) {
+    laParse(rdLaSym(1), 2, stack, stack_p, &ad_cost);
+    tot_cost = ad_cost + mod_cost;
+    if (tot_cost < *cost) {
+        *cost = tot_cost;
+        *choice = DEL_REC;
+    }/*if*/
+    }/*if*/
+}/*tryDel()*/
+
+
+/*----------------------------------------------------------------------------
+ * _pmInsert
+ *----------------------------------------------------------------------------
+ */
+static void _pmInsert(
+UByte1 sym,			/* IN symbol code to insert */
+TmToken *token			/* OUT constructed token */
+)
+{
+    inSym(sym, token);
+}/*_pmInsert()*/
+
+
+/*----------------------------------------------------------------------------
+ * _pmReplace
+ *----------------------------------------------------------------------------
+ */
+static void _pmReplace(
+UByte1 sym,			/* IN replacement symbol code */
+TmToken *token			/* OUT constructed token */
+)
+{
+    delSym(token);
+    inSym(sym, token);
+}/*_pmReplace()*/
+
+
+/*----------------------------------------------------------------------------
+ * _pmDelete
+ *----------------------------------------------------------------------------
+ */
+
+static void _pmDelete(
+TmToken *token			/* OUT new token */
+)
+{
+{
+    if (la_ptr < la_end) {
+    la_ptr++;
+    *token = la_buff[la_ptr];
+    } else {
+    do {
+        skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else token->code = scIndex[token->code];
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }
+    } while (token->code == ERR_SYM);
+    }
+}
+    delSym(token);
+}/*_pmDelete()*/
+
+
+/*----------------------------------------------------------------------------
+ * single - Single error recovery
+ *----------------------------------------------------------------------------
+ */
+static void single(
+TermSet leg_sys,		/* IN legal symbols in current state */
+ParseStack err_stk,		/* INOUT current parser stack */
+short *err_stkp,		/* INOUT current stack pointer */
+TmToken *token,		/* INOUT current token */
+UByte1 *newstat		/* OUT recovery state */
+)
+{
+    short choice;		/* Recovery action performed */
+    short cost;			/* Best cost so far */
+    UByte1 sym;			/* Insert symbol */
+
+    choice = NONE_REC;
+    cost = InfCost;
+    readLa(token);
+
+    tryIn(leg_sys, err_stk, *err_stkp, &sym, &cost, &choice);
+    tryRep(leg_sys, err_stk, *err_stkp, &sym, &cost, &choice);
+    tryDel(err_stk, *err_stkp, &cost, &choice);
+
+    if (cost > Thresh) choice = NONE_REC;
+
+    switch (choice) {
+
+    case IN_REC:
+    _pmInsert(sym, token);
+    break;
+
+    case DEL_REC:
+    _pmDelete(token);
+    break;
+
+    case REP_REC:
+    _pmReplace(sym, token);
+    break;
+
+    default:
+{
+    if (la_ptr < la_end) {
+    la_ptr++;
+    *token = la_buff[la_ptr];
+    } else {
+    do {
+        skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else token->code = scIndex[token->code];
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }
+    } while (token->code == ERR_SYM);
+    }
+}
+    }/*switch*/
+
+    *newstat = err_stk[*err_stkp];
+}/*single()*/
+
+
+
+/*----------------------------------------------------------------------------
+ * recover - From an error
+ *----------------------------------------------------------------------------
+ */
+static void recover(
+ParseStack err_stk,		/* INOUT updated parse stack */
+short *err_stkp,		/* INOUT updated stack pointer */
+TmToken *err_symb,		/* INOUT current token */
+UByte1 *rec_stat		/* OUT state after recovery */
+)
+{
+    TermSet legal_sy;		/* Legal symbols */
+
+    errdescr.err_tok = *err_symb;
+    errdescr.err_tok.code = voc[errdescr.err_tok.code - TermMin].scc;
+    errdescr.method = NONE_REC;
+    errdescr.eClass = SYN_ERR;
+    errdescr.severity = ERR_SEV;
+    gLegSym(err_stk, *err_stkp, legal_sy);
+    single(legal_sy, err_stk, err_stkp, err_symb, rec_stat);
+    if (errdescr.method == NONE_REC) {
+    multiple(err_stk, err_stkp, err_symb, rec_stat);
+    skipcodeMess(&errdescr.err_tok, errdescr.method, errdescr.eClass,
+           errdescr.severity);
+    } else {
+    skipcodeMess(&errdescr.err_tok, errdescr.method, SYN_ERR, errdescr.severity);
+    }/*if*/
+    errdescr.res_tok = *err_symb;
+    errdescr.res_tok.code = voc[errdescr.res_tok.code - TermMin].scc;
+    skipcodeRPoi(&errdescr.res_tok);
+}/*recover()*/
+
+
+/*----------------------------------------------------------------------------
+ * skipcodeParse - Parser routine, entry point
+ *----------------------------------------------------------------------------
+ */
+void skipcodeParse(void)
+{
+    paInit();
+{
+    if (la_ptr < la_end) {
+    la_ptr++;
+    *token = la_buff[la_ptr];
+    } else {
+    do {
+        skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else token->code = scIndex[token->code];
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }
+    } while (token->code == ERR_SYM);
+    }
+}
+    pushStatTok()
+    if (setjmp(pmJmpB)) return;
+
+    while (!endparse) {
+    actTbl(currstat, token->code, &action, &arg);
+
+    switch (action) {
+
+    case ERROR_ACT:
+        recover(parsStk, &skipcodeStkP, token, &currstat);
+        if (skipcodeStkP == 0) endparse = PMTRUE;
+        break;
+
+    case SHIFT_ACT:
+        currstat = arg;
+        pushStatTok();
+{
+    if (la_ptr < la_end) {
+    la_ptr++;
+    *token = la_buff[la_ptr];
+    } else {
+    do {
+        skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else token->code = scIndex[token->code];
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }
+    } while (token->code == ERR_SYM);
+    }
+}
+        break;
+
+    case SHIFTRED_ACT:
+        pushStatTok();
+{
+    if (la_ptr < la_end) {
+    la_ptr++;
+    *token = la_buff[la_ptr];
+    } else {
+    do {
+        skipcodeScan(lexContext, token);
+        if (token->code > SccMax || token->code < 0) {
+        token->code = ERR_SYM;
+        } else token->code = scIndex[token->code];
+        if (token->code == ERR_SYM) {
+        skipcodeMess(token, DEL_REC, LEX_ERR, FAT_SEV);
+        }
+    } while (token->code == ERR_SYM);
+    }
+}
+        goto reduce;
+
+    case REDUCE_ACT:
+      reduce:
+        do {
+        skipcodeStkP -= gto.rhsz[arg - ProdMin];
+        skipcodePaSema(arg);
+        gtoTbl(parsStk[skipcodeStkP], gto.lhs[arg - ProdMin], &action, &arg);
+        pushStat();
+        } while (action != SHIFT_ACT);
+
+        currstat = arg;
+        parsStk[skipcodeStkP] = currstat;
+        break;
+
+    case ACCEPT_ACT:
+        endparse = PMTRUE;
+        break;
+    }/*switch*/
+    }/*while*/
+}/*skipcodeParse()*/
+
+
+==> skipcodeParse.h <==
+#ifndef _skipcodeParse_h_
+#define _skipcodeParse_h_
+/*----------------------------------------------------------------------*\
+
+  skipcodeParse.h
+
+  Parser interface
+
+\*----------------------------------------------------------------------*/
+
+
+/* Token and Srcp definition */
+#include "skipcodeCommon.h"
+
+/* External functions */
+extern void skipcodeParse(void); /* Parser */
+
+/* Export */
+
+/* Semantic attribute interface */
+
+/* Internal node type */
+typedef struct Node {
+    char *string;
+    int value;
+    struct Node *next;
+} Node;
+
+
+#endif
