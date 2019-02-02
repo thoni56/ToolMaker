@@ -349,7 +349,7 @@ A T T R I B U T E S
 /* .tmk-import */
 typedef int TmNatural;
 %%END(tmkImport)
-%%SET tmkForce(0)
+%%SET tmkForce(1)
 %%SET tmkOs("SunOS")
 %%SET pmkOs("SunOS")
 %%SET currentOs("cygwin")
