@@ -10,8 +10,8 @@
 -----------------------------------------------------------------------------
 %%OPTIONS
 
-	Library '..';
-	Generate Tables, Source;
+    Library '../..';
+    Generate Tables, Source;
 
 %%IMPORT
 #include "lmk_i.h"
@@ -84,21 +84,21 @@ messages_section
         %%{
           MessSectNodeP p = (MessSectNodeP) malloc(sizeof(MessSectNode));
           p->name = %messages_header.sval;
-	  p->messCnt = messCnt;
+      p->messCnt = messCnt;
           p->messages = %message_lines.mline;
           p->next = NULL;
           if (!newMessSect(p))
-	    lmkLog(%messages_header.srcp, 200, sevERR, p->name);
+        lmkLog(%messages_header.srcp, 200, sevERR, p->name);
         }%%
     ;
 
 messages_header
     = '%%MESSAGES' IDENTIFIER
-	%%{
-	  messCnt = 0;
-	  %messages_header.sval = %IDENTIFIER.sval;
-	  %messages_header.srcp = %IDENTIFIER.srcp;
-	}%%
+    %%{
+      messCnt = 0;
+      %messages_header.sval = %IDENTIFIER.sval;
+      %messages_header.srcp = %IDENTIFIER.srcp;
+    }%%
     ;
 
 message_lines
@@ -117,7 +117,7 @@ message_lines
             p->next = %message_line.mline;
             %message_lines.mline= %2message_lines.mline;
           }
-	  messCnt++;
+      messCnt++;
         }%%
     ;
 

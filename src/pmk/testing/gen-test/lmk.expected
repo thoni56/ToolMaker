@@ -3,7 +3,7 @@
 %%OPTIONS
     Prefix 'lmk';
     Target 'c';
-    Library '../../../lib/c';
+    Library '../../../../lib/c';
 %%IMPORT
 #include "tmkCommon.h"
 %%END
@@ -45,8 +45,8 @@
 %%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
-%%SET tmkLibrary("../../../lib/c")
-%%SET pmkLibrary("..")
+%%SET tmkLibrary("../../../../lib/c")
+%%SET pmkLibrary("../..")
 %%SET tmkPrefix("lmk")
 %%SET parserPrefix("lmk")
 %%SET listerPrefix("lmk")
@@ -180,18 +180,18 @@ static MessSectNodeP newMessSect(msNode)
 {
           MessSectNodeP p = (MessSectNodeP) malloc(sizeof(MessSectNode));
           p->name = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval;
-	  p->messCnt = messCnt;
+      p->messCnt = messCnt;
           p->messages = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].mline;
           p->next = NULL;
           if (!newMessSect(p))
-	    lmkLog(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 200, sevERR, p->name);
+        lmkLog(%%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp, 200, sevERR, p->name);
         }	break;}
     case 8: { /* messages_header = '`%`%MESSAGES' IDENTIFIER; */
 {
-	  messCnt = 0;
-	  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].sval;
-	  %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
-	}	break;}
+      messCnt = 0;
+      %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].sval = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].sval;
+      %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].srcp = %%(parserPrefix)SySt[%%(parserPrefix)StkP+2].srcp;
+    }	break;}
     case 9: { /* message_lines =; */
 {
           %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].mline = NULL;
@@ -207,7 +207,7 @@ static MessSectNodeP newMessSect(msNode)
             p->next = %%(parserPrefix)SeSt[%%(parserPrefix)StkP+2].mline;
             %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].mline= %%(parserPrefix)SeSt[%%(parserPrefix)StkP+1].mline;
           }
-	  messCnt++;
+      messCnt++;
         }	break;}
     case 11: { /* message_line = NUMBER STRING ';'; */
 {
@@ -553,18 +553,18 @@ int rule;			/* IN production number */
 {
           MessSectNodeP p = (MessSectNodeP) malloc(sizeof(MessSectNode));
           p->name = lmkSeSt[lmkStkP+1].sval;
-	  p->messCnt = messCnt;
+      p->messCnt = messCnt;
           p->messages = lmkSeSt[lmkStkP+2].mline;
           p->next = NULL;
           if (!newMessSect(p))
-	    lmkLog(lmkSeSt[lmkStkP+1].srcp, 200, sevERR, p->name);
+        lmkLog(lmkSeSt[lmkStkP+1].srcp, 200, sevERR, p->name);
         }	break;}
     case 8: { /* messages_header = '%%MESSAGES' IDENTIFIER; */
 {
-	  messCnt = 0;
-	  lmkSeSt[lmkStkP+1].sval = lmkSySt[lmkStkP+2].sval;
-	  lmkSeSt[lmkStkP+1].srcp = lmkSySt[lmkStkP+2].srcp;
-	}	break;}
+      messCnt = 0;
+      lmkSeSt[lmkStkP+1].sval = lmkSySt[lmkStkP+2].sval;
+      lmkSeSt[lmkStkP+1].srcp = lmkSySt[lmkStkP+2].srcp;
+    }	break;}
     case 9: { /* message_lines =; */
 {
           lmkSeSt[lmkStkP+1].mline = NULL;
@@ -580,7 +580,7 @@ int rule;			/* IN production number */
             p->next = lmkSeSt[lmkStkP+2].mline;
             lmkSeSt[lmkStkP+1].mline= lmkSeSt[lmkStkP+1].mline;
           }
-	  messCnt++;
+      messCnt++;
         }	break;}
     case 11: { /* message_line = NUMBER STRING ';'; */
 {
