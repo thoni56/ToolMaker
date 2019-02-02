@@ -1,7 +1,7 @@
 %%OPTIONS
   Target 'c';
   Prefix 'imp';
-  Library '../../../lib/c';
+  Library '../../../../lib/c';
 %%END
 %%IMPORT
 /* .tmk-import */
