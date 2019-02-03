@@ -1,48 +1,29 @@
 ########## pmk ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii pmk.tst.win32 > pmk.tmp
-  alias cat dos2unix -ascii
-else
-  ../lmk pmk > pmk.tmp
-endif
-echo +++++ pmk.tmk +++++  >> pmk.tmp
-\cat pmk.tmk >> pmk.tmp
-echo +++++ pmk.lmt +++++ >> pmk.tmp
-cat pmk.lmt >> pmk.tmp
-echo +++++ pmkCommon.h +++++ >> pmk.tmp
-cat pmkCommon.h >> pmk.tmp
-echo +++++ pmkList.c +++++ >> pmk.tmp
-cat pmkList.c >> pmk.tmp
-echo +++++ pmkList.h +++++ >> pmk.tmp
-cat pmkList.h >> pmk.tmp
-\cat pmk.tmp
-\rm pmk.tmp
-########## /bin/csh -f pmk.tst UNIX ##########
-+++++ pmk.tmk +++++
+==> pmk.tmk <==
 %%OPTIONS
---	OS 'SunOS';
-	PREFIX 'pmk';
+    PREFIX 'pmk';
+    LIBRARY '../../../lib/ansi-c';
 %%IMPORT
 #include "tmkCommon.h"
 %%END
 %%TOKEN
-	NAME PmkToken;
-	CODE code   %% int %1%%;
-	SRCP srcp   %% TmkSrcp %1%%;
-	ATTRIBUTES
-	     sval   %% char *%1%%,
-	     ival   %% int %1%%,
-	     fpos   %% long %1%%,
-	     length %% long %1%%;
+    NAME PmkToken;
+    CODE code   %% int %1%%;
+    SRCP srcp   %% TmkSrcp %1%%;
+    ATTRIBUTES
+         sval   %% char *%1%%,
+         ival   %% int %1%%,
+         fpos   %% long %1%%,
+         length %% long %1%%;
 %%END
 %%SRCP
-	NAME TmkSrcp;
-	COLUMN col;
-	ROW    line;
-	FILE   file;
+    NAME TmkSrcp;
+    COLUMN col;
+    ROW    line;
+    FILE   file;
 %%END
-+++++ pmk.lmt +++++
+
+==> pmk.lmt <==
 %%SET lmkInclude(Off)
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Multiple)
@@ -52,8 +33,8 @@ cat pmkList.h >> pmk.tmp
 %%SET lmkTarget("ansi-c")
 %%SET tmkOs("SunOS")
 %%SET lmkOs("SunOS")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET lmkLibrary("../")
+%%SET tmkLibrary("../../../lib/ansi-c")
+%%SET lmkLibrary("..")
 %%SET tmkPrefix("pmk")
 %%SET lmkPrefix("pmk")
 %%SET lmkEscape("`")
@@ -236,7 +217,8 @@ cat pmkList.h >> pmk.tmp
 %%SET lmkMsg(, "Could not open vocabulary file \""%1\"".")
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(lmkLibrary)/List.imp")
-+++++ pmkCommon.h +++++
+
+==> pmkCommon.h <==
 #ifndef _pmkCommon_H_
 #define _pmkCommon_H_
 /* pmkCommon.h
@@ -270,7 +252,8 @@ typedef struct PmkToken {
 #endif
 
 
-+++++ pmkList.c +++++
+
+==> pmkList.c <==
 /*----------------------------------------------------------------------*\
 
 	ListerMaker
@@ -2027,7 +2010,8 @@ void pmkLiTerminate(
   phase = PH_NONE;
 }
 
-+++++ pmkList.h +++++
+
+==> pmkList.h <==
 #ifndef _pmkList_H_
 #define _pmkList_H_
 /*----------------------------------------------------------------------*\
