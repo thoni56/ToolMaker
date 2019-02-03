@@ -27,3 +27,13 @@ Although this would strictly be copyrighted material, but considering
 
 I'm making this repo of resurrected sources available, mostly for my
 own use. Please consult me before creating forks.
+
+== Current state
+
+All licensing is removed, but the source for the licensing mechanism
+is still here, but not cleaned or compiled recently. The same goes for
+the `toolmake` utility, which creates an initial set of files for your
+new ToolMaker-based project.
+
+Otherwise the source compiles on cygwin and all tests run (using
+Jregr).
