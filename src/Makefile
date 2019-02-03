@@ -29,5 +29,12 @@ test:
 	cd smk; make test
 	cd pmk; make test
 
+clean:
+	cd tmk; make clean
+	cd imp; make clean
+	cd lmk; make clean
+	cd smk; make clean
+	cd pmk; make clean
+
 arch:
 	@echo TMARCH=$(TMARCH)
