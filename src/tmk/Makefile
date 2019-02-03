@@ -26,6 +26,10 @@ OBJS=   $(OBJS.c)
 
 #--
 all debug: $(TMARCH)
+	if ! cmp ../../lib/ansi-c/Common.imp Common.imp >/dev/null 2>&1 ; then \
+	  mv ../../lib/ansi-c/Common.imp ../../lib/ansi-c/Common.imp.old ; \
+	  cp Common.imp ../../lib/ansi-c/ ; \
+	fi
 
 
 .PHONY: $(TMARCH)

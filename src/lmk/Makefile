@@ -33,13 +33,19 @@ OBJECTS = $(VERSIONOBJECTS) version.o
 
 #
 # Normal compilation
-all debug opt: checkARCH $(TMARCH)
-	cp lmk.exe ../../bin/
+all debug opt: lmkobj
+	if ! cmp ../../lib/ansi-c/List.imp List.imp >/dev/null 2>&1 ; then \
+	  mv ../../lib/ansi-c/List.imp ../../lib/ansi-c/List.imp.old ; \
+	  cp List.imp ../../lib/ansi-c/ ; \
+	fi
 
 test:
 	cd testing; jregr
 
 # Miscellaneous targets down here
+
+lmkobj : checkARCH $(TMARCH)
+	cp lmk ../../bin/
 
 cygwin mingw sun3 sun4 solaris1 solaris2: ../license/license.h ../imp/impMacro.h ../tmk/tmk.h ../tmk/tmkCommon.h $(OBJECTS) $(LIBS)
 	$(CC) -o lmk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS)
