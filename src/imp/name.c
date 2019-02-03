@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1991-09-05/tools@heffa
  * CREATED: 1991-08-23
- * 
+ *
  * SoftLab ab (c) 1991
  *
  * Insert Name into AVL-tree (but now linjear list)
@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #ifdef WIN32
 #include <io.h>
 #define lstat stat
@@ -73,11 +74,11 @@ static void replaceSymb(name, ast, symtab)
     node = (Name)malloc(sizeof(NameItem));
     if (!node) {
       if (!(impAstGarb() && (node = (Name)malloc(sizeof(NameItem)))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     }
     if (!(node->name = strdup(name)))
       if (!(impAstGarb() && (node->name = strdup(name))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     node->undef = FALSE;
     node->ast = ast;
     node->noElems = -1;
@@ -85,7 +86,7 @@ static void replaceSymb(name, ast, symtab)
     *symtab = node;
     return;
   }
-  
+
   cmpResult = strcmp(name, (*symtab)->name);
   if (cmpResult == 0) {
     (*symtab)->noElems = -1;
@@ -106,16 +107,16 @@ static void appendSymb(name, ast, symtab)
 {
   int cmpResult;
   Name node;
-  
+
   if (!*symtab) {
     node = (Name)malloc(sizeof(NameItem));
     if (!node) {
       if (!(impAstGarb() && (node = (Name)malloc(sizeof(NameItem)))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     }
     if (!(node->name = strdup(name)))
       if (!(impAstGarb() && (node->name = strdup(name))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     node->undef = FALSE;
     node->ast = ast;
     node->noElems = -1;
@@ -123,17 +124,17 @@ static void appendSymb(name, ast, symtab)
     *symtab = node;
     return;
   }
-  
+
   cmpResult = strcmp(name, (*symtab)->name);
   if (cmpResult == 0) {
     Ast tmp;
     if (ast) {
       (*symtab)->noElems = -1;
       if (!(*symtab)->undef) {
-	tmp = ast;
-	while (tmp->next)
-	  tmp = tmp->next;
-	tmp->next = (*symtab)->ast;
+    tmp = ast;
+    while (tmp->next)
+      tmp = tmp->next;
+    tmp->next = (*symtab)->ast;
       }
       (*symtab)->undef = FALSE;
       (*symtab)->ast = ast;
@@ -165,7 +166,7 @@ static void nulifySymtab(symtab)
 {
   if (!symtab)
     return;
-  
+
   nulifySymtab(symtab->left);
   nulifySymtab(symtab->right);
   symtab->undef = FALSE;
@@ -221,7 +222,7 @@ void impNameUndef(name)
      register char *name;
 {
   register Name node;
-  
+
   if ((localNames && (node = findSymb(name, localNames))) ||
       (node = findSymb(name, globNames))) {
     node->undef = TRUE;
@@ -292,42 +293,42 @@ ImpBoolean impNameGetIndexed(name, ast, idxNo)
       !node->undef) {
     if (idxNo == 0) {
       if (node->noElems != -1) {
-	str = impItoa(node->noElems);
-	*ast = impAstNode(nulSrcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(str), 
-			  str, NULL, NULL, NULL, NULL);
+    str = impItoa(node->noElems);
+    *ast = impAstNode(nulSrcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(str),
+              str, NULL, NULL, NULL, NULL);
       } else {
-	i = 0;
-	*ast = node->ast;
-	while (*ast) {
-	  i++;
-	  *ast = (*ast)->next;
-	}
-	if (!(node->noElems = i))
-	  srcp = nulSrcp;
-	else
-	  srcp = node->ast->srcp;
-	str = impItoa(i);
-	*ast = impAstNode(srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(str), str, 
-			  NULL, NULL, NULL, NULL);
+    i = 0;
+    *ast = node->ast;
+    while (*ast) {
+      i++;
+      *ast = (*ast)->next;
+    }
+    if (!(node->noElems = i))
+      srcp = nulSrcp;
+    else
+      srcp = node->ast->srcp;
+    str = impItoa(i);
+    *ast = impAstNode(srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(str), str,
+              NULL, NULL, NULL, NULL);
       }
     } else {
       if (node->noElems == -1) {
-	Ast tmp;
-	int j;
-	j = 0;
-	tmp = node->ast;
-	while (tmp) {
-	  j++;
-	  tmp = tmp->next;
-	}
-	node->noElems = j;
+    Ast tmp;
+    int j;
+    j = 0;
+    tmp = node->ast;
+    while (tmp) {
+      j++;
+      tmp = tmp->next;
+    }
+    node->noElems = j;
       }
       if (node->noElems+1-idxNo < 1)
-	/* Not enough elements in node */
-	return FALSE;
+    /* Not enough elements in node */
+    return FALSE;
       for (i = 1, *ast = node->ast; i < node->noElems+1-idxNo; i++, *ast = (*ast)->next)
-	if (!*ast)
-	  return FALSE;
+    if (!*ast)
+      return FALSE;
       tail = (*ast)->next;
       (*ast)->next = NULL;
       tmp = impCopyAst(*ast, TRUE);
@@ -374,34 +375,34 @@ static void insertRegion(name, params, locals, ast, regTab)
     node = (Region)malloc(sizeof(RegionItem));
     if (!node) {
       if (!(impAstGarb() && (node = (Region)malloc(sizeof(RegionItem)))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     }
     if (!(node->name = strdup(name)))
       if (!(impAstGarb() && (node->name = strdup(name))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     node->ast = ast;
     node->symtab = NULL;
     node->params = NULL;
     while (params) {
       symbol = (Name)malloc(sizeof(NameItem));
       if (!symbol) {
-	if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
+      longjmp(jmpEnv, 1);
       }
       if (!(symbol->name = strdup(params->txt)))
-	if (!(impAstGarb() && (symbol->name = strdup(params->txt))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol->name = strdup(params->txt))))
+      longjmp(jmpEnv, 1);
       symbol->ast = NULL;
       symbol->left = symbol->right = NULL;
       insertSymb(symbol, &node->symtab);
       par = (Plist)malloc(sizeof(PlistItem));
       if (!par) {
-	if (!(impAstGarb() && (par = (Plist)malloc(sizeof(PlistItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (par = (Plist)malloc(sizeof(PlistItem)))))
+      longjmp(jmpEnv, 1);
       }
       if (!(par->name = strdup(params->txt)))
-	if (!(impAstGarb() && (par->name = strdup(params->txt))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (par->name = strdup(params->txt))))
+      longjmp(jmpEnv, 1);
       par->next = node->params;
       node->params = par;
       params = params->next;
@@ -409,12 +410,12 @@ static void insertRegion(name, params, locals, ast, regTab)
     while (locals) {
       symbol = (Name)malloc(sizeof(NameItem));
       if (!symbol) {
-	if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
+      longjmp(jmpEnv, 1);
       }
       if (!(symbol->name = strdup(locals->txt)))
-	if (!(impAstGarb() && (symbol->name = strdup(locals->txt))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol->name = strdup(locals->txt))))
+      longjmp(jmpEnv, 1);
       symbol->ast = NULL;
       symbol->left = symbol->right = NULL;
       insertSymb(symbol, &node->symtab);
@@ -424,7 +425,7 @@ static void insertRegion(name, params, locals, ast, regTab)
     *regTab = node;
     return;
   }
-  
+
   if ((cmpResult = strcmp(name, (*regTab)->name)) == 0) {
     /* Region already exists, redefine it */
     if ((*regTab)->ast != ast) {
@@ -443,23 +444,23 @@ static void insertRegion(name, params, locals, ast, regTab)
     while (params) {
       symbol = (Name)malloc(sizeof(NameItem));
       if (!symbol) {
-	if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
+      longjmp(jmpEnv, 1);
       }
       if (!(symbol->name = strdup(params->txt)))
-	if (!(impAstGarb() && (symbol->name = strdup(params->txt))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol->name = strdup(params->txt))))
+      longjmp(jmpEnv, 1);
       symbol->ast = NULL;
       symbol->left = symbol->right = NULL;
       insertSymb(symbol, &(*regTab)->symtab);
       par = (Plist)malloc(sizeof(PlistItem));
       if (!par) {
-	if (!(impAstGarb() && (par = (Plist)malloc(sizeof(PlistItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (par = (Plist)malloc(sizeof(PlistItem)))))
+      longjmp(jmpEnv, 1);
       }
       if (!(par->name = strdup(params->txt)))
-	if (!(impAstGarb() && (par->name = strdup(params->txt))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (par->name = strdup(params->txt))))
+      longjmp(jmpEnv, 1);
       par->next = (*regTab)->params;
       (*regTab)->params = par;
       params = params->next;
@@ -467,12 +468,12 @@ static void insertRegion(name, params, locals, ast, regTab)
     while (locals) {
       symbol = (Name)malloc(sizeof(NameItem));
       if (!symbol) {
-	if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol = (Name)malloc(sizeof(NameItem)))))
+      longjmp(jmpEnv, 1);
       }
       if (!(symbol->name = strdup(locals->txt)))
-	if (!(impAstGarb() && (symbol->name = strdup(locals->txt))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (symbol->name = strdup(locals->txt))))
+      longjmp(jmpEnv, 1);
       symbol->ast = NULL;
       symbol->left = symbol->right = NULL;
       insertSymb(symbol, &(*regTab)->symtab);
@@ -488,8 +489,8 @@ static void insertRegion(name, params, locals, ast, regTab)
 /*======================================================================
   impAddRegion - Add a region to the region symbol table.
 
-  Add a region with name name, parameters params and local variables 
-  local to the region symbol table contained in regionRoot. If a region 
+  Add a region with name name, parameters params and local variables
+  local to the region symbol table contained in regionRoot. If a region
   named name already exists it is redefined.
 */
 void impAddRegion(name, params, locals, ast)
@@ -603,22 +604,22 @@ ParseResult impAstGet(file, srcp, ast)
 #endif
   struct stat buf;
 
-  for (pNode = parsedFiles; pNode; pNode = pNode->next) 
+  for (pNode = parsedFiles; pNode; pNode = pNode->next)
     if (strcmp(file,pNode->file) == 0) {
       if (lstat(file, &buf) != 0){
-	*ast = NULL;
-	return NO_EXIST;
+    *ast = NULL;
+    return NO_EXIST;
       }
       if ((pNode->st_ino == buf.st_ino) &&
-	  (pNode->st_dev == buf.st_dev) &&
-	  (pNode->st_time == buf.st_mtime)) {
-	startSrcp.file = ++impFileNo;
-	impLiEnter(&srcp, &startSrcp, file);
-	*ast = pNode->ast;
-	pNode->actCnt++;
-	return pNode->result;
+      (pNode->st_dev == buf.st_dev) &&
+      (pNode->st_time == buf.st_mtime)) {
+    startSrcp.file = ++impFileNo;
+    impLiEnter(&srcp, &startSrcp, file);
+    *ast = pNode->ast;
+    pNode->actCnt++;
+    return pNode->result;
       }
-    } 
+    }
 
   /* Not found, parse it */
   if (lstat(file, &buf) != 0){
@@ -627,23 +628,23 @@ ParseResult impAstGet(file, srcp, ast)
   }
 #ifndef WIN32
   /* 4f - st_ino+st_dev not enough as id since st_ino is not unique (0) */
-  for (wNode = writtenFiles; wNode; wNode = wNode->next) 
+  for (wNode = writtenFiles; wNode; wNode = wNode->next)
     if ((wNode->st_ino == buf.st_ino) &&
-	(wNode->st_dev == buf.st_dev)) {
+    (wNode->st_dev == buf.st_dev)) {
       if (impLastPass)
-	impMyLog(srcp, 217, sevWAR, file);
+    impMyLog(srcp, 217, sevWAR, file);
       *ast = NULL;
       return WRITE_OPEN;
     }
-#endif  
-  
+#endif
+
   impScDelete(impcontext);
   impcontext = impScNew(imp_MAIN_MAIN_Scanner);
   if((impcontext->fd=open(file,OFLAG))<0) {
     *ast = NULL;
     return NO_EXIST;
-  } 
-  
+  }
+
   impcontext->fileNo = startSrcp.file = ++impFileNo;
   impLiEnter(&srcp, &startSrcp, file);
   impMyResetSev();
@@ -683,8 +684,8 @@ void impAstRelease(file, ast)
   ParsedFile node;
 
   for (node = parsedFiles; node; node = node->next)
-    if ((strcmp(file, node->file) == 0) && 
-	(ast == node->ast))
+    if ((strcmp(file, node->file) == 0) &&
+    (ast == node->ast))
       node->actCnt--;
 }
 
@@ -702,7 +703,7 @@ ImpBoolean impAstGarb()
   for (node = parsedFiles; node; node = node->next) {
     if (node->actCnt == 0) {
       if (node->ast)
-	result = TRUE;
+    result = TRUE;
       impFreeAst(node->ast);
       node->ast = NULL;
       node->st_ino = -1;
@@ -729,19 +730,19 @@ FILE *impWriteOpen(file, srcp)
     if (lstat(file, &buf) == 0) {
 #ifndef WIN32
       /* 4f - st_ino+st_dev not enough as id since st_ino is not unique (0) */
-      for (wNode = writtenFiles; wNode; wNode = wNode->next) 
-	if ((wNode->st_ino == buf.st_ino) &&
-	    (wNode->st_dev == buf.st_dev)) {
-	  if (impLastPass)
-	    impMyLog(srcp, 216, sevWAR, file);
-	  fclose(fd);
-	  return NULL;
-	}
+      for (wNode = writtenFiles; wNode; wNode = wNode->next)
+    if ((wNode->st_ino == buf.st_ino) &&
+        (wNode->st_dev == buf.st_dev)) {
+      if (impLastPass)
+        impMyLog(srcp, 216, sevWAR, file);
+      fclose(fd);
+      return NULL;
+    }
 #endif
       wNode = (WrittenFile)malloc(sizeof(WrittenFileItem));
       if (!wNode) {
-	if (!(impAstGarb() && (wNode = (WrittenFile) malloc(sizeof(WrittenFileItem)))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (wNode = (WrittenFile) malloc(sizeof(WrittenFileItem)))))
+      longjmp(jmpEnv, 1);
       }
       wNode->file = fd;
       wNode->st_ino = buf.st_ino;
@@ -749,11 +750,11 @@ FILE *impWriteOpen(file, srcp)
       wNode->next = writtenFiles;
       writtenFiles = wNode;
       for (pNode = parsedFiles; pNode; pNode = pNode->next)
-	if ((strcmp(file,pNode->file) == 0) &&
-	    (pNode->st_ino == buf.st_ino) &&
-	    (pNode->st_dev == buf.st_dev) &&
-	    (pNode->st_time == buf.st_mtime))
-	  pNode->st_time = 0;
+    if ((strcmp(file,pNode->file) == 0) &&
+        (pNode->st_ino == buf.st_ino) &&
+        (pNode->st_dev == buf.st_dev) &&
+        (pNode->st_time == buf.st_mtime))
+      pNode->st_time = 0;
     } else {
       fclose(fd);
       fd = NULL;
@@ -774,9 +775,9 @@ void impWriteClose(file)
     if (file == node->file) {
       fclose(file);
       if (prev == NULL) {
-	writtenFiles = node->next;
+    writtenFiles = node->next;
       } else {
-	prev->next = node->next;
+    prev->next = node->next;
       }
       free(node);
       return;
