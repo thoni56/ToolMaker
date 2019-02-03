@@ -1,48 +1,29 @@
 ########## lmk ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii lmk.tst.win32 > lmk.tmp
-  alias cat dos2unix -ascii
-else
-  ../lmk lmk > lmk.tmp
-endif
-echo +++++ lmk.tmk +++++  >> lmk.tmp
-\cat lmk.tmk >> lmk.tmp
-echo +++++ lmk.lmt +++++ >> lmk.tmp
-cat lmk.lmt >> lmk.tmp
-echo +++++ lmkCommon.h +++++ >> lmk.tmp
-cat lmkCommon.h >> lmk.tmp
-echo +++++ lmkList.c +++++ >> lmk.tmp
-cat lmkList.c >> lmk.tmp
-echo +++++ lmkList.h +++++ >> lmk.tmp
-cat lmkList.h >> lmk.tmp
-\cat lmk.tmp
-\rm lmk.tmp
-########## /bin/csh -f lmk.tst UNIX ##########
-+++++ lmk.tmk +++++
+==> lmk.tmk <==
 %%OPTIONS
---	OS 'SunOS';
-	PREFIX 'lmk';
+    PREFIX 'lmk';
+    LIBRARY '../../../lib/ansi-c';
 %%IMPORT
 #include "tmkCommon.h"
 %%END
 %%TOKEN
-	NAME LmkToken;
-	CODE code   %% int %1%%;
-	SRCP srcp   %% TmkSrcp %1%%;
-	ATTRIBUTES
-	     sval   %% char *%1%%,
-	     ival   %% int %1%%,
-	     fpos   %% long %1%%,
-	     length %% long %1%%;
+    NAME LmkToken;
+    CODE code   %% int %1%%;
+    SRCP srcp   %% TmkSrcp %1%%;
+    ATTRIBUTES
+         sval   %% char *%1%%,
+         ival   %% int %1%%,
+         fpos   %% long %1%%,
+         length %% long %1%%;
 %%END
 %%SRCP
-	NAME TmkSrcp;
-	COLUMN col;
-	ROW    line;
-	FILE   file;
+    NAME TmkSrcp;
+    COLUMN col;
+    ROW    line;
+    FILE   file;
 %%END
-+++++ lmk.lmt +++++
+
+==> lmk.lmt <==
 %%SET lmkInclude(On)
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Multiple)
@@ -51,8 +32,8 @@ cat lmkList.h >> lmk.tmp
 %%SET lmkTarget("ansi-c")
 %%SET tmkOs("SunOS")
 %%SET lmkOs("SunOS")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET lmkLibrary("../")
+%%SET tmkLibrary("../../../lib/ansi-c")
+%%SET lmkLibrary("..")
 %%SET tmkPrefix("lmk")
 %%SET lmkPrefix("lmk")
 %%SET lmkEscape("`")
@@ -72,6 +53,7 @@ cat lmkList.h >> lmk.tmp
 %%SET lmkMSectOffs(0)
 %%SET lmkMSectLen(29)
 %%SET lmkMsgId("0     ")
+%%SET lmkMsg("ToolMaker Lister 1.0")
 %%SET lmkMsgId(, "1     ")
 %%SET lmkMsg(, "No warnings or errors detected.")
 %%SET lmkMsgId(, "2     ")
@@ -130,7 +112,8 @@ cat lmkList.h >> lmk.tmp
 %%SET lmkMsg(, "Message section \""%1\"" already defined.")
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(lmkLibrary)/List.imp")
-+++++ lmkCommon.h +++++
+
+==> lmkCommon.h <==
 #ifndef _lmkCommon_H_
 #define _lmkCommon_H_
 /* lmkCommon.h
@@ -164,7 +147,8 @@ typedef struct LmkToken {
 #endif
 
 
-+++++ lmkList.c +++++
+
+==> lmkList.c <==
 /*----------------------------------------------------------------------*\
 
 	ListerMaker
@@ -238,6 +222,7 @@ static char *lmkNoIns = "<Missing insertstring>";
 typedef char *lmkMsgs[lmkMESSZ];
 
 static lmkMsgs msg[] = {
+    { "0     ", "ToolMaker Lister 1.0" },
     { "1     ", "No warnings or errors detected." },
     { "2     ", "No warnings issued." },
     { "3     ", "No errors detected." },
@@ -1890,7 +1875,8 @@ void lmkLiTerminate(
   phase = PH_NONE;
 }
 
-+++++ lmkList.h +++++
+
+==> lmkList.h <==
 #ifndef _lmkList_H_
 #define _lmkList_H_
 /*----------------------------------------------------------------------*\
