@@ -1,6 +1,6 @@
 %%OPTIONS
 
-    Library '/home/projects/ToolMaker/lib/c/';
+    Library '../../lib/c';
     Escape '`';
 
 %%IMPORT
@@ -360,42 +360,46 @@ optional_decl
 srcp_section
     = srcp_header srcp_decls optional_end
     %%{
-          Boolean declFound = FALSE;
-          Boolean declOmitted = FALSE;
+       Boolean declFound = FALSE;
+       Boolean declOmitted = FALSE;
 
-      if (tmkEnv->srcpNode->name == NULL)
-            /* Source position type must have a name */
-        tmkLog(&%srcp_header.srcp, 63, sevERR, "NAME");
+       if (tmkEnv->srcpNode->name == NULL)
+           /* Source position type must have a name */
+           tmkLog(&%srcp_header.srcp, 63, sevERR, "NAME");
 
-          if (tmkEnv->srcpNode->row || tmkEnv->srcpNode->col ||
-          tmkEnv->srcpNode->file || tmkEnv->srcpNode->pos) {
-            /* check declarations */
-            if (tmkEnv->srcpNode->row)
-              if (tmkEnv->srcpNode->rowDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (tmkEnv->srcpNode->col)
-              if (tmkEnv->srcpNode->colDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (tmkEnv->srcpNode->file)
-              if (tmkEnv->srcpNode->fileDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (tmkEnv->srcpNode->pos)
-              if (tmkEnv->srcpNode->posDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (declFound && declOmitted)
-              /* If there exists declarations all fields must have it */
-              tmkLog(&%srcp_header.srcp, 65, sevERR, "srcp");
-      } else
-            /* Source position must have at least one member */
-            tmkLog(&%srcp_header.srcp, 66, sevERR, "");
+       if (tmkEnv->srcpNode->row || tmkEnv->srcpNode->col ||
+           tmkEnv->srcpNode->file || tmkEnv->srcpNode->pos) {
+           /* check declarations */
+           if (tmkEnv->srcpNode->row) {
+               if (tmkEnv->srcpNode->rowDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (tmkEnv->srcpNode->col) {
+               if (tmkEnv->srcpNode->colDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (tmkEnv->srcpNode->file) {
+               if (tmkEnv->srcpNode->fileDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (tmkEnv->srcpNode->pos) {
+               if (tmkEnv->srcpNode->posDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (declFound && declOmitted)
+               /* If there exists declarations all fields must have it */
+               tmkLog(&%srcp_header.srcp, 65, sevERR, "srcp");
+       } else
+           /* Source position must have at least one member */
+           tmkLog(&%srcp_header.srcp, 66, sevERR, "");
     }%%
     ;
 

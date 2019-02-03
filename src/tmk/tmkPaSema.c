@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------*\
 
-	tmkPaSema.c
+    tmkPaSema.c
 
-	ParserMaker generated semantic actions
+    ParserMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
 
@@ -48,6 +48,8 @@ extern tmkGrammar tmkSeSt[];
 
 /* %%DECLARATIONS - User data and routines */
 
+#line 23 "tmk.pmk"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,8 +61,8 @@ static Boolean srcpOptional = TRUE;
 static char *dummy;
 
 static TokenAttrListP newAttr(name, nameDecl)
-  char *name;			/* Attribute name */
-  char *nameDecl;		/* Attribute name declaration */
+  char *name;           /* Attribute name */
+  char *nameDecl;       /* Attribute name declaration */
 {
   TokenAttrListP p = (TokenAttrListP) malloc(sizeof(TokenAttrList));
   p->name = name;
@@ -70,8 +72,8 @@ static TokenAttrListP newAttr(name, nameDecl)
 }
 
 static OptNodeP newOpt(name, srcp)
-  char *name;			/* Option name */
-  TmkSrcp srcp;			/* Option srcp */
+  char *name;           /* Option name */
+  TmkSrcp srcp;         /* Option srcp */
 {
   OptNodeP p = (OptNodeP) malloc(sizeof(OptNode));
   p->name = name;
@@ -92,370 +94,418 @@ void tmkPaSema(
 int rule			/* IN production number */
 )
 {
+#line 65 "tmk.pmk"
     switch (rule) {
-          case 1: { /* tmk_document = option_section other_sections; */
+    case 1: { /* tmk_document = option_section other_sections; */
+#line 69 "tmk.pmk"
 
           if (!(srcpOptional || tmkEnv->srcpNode))
-	    /* SRCP section not found */
+        /* SRCP section not found */
             tmkLog(NULL, 64, sevERR, "SRCP");
-		break;}
+    	break;}
     case 8: { /* option_section =; */
+#line 94 "tmk.pmk"
 
-	  srcpOptional = TRUE;
-		break;}
+      srcpOptional = TRUE;
+    	break;}
     case 9: { /* option_section = '%%OPTIONS' optional_end; */
+#line 98 "tmk.pmk"
 
-	  srcpOptional = TRUE;
-		break;}
+      srcpOptional = TRUE;
+    	break;}
     case 10: { /* option_section = '%%OPTIONS' option_directives optional_end; */
+#line 102 "tmk.pmk"
 
-	  srcpOptional = TRUE;
+      srcpOptional = TRUE;
           setOpts(tmkEnv->optTab, tmkSeSt[tmkStkP+2].dir);
           setCliOpts(tmkEnv->cliTab, tmkEnv->argc, tmkEnv->argv, &dummy);
-	  tmkEscape = *getStrOpt(tmkEnv->escapeOpt);
-		break;}
+      tmkEscape = *getStrOpt(tmkEnv->escapeOpt);
+    	break;}
     case 13: { /* option_directives = option_directive; */
+#line 117 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].dir = tmkSeSt[tmkStkP+1].dir;
-		break;}
+      tmkSeSt[tmkStkP+1].dir = tmkSeSt[tmkStkP+1].dir;
+    	break;}
     case 14: { /* option_directives = option_directives option_directive; */
+#line 121 "tmk.pmk"
 {
-	  TmoNodeP p;
+      TmoNodeP p;
 
-	  if (tmkSeSt[tmkStkP+1].dir == NULL)
-	    tmkSeSt[tmkStkP+1].dir = tmkSeSt[tmkStkP+2].dir;
-	  else {
-	    for (p = tmkSeSt[tmkStkP+1].dir; p->next; p = p->next);
-	    p->next = tmkSeSt[tmkStkP+2].dir;
-	    tmkSeSt[tmkStkP+1].dir= tmkSeSt[tmkStkP+1].dir;
-	  }
-	}	break;}
+      if (tmkSeSt[tmkStkP+1].dir == NULL)
+        tmkSeSt[tmkStkP+1].dir = tmkSeSt[tmkStkP+2].dir;
+      else {
+        for (p = tmkSeSt[tmkStkP+1].dir; p->next; p = p->next);
+        p->next = tmkSeSt[tmkStkP+2].dir;
+        tmkSeSt[tmkStkP+1].dir= tmkSeSt[tmkStkP+1].dir;
+      }
+    }	break;}
     case 15: { /* option_directive = identifier ';'; */
+#line 136 "tmk.pmk"
 {
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = tmkSeSt[tmkStkP+1].sval;
-	  p->srcp = tmkSeSt[tmkStkP+1].srcp;
-	  p->dirKind = BOOL_TMO;
-	  p->oval.bval = TRUE;
-	  p->next = NULL;
-	  tmkSeSt[tmkStkP+1].dir = p;
-	}	break;}
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = tmkSeSt[tmkStkP+1].sval;
+      p->srcp = tmkSeSt[tmkStkP+1].srcp;
+      p->dirKind = BOOL_TMO;
+      p->oval.bval = TRUE;
+      p->next = NULL;
+      tmkSeSt[tmkStkP+1].dir = p;
+    }	break;}
     case 16: { /* option_directive = 'NO' identifier ';'; */
+#line 146 "tmk.pmk"
 {
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = tmkSeSt[tmkStkP+2].sval;
-	  p->srcp = tmkSeSt[tmkStkP+2].srcp;
-	  p->dirKind = BOOL_TMO;
-	  p->oval.bval = FALSE;
-	  p->next = NULL;
-	  tmkSeSt[tmkStkP+1].dir = p;
-	}	break;}
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = tmkSeSt[tmkStkP+2].sval;
+      p->srcp = tmkSeSt[tmkStkP+2].srcp;
+      p->dirKind = BOOL_TMO;
+      p->oval.bval = FALSE;
+      p->next = NULL;
+      tmkSeSt[tmkStkP+1].dir = p;
+    }	break;}
     case 17: { /* option_directive = identifier NUMBER ';'; */
+#line 156 "tmk.pmk"
 {
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = tmkSeSt[tmkStkP+1].sval;
-	  p->srcp = tmkSeSt[tmkStkP+1].srcp;
-	  p->dirKind = NUM_TMO;
-	  p->oval.ival = tmkSySt[tmkStkP+2].ival;
-	  p->next = NULL;
-	  tmkSeSt[tmkStkP+1].dir = p;
-	}	break;}
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = tmkSeSt[tmkStkP+1].sval;
+      p->srcp = tmkSeSt[tmkStkP+1].srcp;
+      p->dirKind = NUM_TMO;
+      p->oval.ival = tmkSySt[tmkStkP+2].ival;
+      p->next = NULL;
+      tmkSeSt[tmkStkP+1].dir = p;
+    }	break;}
     case 18: { /* option_directive = identifier STRING ';'; */
+#line 166 "tmk.pmk"
 {
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = tmkSeSt[tmkStkP+1].sval;
-	  p->srcp = tmkSeSt[tmkStkP+1].srcp;
-	  p->dirKind = STR_TMO;
-	  p->oval.sval = tmkSySt[tmkStkP+2].sval;
-	  p->next = NULL;
-	  tmkSeSt[tmkStkP+1].dir = p;
-	}	break;}
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = tmkSeSt[tmkStkP+1].sval;
+      p->srcp = tmkSeSt[tmkStkP+1].srcp;
+      p->dirKind = STR_TMO;
+      p->oval.sval = tmkSySt[tmkStkP+2].sval;
+      p->next = NULL;
+      tmkSeSt[tmkStkP+1].dir = p;
+    }	break;}
     case 19: { /* option_directive = identifier options ';'; */
+#line 176 "tmk.pmk"
 {
-	  TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
-	  p->name = tmkSeSt[tmkStkP+1].sval;
-	  p->srcp = tmkSeSt[tmkStkP+1].srcp;
-	  p->dirKind = SET_TMO;
-	  p->oval.opts = tmkSeSt[tmkStkP+2].opt;
-	  p->next = NULL;
+      TmoNodeP p = (TmoNodeP) malloc(sizeof(TmoNode));
+      p->name = tmkSeSt[tmkStkP+1].sval;
+      p->srcp = tmkSeSt[tmkStkP+1].srcp;
+      p->dirKind = SET_TMO;
+      p->oval.opts = tmkSeSt[tmkStkP+2].opt;
+      p->next = NULL;
           tmkSeSt[tmkStkP+1].dir = p;
-	}	break;}
+    }	break;}
     case 20: { /* options = identifier; */
+#line 189 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].opt = newOpt(tmkSeSt[tmkStkP+1].sval, tmkSeSt[tmkStkP+1].srcp);
-		break;}
+      tmkSeSt[tmkStkP+1].opt = newOpt(tmkSeSt[tmkStkP+1].sval, tmkSeSt[tmkStkP+1].srcp);
+    	break;}
     case 21: { /* options = options ',' identifier; */
+#line 193 "tmk.pmk"
 {
-	  OptNodeP p;
+      OptNodeP p;
 
-	  if (tmkSeSt[tmkStkP+1].opt == NULL)
-	    tmkSeSt[tmkStkP+1].opt = newOpt(tmkSeSt[tmkStkP+3].sval, tmkSeSt[tmkStkP+3].srcp);
-	  else {
-	    for (p = tmkSeSt[tmkStkP+1].opt; p->next; p = p->next);
-	    p->next = newOpt(tmkSeSt[tmkStkP+3].sval, tmkSeSt[tmkStkP+3].srcp);
-	    tmkSeSt[tmkStkP+1].opt = tmkSeSt[tmkStkP+1].opt;
-	  }
-	}	break;}
+      if (tmkSeSt[tmkStkP+1].opt == NULL)
+        tmkSeSt[tmkStkP+1].opt = newOpt(tmkSeSt[tmkStkP+3].sval, tmkSeSt[tmkStkP+3].srcp);
+      else {
+        for (p = tmkSeSt[tmkStkP+1].opt; p->next; p = p->next);
+        p->next = newOpt(tmkSeSt[tmkStkP+3].sval, tmkSeSt[tmkStkP+3].srcp);
+        tmkSeSt[tmkStkP+1].opt = tmkSeSt[tmkStkP+1].opt;
+      }
+    }	break;}
     case 22: { /* import_section = '%%IMPORT' optional_end; */
+#line 214 "tmk.pmk"
 
-	  if (tmkEnv->importSection)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 60, sevERR, "");
-	  else
-  	    tmkEnv->importSection = tmkNewCode(tmkSySt[tmkStkP+1].fpos, tmkSySt[tmkStkP+1].length);
-		break;}
+      if (tmkEnv->importSection)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 60, sevERR, "");
+      else
+        tmkEnv->importSection = tmkNewCode(tmkSySt[tmkStkP+1].fpos, tmkSySt[tmkStkP+1].length);
+    	break;}
     case 23: { /* token_section = token_header token_decls optional_end; */
+#line 228 "tmk.pmk"
 {
-          Boolean declFound = FALSE;
-          Boolean declOmitted = FALSE;
-          TokenAttrListP attrs;
+         Boolean declFound = FALSE;
+         Boolean declOmitted = FALSE;
+         TokenAttrListP attrs;
 
-	  if (tmkEnv->tokenNode->name == NULL)
+         if (tmkEnv->tokenNode->name == NULL)
             /* Token type must have a name */
-	    tmkLog(&tmkSeSt[tmkStkP+1].srcp, 62, sevERR, "NAME");
+            tmkLog(&tmkSeSt[tmkStkP+1].srcp, 62, sevERR, "NAME");
 
-	  if (tmkEnv->tokenNode->code == NULL)
+         if (tmkEnv->tokenNode->code == NULL)
             /* Token must have a code part */
-	    tmkLog(&tmkSeSt[tmkStkP+1].srcp, 62, sevERR, "CODE");
+            tmkLog(&tmkSeSt[tmkStkP+1].srcp, 62, sevERR, "CODE");
 
-          /* check declarations */
-          if (tmkEnv->tokenNode->codeDecl)
+         /* check declarations */
+         if (tmkEnv->tokenNode->codeDecl)
             declFound = TRUE;
-          else
+         else
             declOmitted = TRUE;
 
-          if (tmkEnv->tokenNode->srcpDecl)
+         if (tmkEnv->tokenNode->srcpDecl)
             declFound = TRUE;
 
-          for (attrs = tmkEnv->tokenNode->attrs; 
-               attrs && (!declFound || !declOmitted); 
-               attrs = attrs->next)
-            if (attrs->nameDecl)
-              declFound = TRUE;
-            else 
-              declOmitted = TRUE;
+         for (attrs = tmkEnv->tokenNode->attrs;
+                    attrs && (!declFound || !declOmitted);
+                    attrs = attrs->next)
+             if (attrs->nameDecl)
+                declFound = TRUE;
+             else
+                declOmitted = TRUE;
 
           if (declFound && declOmitted)
-            /* If there exists declarations all fields (except SRCP) must have it */
-            tmkLog(&tmkSeSt[tmkStkP+1].srcp, 65, sevERR, "token");
+              /* If there exists declarations all fields (except SRCP) must have it */
+              tmkLog(&tmkSeSt[tmkStkP+1].srcp, 65, sevERR, "token");
 
           srcpOptional = (!declFound || tmkEnv->tokenNode->srcpDecl || !tmkEnv->tokenNode->srcp);
-	}	break;}
+    }	break;}
     case 24: { /* token_header = '%%TOKEN'; */
+#line 268 "tmk.pmk"
 
           tmkEnv->tokenNode = (TokenNodeP) calloc(1,sizeof(TokenNode));
           tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+    	break;}
     case 27: { /* token_decl = 'NAME' identifier ';'; */
+#line 281 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->tokenNode->name)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else
-	    tmkEnv->tokenNode->name = tmkSeSt[tmkStkP+2].sval;
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->tokenNode->name)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else
+        tmkEnv->tokenNode->name = tmkSeSt[tmkStkP+2].sval;
+    	break;}
     case 28: { /* token_decl = 'CODE' identifier optional_decl ';'; */
+#line 289 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->tokenNode->code)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->tokenNode->code = tmkSeSt[tmkStkP+2].sval;
-	    tmkEnv->tokenNode->codeDecl = tmkSeSt[tmkStkP+3].sval;
-	  }
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->tokenNode->code)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else {
+        tmkEnv->tokenNode->code = tmkSeSt[tmkStkP+2].sval;
+        tmkEnv->tokenNode->codeDecl = tmkSeSt[tmkStkP+3].sval;
+      }
+    	break;}
     case 29: { /* token_decl = 'SRCP' identifier optional_decl ';'; */
+#line 299 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->tokenNode->srcp)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->tokenNode->srcp = tmkSeSt[tmkStkP+2].sval;
-	    tmkEnv->tokenNode->srcpDecl = tmkSeSt[tmkStkP+3].sval;
-	  }
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->tokenNode->srcp)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else {
+        tmkEnv->tokenNode->srcp = tmkSeSt[tmkStkP+2].sval;
+        tmkEnv->tokenNode->srcpDecl = tmkSeSt[tmkStkP+3].sval;
+      }
+    	break;}
     case 30: { /* token_decl = 'ATTRIBUTES' token_attributes ';'; */
+#line 309 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->tokenNode->attrs)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else
-	    tmkEnv->tokenNode->attrs = tmkSeSt[tmkStkP+2].attr;
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->tokenNode->attrs)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else
+        tmkEnv->tokenNode->attrs = tmkSeSt[tmkStkP+2].attr;
+    	break;}
     case 31: { /* token_attributes = token_attribute; */
+#line 320 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+1].attr;
-		break;}
+      tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+1].attr;
+    	break;}
     case 32: { /* token_attributes = token_attributes ',' token_attribute; */
+#line 324 "tmk.pmk"
 {
-	  TokenAttrListP p;
+      TokenAttrListP p;
 
-	  if (tmkSeSt[tmkStkP+1].attr == NULL)
-	    tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+3].attr;
-	  else {
-	    for (p = tmkSeSt[tmkStkP+1].attr; p->next; p = p->next);
-	    p->next = tmkSeSt[tmkStkP+3].attr;
-	    tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+1].attr;
-	  }
-	}	break;}
+      if (tmkSeSt[tmkStkP+1].attr == NULL)
+        tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+3].attr;
+      else {
+        for (p = tmkSeSt[tmkStkP+1].attr; p->next; p = p->next);
+        p->next = tmkSeSt[tmkStkP+3].attr;
+        tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+1].attr;
+      }
+    }	break;}
     case 33: { /* token_attribute = identifier optional_decl; */
+#line 339 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].attr = newAttr(tmkSeSt[tmkStkP+1].sval, tmkSeSt[tmkStkP+2].sval);
-		break;}
+      tmkSeSt[tmkStkP+1].attr = newAttr(tmkSeSt[tmkStkP+1].sval, tmkSeSt[tmkStkP+2].sval);
+    	break;}
     case 34: { /* optional_decl =; */
+#line 346 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = NULL;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = NULL;
+    	break;}
     case 35: { /* optional_decl = '%%'; */
+#line 350 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+    	break;}
     case 36: { /* srcp_section = srcp_header srcp_decls optional_end; */
+#line 362 "tmk.pmk"
 {
-          Boolean declFound = FALSE;
-          Boolean declOmitted = FALSE;
+       Boolean declFound = FALSE;
+       Boolean declOmitted = FALSE;
 
-	  if (tmkEnv->srcpNode->name == NULL)
-            /* Source position type must have a name */
-	    tmkLog(&tmkSeSt[tmkStkP+1].srcp, 63, sevERR, "NAME");
+       if (tmkEnv->srcpNode->name == NULL)
+           /* Source position type must have a name */
+           tmkLog(&tmkSeSt[tmkStkP+1].srcp, 63, sevERR, "NAME");
 
-          if (tmkEnv->srcpNode->row || tmkEnv->srcpNode->col ||
-	      tmkEnv->srcpNode->file || tmkEnv->srcpNode->pos) {
-            /* check declarations */
-            if (tmkEnv->srcpNode->row)
-              if (tmkEnv->srcpNode->rowDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (tmkEnv->srcpNode->col)
-              if (tmkEnv->srcpNode->colDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (tmkEnv->srcpNode->file)
-              if (tmkEnv->srcpNode->fileDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (tmkEnv->srcpNode->pos)
-              if (tmkEnv->srcpNode->posDecl)
-                declFound = TRUE;
-              else
-                declOmitted = TRUE;
-            if (declFound && declOmitted)
-              /* If there exists declarations all fields must have it */
-              tmkLog(&tmkSeSt[tmkStkP+1].srcp, 65, sevERR, "srcp");
-	  } else
-            /* Source position must have at least one member */
-            tmkLog(&tmkSeSt[tmkStkP+1].srcp, 66, sevERR, "");  
-	}	break;}
+       if (tmkEnv->srcpNode->row || tmkEnv->srcpNode->col ||
+           tmkEnv->srcpNode->file || tmkEnv->srcpNode->pos) {
+           /* check declarations */
+           if (tmkEnv->srcpNode->row) {
+               if (tmkEnv->srcpNode->rowDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (tmkEnv->srcpNode->col) {
+               if (tmkEnv->srcpNode->colDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (tmkEnv->srcpNode->file) {
+               if (tmkEnv->srcpNode->fileDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (tmkEnv->srcpNode->pos) {
+               if (tmkEnv->srcpNode->posDecl)
+                   declFound = TRUE;
+               else
+                   declOmitted = TRUE;
+           }
+           if (declFound && declOmitted)
+               /* If there exists declarations all fields must have it */
+               tmkLog(&tmkSeSt[tmkStkP+1].srcp, 65, sevERR, "srcp");
+       } else
+           /* Source position must have at least one member */
+           tmkLog(&tmkSeSt[tmkStkP+1].srcp, 66, sevERR, "");
+    }	break;}
     case 37: { /* srcp_header = '%%SRCP'; */
+#line 408 "tmk.pmk"
 
           tmkEnv->srcpNode = (SrcpNodeP) calloc(1,sizeof(SrcpNode));
           tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+    	break;}
     case 40: { /* srcp_decl = 'NAME' identifier ';'; */
+#line 421 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->srcpNode->name)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else
- 	    tmkEnv->srcpNode->name = tmkSeSt[tmkStkP+2].sval;
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->srcpNode->name)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else
+        tmkEnv->srcpNode->name = tmkSeSt[tmkStkP+2].sval;
+    	break;}
     case 41: { /* srcp_decl = 'ROW' identifier optional_decl ';'; */
+#line 429 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->srcpNode->row)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->row = tmkSeSt[tmkStkP+2].sval;
-	    tmkEnv->srcpNode->rowDecl = tmkSeSt[tmkStkP+3].sval;
-	  }
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->srcpNode->row)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->row = tmkSeSt[tmkStkP+2].sval;
+        tmkEnv->srcpNode->rowDecl = tmkSeSt[tmkStkP+3].sval;
+      }
+    	break;}
     case 42: { /* srcp_decl = 'COLUMN' identifier optional_decl ';'; */
+#line 439 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->srcpNode->col)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->col = tmkSeSt[tmkStkP+2].sval;
-	    tmkEnv->srcpNode->colDecl = tmkSeSt[tmkStkP+3].sval;
-	  }
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->srcpNode->col)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->col = tmkSeSt[tmkStkP+2].sval;
+        tmkEnv->srcpNode->colDecl = tmkSeSt[tmkStkP+3].sval;
+      }
+    	break;}
     case 43: { /* srcp_decl = 'FILE' identifier optional_decl ';'; */
+#line 449 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->srcpNode->file)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->file = tmkSeSt[tmkStkP+2].sval;
-	    tmkEnv->srcpNode->fileDecl = tmkSeSt[tmkStkP+3].sval;
-	  }
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->srcpNode->file)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->file = tmkSeSt[tmkStkP+2].sval;
+        tmkEnv->srcpNode->fileDecl = tmkSeSt[tmkStkP+3].sval;
+      }
+    	break;}
     case 44: { /* srcp_decl = 'POSITION' identifier optional_decl ';'; */
+#line 459 "tmk.pmk"
 
-	  free(tmkSySt[tmkStkP+1].sval);
-	  if (tmkEnv->srcpNode->pos)
-	    tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
-	  else {
-	    tmkEnv->srcpNode->pos = tmkSeSt[tmkStkP+2].sval;
-	    tmkEnv->srcpNode->posDecl = tmkSeSt[tmkStkP+3].sval;
-	  }
-		break;}
+      free(tmkSySt[tmkStkP+1].sval);
+      if (tmkEnv->srcpNode->pos)
+        tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
+      else {
+        tmkEnv->srcpNode->pos = tmkSeSt[tmkStkP+2].sval;
+        tmkEnv->srcpNode->posDecl = tmkSeSt[tmkStkP+3].sval;
+      }
+    	break;}
     case 45: { /* skip_section = SKIPHEADER optional_end; */
+#line 478 "tmk.pmk"
 
       if (tmkEnv->fileType == TMK_FILE)
         tmkLog(&tmkSySt[tmkStkP+1].srcp, 51, sevERR, "");
     	break;}
     case 46: { /* identifier = IDENTIFIER; */
+#line 490 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
         	break;}
     case 47: { /* identifier = 'ATTRIBUTES'; */
+#line 495 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 48: { /* identifier = 'NAME'; */
+#line 500 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 49: { /* identifier = 'CODE'; */
+#line 505 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 50: { /* identifier = 'SRCP'; */
+#line 510 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 51: { /* identifier = 'ROW'; */
+#line 515 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 52: { /* identifier = 'COLUMN'; */
+#line 520 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 53: { /* identifier = 'FILE'; */
+#line 525 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 54: { /* identifier = 'POSITION'; */
+#line 530 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     case 55: { /* identifier = 'NO'; */
+#line 536 "tmk.pmk"
 
-	  tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-	  tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-		break;}
+      tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
+      tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
+    	break;}
     default: break; }
 }/*tmkPaSema()*/
 
