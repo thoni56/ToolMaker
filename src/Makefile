@@ -1,5 +1,5 @@
 #
-TMARCH	= cygwin
+TMARCH	= ${if ${findstring CYGWIN, ${shell uname}},cygwin,${strip ${shell uname}}}
 
 all: tmk imp lmk smk pmk
 
@@ -22,3 +22,12 @@ smk:
 .PHONY: pmk
 pmk:
 	cd pmk; make TMARCH=$(TMARCH)
+
+test:
+	cd imp; make test
+	cd lmk; make test
+	cd smk; make test
+	cd pmk; make test
+
+arch:
+	@echo TMARCH=$(TMARCH)
