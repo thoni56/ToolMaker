@@ -1,50 +1,31 @@
 ########## smk ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii smk.tst.win32 > smk.tmp
-  alias cat dos2unix -ascii
-else
-  ../lmk smk > smk.tmp
-endif
-echo +++++ smk.tmk +++++  >> smk.tmp
-\cat smk.tmk >> smk.tmp
-echo +++++ smk.lmt +++++ >> smk.tmp
-cat smk.lmt >> smk.tmp
-echo +++++ smkCommon.h +++++ >> smk.tmp
-cat smkCommon.h >> smk.tmp
-echo +++++ smkList.c +++++ >> smk.tmp
-cat smkList.c >> smk.tmp
-echo +++++ smkList.h +++++ >> smk.tmp
-cat smkList.h >> smk.tmp
-\cat smk.tmp
-\rm smk.tmp
-########## /bin/csh -f smk.tst UNIX ##########
-+++++ smk.tmk +++++
+==> smk.tmk <==
 %%OPTIONS
---	OS 'SunOS';
-	PREFIX 'smk';
+    PREFIX 'smk';
+    LIBRARY '../../../lib/ansi-c';
 %%IMPORT
 #include "tmkCommon.h"
 #include "name.h"
 #include "action.h"
 %%END
 %%TOKEN
-	NAME SmkToken;
-	CODE code    %% int %1%%;
-	SRCP srcp    %% TmkSrcp %1%%;
-	ATTRIBUTES
-	     action  %% Action %1%%,
-	     name    %% Name %1%%,
-	     fnumber %% double %1%%,
-	     inumber %% int %1%%;
+    NAME SmkToken;
+    CODE code    %% int %1%%;
+    SRCP srcp    %% TmkSrcp %1%%;
+    ATTRIBUTES
+         action  %% Action %1%%,
+         name    %% Name %1%%,
+         fnumber %% double %1%%,
+         inumber %% int %1%%;
 %%END
 %%SRCP
-	NAME TmkSrcp;
-	COLUMN col;
-	ROW    line;
-	FILE   file;
+    NAME TmkSrcp;
+    COLUMN col;
+    ROW    line;
+    FILE   file;
 %%END
-+++++ smk.lmt +++++
+
+==> smk.lmt <==
 %%SET lmkInclude(Off)
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Multiple)
@@ -54,8 +35,8 @@ cat smkList.h >> smk.tmp
 %%SET lmkTarget("ansi-c")
 %%SET tmkOs("SunOS")
 %%SET lmkOs("SunOS")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET lmkLibrary("../")
+%%SET tmkLibrary("../../../lib/ansi-c")
+%%SET lmkLibrary("..")
 %%SET tmkPrefix("smk")
 %%SET lmkPrefix("smk")
 %%SET lmkEscape("`")
@@ -220,7 +201,8 @@ cat smkList.h >> smk.tmp
 %%SET lmkMsg(, "Scanner description file \""%1\"" not found.")
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(lmkLibrary)/List.imp")
-+++++ smkCommon.h +++++
+
+==> smkCommon.h <==
 #ifndef _smkCommon_H_
 #define _smkCommon_H_
 /* smkCommon.h
@@ -256,7 +238,8 @@ typedef struct SmkToken {
 #endif
 
 
-+++++ smkList.c +++++
+
+==> smkList.c <==
 /*----------------------------------------------------------------------*\
 
 	ListerMaker
@@ -2003,7 +1986,8 @@ void smkLiTerminate(
   phase = PH_NONE;
 }
 
-+++++ smkList.h +++++
+
+==> smkList.h <==
 #ifndef _smkList_H_
 #define _smkList_H_
 /*----------------------------------------------------------------------*\
