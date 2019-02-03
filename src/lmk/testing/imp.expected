@@ -1,29 +1,9 @@
 ########## imp ##########
-set os = "$argv[1]"
-if ("$os" == "PC") then
-  dos2unix -ascii imp.tst.win32 > imp.tmp
-  alias cat dos2unix -ascii
-else
-  ../lmk imp > imp.tmp
-endif
-echo +++++ imp.tmk +++++  >> imp.tmp
-\cat imp.tmk >> imp.tmp
-echo +++++ imp.lmt +++++ >> imp.tmp
-cat imp.lmt >> imp.tmp
-echo +++++ impCommon.h +++++ >> imp.tmp
-cat impCommon.h >> imp.tmp
-echo +++++ impList.c +++++ >> imp.tmp
-cat impList.c >> imp.tmp
-echo +++++ impList.h +++++ >> imp.tmp
-cat impList.h >> imp.tmp
-\cat imp.tmp
-\rm imp.tmp
-########## /bin/csh -f imp.tst UNIX ##########
-+++++ imp.tmk +++++
+==> imp.tmk <==
 %%OPTIONS
---  OS 'SunOS';
   TARGET 'c';
   PREFIX 'imp';
+  LIBRARY '../../../lib/c';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -45,7 +25,7 @@ typedef int TmNatural;
   FILE   file %% TmNatural %1%%;
 %%END
 
-+++++ imp.lmt +++++
+==> imp.lmt <==
 %%SET lmkInclude(On)
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Single)
@@ -54,8 +34,8 @@ typedef int TmNatural;
 %%SET lmkTarget("c")
 %%SET tmkOs("SunOS")
 %%SET lmkOs("SunOS")
-%%SET tmkLibrary("%%(TMHOME)/lib/%%(tmkTarget)/")
-%%SET lmkLibrary("../")
+%%SET tmkLibrary("../../../lib/c")
+%%SET lmkLibrary("..")
 %%SET tmkPrefix("imp")
 %%SET lmkPrefix("imp")
 %%SET lmkEscape("`")
@@ -150,7 +130,8 @@ typedef int TmNatural;
 %%SET lmkMsg(, "Unable to allocate memory !")
 %%PROCESS("%%(tmkLibrary)/Common.imp")
 %%PROCESS("%%(lmkLibrary)/List.imp")
-+++++ impCommon.h +++++
+
+==> impCommon.h <==
 #ifndef _impCommon_H_
 #define _impCommon_H_
 /* impCommon.h
@@ -188,7 +169,8 @@ typedef struct TmToken {
 #endif
 
 
-+++++ impList.c +++++
+
+==> impList.c <==
 /*----------------------------------------------------------------------*\
 
 	ListerMaker
@@ -1831,7 +1813,8 @@ void impLiTerminate()
   phase = PH_NONE;
 }
 
-+++++ impList.h +++++
+
+==> impList.h <==
 #ifndef _impList_H_
 #define _impList_H_
 /*----------------------------------------------------------------------*\

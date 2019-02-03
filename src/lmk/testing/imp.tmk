@@ -1,7 +1,7 @@
 %%OPTIONS
---  OS 'SunOS';
   TARGET 'c';
   PREFIX 'imp';
+  LIBRARY '../../../lib/c';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -22,4 +22,3 @@ typedef int TmNatural;
   ROW    line %% TmNatural %1%%;
   FILE   file %% TmNatural %1%%;
 %%END
-

@@ -1,7 +1,7 @@
 %%OPTIONS
 
   GENERATE tables, source;
-  LIBRARY '../';
+  LIBRARY '..';
   MESSAGE embedded;
   LISTINGS single;
 
