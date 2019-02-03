@@ -56,7 +56,7 @@ LIBS	= \
 #--
 
 all debug: checkARCH $(TMARCH)
-	cp pmk.exe ../../bin/
+	cp pmk ../../bin/
 
 mingw cygwin sun3 sun4 solaris1 solaris2: ../license/license.h ../imp/impMacro.h ../tmk/tmk.h ../tmk/tmkCommon.h $(OBJECTS) $(LIBS)
 	$(CC) -o pmk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS)
