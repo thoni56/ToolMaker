@@ -624,7 +624,12 @@ static void insert(istr, mstr)
   int iptr;
 
   /* Allocate temporary buffer */
-  if ((rb = (char *) malloc(1000)) == NULL) {
+%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
+  if ((rb = (char *) malloc((size_t)(istr? strlen(istr): 0) + 
+%%ELSE
+  if ((rb = (char *) malloc((istr? strlen(istr): 0) + 
+%%ENDIF
+      (mstr? strlen(mstr): 0) + 1)) == NULL) {
     error("Out of memory.");
     return;
   }

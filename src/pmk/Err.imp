@@ -139,14 +139,23 @@ void %%(parserPrefix)ISym(%%(tmkTokenCode), symString, printString, token)
     %%(tmkTokenName) *token;		/* OUT the created scanner symbol */
 %%ENDIF
 {
+    char *selectedString;
+
     if (insToks < MaxTokens) {
 	/* Concatenate the token string
 	 */
 	if (insToks > 0) strcat(insStr, " ");
-	if (%%(tmkTokenCode) == 0) strcat(insStr, "Unknown Token");
-	else if (%%(tmkTokenCode) == 1) strcat(insStr, "End Of File");
-	else if (*printString != '\0') strcat(insStr, printString);
-	else strcat(insStr, symString);
+	if (%%(tmkTokenCode) == 0) strcat(insStr, "<unknown token>");
+	else if (%%(tmkTokenCode) == 1) strcat(insStr, "<end of file>");
+        else {
+            if (*printString != '\0') selectedString = printString;
+            else selectedString = symString;
+            if (selectedString[0] == '\'') {
+                strcat(insStr, &selectedString[1]);
+                insStr[strlen(insStr)-1] = '\0';
+            } else
+                strcat(insStr, selectedString);
+        }
     } else if (insToks == MaxTokens) {
 	strcat(insStr, " ...");
     }/*if*/
@@ -187,13 +196,26 @@ void %%(parserPrefix)DSym(token, symString, printString)
 %%IF ({"c++"} (%%(pmkTarget)))
     (void)printString;			/* To avoid varnings from CC */
 %%ENDIF
+    char *selectedString;
+
     if (delToks < MaxTokens) {
 	/* Concatenate the symbol strings */
 	if (delToks > 0) strcat(delStr, " ");
-	if (token->%%(tmkTokenCode) == 0) strcat(delStr, "Unknown Token");
-	else if (token->%%(tmkTokenCode) == 1) strcat(delStr, "End Of File");
-	else if (*printString != '\0') strcat(delStr, printString);
-	else strcat(delStr, symString);
+	if (token->%%(tmkTokenCode) == 0) strcat(delStr, "<unknown token>");
+	else if (token->%%(tmkTokenCode) == 1) strcat(delStr, "<end of file>");
+	else {
+#ifdef DELETEIDENTIFIERASINPUTTED
+            if (token->%%(tmkTokenCode) == 2) selectedString = token->chars;
+            else
+#endif
+            if (*printString != '\0') selectedString = printString;
+            else selectedString = symString;
+            if (selectedString[0] == '\'') {
+                strcat(delStr, &selectedString[1]);
+                delStr[strlen(delStr)-1] = '\0';
+            } else
+                strcat(delStr, selectedString);
+        }
     } else if (delToks == MaxTokens) {
 	strcat(delStr, " ...");
     }/*if*/
@@ -386,11 +408,9 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%ENDIF
     }
 }/*%%(parserPrefix)Mess()*/
-%%-- 4f - pmkOs should be current OS
-%%IF({"SunOS", "HP", "Apollo", "VMS"} (%%(pmkOs)))
+%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
 %%PROCESS(, "/dev/null")
-%%-- 4f - pmkOs should be current OS
-%%ELSIF({"MSDOS", "WIN32"} (%%(pmkOs)))
+%%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%PROCESS(, "NUL")
 %%ELSE
 	Illegal OS option
@@ -402,8 +422,7 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%--
 %%  ESET files ("%%(parserPrefix)Err.%%(targetLanguageExtension)")
 %%  LOOP(file, files)
-%%-- 4f - pmkOs should be current OS
-%%      IF({"SunOS", "HP", "Apollo", "VMS"} (%%(pmkOs)))
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
 %%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
 %%	        IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
 %%	            EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
@@ -413,8 +432,7 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%	            EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%	        ENDIF
 %%          ENDIF
-%%-- 4f - pmkOs should be current OS
-%%      ELSIF({"MSDOS", "WIN32"} (%%(pmkOs)))
+%%      ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%	    IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
 %%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%          ENDIF

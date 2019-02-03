@@ -4,7 +4,7 @@
 %%-- for srcpDeclaration and tokenDeclaration if generateCommon is 
 %%-- set to "OFF".
 %%-- 
-%%  IF(NOT {"SunOS", "HP", "Apollo", "VMS", "MSDOS", "WIN32"} (%%(tmkOs)))
+%%  IF(NOT {"SunOS", "HP", "Apollo", "VMS", "MSDOS", "WIN32", "cygwin"} (%%(tmkOs)))
 %%MESSAGE("Unsupported value of OS option: '%%(tmkOs)'")
 %%MESSAGE("	Use one of:")
 %%MESSAGE("		SunOS")
@@ -24,7 +24,7 @@
 /* These datatypes should be defined to be unsigned integers of length 1, 2
  * and 4 bytes respectively.
  */
-%%  IF({"SunOS", "HP", "Apollo", "VMS", "WIN32"} (%%(tmkOs)))
+%%  IF({"SunOS", "HP", "Apollo", "VMS", "WIN32", "cygwin"} (%%(tmkOs)))
 typedef unsigned char UByte1;
 typedef unsigned short UByte2;
 typedef unsigned int UByte4;
@@ -102,7 +102,7 @@ typedef struct %%(tmkTokenName) {
 %%SET currentOs(%%(tmkOs))
 %%ENDIF
 
-%%  IF({"SunOS", "HP", "Apollo", "VMS"} (%%(currentOs)))
+%%  IF({"SunOS", "HP", "Apollo", "VMS", "cygwin"} (%%(currentOs)))
 %%  PROCESS(, "/dev/null")
 %%  ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
 %%  PROCESS(, "NUL")
@@ -116,7 +116,7 @@ typedef struct %%(tmkTokenName) {
 %%--
 %%    ESET files ("%%(tmkPrefix)Common.h")
 %%    LOOP(file, files)
-%%      IF({"SunOS", "HP", "Apollo", "VMS"} (%%(currentOs)))
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
 %%        IF(IMP$SYSTEM("cmp -s %%(file).new %%(file)", output))
 %%	    IF(NOT IMP$SYSTEM("rm -f %%(file).new", output))
 %%	      EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
@@ -126,7 +126,7 @@ typedef struct %%(tmkTokenName) {
 %%	      EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%	    ENDIF
 %%        ENDIF
-%%      ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
+%%      ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%	  IF(NOT IMP$SYSTEM("move /Y %%(file).new %%(file)", output))
 %%          EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%        ENDIF
