@@ -640,9 +640,9 @@ static void insert(
       /* escaped character */
       msidx++;
       rb[rbidx++] = mstr[msidx++];
-    } else if (mstr[msidx] == '%' && isdigit(mstr[msidx+1])) {
+    } else if (mstr[msidx] == '%' && isdigit((int)mstr[msidx+1])) {
       /* insertion string */
-      for (msidx++, iptr = 0; isdigit(mstr[msidx]); msidx++)
+      for (msidx++, iptr = 0; isdigit((int)mstr[msidx]); msidx++)
         iptr = iptr * 10 + mstr[msidx] - '0';
 
       if (iptr > 0) {
@@ -796,12 +796,14 @@ static void geterr(
     return;
 
   /* Find last error for the line */
-  for (*last = *first; (*last < count.msgs)
+  if (*first >= 0) {
+    for (*last = *first; (*last < count.msgs)
         && (msarr[*last].pos.file == fil) 
         && (msarr[*last].pos.line == line) 
        ; (*last)++)
     *errflg |= msarr[*last].sev; /* this severity was found */
-  (*last)--;
+    (*last)--;
+  }
 }
 
 
@@ -940,14 +942,16 @@ static void prsrcl(
   
   /* Possibly output source if requested */
   if (inset(errflg, lstsev)) {
-    if (inset(liERR, lsttyp)) {
+    /* There is a message in this line that we want to show */
+    if (inset(liMSG, lsttyp)) {
       if (!pageSkipped)
 	skippage();			/* Skip list to next page */
       if (!src[srclev].printed)
 	prfnm();
       prlin(lbuf, TRUE, FALSE, 0);	/* Error line to follow */
     }
-  } else if (errflg == (pmkSev) 0) {
+  } else {
+    /* No interesting message on this line, show it anyway? */
     if (inset(liOK, lsttyp)) {
       if (!pageSkipped)
 	skippage();			/* Skip list to next page */
@@ -1076,12 +1080,13 @@ static void prerrm(
 	  line[outIndex] = '\0';
 	  break;
 	}
-	if (outIndex != preCol)	/* Don't overwrite a previous marker */
+	if (outIndex != preCol)	{ /* Don't overwrite a previous marker */
 	  /* If source contained TAB, pad with that instead */
 	  if (src[outIndex] == '\t')
 	    line[OMARG+outIndex] = '\t';
 	  else
 	    line[OMARG+outIndex] = ' ';
+	}
 	outIndex = outIndex + 1;		/* Next column */
       }
       
@@ -1173,11 +1178,11 @@ static void liOpenOutput(
     fclose(out.file);
   out.name = ofnm;
   if (strcmp(out.name, "") == 0) /* Output to standard output */
-    out.file = stderr;
+    out.file = stdout;
   else {
     out.file = fopen(out.name, "w");
     if (out.file == NULL) {	/* Couldn't open list file */
-      out.file = stderr;	/* So list on stderr instead */
+      out.file = stdout;	/* So list on standard output */
       out.name = NULL;		/* Remember! */
     }
   }
@@ -2046,12 +2051,12 @@ typedef int pmkSev;
 typedef int pmkTyp;
 #define liNONE  0
 #define liSUM   (1<<0)		/* Summary */
-#define liERR   (1<<1)		/* Erroneous source lines */
+#define liMSG   (1<<1)		/* Source lines with messages*/
 #define liOK    (1<<2)		/* Correct source lines */
 #define liINCL  (1<<3)		/* Look also in PUSHed files */
 #define liHEAD  (1<<4)		/* Heading */
 
-#define liTINY (liSUM|liERR|liHEAD|liINCL)
+#define liTINY (liSUM|liMSG|liHEAD|liINCL)
 #define liFULL (liTINY|liOK)
 
 typedef enum pmkMessages {
