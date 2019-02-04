@@ -1,6 +1,6 @@
 %%OPTIONS
 
-	Library '/home/projects/ToolMaker/lib/c/';
+    Library '../../lib/ansi-c';
 
 %%MESSAGES english
 0     'ToolMaker 2.0';

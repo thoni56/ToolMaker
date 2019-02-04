@@ -2,10 +2,10 @@
 #define _tmkList_H_
 /*----------------------------------------------------------------------*\
 
-	tmkList.h
+    tmkList.h
 
-	Header file for ListerMaker generated error message and listing
-	handler
+    Header file for ListerMaker generated error message and listing
+    handler
 
 \*----------------------------------------------------------------------*/
 
@@ -32,12 +32,12 @@ typedef int tmkSev;
 typedef int tmkTyp;
 #define liNONE  0
 #define liSUM   (1<<0)		/* Summary */
-#define liERR   (1<<1)		/* Erroneous source lines */
+#define liMSG   (1<<1)		/* Source lines with messages*/
 #define liOK    (1<<2)		/* Correct source lines */
 #define liINCL  (1<<3)		/* Look also in PUSHed files */
 #define liHEAD  (1<<4)		/* Heading */
 
-#define liTINY (liSUM|liERR|liHEAD|liINCL)
+#define liTINY (liSUM|liMSG|liHEAD|liINCL)
 #define liFULL (liTINY|liOK)
 
 typedef enum tmkMessages {
@@ -48,21 +48,21 @@ typedef enum tmkMessages {
 /* UNINITIALISED: */
 /* Initialise the tmkLister System */
 extern void tmkLiInit(char header[],
-				 char src[],
-				 tmkMessages msect);
+                 char src[],
+                 tmkMessages msect);
 
 /* COLLECTING: */
 /* Log a message at a source position */
 extern void tmkLog(TmkSrcp *pos,
-				int ecode,
-				tmkSev sev,
-				char *istrs);
+                int ecode,
+                tmkSev sev,
+                char *istrs);
 
 /* Log a message at a source position using va_arg handling */
 extern void tmkLogv(TmkSrcp *pos,
-				int ecode,
-				tmkSev sev,
-				...);
+                int ecode,
+                tmkSev sev,
+                ...);
 
 /* Turn listing completely off after a particular source position */
 extern void tmkLiOff(TmkSrcp *pos);
@@ -72,15 +72,15 @@ extern void tmkLiOn(TmkSrcp *pos);
 
 /* Start reading an included file at a particular source position */
 extern void tmkLiEnter(TmkSrcp *pos,
-				  TmkSrcp *start,
-				  char fnm[]);
+                  TmkSrcp *start,
+                  char fnm[]);
 
 /* Stop reading from an included file prematurely */
 extern void tmkLiExit(TmkSrcp *pos);
 
 /* (Un)conditionally skip to a new page at a source position */
 extern void tmkLiPage(TmkSrcp *pos,
-				 int lins);
+                 int lins);
 
 /* Read worst severity logged so far */
 extern tmkSev tmkSeverity(void);
@@ -90,15 +90,15 @@ extern void tmkResLocSeverity(void);
 /* RETRIEVING: */
 /* Create a listing of a selected type in a file or the screen */
 extern void tmkList(char ofnm[],
-				 int lins,
-				 int cols,
-				 tmkTyp typ,
-				 tmkSev sevs);
+                 int lins,
+                 int cols,
+                 tmkTyp typ,
+                 tmkSev sevs);
 
 /* Return the i'th formatted message, return 0 if not found */
 extern int tmkMsg(int i,
-			       TmkSrcp *pos,
-			       char *msg);
+                   TmkSrcp *pos,
+                   char *msg);
 
 /* Print a string on a line in the output file */
 extern void tmkLiPrint(char str[]);

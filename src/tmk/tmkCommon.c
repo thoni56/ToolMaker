@@ -173,7 +173,6 @@ char* tmkReplPH(decl, attrName, new)
      char *new;
 {
   int attrLen;			/* Length of attribute name                   */
-  int subst = 0;		/* Number of placeholder substitutions so far */
   int state = 0;		/* What state am I in ?                       */
   int oldPtr = 0, newPtr = 0;	/* Pointers into new and old declarations     */
 
@@ -299,9 +298,6 @@ void tmkPCommon(outfile, tokenNode, srcpNode, importSection, escapeChar)
 {
   FILE *infile;
   TokenAttrListP  p;
-  int i;
-  char ch;
-  char *buff;
 
   /* token node declaration */
   if (tokenNode) {

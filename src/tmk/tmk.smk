@@ -23,6 +23,7 @@
 
 %%DECLARATIONS
 
+#include <unistd.h>
 #include <stdlib.h>
 #ifdef WIN32
 #include <io.h>
@@ -74,7 +75,7 @@ static char *newStr(smThis, skip)
   'FILE'        = 'FILE'        %% smToken->sval = newStr(smThis, 0); %%;
   'POSITION'    = 'POSITION'    %% smToken->sval = newStr(smThis, 0); %%;
   IDENTIFIER    = Identifier    %% smToken->sval = newStr(smThis, 0); %%;
-  NUMBER    = Number	%% smToken->ival = atoi(smThis->smText); %%;
+  NUMBER    = Number	%% smToken->ival = atoi((char *)smThis->smText); %%;
   STRING	= String	%% smToken->sval = newStr(smThis, 1); %%;
   '%%IMPORT'    = '%%IMPORT'
       %%
