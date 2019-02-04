@@ -2,6 +2,8 @@
 #
 # This makefile is to make from already existing sources
 
+DESTROOT=/usr/local
+
 TMARCH	= cygwin
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin
@@ -26,11 +28,14 @@ OBJS=   $(OBJS.c)
 
 #--
 all debug: $(TMARCH)
-	if ! cmp ../../lib/ansi-c/Common.imp Common.imp >/dev/null 2>&1 ; then \
-	  mv ../../lib/ansi-c/Common.imp ../../lib/ansi-c/Common.imp.old ; \
-	  cp Common.imp ../../lib/ansi-c/ ; \
-	fi
+	install -C -b Common.imp ../../lib/ansi-c
 
+# Install in DESTROOT/bin, DESTROOT/lib/ToolMaker & DESTROOT/man
+install:
+	install	-d $(DESTROOT)/lib/ToolMaker/ansi-c
+	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c
+	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c++
+	install -C Common.imp $(DESTROOT)/lib/ToolMaker/ansi-c
 
 .PHONY: $(TMARCH)
 $(TMARCH): tmkobj

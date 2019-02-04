@@ -3,6 +3,8 @@
 # This makefile is to compile directly from existing sources
 #
 
+DESTROOT = /usr/local
+
 TMARCH	= cygwin
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin -DMINGW
@@ -26,8 +28,14 @@ OBJECTS	= $(VERSIONOBJECTS) version.o
 
 all debug trace : impobj
 
+install:
+	install imp $(DESTROOT)/bin
+
+test:
+	cd testing; jregr
+
 impobj:	checkARCH $(TMARCH)
-	cp imp.exe ../../bin/
+	install imp.exe ../../bin/
 
 mingw cygwin sun3 sun4 solaris1: $(IMPLIB) imp.o
 	$(CC) -o imp $(CFLAGS) imp.o $(IMPLIB) $(LDFLAGS)
@@ -47,9 +55,6 @@ impScSema.o: impScSema.c
 impList.o: impList.c
 
 #-
-
-test:
-	cd testing; jregr
 
 clean:
 	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt imp imp.a

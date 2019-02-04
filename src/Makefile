@@ -1,5 +1,4 @@
 #
-TMARCH	= ${if ${findstring CYGWIN, ${shell uname}},cygwin,${strip ${shell uname}}}
 
 all: tmk imp lmk smk pmk
 
@@ -36,5 +35,14 @@ clean:
 	cd smk; make clean
 	cd pmk; make clean
 
+install:
+	cd tmk; make install
+	cd imp; make install
+	cd lmk; make install
+	cd smk; make install
+	cd pmk; make install
+
 arch:
 	@echo TMARCH=$(TMARCH)
+
+include common.mk

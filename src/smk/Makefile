@@ -33,17 +33,21 @@ OBJECTS		= $(VERSIONOBJECTS) version.o
 #
 #
 all debug : smkobj
-	if ! cmp ../../lib/ansi-c/Scan.imp Scan.imp >/dev/null 2>&1 ; then \
-	  mv ../../lib/ansi-c/Scan.imp ../../lib/ansi-c/Scan.imp.old ; \
-	  cp Scan.imp ../../lib/ansi-c/ ; \
-	fi
+	install -C Scan.imp ../../lib/ansi-c
 
 ################################################################################
 #
 #
+# Install in DESTDIR/bin, DESTDIR/lib/ToolMaker & DESTDIR/man
+install:
+	install -d $(DESTDIR)/lib/ToolMaker/ansi-c
+	ln -sf $(DESTDIR)/lib/ToolMaker/ansi-c $(DESTDIR)/lib/ToolMaker/c
+	ln -sf $(DESTDIR)/lib/ToolMaker/ansi-c $(DESTDIR)/lib/ToolMaker/c++
+	install	-C Scan.imp $(DESTDIR)/lib/ToolMaker/ansi-c
+	install smk $(DESTDIR)/bin
 
 smkobj: checkARCH $(TMARCH)
-	cp smk ../../bin/
+	install smk ../../bin/
 
 mingw cygwin sun3 sun4 solaris1 solaris2: $(OBJECTS) $(LIBS)
 	$(CC) -o smk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS) $(MALLOCDEBUG)

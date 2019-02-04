@@ -4,6 +4,8 @@
 # without license
 #
 
+DESTROOT = /usr/local
+
 TMARCH	= cygwin
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin
@@ -34,18 +36,22 @@ OBJECTS = $(VERSIONOBJECTS) version.o
 #
 # Normal compilation
 all debug opt: lmkobj
-	if ! cmp ../../lib/ansi-c/List.imp List.imp >/dev/null 2>&1 ; then \
-	  mv ../../lib/ansi-c/List.imp ../../lib/ansi-c/List.imp.old ; \
-	  cp List.imp ../../lib/ansi-c/ ; \
-	fi
+	install -C List.imp ../../lib/ansi-c
 
 test:
 	cd testing; jregr
 
+install:
+	install -d $(DESTROOT)/lib/ToolMaker/ansi-c
+	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c
+	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c++
+	install	-C List.imp $(DESTROOT)/lib/ToolMaker/ansi-c
+	install lmk $(DESTROOT)/bin
+
 # Miscellaneous targets down here
 
 lmkobj : checkARCH $(TMARCH)
-	cp lmk ../../bin/
+	install lmk ../../bin/
 
 cygwin mingw sun3 sun4 solaris1 solaris2: ../license/license.h ../imp/impMacro.h ../tmk/tmk.h ../tmk/tmkCommon.h $(OBJECTS) $(LIBS)
 	$(CC) -o lmk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS)

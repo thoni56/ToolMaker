@@ -4,6 +4,8 @@
 # without license...
 #
 
+DESTROOT = /usr/local
+
 TMARCH	= cygwin
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin
@@ -56,17 +58,18 @@ LIBS	= \
 #--
 
 all debug: pmkobj
-	if ! cmp ../../lib/ansi-c/Parse.imp Parse.imp >/dev/null 2>&1 ; then \
-	  mv ../../lib/ansi-c/Parse.imp ../../lib/ansi-c/Parse.imp.old ; \
-	  cp Parse.imp ../../lib/ansi-c/ ; \
-	fi
-	if ! cmp ../../lib/ansi-c/Err.imp Err.imp >/dev/null 2>&1 ; then \
-	  mv ../../lib/ansi-c/Err.imp ../../lib/ansi-c/Err.imp.old ; \
-	  cp Err.imp ../../lib/ansi-c/ ; \
-	fi
+	install -C Parse.imp Err.imp ../../lib/ansi-c
+
+install:
+	install -d $(DESTROOT)/lib/ToolMaker/ansi-c
+	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c
+	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c++
+	install	-C  Parse.imp Err.imp $(DESTROOT)/lib/ToolMaker/ansi-c
+	install pmk $(DESTROOT)/bin
+
 
 pmkobj: checkARCH $(TMARCH)
-	cp pmk ../../bin/
+	install pmk ../../bin/
 
 mingw cygwin sun3 sun4 solaris1 solaris2: ../license/license.h ../imp/impMacro.h ../tmk/tmk.h ../tmk/tmkCommon.h $(OBJECTS) $(LIBS)
 	$(CC) -o pmk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS)
