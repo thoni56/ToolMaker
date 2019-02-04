@@ -1,8 +1,8 @@
 %%OPTIONS
 
-	Library '/home/projects/ToolMaker/lib/c/';
-	Escape '`';
-	
+    Library '../../lib/c';
+    Escape '`';
+
 %%IMPORT
 
 #include "tmk.h"
@@ -74,31 +74,31 @@ static char *newStr(smThis, skip)
   'FILE'        = 'FILE'        %% smToken->sval = newStr(smThis, 0); %%;
   'POSITION'    = 'POSITION'    %% smToken->sval = newStr(smThis, 0); %%;
   IDENTIFIER    = Identifier    %% smToken->sval = newStr(smThis, 0); %%;
-  NUMBER 	= Number	%% smToken->ival = atoi(smThis->smText); %%;
+  NUMBER    = Number	%% smToken->ival = atoi(smThis->smText); %%;
   STRING	= String	%% smToken->sval = newStr(smThis, 1); %%;
   '%%IMPORT'    = '%%IMPORT'
       %%
-	tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
+          tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
       %%;
   SKIPHEADER    = Skiphead1
       %%
-	/* Skip a section where ToolMaker strings and semantic actions exist */
-	tmkSkipCode(RULES_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
+          /* Skip a section where ToolMaker strings and semantic actions exist */
+          tmkSkipCode(RULES_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
       %%;
   SKIPHEADER    = Skiphead2
       %%
-	/* Skip a section where ToolMaker strings exists */
-	tmkSkipCode(STRSKP_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
+          /* Skip a section where ToolMaker strings exists */
+          tmkSkipCode(STRSKP_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
       %%;
   SKIPHEADER    = Skiphead3
       %%
-	/* Skip a section where no ToolMaker strings exists */
-	tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
+          /* Skip a section where no ToolMaker strings exists */
+          tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
       %%;
-  '%%' 		= '%%'
+  '%%'      = '%%'
       %%
-	tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
-        smToken->sval = newStr(smThis, 2);
+          tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), tmkEscape);
+          smToken->sval = newStr(smThis, 2);
       %%;
   Unknown	= _Unknown;
   EndOfText     = _EndOfText;
