@@ -2,10 +2,10 @@
 #define _smkList_H_
 /*----------------------------------------------------------------------*\
 
-	smkList.h
+    smkList.h
 
-	Header file for ListerMaker generated error message and listing
-	handler
+    Header file for ListerMaker generated error message and listing
+    handler
 
 \*----------------------------------------------------------------------*/
 
@@ -32,12 +32,12 @@ typedef int smkSev;
 typedef int smkTyp;
 #define liNONE  0
 #define liSUM   (1<<0)		/* Summary */
-#define liERR   (1<<1)		/* Erroneous source lines */
+#define liMSG   (1<<1)		/* Source lines with messages*/
 #define liOK    (1<<2)		/* Correct source lines */
 #define liINCL  (1<<3)		/* Look also in PUSHed files */
 #define liHEAD  (1<<4)		/* Heading */
 
-#define liTINY (liSUM|liERR|liHEAD|liINCL)
+#define liTINY (liSUM|liMSG|liHEAD|liINCL)
 #define liFULL (liTINY|liOK)
 
 typedef enum smkMessages {
@@ -49,21 +49,21 @@ typedef enum smkMessages {
 /* UNINITIALISED: */
 /* Initialise the smkLister System */
 extern void smkLiInit(char header[],
-				 char src[],
-				 smkMessages msect);
+                 char src[],
+                 smkMessages msect);
 
 /* COLLECTING: */
 /* Log a message at a source position */
 extern void smkLog(TmkSrcp *pos,
-				int ecode,
-				smkSev sev,
-				char *istrs);
+                int ecode,
+                smkSev sev,
+                char *istrs);
 
 /* Log a message at a source position using va_arg handling */
 extern void smkLogv(TmkSrcp *pos,
-				int ecode,
-				smkSev sev,
-				...);
+                int ecode,
+                smkSev sev,
+                ...);
 
 /* Turn listing completely off after a particular source position */
 extern void smkLiOff(TmkSrcp *pos);
@@ -74,7 +74,7 @@ extern void smkLiOn(TmkSrcp *pos);
 
 /* (Un)conditionally skip to a new page at a source position */
 extern void smkLiPage(TmkSrcp *pos,
-				 int lins);
+                 int lins);
 
 /* Read worst severity logged so far */
 extern smkSev smkSeverity(void);
@@ -84,16 +84,16 @@ extern void smkResLocSeverity(void);
 /* RETRIEVING: */
 /* Create a listing of multiple input files in a listing file or on screen */
 extern void smkListm(char ofnm[],
-				  int lins,
-				  int cols,
-				  smkTyp typ,
-				  smkSev sevs,
-				  char *fnms[]);
+                  int lins,
+                  int cols,
+                  smkTyp typ,
+                  smkSev sevs,
+                  char *fnms[]);
 
 /* Return the i'th formatted message, return 0 if not found */
 extern int smkMsg(int i,
-			       TmkSrcp *pos,
-			       char *msg);
+                   TmkSrcp *pos,
+                   char *msg);
 
 /* Print a string on a line in the output file */
 extern void smkLiPrint(char str[]);
