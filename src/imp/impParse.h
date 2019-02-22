@@ -1,5 +1,3 @@
-
-
 #ifndef _impParse_h_
 #define _impParse_h_
 /*----------------------------------------------------------------------*\
@@ -11,16 +9,11 @@
 \*----------------------------------------------------------------------*/
 
 
-
 /* Token and Srcp definition */
 #include "impCommon.h"
 
-
 /* External functions */
-
 extern void impParse(void); /* Parser */
-
-
 
 /* Export */
 
@@ -29,7 +22,4 @@ extern void impParse(void); /* Parser */
 #include "ast.h"
 
 
-
-
 #endif
-

@@ -1,13 +1,10 @@
-
-
 /*----------------------------------------------------------------------*\
 
-	impPaSema.c
+    impPaSema.c
 
-	ParserMaker generated semantic actions
+    ParserMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
-
 
 /* %%IMPORT */
 
@@ -19,66 +16,45 @@
 #include "impScan.h"
 #include "impList.h"
 extern impScContext impcontext;
-
 /* END %%IMPORT */
-
 
 /* System dependencies
  * -------------------
  */
 
-
 /* These datatypes should be defined to be unsigned integers of length 1, 2
  * and 4 bytes respectively.
  */
-
 typedef unsigned char UByte1;
 typedef unsigned short UByte2;
 typedef unsigned int UByte4;
 
-
-
-
 /* Token and Srcp definition */
 #include "impCommon.h"
 
-
 /* Attribute stacks *\
 \* ---------------- */
-
 /* %%ATTRIBUTES */
 /* The semantic attributes for grammar symbols */
-
 typedef struct impGrammar {
-
     Ast last         /* Pointer to last node in a list */;
-
     Ast seq         /* Sequence of nodes              */;
-
     Ast ast         /* An abstract syntax tree        */;
-
     TmSrcp srcp      /* Source position                */;
-
 } impGrammar;
-
 
 /* END %%ATTRIBUTES */
 
-
 extern short impStkP;
 extern TmToken impSySt[];
-
 extern impGrammar impSeSt[];
 
-
 /* %%DECLARATIONS - User data and routines */
-
 
 
 /* .pmk-declarations */
 Ast tmpAst;
 int seqNumber;
-
 
 /* END %%DECLARATIONS */
 
@@ -87,11 +63,9 @@ int seqNumber;
  * impPaSema - The semantic actions
  *----------------------------------------------------------------------------
  */
-
 void impPaSema(
 int rule			/* IN production number */
 )
-
 {
     switch (rule) {
           case 1: { /* goal = statements; */
@@ -877,10 +851,6 @@ int rule			/* IN production number */
  
   /* Transfer all attributes */
 	break;}
-
     default: break; }
 }/*impPaSema()*/
-
-
-
 

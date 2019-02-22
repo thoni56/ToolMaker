@@ -32,7 +32,7 @@ install:
 	install imp $(DESTROOT)/bin
 
 test:
-	cd testing; jregr
+	cd testing; make
 
 impobj:	checkARCH $(TMARCH)
 	install imp.exe ../../bin/

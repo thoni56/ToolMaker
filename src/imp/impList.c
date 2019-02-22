@@ -1,23 +1,17 @@
-
-
 /*----------------------------------------------------------------------*\
 
-	ListerMaker
+    ListerMaker
 
-	Source file for ListerMaker generated listing handler
+    Source file for ListerMaker generated listing handler
 
 \*----------------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
-
-
-
 
 
 
@@ -58,12 +52,8 @@ typedef enum liPhase {
 #define LSTWIDTH (SRCWIDTH+OMARG)
 #define INITMSG 100
 #define INCMSG  100
-
 #define HEADERLINES 3
 #define ESCAPECHAR '`'
-
-
-
 
 /*********************
  *                   *
@@ -71,128 +61,63 @@ typedef enum liPhase {
  *                   *
  *********************/
 
-
 static TmSrcp nulpos = {	/* Zero source position */
-  
-
-
-
-
-0
-
-
-
-, 
-
-0
-
-
-
-, 
-
-0
-
-
-
+  0, 0, 0
 };
 
 static char *impNoIns = "<Missing insertstring>";
-
-
 
 #define impMESSZ 2
 typedef char *impMsgs[impMESSZ];
 
 static impMsgs msg[] = {
-
     { "0     ", "IMP -- Incremental Macro Processor %1" },
-
     { "1     ", "No warnings or errors detected." },
-
     { "2     ", "No warnings issued." },
-
     { "3     ", "No errors detected." },
-
     { "4     ", "%1 informational message(s) produced." },
-
     { "5     ", "%1 warning(s) issued." },
-
     { "6     ", "%1 error(s) detected." },
-
     { "7     ", "Maximum number of messages exceeded." },
-
     { "100   ", "Parsing resumed." },
-
     { "101   ", "%1 inserted." },
-
     { "102   ", "%1 deleted." },
-
     { "103   ", "%1 replaced by %2." },
-
     { "104   ", "Syntax error, stack backed up." },
-
     { "105   ", "Syntax error." },
-
     { "106   ", "Parse stack overflow." },
-
     { "107   ", "Parse table error." },
-
     { "108   ", "Parsing terminated." },
-
     { "201   ", "File \"%1\" not found." },
-
     { "202   ", "No file(s) given, statement ignored." },
-
     { "203   ", "Label \"%1\" differs from corresponding BEGIN label." },
-
     { "204   ", "Variable \"%1\" not set." },
-
     { "205   ", "Label \"%1\" not defined." },
-
     { "206   ", "Unable to open file \"%1\" where label is defined." },
-
     { "207   ", "Unable to open output file \"%1\"." },
-
     { "208   ", "Value \"%1\" of wrong type, must be INTEGER." },
-
     { "209   ", "Index value \"%1\" out of range." },
-
     { "210   ", "Operands must be of same type." },
-
     { "211   ", "Only variables may have index." },
-
     { "212   ", "Could not expand identifier %1" },
-
     { "213   ", "Incorrect number of parameters given in INCLUDE statement" },
-
     { "214   ", "Empty string not allowed as variable name" },
-
     { "215   ", "More than %1 levels of evaluation, probably infinite loop" },
-
     { "216   ", "Output file \"%1\" already open for writing." },
-
     { "217   ", "Input file \"%1\" already open for writing." },
-
     { "218   ", "Unable to open input file \"%1\"." },
-
     { "301   ", "Erroneous argument to ast access routine : %1" },
-
     { "302   ", "Erroneous node type found in %1" },
-
     { "303   ", "%1 times" },
-
     { "304   ", "Unable to allocate memory !" },
-
     { NULL }
 };
-
 typedef struct MSect {
   int offs;
   int len;
 } MSect;
 
 static MSect msects[] = {
-
     {0, 39}
 };
 static impMessages currMsect = (impMessages)0;
@@ -278,9 +203,7 @@ static int plnum;		/* Current page line number */
  *******************/
 
 #define inset(x,y)(x&y)
-
 static void prlin(char str[], LMBOOL cont, LMBOOL wrdwrp, int indent);
-
 
 
 
@@ -291,11 +214,9 @@ static void prlin(char str[], LMBOOL cont, LMBOOL wrdwrp, int indent);
    Internal or usage error. Print a message.
 
  */
-
 static void error(
      char str[]			/* IN - the error message */
 ) {
-
   printf("\n***** impList - %s\n", str);
 }
 
@@ -308,80 +229,48 @@ static void error(
    Sort error messages in msarr[]
 
  */
-
 static void sortmsg(void)
-
 {
   int i;
   LMBOOL swap, ready;
   struct sortRec temp;		/* Temporary storage for sort record... */
-
   int f1, f2;			/* ... files, ... */
-
-
   int l1, l2;			/* ... lines */
-
-
   int c1, c2;			/* ... columns */
-
   int n1, n2;			/* Message reference numbers, ie. log order */
-  
+
   /* Sort the error messages */
   ready = FALSE;
   while (!ready) {
     ready = TRUE;
-
     f1 = msarr[0].pos.file;
-
-
     l1 = msarr[0].pos.line;
-
-
     c1 = msarr[0].pos.col;
-
     n1 = msarr[0].ref;
     for(i = 0; i < (count.msgs - 1); i++) {
-
       f2 = msarr[i+1].pos.file;
-
-
       l2 = msarr[i+1].pos.line;
-
-
       c2 = msarr[i+1].pos.col;
-
       n2 = msarr[i+1].ref;	/* Use log order as last component */
-
       if (f2 != f1)
-	swap = (f2 <= f1);
+    swap = (f2 <= f1);
       else
-
-
       if (l2 != l1)
-	swap = (l2 <= l1);
-      else 
-
-
-      if (c2 != c1)
-	swap = (c2 <= c1);
+    swap = (l2 <= l1);
       else
-
+      if (c2 != c1)
+    swap = (c2 <= c1);
+      else
       swap = (n2 < n1);
       if (swap) {
-	temp = msarr[i];
-	msarr[i] = msarr[i+1];
-	msarr[i+1] = temp;
-	ready = FALSE;
+    temp = msarr[i];
+    msarr[i] = msarr[i+1];
+    msarr[i+1] = temp;
+    ready = FALSE;
       }
-
       f1 = f2;
-
-
       l1 = l2;
-
-
       c1 = c2;
-
       n1 = n2;
     }
   }
@@ -396,20 +285,17 @@ static void sortmsg(void)
    Get a message template from the ERRMSG file.
 
  */
-
 static void getmsg(
      int i,			/* IN - error/message code */
      char mstr[]		/* OUT - the message for that code */
 )
-
 {
-
   int msgIx;		/* Message array index */
   char msgId[16];	/* Requested message identity */
 
   sprintf(msgId, "%-6d", i);
   for (msgIx = msects[currMsect].offs; ; msgIx++) {
-    if (msg[msgIx][0] == NULL || 
+    if (msg[msgIx][0] == NULL ||
         msgIx >= msects[currMsect].offs + msects[currMsect].len) {
       sprintf(mstr, "<< Lister: No message for code %d found >>", i);
       return;
@@ -417,10 +303,9 @@ static void getmsg(
 
     if (strcmp(msg[msgIx][0],msgId)==0) break;
   }
-    
+
   /* Copy message to caller */
   strcpy(mstr, msg[msgIx][1]);
-
 }
 
 
@@ -432,12 +317,10 @@ static void getmsg(
    Insert the insert string/s into textual message.
 
  */
-
 static void insert(
      char istr[],		/* IN - insert string/s */
      char mstr[]		/* INOUT - the textual message */
 )
-
 {
   char *rb;			/* Result buffer */
   char *s;			/* Insertion string pointer */
@@ -446,7 +329,8 @@ static void insert(
   int iptr;
 
   /* Allocate temporary buffer */
-  if ((rb = (char *) malloc(1000)) == NULL) {
+  if ((rb = (char *) malloc((size_t)(istr? strlen(istr): 0) +
+      (mstr? strlen(mstr): 0) + 1)) == NULL) {
     error("Out of memory.");
     return;
   }
@@ -467,7 +351,7 @@ static void insert(
         for (s = istr; iptr > 1 && *s; iptr--) {
           for (; *s && *s != impSEPARATOR; s++);
           if (*s) s++;
-	}
+    }
 
         /* copy insertion string */
         for (; *s && *s != impSEPARATOR; rb[rbidx++] = *(s++));
@@ -483,7 +367,6 @@ static void insert(
 }
 
 
-
 /*----------------------------------------------------------------------
 
    crehead()
@@ -491,44 +374,37 @@ static void insert(
    Create list header string including date and page number padding
 
  */
-
 static void crehead(void)
-
 {
   char curtim[50];		/* Current time */
   time_t ticks;			/* Time in seconds */
   int i;			/* Loop */
-  
+
   /* Create first part of header message from ERRMSG info */
   getmsg(0, header);
   insert(lihdr, header);	/* Insert the header insert string */
   strcat(header, " - ");
-  
+
   /* Copy top level source file name if there is room */
   if (strlen(header) + strlen(src[0].fnm) + 2 < pagwdt - 5 -2) {
     strcat(header, src[0].fnm);
     strcat(header, " - ");
   }
-  
+
   /* Get current time */
   time(&ticks);
-
-  { struct tm* t; 
-    t = localtime(&ticks); 
-
-    strftime(curtim, (size_t)50, "%Y-%m-%d %H:%M", t); 
-
+  { struct tm* t;
+    t = localtime(&ticks);
+    strftime(curtim, (size_t)50, "%Y-%m-%d %H:%M", t);
   }
   if (strlen(header) + strlen(curtim) < pagwdt - 5 - 2)
     strcat(header, curtim);
-
 
   /* Pad w.r.t. page width */
   for (i = (pagwdt - 5 - 2) - strlen(header); i > 0; i--)
     strcat(header, " ");
 
 }
-
 
 
 
@@ -539,9 +415,7 @@ static void crehead(void)
    Print list header.
 
  */
-
 static void prhead(void)
-
 {
   int i;
 
@@ -560,11 +434,9 @@ static void prhead(void)
    file.
 
  */
-
 static LMBOOL getsrc(
      char *sline		/* INOUT - the source line */
 )
-
 {
   static char oline[SRCWIDTH+1];	/* Overflow text line */
   LMBOOL eof, tmpeof;		/* EOF indicators */
@@ -577,8 +449,8 @@ static LMBOOL getsrc(
     if (sline[strlen(sline)-1] != '\n')
       /* No, so find that or real end of file */
       do {
-	/* Don't tell about the EOF yet! */
-	tmpeof = (fgets(oline, SRCWIDTH, src[srclev].file) == 0);
+    /* Don't tell about the EOF yet! */
+    tmpeof = (fgets(oline, SRCWIDTH, src[srclev].file) == 0);
       } while (!tmpeof && oline[strlen(oline)-1] != '\n');
     else
       sline[strlen(sline)-1] = '\0';
@@ -596,25 +468,20 @@ static LMBOOL getsrc(
    Get errors for a source line
 
  */
-
 static void geterr(
-
      int fil,			/* IN - source file number */
-
      int line,			/* IN - source line number */
      int *first,		/* OUT - lines first error in msarr[] */
      int *last,			/* OUT - lines last error in msarr[] */
      impSev *errflg /* OUT - set of severities found in line */
 )
-
 {
   /* initialize */
-  *errflg = sevNONE; 
+  *errflg = sevNONE;
   *first=0;
   *last = 0;
   if (count.msgs <= 0)
     return;
-
 
   /* First skip files (possibly) and lines with lower number */
   while ((*first < count.msgs) && (msarr[*first].pos.file < fil))
@@ -623,14 +490,11 @@ static void geterr(
   if (*first == count.msgs || msarr[*first].pos.file != fil)
     return;
 
-
-
   while ((*first < count.msgs) && (msarr[*first].pos.line < line))
     (*first)++;
   /* at correct line ? */
   if (*first == count.msgs || msarr[*first].pos.line != line)
     return;
-
 
   /* Find last error for the line */
   if (*first >= 0) {
@@ -649,12 +513,10 @@ static void geterr(
 
    skippage()
 
-   Skip to next page on the list device 
+   Skip to next page on the list device
 
  */
-
 static void skippage(void)
-
 {
   pageSkipped = TRUE;
   if (paglen >= 20) {
@@ -677,17 +539,15 @@ static void skippage(void)
    Print line. Handles wrapping and page feeds.
 
  */
-
 static void prlin(
      char str[],		/* IN - the string to print out */
      LMBOOL cont,		/* IN - TRUE : equally sized line
-				   to follow on the same page */
+                   to follow on the same page */
      LMBOOL wrdwrp,		/* IN - TRUE : wrap after BLANK or COMMA
-				   if possible. */
+                   if possible. */
      int indent			/* IN - possible prefix to indent split lines
-				   with */
+                   with */
 )
-
 {
   static char obuf[LSTWIDTH + 1]; /* Output buffer */
   int nline;			/* Number of sublines */
@@ -695,7 +555,7 @@ static void prlin(
   char omarg[OMARG+1];		/* Output margin string */
   char *indentation;
   int omargLen;
-  
+
   strcpy(omarg, "");		/* Init omarg[] */
   omargLen = 0;
   indentation = (char *)malloc(indent+1); /* and indentation */
@@ -705,7 +565,7 @@ static void prlin(
 
   /* Get number of lines needed */
   nline = (strlen(str)/(pagwdt-OMARG)) + 1;
-  
+
   /* Do they fit on this page ? */
   if (cont)			/* Line to come ? */
     nline = nline * 2;
@@ -720,15 +580,13 @@ static void prlin(
     if (strlen(&str[i]) > pagwdt-omargLen) {
       wrap = pagwdt - omargLen;	/* Set default wrap point */
       if (wrdwrp)		/* Try to find a space before 20 chars*/
-	while(str[i+wrap] != ' ' && str[i+wrap] != ',' && wrap > 20)
-	  wrap--;
-	if (wrap == 20)		/* else use default wrap point */
-	  wrap = pagwdt - omargLen;
+        while(str[i+wrap] != ' ' && str[i+wrap] != ',' && wrap > 20)
+      wrap--;
+      if (wrap == 20)		/* else use default wrap point */
+        wrap = pagwdt - omargLen;
     } else
       wrap = strlen(&str[i]);
-
     strncpy(obuf, &str[i], (size_t)wrap); /* Copy the string */
-
     obuf[wrap] = '\0';		/* Terminate it */
     fprintf(out.file, "%s%s%s\n", omarg, indentation, obuf);
     plnum++;			/* Increment number of lines on this page */
@@ -752,9 +610,7 @@ static void prlin(
   Print the name of an include file as a kind of header.
 
   */
-
 static void prfnm(void)
-
 {
   impSkipLines(6);
   prlin("", FALSE, FALSE, 0);
@@ -762,7 +618,7 @@ static void prfnm(void)
   prlin(src[srclev].fnm, FALSE, FALSE, 0);
   prlin("", FALSE, FALSE, 0);
   src[srclev].printed = TRUE;
-}  
+}
 
 
 /*----------------------------------------------------------------------
@@ -772,42 +628,40 @@ static void prfnm(void)
    Print a source line including line number
 
  */
-
 static void prsrcl(
      int sln,			/* IN - Source line number */
      char slstr[],		/* IN - Source line string */
-     impSev errflg 		/* IN - Set of errors on this line */
+     impSev errflg        /* IN - Set of errors on this line */
 )
-
 {
   static char lbuf[SRCWIDTH + OMARG]; /* Line buffer */
-  
+
   if (srclev == 0)
     sprintf(lbuf,"%5d.  %s", sln, slstr);
   else
     sprintf(lbuf,"%5d.%1d %s", sln, srclev, slstr);
-  
+
   /* Possibly output source if requested */
   if (inset(errflg, lstsev)) {
     /* There is a message in this line that we want to show */
     if (inset(liMSG, lsttyp)) {
       if (!pageSkipped)
-	skippage();			/* Skip list to next page */
+    skippage();			/* Skip list to next page */
       if (!src[srclev].printed)
-	prfnm();
+    prfnm();
       prlin(lbuf, TRUE, FALSE, 0);	/* Error line to follow */
     }
   } else {
     /* No interesting message on this line, show it anyway? */
     if (inset(liOK, lsttyp)) {
       if (!pageSkipped)
-	skippage();			/* Skip list to next page */
+    skippage();			/* Skip list to next page */
       if (!src[srclev].printed)
-	prfnm();
+    prfnm();
       prlin(lbuf, FALSE, FALSE, 0); /* Only line */
     }
   }
-  
+
 }
 
 
@@ -820,17 +674,14 @@ static void prsrcl(
   msarr[]. NOTE the difference to impMsg()!!
 
  */
-
 static void liFormatMsg(
      int i,			/* IN - Message index >= 0 */
      char msgstr[]		/* OUT - Formatted message */
 )
-
 {
   char svchar;			/* Severity character */
   char errstr[MSGWIDTH+1]; /* Room for ERRMSG string */
   int mdidx;			/* Index for mdarr[] */
-  
 
 
 
@@ -857,13 +708,13 @@ static void liFormatMsg(
   case sevSYS: svchar = 'S'; break;
   default:     svchar = '?'; break;
   }
-  
+
   /* Find index in mdarr[] */
   mdidx = msarr[i].ref;		/* 1 indirection */
-  
+
   /* Format text */
   sprintf(msgstr, "%d %c : ", mdarr[mdidx].code, svchar);
-  
+
   /* Get textual message from ERRMSG */
   getmsg(mdarr[mdidx].code, errstr);
 
@@ -883,13 +734,11 @@ static void liFormatMsg(
    Print column markers and error messages for a source line.
 
  */
-
 static void prerrm(
      int first,			/* IN - First error to mark */
      int last,			/* IN - Last error to mark */
      char src[]			/* IN - Source line */
 )
-
 {
   static char line[LSTWIDTH+1];	/* Output line buffer */
   char *msg;			/* Message line buffer */
@@ -920,36 +769,35 @@ static void prerrm(
   for (msgIndex = first; msgIndex <= last; msgIndex++) {
     /* First skip over unwanted and internal messages */
     while ((!inset(msarr[msgIndex].sev, lstsev) ||
-	    msarr[msgIndex].sev > sevSYS) && (msgIndex <= last))
+        msarr[msgIndex].sev > sevSYS) && (msgIndex <= last))
       msgIndex++;
     if (msgIndex > last)
       break;
 
-
     /* Pad with SPACE or TAB to marker column (if it wasn't 0) */
     if (msarr[msgIndex].pos.col != 0) {
       while (outIndex < msarr[msgIndex].pos.col-1) {
-	if (outIndex >= SRCWIDTH) {
-	  line[outIndex] = '\0';
-	  break;
-	}
-	if (outIndex != preCol)	{ /* Don't overwrite a previous marker */
-	  /* If source contained TAB, pad with that instead */
-	  if (src[outIndex] == '\t')
-	    line[OMARG+outIndex] = '\t';
-	  else
-	    line[OMARG+outIndex] = ' ';
-	}
-	outIndex = outIndex + 1;		/* Next column */
+    if (outIndex >= SRCWIDTH) {
+      line[outIndex] = '\0';
+      break;
+    }
+    if (outIndex != preCol)	{ /* Don't overwrite a previous marker */
+      /* If source contained TAB, pad with that instead */
+      if (src[outIndex] == '\t')
+        line[OMARG+outIndex] = '\t';
+      else
+        line[OMARG+outIndex] = ' ';
+    }
+    outIndex = outIndex + 1;		/* Next column */
       }
-      
+
       /* Set a new marker if not at the same column */
       if (outIndex != preCol) {
-	/* Update error number */
-	if (number < 9)
-	  number++;
-	line[OMARG+outIndex] = (number + '0'); /* Convert to digit */
-	preCol = outIndex;
+    /* Update error number */
+    if (number < 9)
+      number++;
+    line[OMARG+outIndex] = (number + '0'); /* Convert to digit */
+    preCol = outIndex;
       }
     }
     /* Remember which marker number this message had */
@@ -957,18 +805,17 @@ static void prerrm(
       msgnum[numberIndex] = 0;
     else
       msgnum[numberIndex] = number;
-
     numberIndex = numberIndex + 1;
   }
   line[OMARG+outIndex+1] = '\0'; /* Terminate line[] */
-  
+
   /* Print column marker line - if it's not empty */
   if (number > 0)
     prlin(line, FALSE, FALSE, 0);
-  
+
   /* Print empty line */
   prlin("", FALSE, FALSE, 0);
-  
+
   /* Print the error messages */
   anymsg = FALSE;		/* To avoid double LF */
   msgIndex = first;
@@ -984,16 +831,14 @@ static void prerrm(
 
     /* Again skip unwanted messages */
     while ((!inset(msarr[msgIndex].sev, lstsev)
-	    || msarr[msgIndex].sev >= sevPUSH
-	    ) && (msgIndex <= last))
+        || msarr[msgIndex].sev >= sevPUSH
+        ) && (msgIndex <= last))
       msgIndex++;
-    
+
     /* Get formatted message text */
-
     msg = (char *) malloc((size_t)MSGWIDTH +
-
-			  (mdarr[msarr[msgIndex].ref].insert?
-			   strlen(mdarr[msarr[msgIndex].ref].insert): 0));
+              (mdarr[msarr[msgIndex].ref].insert?
+               strlen(mdarr[msarr[msgIndex].ref].insert): 0));
     if (!msg)
       error("Out of memory!");
     else {
@@ -1001,14 +846,14 @@ static void prerrm(
 
       /* Merge prefix and textual message */
       strcat(line, msg);
-    
+
       /* Print the message, wrap between words if necessary */
       prlin(line, FALSE, TRUE, indent);
       msgIndex = msgIndex + 1;	/* Next message */
       free(msg);
     }
   }
-  
+
   /* Print empty line - if any message was printed */
   if (anymsg)
     prlin("", FALSE, FALSE, 0);
@@ -1025,11 +870,9 @@ static void prerrm(
   Open the output file.
 
  */
-
 static void liOpenOutput(
      char ofnm[]		/* IN - Output file name string */
 )
-
 {
   /* Open the output file/device, but first check if previously open */
   if (out.open && strcmp(out.name, "") != 0)
@@ -1055,12 +898,10 @@ static void liOpenOutput(
   Open a source file. Level will be srclev.
 
  */
-
 static void liOpenSrc(
      char srcfnm[],		/* IN - Source file name string */
      int fno			/* IN - File number for this file */
 )
-
 {
   src[srclev].fnm = srcfnm;
   src[srclev].printed = FALSE;	/* Not shown yet */
@@ -1076,15 +917,13 @@ static void liOpenSrc(
 
    liPush()
 
-   Internal function to push to an include file. 
+   Internal function to push to an include file.
 
  */
-
 static void liPush(
      int first,			/* IN - first ... */
      int last			/* IN - ... and last error msgs */
 )
-
 {
   int i;			/* Scratch error number */
   static char srcline[SRCWIDTH]; /* Source line buffer for skipping */
@@ -1092,9 +931,7 @@ static void liPush(
   /* extend src dynamic storage */
   if (srclev == srcEntries-1) {
     srcEntries += INCINCLUDE;
-
     src = (Srctyp *) realloc((char *) src, (size_t)sizeof(Srctyp) * srcEntries);
-
   }
 
   /* Find any previous push made from this line */
@@ -1121,13 +958,12 @@ static void liPush(
 
   /* Push one level */
   srclev++;
-  
+
   /* Open the source file */
   liOpenSrc(mdarr[i].insert, mdarr[i].code);
 
   /* Next line read is line 1 */
   src[srclev].lno = 1;
-
 
   /* Start line at line 0 => line 1 */
   if (mdarr[i].start.line == 0)
@@ -1138,7 +974,6 @@ static void liPush(
     (void) getsrc(srcline);
     src[srclev].lno++;		/* Increment line number */
   }
-
 }
 
 
@@ -1151,9 +986,7 @@ static void liPush(
    end of file).
 
  */
-
 static LMBOOL liPop(void) {
-
   int lev;			/* Level loop variable */
 
   if (srclev == 0)
@@ -1170,7 +1003,7 @@ static LMBOOL liPop(void) {
     if (src[srclev].printed) {
       prlin("", FALSE, FALSE, 0);	/* One empty line after shown file */
       for (lev = srclev; lev >= 0; lev--)
-	  src[lev].printed = FALSE; /* Reset printed names on files below */
+      src[lev].printed = FALSE; /* Reset printed names on files below */
     }
     srclev--;			/* Pop one level */
     src[srclev].lno--;		/* Rewind one line */
@@ -1180,7 +1013,6 @@ static LMBOOL liPop(void) {
 }
 
 
-
 /*----------------------------------------------------------------------
 
    prpack()
@@ -1188,29 +1020,27 @@ static LMBOOL liPop(void) {
    Print a source package (= source line and error messages).
 
  */
-
 static void prpack(
     LMBOOL *eof			/* OUT - TRUE if eof */
 ) {
-
   int first;			/* First error index for this line */
   int last;			/* Last error index for this line */
   int i;			/* Counter index */
   impSev msgflg; /* Set of msg severities found */
   static char sline[SRCWIDTH+1]; /* Source line buffer */
- 
+
 
   src[srclev].lno++;	/* Increment source line number */
 
   /* Any messages for this line ? */
   geterr( src[srclev].fno, 
-	 src[srclev].lno, &first, &last, &msgflg);
-  
+     src[srclev].lno, &first, &last, &msgflg);
+
   /* PUSH or POP from this line */
   if (inset(msgflg, sevPUSH)) {
     liPush(first, last);
     geterr( src[srclev].fno, 
-	   src[srclev].lno, &first, &last, &msgflg);
+       src[srclev].lno, &first, &last, &msgflg);
   }
   if (inset(msgflg, sevPOP)) {
     *eof = liPop();
@@ -1225,28 +1055,27 @@ static void prpack(
   if (inset(msgflg, sevPAGE)) {
     for (i= first; i <= last; i++)
       if (msarr[i].sev == sevPAGE)
-	break;
+    break;
     impSkipLines(mdarr[msarr[i].ref].code); /* code contains #lines */
   }
-    
+
 
   /* Now we can remove any possible internal error flags */
   msgflg &= sevALL;
-  
+
   /* Read next source line */
   *eof = getsrc(sline);
 
   /* Print source line if requested */
   if (liston || inset(msgflg, lstsev))
     prsrcl(src[srclev].lno, sline, msgflg);
-  
+
   /* If line contained wanted errors... */
   if (inset(msgflg, lstsev))
     /* Print column markers and error messages */
     prerrm(first, last, sline);
 
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -1257,9 +1086,7 @@ static void prpack(
    without any line number).
 
  */
-
 static void prupack(void)
-
 {
   int first, last;
   impSev errflg;
@@ -1267,11 +1094,9 @@ static void prupack(void)
   geterr( src[0].fno,  0, &first, &last, &errflg);
   if (inset(errflg, lstsev)) {
     prlin("", FALSE, FALSE, 0);	/* Empty line before trail. errors */
-
     prerrm(first, last, "");
   }
 }
-
 
 /*----------------------------------------------------------------------
 
@@ -1280,9 +1105,7 @@ static void prupack(void)
    Print the global package (the messages with no source position)
 
  */
-
 static void prgpack(void)
-
 {
   int first, last;
   impSev errflg;
@@ -1297,7 +1120,6 @@ static void prgpack(void)
 
 
 
-
 /*----------------------------------------------------------------------
 
    prepi()
@@ -1305,18 +1127,16 @@ static void prgpack(void)
    Print epilogue.
 
  */
-
 static void prepi(void)
-
 {
   static char sbuf[SRCWIDTH+1];	/* String buffer */
   char nstr[20];		/* Number string */
-  
+
   if (!inset(liSUM, lsttyp))
     return;
-  
+
   prlin("", FALSE, FALSE, 0);
-  
+
   if ((count.warns + count.errs) == 0) {
     getmsg(1, sbuf);
     prlin(sbuf, FALSE, FALSE, 0);
@@ -1346,7 +1166,7 @@ static void prepi(void)
     insert(nstr, sbuf);		/* Insert the number */
     prlin(sbuf, FALSE, FALSE, 0);
   }
-  
+
   prlin("", FALSE, FALSE, 0);
 
 }
@@ -1360,7 +1180,6 @@ static void prepi(void)
    Internal routine for logging a message. Takes care of special format
    messages like PUSH and POP messages.
  */
-
 static void liLog(
      TmSrcp *srcp,	/* IN - source position for message */
      TmSrcp *start,	/* IN - srcp for possible PUSH message */
@@ -1369,19 +1188,13 @@ static void liLog(
      char *istrs		/* IN - concatenated insert strings */
 ) {
 
-
-
   /* extend mdarr & msarr dynamic storage */
   if (count.msgs == marrEntries) {
     marrEntries += INCMSG;
-
     mdarr = (msgRec *) realloc((char *) mdarr, (size_t)sizeof(msgRec) * marrEntries);
-
-
     msarr = (sortRec *) realloc((char *) msarr, (size_t)sizeof(sortRec) * marrEntries);
-
   }
-  
+
   /* Store the message data */
   mdarr[count.msgs].code = ecode; /* store error code */
 
@@ -1391,17 +1204,15 @@ static void liLog(
 
   /* Allocate dynamic string storage */
   if (istrs != NULL) {
-
     mdarr[count.msgs].insert = (char *) malloc((size_t)strlen(istrs)+1);
-
     if (!mdarr[count.msgs].insert) {
       error("Out of memory!");
-      mdarr[count.msgs].insert = impNoIns; 
+      mdarr[count.msgs].insert = impNoIns;
     } else
       strcpy(mdarr[count.msgs].insert, istrs); /* Store insert string/s */
   } else
     mdarr[count.msgs].insert = NULL;
-  
+
   /* Update sort record */
   if (srcp != NULL)
     msarr[count.msgs].pos = *srcp; /* Store source position */
@@ -1409,12 +1220,10 @@ static void liLog(
     msarr[count.msgs].pos = nulpos; /* Use zero source position */
   msarr[count.msgs].ref = count.msgs; /* Reference to mdarr[] */
   msarr[count.msgs].sev = sev;	/* Store severity code */
-  
+
   count.msgs++;
-  
 
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -1424,14 +1233,12 @@ static void liLog(
   Initialise for listing production.
 
  */
-
 static void liInit(
      impTyp typ,	/* IN - Listing type */
      impSev sevs,	/* IN - Severities to include */
      int lins,			/* IN - Lines per page */
      int cols			/* IN - Columns per line */
 )
-
 {
   /* Init values */
   lsttyp = typ;			/* Listing type */
@@ -1450,7 +1257,6 @@ static void liInit(
 
 
 
-
 /*======================================================================
 
    impLiInit()
@@ -1458,42 +1264,27 @@ static void liInit(
    Init the Lister module
 
  */
-
 void impLiInit(
      char header[],		/* IN - String to be inserted in header */
      char srcf[],		/* IN - Name of top level source file */
-
      impMessages msect	/* IN - Message sector */
-
 ) {
-
   /* Create dynamic storage structures */
-
   src = (Srctyp *) malloc((size_t)sizeof(Srctyp) * INITINCLUDE);
-
   srcEntries = INITINCLUDE;
-
   mdarr = (msgRec *) malloc((size_t)sizeof(msgRec) * INITMSG);
-
-
   msarr = (sortRec *) malloc((size_t)sizeof(sortRec) * INITMSG);
-
   marrEntries = INITMSG;
-  
+
   /* Save name of top level source and message file */
-
   src[0].fnm = (char *) malloc((size_t)strlen(srcf)+1);
-
   strcpy(src[0].fnm, srcf);
   currMsect = msect;
 
-  
   /* Save header insert string */
-
   lihdr = (char *) malloc((size_t)strlen(header)+1);
-
   strcpy(lihdr, header);
-  
+
   /* Init static variables etc. */
   count.msgs = 0;		/* number of messages so far is 0 */
   count.errs = 0;		/* number of errors so far is 0 */
@@ -1502,10 +1293,8 @@ void impLiInit(
   phase = PH_COLL;		/* Message collection phase */
   maxsev = sevOK;		/* Highest severity is OK!! */
   maxlocsev = sevOK;		/* Highest local severity is OK!! */
-
   /* Initialize file field of nulpos */
   nulpos.file = -1;
-
 
 }
 
@@ -1518,53 +1307,43 @@ void impLiInit(
    Log an error message, insert strings separatated using %(lmkPrefix)separator
 
  */
-
 void impLog(
     TmSrcp *pos,		/* IN - Source position */
     int ecode,				/* IN - The error code */
     impSev sev,		/* IN - Severity code */
     char istrs[]			/* IN - Insert strings */
 ) {
-
     TmSrcp srcpos, *srcp = &srcpos;	/* Source position copy */
-    
+
   /* Check phase */
   if (phase != PH_COLL) {
     error("impLog(): Phase error.");
     return;
   }
-  
 
   if (pos != NULL) {
     /* check source position */
     srcpos = *pos;
-
     if (srcp->col < 0) {
       error("impLog(): Source position column < 0.");
       srcp->col = 0;
     }
-
-
     if (srcp->line < 0) {
       error("impLog(): Source position line < 0.");
       srcp->line = 0;
     }
-
     if (srcp->line == 0) {
       srcp->col = 0;
     }
-
-
   } else
     srcp = NULL;
-
 
   /* Update highest severity unless it was an internal severity code */
   if(sev > maxsev && sev <= sevSYS)
     maxsev = sev;
   if(sev > maxlocsev && sev <= sevSYS)
     maxlocsev = sev;
-  
+
   /* Update warning and error counters */
   switch (sev) {
   case sevOK:  break;
@@ -1574,12 +1353,11 @@ void impLog(
   case sevFAT:
   case sevSYS: count.errs++; break;
   }
-  
+
   /* Log the message */
   liLog(srcp, NULL, ecode, sev, istrs);
 
 }
-
 
 
 
@@ -1596,9 +1374,7 @@ void impLogv(
     impSev sev,	/* IN - Severity code */
     ...
 ) {
-
   char *errorstring = (char *)malloc((size_t)256);
-
   int curlen = 256;
   char *arg, *tmp;
   int len = 0;
@@ -1622,13 +1398,11 @@ void impLogv(
     if (len + strlen(arg) >= curlen) {
       tmp = errorstring;
       curlen += 256;
-
       errorstring = (char *)malloc((size_t)curlen);
-
       /* Check errorstring */
       if (!errorstring) {
-	error("Out of memory!");
-	return;
+    error("Out of memory!");
+    return;
       }
       strcpy(errorstring, tmp);
       free(tmp);
@@ -1637,7 +1411,7 @@ void impLogv(
     len = strlen(errorstring);
     errorstring[len] = impSEPARATOR;
     errorstring[len+1] = '\0';
-      
+
   }
 
   va_end(ap);
@@ -1647,7 +1421,6 @@ void impLogv(
 }
 
 
-
 /*======================================================================
 
    impLiOff()
@@ -1655,11 +1428,9 @@ void impLogv(
    Turn listing off at source position.
 
  */
-
 void impLiOff(
     TmSrcp *srcp		/* IN - The first source position to exclude */
 ) {
-
     liLog(srcp, NULL, 0, sevOFF, NULL);
 }
 
@@ -1672,11 +1443,9 @@ void impLiOff(
    Turn listing on again (if it was off).
 
  */
-
 void impLiOn(
     TmSrcp *srcp		/* IN - The first source position to include */
 ) {
-
     liLog(srcp, NULL, 0, sevON, "");
 }
 
@@ -1689,15 +1458,12 @@ void impLiOn(
    Skip to next page at source position. If 'lins' <> 0 then a form feed is
    only inserted if less that 'lins' lines left on the page.
  */
-
 void impLiPage(
      TmSrcp *srcp,	/* IN - Source position */
      int lins			/* IN - Number of lines */
 ) {
-
     liLog(srcp, NULL, lins, sevPAGE, "");
 }
-
 
 
 /*======================================================================
@@ -1708,13 +1474,11 @@ void impLiPage(
    severity to indicate a PUSH.
 
  */
-
 void impLiEnter(
     TmSrcp *srcp,		/* IN - Where to include the file */
     TmSrcp *start,	/* IN - First position to include from file */
     char fnm[]			/* IN - File name of file to include */
 ) {
-
     liLog(srcp, start, start->file, sevPUSH, fnm);
 }
 
@@ -1726,14 +1490,11 @@ void impLiEnter(
    Prematurely pop from an include file at specified source position.
 
  */
-
 void impLiExit(
     TmSrcp *srcp		/* IN - Where to return from an include file */
 ) {
-
     liLog(srcp, NULL, 0, sevPOP, "");
 }
-
 
 
 
@@ -1745,10 +1506,8 @@ void impLiExit(
    Return highest severity logged so far.
 
  */
-
 impSev impSeverity(
 ) {
-
   return (maxsev);
 }
 
@@ -1761,10 +1520,8 @@ impSev impSeverity(
    Return highest local severity logged so far.
 
  */
-
 impSev impLocSeverity(
 ) {
-
   return (maxlocsev);
 }
 
@@ -1777,9 +1534,7 @@ impSev impLocSeverity(
    Reset local severity.
 
  */
-
 void impResLocSeverity(void) {
-
   maxlocsev = sevOK;
 }
 
@@ -1795,13 +1550,11 @@ void impResLocSeverity(void) {
 
 
  */
-
 int impMsg(
      int msgno,			/* IN - Message number >= 1 */
      TmSrcp *srcp,	/* OUT - Source position */
      char msgstr[]		/* OUT - Formatted message */
 )
-
 {
   int number;			/* Counting user messages */
   int index;			/* Index in msarr[] */
@@ -1824,19 +1577,18 @@ int impMsg(
   number = 1;
   for (index = 0; index < count.msgs; index++) {
       if (msarr[index].sev <= sevSYS)
-	  /* A user message */
-	  if (number++ == msgno) {	/* Found the requested message! */
-	      /* Return source position */
-	      *srcp = msarr[index].pos;
-	      /* Format the message text into the user area */
-	      liFormatMsg(index, msgstr);
-	      return(msgno);
-	  }
+      /* A user message */
+      if (number++ == msgno) {	/* Found the requested message! */
+          /* Return source position */
+          *srcp = msarr[index].pos;
+          /* Format the message text into the user area */
+          liFormatMsg(index, msgstr);
+          return(msgno);
+      }
   }
 
   return(0);			/* Didn't find it! */
 }
-
 
 
 /*======================================================================
@@ -1846,7 +1598,6 @@ int impMsg(
    Create listing file.
 
  */
-
 void impList(
      char ofnm[],		/* IN - Output file name string */
      int lins,			/* IN - Lines per page */
@@ -1854,31 +1605,29 @@ void impList(
      impTyp typ,	/* IN - Listing type */
      impSev sevs	/* IN - Severities to include */
 )
-
 {
   char mess[MSGWIDTH+1];
   LMBOOL seof;			/* TRUE - source end of file reached */
-  
+
   /* First check phase */
   if (phase == PH_NONE) {
     error("impList(): Phase error.");
     return;
   }
-  
+
   liInit(typ, sevs, lins, cols);
   liOpenOutput(ofnm);
 
   /* Open the source file */
   srclev = 0;
   liOpenSrc(src[0].fnm, 0);
-  
+
   /* Sort messages, let liFormatMsg() alter phase and open msg file */
   sortmsg();
   liFormatMsg(0, mess);
-  
+
   crehead();			/* Create list header string */
   skippage();			/* Skip list to next page */
-  
 
   /* Until end of source file */
   seof = !src[0].open;
@@ -1888,24 +1637,18 @@ void impList(
     if (seof)			/* End of this file? */
       seof = liPop();		/* Try surrounding ... */
   }
-
   prupack();			/* Print unnumbered messages */
-  
 
   /* Output the global messages */
   prgpack();
 
-
   /* Print epilogue */
   prepi();
-  
+
   /* Close source file */
   if (src[0].open)
     fclose(src[0].file);
 }
-
-
-
 
 
 
@@ -1919,11 +1662,9 @@ void impList(
   Print one supplimentary line in the output file.
 
   */
-
 void impLiPrint(
     char str[]			/* IN - the string to print */
 ) {
-
   if (phase != PH_RETR)
     error("impPrint(): Phase error.");
   else
@@ -1938,11 +1679,9 @@ void impLiPrint(
   Skip to a new page if not enough number of lines left on the page.
 
   */
-
 void impSkipLines(
      int lins			/* IN - minimum number of lines left */
 ) {
-
   if (phase != PH_RETR)
     error("impSkipLines(): Phase error.");
   else if ((lins == 0) || (plnum + lins > paglen+HEADERLINES))
@@ -1957,18 +1696,15 @@ void impSkipLines(
   Clean up after one session.
 
   */
-
 void impLiTerminate(
 ) {
-
   int i;
-  
+
   /* Free all allocated string areas */
   if (src[0].fnm != NULL)
     free(src[0].fnm);
   free(src);
 
-  
   for (i=0; i < count.msgs; i++)
     if (mdarr[i].insert != impNoIns && mdarr[i].insert != NULL)
       free(mdarr[i].insert);
@@ -1976,13 +1712,12 @@ void impLiTerminate(
   free(msarr);
 
   free(lihdr);
-  
+
   /* Close output file if it wasn't the terminal */
   if (out.open && out.name && strcmp(out.name, "") != 0)
-    fclose(out.file);	
+    fclose(out.file);
   out.open = FALSE;
-  
+
   phase = PH_NONE;
 }
-
 

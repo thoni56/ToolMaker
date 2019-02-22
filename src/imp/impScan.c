@@ -1,5 +1,3 @@
-
-
 /*----------------------------------------------------------------------*\
 
 	impScan.c
@@ -9,41 +7,27 @@
 \*----------------------------------------------------------------------*/
 
 
-
 #include <stdio.h>
-
 #include <stdlib.h>
 #include <string.h>
-
 #include "impScan.h"
 
 /* Local imports */
-
 extern int impScReader( impScContext smThis, unsigned char *smBuffer, unsigned int smLength );
-
 extern int impScAction( impScContext smThis, int smInternalCode, TmToken *smToken );
-
 extern int impScPostHook( impScContext smThis, TmToken *smToken );
 
-
-
 /* System dependencies */
-
 
 /* These datatypes should be defined to be unsigned integers of length 1, 2
  * and 4 bytes respectively.
  */
-
 typedef unsigned char UByte1;
 typedef unsigned short UByte2;
 typedef unsigned int UByte4;
 
 
-
-
-
 /* START of scanning tables */
-
 
 
 /*
@@ -72,9 +56,6 @@ static UByte1 smMap[256]={
 ,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255
 }
 ;
-
-
-
 
 
 /*
@@ -148,7 +129,6 @@ static UByte1 smUnknownCode[5]={
  * DFA
  */
 
-
 static UByte2 smDFArow[216]={
 0,46,92,138,184,230,276,322,322,322,368,322,322,322,322,322
 ,414,460,322,506,552,598,322,322,322,322,644,690,736,782,828,874
@@ -166,8 +146,6 @@ static UByte2 smDFArow[216]={
 ,6900,6946,6992,7038,7084,7130,7176,7222
 }
 ;
-
-
 static UByte1 smDFAcol[256]={
 0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0
 ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -187,9 +165,6 @@ static UByte1 smDFAcol[256]={
 ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 }
 ;
-
-
-
   
 static UByte1 smDFAval[7268]={
 5,5,5,5,5,5,6,5,5,5,5,5,5,5,5,5
@@ -671,10 +646,7 @@ static UByte1 smDFAval[7268]={
   
 
 
-
-
 /* END of scanning tables */
-
 
 /*
  * LOOKAHEAD
@@ -713,12 +685,10 @@ static UByte1 smLookaheadSuffix[84]={
 }
 ;
 
-
 static unsigned char *smLookahead(
      int smCode,
      unsigned char *smAt,
      unsigned char *smEnd)
-
 {
   unsigned char *halt;
   unsigned char ch;
@@ -733,16 +703,8 @@ static unsigned char *smLookahead(
     /* Scan forward */
     state=smLookaheadPrefix[smCode];
     for(;;) {
-
-
 ch=smMap[*smAt++];
-
-
-
-
 {
-
-
 
   
     
@@ -751,9 +713,7 @@ ch=smMap[*smAt++];
       
     
   
-
 }
-
       if(state==216) break;
       if(smAccept[state]>0) {
 	halt=smAt;
@@ -764,16 +724,8 @@ ch=smMap[*smAt++];
     state=smLookaheadSuffix[smCode];
     for(;;) {
       if(smAccept[state]>0 && smEnd<=halt) break;
-
-
 ch=smMap[*--smEnd];
-
-
-
-
 {
-
-
 
   
     
@@ -782,9 +734,7 @@ ch=smMap[*--smEnd];
       
     
   
-
 }
-
       }
     return smEnd;
   }
@@ -795,47 +745,36 @@ ch=smMap[*--smEnd];
 
 
 
-
-
-
 /*
  * Source position calculation 
  */
-
 
 static void smSourcePosition(
      impScContext smThis,
      unsigned char *smAt,
      unsigned char *smEnd)
-
 {
   if(smThis->smPosContinue<smEnd) {
     if(smThis->smPosContinue>smAt) smAt=smThis->smPosContinue;
     smThis->smNextPosition+=smEnd-smAt;
-
     for(;smAt<smEnd;smAt++) 
       if(*smAt==10) {
 	smThis->smPosLine=smAt;
 	smThis->smNextLine++;
-
       }
 
     smThis->smNextColumn=smEnd-smThis->smPosLine;
-
     smThis->smPosContinue=smEnd;
   }
 }
-
 
 static void smRewindSourcePosition(
      impScContext smThis,
      unsigned char *smAt,
      unsigned char *smEnd)
-
 {
   if(smThis->smPosContinue>smEnd) return;
   smThis->smNextPosition-=smEnd-smAt;
-
   while(smAt<smEnd--) if(*smEnd==10) smThis->smNextLine--;
   while(smThis->smBegining<smEnd) 
     if(*smEnd==10) {
@@ -845,10 +784,8 @@ static void smRewindSourcePosition(
     else smEnd--;
   if(smAt<smThis->smPosLine) smThis->smPosLine=smThis->smPosPrevLine;
   smThis->smNextColumn=smAt-smThis->smPosLine;
-
   smThis->smPosContinue=smAt;
 }
-
 
 
 /*
@@ -863,9 +800,7 @@ static void smRewindSourcePosition(
  *
  */
 
-
 static int smReadBuffer(impScContext smThis)
-
 {
   long length;
   int size;
@@ -874,30 +809,20 @@ static int smReadBuffer(impScContext smThis)
   if(smThis->smBegining!=smThis->smText) {
     /* Move data to beginning of buffer */
     length=smThis->smEnd-smThis->smText;
-
     memcpy((void *)smThis->smBegining,(void *)smThis->smText,(size_t)length);
-
     if(length<1024 && smThis->smSize>1024) {
       /* Reduce buffer size */
       smThis->smSize=1024;
-
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)1024+1);
-
     }
   }
   else if(smThis->smBegining+smThis->smSize==smThis->smEnd) {
     /* Try to enlarge buffer */
     if(smThis->smSize==524288) {
       /* Cut Buffer */
-
       smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
-
-
       memcpy((void *)smThis->smBegining,(void *)(smThis->smEnd-1024),(size_t)1024);
-
-
       mod=smThis->smEnd-smThis->smBegining-1024;
-
       smThis->smContinue-=mod;
       smThis->smEnd-=mod;
       smThis->smPosPrevLine-=mod;
@@ -907,26 +832,16 @@ static int smReadBuffer(impScContext smThis)
     }
     else {
       unsigned char *begining = smThis->smBegining;
-
       size=smThis->smSize*1.5;
-
       if(size>524288) size=524288;
       /* Enlarge buffer */
-
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)size+1);
-
       if(smThis->smBegining==NULL) {
 	/* Cut Buffer */
 	smThis->smBegining = begining;	/* Restore to original buffer */
-
 	smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
-
-
 	memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), (size_t)1024);
-
-
 	mod=smThis->smEnd-smThis->smBegining-1024;
-
 	smThis->smContinue-=mod;
 	smThis->smEnd-=mod;
 	smThis->smPosPrevLine-=mod;
@@ -939,9 +854,7 @@ static int smReadBuffer(impScContext smThis)
     }
   }
   if(smThis->smBegining!=smThis->smText) {
-
     mod=smThis->smText-smThis->smBegining;
-
     smThis->smContinue-=mod;
     smThis->smEnd-=mod;
     smThis->smPosPrevLine-=mod;
@@ -953,7 +866,6 @@ static int smReadBuffer(impScContext smThis)
   length=impScReader(smThis,smThis->smEnd,(unsigned int)length);
   if(length<0) return length;
   smThis->smEnd+=length;
-
   return length;
 }
 
@@ -964,21 +876,15 @@ static int smReadBuffer(impScContext smThis)
  *
  */
 
-
 impScContext impScNew(impScScanner smScanner)
-
 {
   impScContext smThis;
 
-
   smThis=(impScContext)malloc((size_t)sizeof(impScContextItem));
-
   if(smThis==NULL) {
     return NULL;
   }
-
   smThis->smBegining=(unsigned char *)malloc((size_t)1024+1);
-
   if(smThis->smBegining==NULL) {
     free((char *)smThis);
     return NULL;
@@ -999,9 +905,7 @@ impScContext impScNew(impScScanner smScanner)
   smThis->smColumn=1;
   smThis->smPosition=0;
   smThis->smScanner=smScanner;
-
   smThis->smBegining[0]=0;
-
   return smThis;
 }
 
@@ -1012,9 +916,7 @@ impScContext impScNew(impScScanner smScanner)
  *
  */
 
-
 void impScDelete(impScContext smThis)
-
 {
   free((char *)smThis->smBegining);
   free((char *)smThis);
@@ -1029,11 +931,9 @@ void impScDelete(impScContext smThis)
  *
  */
 
-
 int impScSkip(
      impScContext smThis,
      int smLength)
-
 {
   int empty;
 
@@ -1045,30 +945,24 @@ int impScSkip(
       empty=smThis->smEnd-smThis->smContinue;
       if(empty<smLength) smLength=empty;
     }
-
     smSourcePosition(smThis,smThis->smContinue,smThis->smContinue+smLength);
-
     smThis->smContinue+=smLength;
     smThis->smLength+=smLength;
   }
   else if(smLength<0) {
     smLength= -smLength;
     if(smLength>smThis->smLength) smLength=smThis->smLength;
-
     smRewindSourcePosition(smThis,smThis->smContinue-smLength,smThis->smContinue);
-
     smThis->smContinue-=smLength;
     smThis->smLength-=smLength;
     }
   return smLength;
 }
 
-
 int impScModify(
      impScContext smThis,
      unsigned char *smBuffer,
      int smLength)
-
 {
   if(smLength<0) {
 /* This code is identical to smSkip but no source position is rewinded */
@@ -1077,9 +971,7 @@ int impScModify(
     smThis->smContinue-=smLength;
     smThis->smLength-=smLength;
 /***********************************************************************/
-
     memcpy((void *)smThis->smContinue,(void *)smBuffer,(size_t)smLength);
-
     return smLength;
   }
   else if(smLength>0) {
@@ -1088,9 +980,7 @@ int impScModify(
     
     for(length2=smLength;(length1=impScSkip(smThis,length2));length2-=length1) {
       if(length1<0) return length1;
-
       memcpy((void *)(smThis->smContinue-length1),(void *)smBuffer,(size_t)length1);
-
       smBuffer+=length1;
     }
     return smLength-length2;
@@ -1098,29 +988,23 @@ int impScModify(
   return smLength;
 }
 
-
 int impScCopy(
      impScContext smThis,
      unsigned char *smBuffer,
      unsigned int smFrom,
      unsigned int smTo)
-
 {
   if(smFrom>smThis->smLength) smFrom=smThis->smLength;
   if(smTo>smThis->smLength) smTo=smThis->smLength;
-
   memcpy((void *)smBuffer,(void *)(smThis->smText+smFrom),(size_t)smTo-smFrom);
-
   return smTo-smFrom;
 }
-
 
 int impScMapCopy(
      impScContext smThis,
      unsigned char *smBuffer,
      unsigned int smFrom,
      unsigned int smTo)
-
 {
   int n;
   int len;
@@ -1130,51 +1014,35 @@ int impScMapCopy(
   if(smTo>smThis->smLength) smTo=smThis->smLength;
   len=0;
   for(n=smFrom,at=smThis->smText+smFrom;n<smTo;n++) {
-
-
 *smBuffer++=smMap[*at++];
-
-
-
     len++;
   }
   return len;
 }
 
-
 void impScScrScanner(
      impScScanner smScanner,
      int smOnOff)
-
 {
-
 }
-
 
 void impScScrToken(
      impScScanner smScanner,
      int smCode,
      int smOnOff)
-
 {
-
 }
-
 
 void impScScrRule(
      impScScanner smScanner,
      int smCode,
      int smOnOff)
-
 {
-
 }
-
 
 int impScan(
      impScContext smThis,
      TmToken *smToken)
-
 {
   unsigned char *at;
   unsigned char *end;
@@ -1184,26 +1052,16 @@ int impScan(
   int rew_state;
   int code;
 
-
   do {				/* Skip loop */
-
- 
     smThis->smLine=smThis->smNextLine;
     smThis->smColumn=smThis->smNextColumn;
-
     smThis->smPosition=smThis->smNextPosition;
-
-
     end=(smThis->smEnd);
     smThis->smText=smThis->smContinue;
     smThis->smBufferOverflow=0;
-
- 
     smToken->srcp.line=smThis->smNextLine;
     smToken->srcp.col=smThis->smNextColumn;
-
     smThis->smPosPrevLine=smThis->smPosLine;
-
     rew_at=smThis->smText;
     do {			/* Continue loop */
       rew_state=216;
@@ -1211,7 +1069,6 @@ int impScan(
       at=(smThis->smContinue);
       state=smScanner[smThis->smScanner];
       for (;;) {
-
 	if(at==end) {
 	  int mod;
 	  
@@ -1225,12 +1082,8 @@ int impScan(
           if(at==end) 
 	    break;
         }
-
 	  ch = *at++;
-
 {
-
-
 
   
     
@@ -1239,15 +1092,12 @@ int impScan(
       
     
   
-
 }
-
 	  if(state>=216) break;
 	  if(smAccept[state]>0) {
 	    rew_state=state;
 	    rew_at=at;
 	  }
-
       }
       if(rew_state==216) {
         if(rew_at>end) {
@@ -1259,31 +1109,17 @@ int impScan(
       }	
       else
 	code=smAccept[rew_state]-1;	
-
-
       if(smLookaheadType[code])
 	smThis->smContinue=smLookahead(code,smThis->smText,rew_at);
       else
 	smThis->smContinue=rew_at;
-
       smThis->smLength=smThis->smContinue-smThis->smText;
-
-
-
       smSourcePosition(smThis,smThis->smText,smThis->smContinue);
-
-
-
       smToken->code=smTokenCode[code]-1;
       code=impScAction(smThis,code,smToken);
-
     } while(code<-1);
-
-
     smToken->code=code;
     code=impScPostHook(smThis,smToken);
-
   } while(code<0);
   return smToken->code=code;
 }
-

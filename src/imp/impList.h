@@ -1,18 +1,15 @@
-
-
 #ifndef _impList_H_
 #define _impList_H_
 /*----------------------------------------------------------------------*\
 
-	impList.h
+    impList.h
 
-	Header file for ListerMaker generated error message and listing
-	handler
+    Header file for ListerMaker generated error message and listing
+    handler
 
 \*----------------------------------------------------------------------*/
 
 #include "impCommon.h"
-
 
 
 /* Insert string separator */
@@ -44,34 +41,28 @@ typedef int impTyp;
 #define liFULL (liTINY|liOK)
 
 typedef enum impMessages {
-
     imp_ENGLISH_Messages
 } impMessages;
-
 
 
 /* UNINITIALISED: */
 /* Initialise the impLister System */
 extern void impLiInit(char header[],
-
-				 char src[],
-				 impMessages msect);
-
+                 char src[],
+                 impMessages msect);
 
 /* COLLECTING: */
 /* Log a message at a source position */
 extern void impLog(TmSrcp *pos,
-				int ecode,
-				impSev sev,
-				char *istrs);
-
+                int ecode,
+                impSev sev,
+                char *istrs);
 
 /* Log a message at a source position using va_arg handling */
 extern void impLogv(TmSrcp *pos,
-				int ecode,
-				impSev sev,
-				...);
-
+                int ecode,
+                impSev sev,
+                ...);
 
 /* Turn listing completely off after a particular source position */
 extern void impLiOff(TmSrcp *pos);
@@ -79,19 +70,17 @@ extern void impLiOff(TmSrcp *pos);
 /* Turn listing on again at a particular source position */
 extern void impLiOn(TmSrcp *pos);
 
-
 /* Start reading an included file at a particular source position */
 extern void impLiEnter(TmSrcp *pos,
-				  TmSrcp *start,
-				  char fnm[]);
+                  TmSrcp *start,
+                  char fnm[]);
 
 /* Stop reading from an included file prematurely */
 extern void impLiExit(TmSrcp *pos);
 
-
 /* (Un)conditionally skip to a new page at a source position */
 extern void impLiPage(TmSrcp *pos,
-				 int lins);
+                 int lins);
 
 /* Read worst severity logged so far */
 extern impSev impSeverity(void);
@@ -99,21 +88,17 @@ extern impSev impLocSeverity(void);
 extern void impResLocSeverity(void);
 
 /* RETRIEVING: */
-
 /* Create a listing of a selected type in a file or the screen */
 extern void impList(char ofnm[],
-				 int lins,
-				 int cols,
-				 impTyp typ,
-				 impSev sevs);
-
-
-
+                 int lins,
+                 int cols,
+                 impTyp typ,
+                 impSev sevs);
 
 /* Return the i'th formatted message, return 0 if not found */
 extern int impMsg(int i,
-			       TmSrcp *pos,
-			       char *msg);
+                   TmSrcp *pos,
+                   char *msg);
 
 /* Print a string on a line in the output file */
 extern void impLiPrint(char str[]);
@@ -125,9 +110,5 @@ extern void impSkipLines(int lins);
 extern void impLiTerminate(void);
 
 
-
-
 #endif
-
-
 

@@ -1,5 +1,3 @@
-
-
 /*----------------------------------------------------------------------*\
 
 	impScSema.c
@@ -8,10 +6,7 @@
 
 \*----------------------------------------------------------------------*/
 
-
 #include "impScan.h"
-
-
 
 /* %%DECLARATION */
 
@@ -40,43 +35,30 @@ static int lexScanner[512];
 static int lexColumn = 0;
 
 
-
 /* END %%DECLARATION */
-
-
 
 int impScReader(
      impScContext smThis,
      unsigned char *smBuffer,
      unsigned int smLength)
-
 {
-
 
 
   return read(smThis->fd, smBuffer, smLength);
 
 
-
-
 }    
-
-
-
 
 
 int impScAction(
      impScContext smThis,
      int smInternalCode,
      TmToken *smToken)
-
 {
   enum {
     smSkipToken		= -1,
     smContinueToken	= -2
   };
-
-
   switch(smInternalCode) {
   case   1:		/* '%%IF'*/ 
   case   2:		/* '%%SET'*/ 
@@ -574,32 +556,21 @@ int impScAction(
 }
     break;
   }
-
-
   return smToken->code;
 }
-
-
-
 
 int impScPostHook(
      impScContext smThis,
      TmToken *smToken)
-
 {
   enum {
     smSkipToken		= -1
   };
 
 
-
   smToken->srcp.file = smThis->fileNo;
-
-
 
 
   return smToken->code;
 }
-
-
 

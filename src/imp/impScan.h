@@ -1,11 +1,7 @@
-
-
 #ifndef _impScan_h_
 #define _impScan_h_
 
-
 #include "impCommon.h"
-
 
 typedef enum impScScanner {
 	imp_MAIN_MAIN_Scanner = 0,
@@ -75,9 +71,7 @@ typedef enum imp_MAIN_ScToken {
 } imp_MAIN_ScToken;
 
 
-
 typedef struct impScContextItem *impScContext;
-
 
 extern impScContext impScNew( impScScanner smScanner );
 extern void impScDelete( impScContext smThis );
@@ -89,8 +83,6 @@ extern void impScScrScanner( impScScanner scanner, int smOnOff );
 extern void impScScrToken( impScScanner scanner, int smCode, int smOnOff );
 extern void impScScrRule( impScScanner scanner, int smCode, int smOnOff );
 extern int impScan( impScContext smThis, TmToken *smToken );
-
-
 
 
 typedef struct impScContextItem {
@@ -123,16 +115,12 @@ typedef struct impScContextItem {
 
 
 
-
   int fd;
   int fileNo;
   int endPos;
 
 
 
-
-
 } impScContextItem;
 
 #endif
-
