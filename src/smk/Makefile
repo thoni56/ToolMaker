@@ -4,6 +4,7 @@
 #	without license
 
 TMARCH	= cygwin
+
 mingw:	TMARCH = mingw
 mingw:	MINGW	= -mno-cygwin
 cygwin: CQ = -DCYGWIN
@@ -38,13 +39,10 @@ all debug : smkobj
 ################################################################################
 #
 #
-# Install in DESTDIR/bin, DESTDIR/lib/ToolMaker & DESTDIR/man
-install:
-	install -d $(DESTDIR)/lib/ToolMaker/ansi-c
-	ln -sf $(DESTDIR)/lib/ToolMaker/ansi-c $(DESTDIR)/lib/ToolMaker/c
-	ln -sf $(DESTDIR)/lib/ToolMaker/ansi-c $(DESTDIR)/lib/ToolMaker/c++
-	install	-C Scan.imp $(DESTDIR)/lib/ToolMaker/ansi-c
-	install smk $(DESTDIR)/bin
+# Install in DESTROOT/bin, DESTROOT/lib/ToolMaker=DESTLIB & DESTROOT/man
+install: installdirs
+	install	-C Scan.imp $(DESTLIB)/lib/ansi-c
+	install smk $(DESTROOT)/bin
 
 smkobj: checkARCH $(TMARCH)
 	install smk ../../bin/

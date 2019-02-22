@@ -36,16 +36,13 @@ OBJECTS = $(VERSIONOBJECTS) version.o
 #
 # Normal compilation
 all debug opt: lmkobj
-	install -C List.imp ../../lib/ansi-c
+	install -C List.imp ../../lib/ansi-c/
 
 test:
 	cd testing; make
 
-install:
-	install -d $(DESTROOT)/lib/ToolMaker/ansi-c
-	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c
-	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c++
-	install	-C List.imp $(DESTROOT)/lib/ToolMaker/ansi-c
+install: installdirs
+	install	-C List.imp $(DESTLIB)/lib/ansi-c
 	install lmk $(DESTROOT)/bin
 
 # Miscellaneous targets down here

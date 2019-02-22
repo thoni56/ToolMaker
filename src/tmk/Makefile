@@ -30,12 +30,9 @@ OBJS=   $(OBJS.c)
 all debug: $(TMARCH)
 	install -C -b Common.imp ../../lib/ansi-c
 
-# Install in DESTROOT/bin, DESTROOT/lib/ToolMaker & DESTROOT/man
-install:
-	install	-d $(DESTROOT)/lib/ToolMaker/ansi-c
-	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c
-	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c++
-	install -C Common.imp $(DESTROOT)/lib/ToolMaker/ansi-c
+# Install in DESTROOT/bin, DESTROOT/lib/ToolMaker=DESTLIB & DESTROOT/man
+install: installdirs
+	install -C Common.imp $(DESTLIB)/lib//ansi-c
 
 .PHONY: $(TMARCH)
 $(TMARCH): tmkobj

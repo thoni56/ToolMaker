@@ -60,11 +60,8 @@ LIBS	= \
 all debug: pmkobj
 	install -C Parse.imp Err.imp ../../lib/ansi-c
 
-install:
-	install -d $(DESTROOT)/lib/ToolMaker/ansi-c
-	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c
-	ln -sf $(DESTROOT)/lib/ToolMaker/ansi-c $(DESTROOT)/lib/ToolMaker/c++
-	install	-C  Parse.imp Err.imp $(DESTROOT)/lib/ToolMaker/ansi-c
+install: installdirs
+	install	-C  Parse.imp Err.imp $(DESTLIB)/lib/ansi-c
 	install pmk $(DESTROOT)/bin
 
 

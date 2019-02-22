@@ -3,6 +3,15 @@
 # TODO: generate 'cygwin32' or 'cygwin64' and handle that in all skeleton files to
 TMARCH = ${if ${findstring CYGWIN, ${shell uname}},cygwin,${strip ${shell uname}}}
 
+DESTROOT=/usr/local
+DESTLIB=$(DESTROOT)/lib/ToolMaker
+
+.PHONY: installdirs
+installdirs:
+	install -d $(DESTLIB)/lib/ansi-c
+	ln -sf $(DESTLIB)/lib/ansi-c $(DESTLIB)/lib/c
+	ln -sf $(DESTLIB)/lib/ansi-c $(DESTLIB)/lib/c++
+
 checkARCH:
 	@if test -f .arch ; then :; else echo "none" > .arch; fi
 	@-if test "`cat .arch`" != "$(TMARCH)"; then \
