@@ -50,6 +50,10 @@ smkobj: checkARCH $(TMARCH)
 mingw cygwin sun3 sun4 solaris1 solaris2: $(OBJECTS) $(LIBS)
 	$(CC) -o smk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS) $(MALLOCDEBUG)
 
+tm:
+	smk smk
+	pmk smk
+	lmk smk
 
 test:
 	cd testing; make
