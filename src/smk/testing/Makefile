@@ -5,4 +5,6 @@
 all:
 	jregr
 	cd gen-test; jregr
-	cd performance; jregr
+
+performance:
+	cd performance
