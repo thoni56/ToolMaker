@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1990-06-27
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/smk.c,v 1.1 2002/06/25 20:04:53 Thomas Nilsson Exp $
@@ -88,7 +88,7 @@
  *
  * Revision 1.6  91/08/22  07:19:42  tools
  * Silence when there are no messages
- * 
+ *
  * Revision 1.5  1991/08/20  11:10:28  tools
  * Added code for malloc_debug if DEBUG is defined
  *
@@ -186,17 +186,17 @@ OptTabRec smkOptTab[] = {
      "set [no] scanner prefix"},
   {TMKPREFIX_OPT, BOOLSTR_TMO, "", "", (unsigned) "tm",
      "set [no] system prefix"},
-  {SMKLIBRARY_OPT, STR_TMO, "library", "library <lib>", 
+  {SMKLIBRARY_OPT, STR_TMO, "library", "library <lib>",
      (unsigned) "%%(TMHOME)/lib/%%(smkTarget)/", "use directory <lib> as library"},
-  {TMKLIBRARY_OPT, STR_TMO, "", "", 
+  {TMKLIBRARY_OPT, STR_TMO, "", "",
      (unsigned) "%%(TMHOME)/lib/%%(tmkTarget)/", "set library"},
-  {SMKESCAPE_OPT, BOOLSTR_TMO, "escape", "escape [<c>]", (unsigned) "`", 
+  {SMKESCAPE_OPT, BOOLSTR_TMO, "escape", "escape [<c>]", (unsigned) "`",
      "set [no] escape character"},
-  {TMKESCAPE_OPT, BOOLSTR_TMO, "", "", (unsigned) "`", 
+  {TMKESCAPE_OPT, BOOLSTR_TMO, "", "", (unsigned) "`",
      "set [no] escape character"},
   {WIDTH_OPT, BOOLNUM_TMO, "width", "width <n>", 78,
      "set [no] listing width to <n>", {0, MAX}},
-  {HEIGHT_OPT, BOOLNUM_TMO, "height", "height <n>", 60, 
+  {HEIGHT_OPT, BOOLNUM_TMO, "height", "height <n>", 60,
       "set [no] listing height to <n>", {0, MAX}},
   {GENERATE_OPT, SET_TMO, "generate", "generate", 0x2,
      "select [no] generated output { tables | source }", {0},
@@ -209,17 +209,17 @@ OptTabRec smkOptTab[] = {
      "do [not] generate tracing"},
   {OPTIMIZE_OPT, BOOL_TMO, "optimize", "optimize", TRUE,
      "do [not] optimize tables"},
-  {TOKENSIZE_OPT, NUM_TMO, "tokensize", "tokensize <n>", 1024, 
+  {TOKENSIZE_OPT, NUM_TMO, "tokensize", "tokensize <n>", 1024,
      "set normal size of token buffer to <n>", {0, MAX}},
-  {TOKENLIMIT_OPT, NUM_TMO, "tokenlimit", "tokenlimit <n>", 512*1024, 
+  {TOKENLIMIT_OPT, NUM_TMO, "tokenlimit", "tokenlimit <n>", 512*1024,
      "set maximal token length <n>", {0,MAX}},
-  {EXCLUDE_OPT, BOOLSTR_TMO, "exclude", "exclude [<c>]", FALSE, 
+  {EXCLUDE_OPT, BOOLSTR_TMO, "exclude", "exclude [<c>]", FALSE,
      "set [no] excluded character"},
-  {PACK_OPT, SET_TMO, "pack", "pack", 3, 
-     "select [no] table packing { row | column | rds | les | gcs | error }", {0}, 
+  {PACK_OPT, SET_TMO, "pack", "pack", 3,
+     "select [no] table packing { row | column | rds | les | gcs | error }", {0},
      {"Row", "Column", "RDS", "LES", "GCS", "Error", NULL}},
-  {LIST_OPT, SET_TMO, "list", "list", 0, 
-     "select [no] listed information { set | map | token | input | nfa | dfa | rule }", {0}, 
+  {LIST_OPT, SET_TMO, "list", "list", 0,
+     "select [no] listed information { set | map | token | input | nfa | dfa | rule }", {0},
      {"Set", "Map", "Token", "Input", "Nfa", "Dfa", "Rule", NULL}},
   {VOC_OPT, STR_TMO, "", "voc <file>", (int)NULL, "read vocabulary from <file>"},
   {SML_OPT, STR_TMO, "", "sml <file>", (int)NULL, "write lists to <file> (if any)"},
@@ -367,40 +367,40 @@ void mainCreate( int argc, char **argv)
   if(getSetOpt(GENERATE_OPT)) {
     if(access(optSmtfile,F_OK)==0)
       if(access(optSmtfile,W_OK))
-	smkLog(NULL,207,sevFAT,optSmtfile);
+    smkLog(NULL,207,sevFAT,optSmtfile);
   }
   if (getSetOpt(LIST_OPT)) {
     if(access(optSmlfile,F_OK)==0)
       if(access(optSmlfile,W_OK))
-	smkLog(NULL,208,sevFAT,optSmlfile);
+    smkLog(NULL,208,sevFAT,optSmlfile);
   }
   if(smkSeverity() & (sevERR+sevFAT+sevSYS)) {
-    if (getBoolOpt(VERBOSE_OPT)) 
+    if (getBoolOpt(VERBOSE_OPT))
       printf("%s\n\n",product.longHeader);
     return;
   }
 
   /* options in .tmk file */
-  if ((tmkExists = tmkCParse(mainListFiles[2], tmkOptTab, smkOptTab, argc, argv, 
-			   &tokenNode, &srcpNode, &importSection, 2, TMK_FILE, TMKESCAPE_OPT))) {
+  if ((tmkExists = tmkCParse(mainListFiles[2], tmkOptTab, smkOptTab, argc, argv,
+               &tokenNode, &srcpNode, &importSection, 2, TMK_FILE, TMKESCAPE_OPT))) {
   }
   /* options in input file */
   if (tmkExists) {
-    if (tmkCParse(mainListFiles[1], smkOptTab, smkOptTab, argc, argv, 
-		 &tmpToken, &tmpSrcp, &smkImportSection, 1, SMK_FILE, SMKESCAPE_OPT)) {
+    if (tmkCParse(mainListFiles[1], smkOptTab, smkOptTab, argc, argv,
+         &tmpToken, &tmpSrcp, &smkImportSection, 1, SMK_FILE, SMKESCAPE_OPT)) {
       if (tmpToken)
-	smkLog(NULL, 52, sevERR, "TOKEN");
+    smkLog(NULL, 52, sevERR, "TOKEN");
       if (tmpSrcp)
-	smkLog(NULL, 52, sevERR, "SRCP");
+    smkLog(NULL, 52, sevERR, "SRCP");
     } else
       smkLog(NULL, 401, sevFAT, mainListFiles[1]);
   } else {
-    if (!tmkCParse(mainListFiles[1], smkOptTab, smkOptTab, argc, argv, 
-		  &tokenNode, &srcpNode, &smkImportSection, 1, SMK_FILE, SMKESCAPE_OPT))
+    if (!tmkCParse(mainListFiles[1], smkOptTab, smkOptTab, argc, argv,
+          &tokenNode, &srcpNode, &smkImportSection, 1, SMK_FILE, SMKESCAPE_OPT))
       smkLog(NULL, 401, sevFAT, mainListFiles[1]);
   }
 
-  if (getBoolOpt(VERBOSE_OPT)) 
+  if (getBoolOpt(VERBOSE_OPT))
     printf("%s\n\n",product.longHeader);
 
   if (smkSeverity() & (sevERR+sevFAT+sevSYS)) {
@@ -421,13 +421,13 @@ void mainCreate( int argc, char **argv)
   mergeOptions(SMKOS_OPT, TMKOS_OPT, tmkExists);
   /* Target assignment */
   mergeOptions(SMKTARGET_OPT, TMKTARGET_OPT, tmkExists);
-    
+
   if ((strcmp(getStrOpt(TMKTARGET_OPT), "c") != 0) &&
       (strcmp(getStrOpt(TMKTARGET_OPT), "ansi-c") != 0) &&
       (strcmp(getStrOpt(TMKTARGET_OPT), "c++") != 0)) {
     smkLog(NULL, 405, sevWAR, getStrOpt(TMKTARGET_OPT));
   }
-  
+
   if ((strcmp(getStrOpt(SMKTARGET_OPT), getStrOpt(TMKTARGET_OPT)) != 0) &&
       (strcmp(getStrOpt(SMKTARGET_OPT), "c") != 0) &&
       (strcmp(getStrOpt(SMKTARGET_OPT), "ansi-c") != 0) &&
@@ -468,7 +468,7 @@ void mainCreate( int argc, char **argv)
   if(charSize<1 || (smkSeverity() & (sevERR+sevFAT+sevSYS))) {
     optList = getSetOpt(LIST_OPT);
     goto Exit;
-  } 
+  }
 
   tistart(&tb);
   dfaCreate();
@@ -486,13 +486,13 @@ void mainCreate( int argc, char **argv)
     dfaOptimize();
     time=tistop(&tb);
     if(getBoolOpt(VERBOSE_OPT)) printf("optimize DFA    %s    %7d      %7d                    %5.2f%%\n",
-			  tistr(time),dfaSize,charSize,(dfaSize*100.0)/size);
+              tistr(time),dfaSize,charSize,(dfaSize*100.0)/size);
     if(dfaSize<1 || (smkSeverity() & (sevERR+sevFAT+sevSYS))) {
     optList = getSetOpt(LIST_OPT);
     goto Exit;
   }
   }
-  
+
   tistart(&tb);
   if(smkSeverity() & (sevERR+sevFAT+sevSYS)) {
     optList = getSetOpt(LIST_OPT);
@@ -502,7 +502,7 @@ void mainCreate( int argc, char **argv)
   screenCreate();
   time=tistop(&tb);
   if(getBoolOpt(VERBOSE_OPT)) printf("pack DFA table  %s    %7d      %7d                    %5.2f%%\n",
-			tistr(time),pack->rows,pack->cols,(pack->rows*pack->cols*100.0)/(size*256));
+            tistr(time),pack->rows,pack->cols,(pack->rows*pack->cols*100.0)/(size*256));
   if(smkSeverity() & (sevERR+sevFAT+sevSYS)) {
     optList = getSetOpt(LIST_OPT);
     goto Exit;
@@ -511,11 +511,11 @@ void mainCreate( int argc, char **argv)
   if((optList = getSetOpt(LIST_OPT))) {
     tistart(&tb);
     smkListm(optSmlfile,
-	    getNumOpt(HEIGHT_OPT),
-	    getNumOpt(WIDTH_OPT),
-	    (optList & optLIST_INPUT) ? liFULL : liTINY,
-	    sevOK+sevINF+sevWAR+sevERR+sevFAT,
-	    mainListFiles);
+        getNumOpt(HEIGHT_OPT),
+        getNumOpt(WIDTH_OPT),
+        (optList & optLIST_INPUT) ? liFULL : liTINY,
+        sevOK+sevINF+sevWAR+sevERR+sevFAT,
+        mainListFiles);
     optList=getSetOpt(LIST_OPT);
     if(optList & optLIST_NONE) ;
     if(optList & optLIST_SET) setPrint();
@@ -539,19 +539,19 @@ void mainCreate( int argc, char **argv)
       int ecode=0;
       ecode = impMacro(optSmtfile, NULL, "", envBit, 0, smkEscape, &ecode) & (sevERR | sevFAT | sevSYS);
       if (ecode == 0) {
-	if((getSetOpt(GENERATE_OPT) & optGENERATE_TABLES)==0) 
-	  unlink(optSmtfile); 
-	}
+    if((getSetOpt(GENERATE_OPT) & optGENERATE_TABLES)==0)
+      unlink(optSmtfile);
+    }
       else
-	smkLog(0,402,sevFAT,"");
+    smkLog(0,402,sevFAT,"");
       time=tistop(&tb);
       if(getBoolOpt(VERBOSE_OPT)) printf("generate source %s                            %7d bytes   %5.2f%%\n",
-					 tistr(time),minsize,(minsize*100.0)/maxsize);
-    } 
+                     tistr(time),minsize,(minsize*100.0)/maxsize);
+    }
     else {
       time=tistop(&tb);
       if(getBoolOpt(VERBOSE_OPT)) printf("generate tables %s                            %7d bytes   %5.2f%%\n",
-					 tistr(time),minsize,(minsize*100.0)/maxsize);
+                     tistr(time),minsize,(minsize*100.0)/maxsize);
     }
 
   }
@@ -560,11 +560,11 @@ void mainCreate( int argc, char **argv)
 
   if(optList && (smkSeverity() & (sevERR+sevFAT+sevSYS)))
     smkListm(optSmlfile,
-	    getNumOpt(HEIGHT_OPT),
-	    getNumOpt(WIDTH_OPT),
-	    (optList & optLIST_INPUT) ? liFULL : liTINY,
-	    sevOK+sevINF+sevWAR+sevERR+sevFAT,
-	    mainListFiles);
+        getNumOpt(HEIGHT_OPT),
+        getNumOpt(WIDTH_OPT),
+        (optList & optLIST_INPUT) ? liFULL : liTINY,
+        sevOK+sevINF+sevWAR+sevERR+sevFAT,
+        mainListFiles);
   time=tistop(&tbTotal);
   if(getBoolOpt(VERBOSE_OPT)) {
     printf("===============================================================================\n");
@@ -602,7 +602,7 @@ int main( int argc, char **argv )
 
   /* Initiate option database */
   initOpts(LAST_OPT, smkOptTab);
-  
+
   /* Set command line options */
   setCliOpts(smkOptTab, argc, argv, &fileName);
 
@@ -617,7 +617,7 @@ int main( int argc, char **argv )
   mainListFiles[0] = optVocabulary;
   mainListFiles[1] = optScanner;
   mainListFiles[2] = optTmkfile;
-      
+
   setInit();
 #ifdef _AMOSDEV
   smkLiInit(product.longHeader, optScanner, smk_AMOS_Messages);

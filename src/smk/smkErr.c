@@ -110,7 +110,7 @@ void smkISym(
 #define pstr printString
 
 
-  /* 
+  /*
    * Make the requested token
    */
 

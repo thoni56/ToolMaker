@@ -1,44 +1,3 @@
-/*
- * AUTHOR : Tony Olsson
- * DATE   : 1993-08-20/tony@wolf
- * CREATED: 1990-06-28
- * 
- * SoftLab ab (c) 1990
- *
- * $Header: /Repository/ToolMaker/src/smk/screen.c,v 1.1 2002/06/25 20:04:50 Thomas Nilsson Exp $
- *
- * $Log: screen.c,v $
- * Revision 1.1  2002/06/25 20:04:50  Thomas Nilsson
- * Initial version of ToolMaker source import
- *
- * Revision 1.5  1997/01/13 10:20:51  thoni
- * Fixed Memory Access errors
- *
- * Revision 1.4  1993/08/20 11:33:52  tony
- * Conforms more to ANSI C standard.
- *
- * Revision 1.3  1993/04/30  12:33:21  tools
- * Adoption to ANSI-C completed.
- * Explicit register allocation removed.
- *
- * Revision 1.2  1993/04/23  11:12:47  tools
- * Totaly rewritten to correctly handle vocabularies and rules.
- *
- * Revision 1.1  1993/03/24  09:24:43  tools
- * Ursprunglig version av smk testsvit
- *
- * Revision 1.3  1991/12/11  13:00:32  tools
- * Not modified
- *
- * Revision 1.2  91/07/11  10:38:37  tools
- * Added Inherited scanners and Undefined tokens
- * 
- * Revision 1.1  1991/01/10  13:52:10  tools
- * Initial revision
- *
- *
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -107,7 +66,7 @@ static int screenTokenQSortCmp(const ScreenedTokens elem1, const ScreenedTokens 
 }
 
 /*
- * This function inserts a string in screenTokens table. Returns the start of the string 
+ * This function inserts a string in screenTokens table. Returns the start of the string
  *
  * uses: screenTokens, screenTokensPackedSize and screenTokensSize
  */
@@ -116,7 +75,7 @@ static int screenPackToken(char *string, int length)
 {
   int start;
   int i;
-  
+
   /*
    * Check if string is somewhere in screenTokens
    */
@@ -143,7 +102,7 @@ void screenCreate()
   int tokenTableIndex;
   int i;
   ScreenedTokens screenedTokens;
-    
+
   /*
    * Allocate check tables
    */
@@ -166,16 +125,16 @@ void screenCreate()
   screenTokensSize=0;
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
-      for(rule=scanner->rules;rule;rule=rule->next) 
-	if(rule->screening==YES) {
-	  screenTokenSize++;
-	  screenTokensSize+=astSequenceLength(rule->ast);
-	}
+      for(rule=scanner->rules;rule;rule=rule->next)
+    if(rule->screening==YES) {
+      screenTokenSize++;
+      screenTokensSize+=astSequenceLength(rule->ast);
+    }
   screenTokenLength=(int *)smalloc(sizeof(int)*screenTokenSize);
   screenTokenStart=(int *)smalloc(sizeof(int)*screenTokenSize);
   screenTokenCode=(int *)smalloc(sizeof(int)*screenTokenSize);
   screenTokens=(int *)smalloc(sizeof(int)*screenTokensSize);
- 
+
   /*
    * Create check tables
    */
@@ -183,18 +142,18 @@ void screenCreate()
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       screenCheckScan[scanner->code]=NO;
       for(rule=scanner->rules;rule;rule=rule->next) {
-	if (rule->type != ruleUNDEF) {
-	  screenCheckCodeScan[rule->code]=scanner->code;
-	  if(rule->screens==YES) {
-	    screenCheckScan[scanner->code]=2;
-	    screenCheckCode[rule->code]=2;
-	  }
-	  else
-	    screenCheckCode[rule->code]=0;
-	}
+    if (rule->type != ruleUNDEF) {
+      screenCheckCodeScan[rule->code]=scanner->code;
+      if(rule->screens==YES) {
+        screenCheckScan[scanner->code]=2;
+        screenCheckCode[rule->code]=2;
+      }
+      else
+        screenCheckCode[rule->code]=0;
+    }
       }
     }
-  
+
   /*
    * Create token tables
    */
@@ -203,30 +162,30 @@ void screenCreate()
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       screenTableBegin[scanner->code]=tokenTableIndex;
-      for(rule=scanner->rules;rule;rule=rule->next) 
-	if(rule->screening==YES) {
-	  screenedTokens[tokenTableIndex].name=strdup(astToName(rule->ast));
-	  screenedTokens[tokenTableIndex].length=astSequenceLength(rule->ast);
-	  screenedTokens[tokenTableIndex].rule=rule;
-	  for(i=0;i<screenedTokens[tokenTableIndex].length;i++)
-	    screenedTokens[tokenTableIndex].name[i]=setTable[screenedTokens[tokenTableIndex].name[i]];
-	  tokenTableIndex++;
-	}
+      for(rule=scanner->rules;rule;rule=rule->next)
+    if(rule->screening==YES) {
+      screenedTokens[tokenTableIndex].name=strdup(astToName(rule->ast));
+      screenedTokens[tokenTableIndex].length=astSequenceLength(rule->ast);
+      screenedTokens[tokenTableIndex].rule=rule;
+      for(i=0;i<screenedTokens[tokenTableIndex].length;i++)
+          screenedTokens[tokenTableIndex].name[i]=setTable[(int)screenedTokens[tokenTableIndex].name[i]];
+      tokenTableIndex++;
+    }
       screenTableEnd[scanner->code]=tokenTableIndex-1;
       /*
        * Sort screenTokenTable per scanner (per scanner is important)
        */
       qsort(screenedTokens+screenTableBegin[scanner->code],
-	    screenTableEnd[scanner->code]-screenTableBegin[scanner->code]+1,
-	    sizeof(ScreenedTokensItem),
-	    (int (*)(const void *, const void *))screenTokenQSortCmp);
+        screenTableEnd[scanner->code]-screenTableBegin[scanner->code]+1,
+        sizeof(ScreenedTokensItem),
+        (int (*)(const void *, const void *))screenTokenQSortCmp);
       /*
        * Insert tokens in tokens table (start in reverse order for each scanners)
        */
       for(i=screenTableEnd[scanner->code];i>=screenTableBegin[scanner->code];i--) {
-	screenTokenLength[i]=screenedTokens[i].length;
-	screenTokenStart[i]=screenPackToken(screenedTokens[i].name, screenedTokens[i].length);
-	screenTokenCode[i]=screenedTokens[i].rule->code;
+    screenTokenLength[i]=screenedTokens[i].length;
+    screenTokenStart[i]=screenPackToken(screenedTokens[i].name, screenedTokens[i].length);
+    screenTokenCode[i]=screenedTokens[i].rule->code;
       }
     }
   for(i=0;i<screenTokenSize;i++) free(screenedTokens[i].name);
@@ -241,19 +200,19 @@ void screenDump()
   Scanner scanner;
   int i;
   int j;
-  
+
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next) {
     printf( "Vocabulary: %s\n", vocabulary->name);
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       printf("    Scanner: %s   screening=%s\n", scanner->name, screenCheckScan[scanner->code]==YES ? "YES" : "NO");
       for(i=screenTableBegin[scanner->code];i<=screenTableEnd[scanner->code];i++)  {
-	printf("\tlength=%3d start=%3d code=%3d \"",
-	       screenTokenLength[i],
-	       screenTokenStart[i],
-	       screenTokenCode[i]);
-	for(j=0;j<screenTokenLength[i];j++)
-	  printf("%c", screenTokens[screenTokenStart[i]+j]);
-	printf("\"\n");
+    printf("\tlength=%3d start=%3d code=%3d \"",
+           screenTokenLength[i],
+           screenTokenStart[i],
+           screenTokenCode[i]);
+    for(j=0;j<screenTokenLength[i];j++)
+      printf("%c", screenTokens[screenTokenStart[i]+j]);
+    printf("\"\n");
       }
     }
   }

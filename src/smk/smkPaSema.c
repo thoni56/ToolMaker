@@ -100,10 +100,10 @@ int rule			/* IN production number */
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       scanner->code=scannerCodes++;
       for(rule=scanner->rules;rule;rule=rule->next)
-	if(rule->type==ruleUNDEF)
-	  rule->code=codeSKIP;
-	else
-	  rule->code=ruleCodes++;
+    if(rule->type==ruleUNDEF)
+      rule->code=codeSKIP;
+    else
+      rule->code=ruleCodes++;
     }
 }	break;}
     case 2: { /* __genSym#0 =; */
@@ -113,11 +113,12 @@ int rule			/* IN production number */
 }	break;}
     case 3: { /* __genSym#1 =; */
 {
-  if(getBoolOpt(SET_OPT))
-    if(setGet(getStrOpt(SET_OPT))) 
-      setUse(getStrOpt(SET_OPT)); 
+  if(getBoolOpt(SET_OPT)) {
+    if(setGet(getStrOpt(SET_OPT)))
+      setUse(getStrOpt(SET_OPT));
     else
       smkLog(NULL,254,sevERR,getStrOpt(SET_OPT));
+  }
 }	break;}
     case 19: { /* <code section> = '%%DECLARATION' <end opt>; */
 {
@@ -170,7 +171,7 @@ int rule			/* IN production number */
   if(definition==NULL) definition=definitionPut(smkSeSt[smkStkP+1].name);
   if(definition->ast)
     smkLog(&smkSeSt[smkStkP+1].srcp,233,sevERR,"");
-  else 
+  else
     definition->ast=smkSeSt[smkStkP+3].ast;
 }	break;}
     case 35: { /* <definition definition> = <identifier> '=' '%%' ';'; */
@@ -179,7 +180,7 @@ int rule			/* IN production number */
 
   definition=definitionGet(smkSeSt[smkStkP+1].name);
   if(definition==NULL) definition=definitionPut(smkSeSt[smkStkP+1].name);
-  if(definition->action) 
+  if(definition->action)
     smkLog(&smkSeSt[smkStkP+1].srcp,246,sevERR,"");
   else
     definition->action=smkSySt[smkStkP+3].action;
@@ -192,9 +193,9 @@ int rule			/* IN production number */
   if(definition==NULL) definition=definitionPut(smkSeSt[smkStkP+1].name);
   if(definition->ast)
     smkLog(&smkSeSt[smkStkP+1].srcp,233,sevERR,"");
-  else 
+  else
     definition->ast=smkSeSt[smkStkP+3].ast;
-  if(definition->action) 
+  if(definition->action)
     smkLog(&smkSeSt[smkStkP+1].srcp,246,sevERR,"");
   else
     definition->action=smkSySt[smkStkP+4].action;
@@ -236,9 +237,9 @@ int rule			/* IN production number */
     Token token=tokenNew(&grmVocabulary->tokens, smkSeSt[smkStkP+1].name, smkSeSt[smkStkP+3].inumber);
     if(token==0) {
       if(tokenGetByName(grmVocabulary->tokens, smkSeSt[smkStkP+1].name))
-	smkLog(&smkSeSt[smkStkP+1].srcp,233,sevERR,"");
+    smkLog(&smkSeSt[smkStkP+1].srcp,233,sevERR,"");
       if(tokenGetByCode(grmVocabulary->tokens, smkSeSt[smkStkP+3].inumber))
-	smkLog(&smkSeSt[smkStkP+3].srcp,212,sevERR,"");
+    smkLog(&smkSeSt[smkStkP+3].srcp,212,sevERR,"");
     }
     else {
       token->srcp=smkSeSt[smkStkP+1].srcp;
@@ -258,21 +259,21 @@ int rule			/* IN production number */
 {
   if(grmScanner && grmScanner==grmVocabulary->scanners) {
     Token token;
-    for(token=grmVocabulary->tokens;token;token=token->next) 
+    for(token=grmVocabulary->tokens;token;token=token->next)
       if(token->name[0]=='"' || token->name[0]=='\'') {
-	Rule rule;
-	AST ast;
+    Rule rule;
+    AST ast;
 
-	if((ast=astString(token->name))) {
-	  rule=ruleNew(&grmScanner->rules);
-	  rule->srcp=token->srcp;
-	  rule->scanner=grmScanner;
-	  rule->token=token;
-	  rule->ast=ast;
-	  rule->type=rulePREDEF;
-	}
-	else
-	  smkLog(&token->srcp,220,sevERR,"");
+    if((ast=astString(token->name))) {
+      rule=ruleNew(&grmScanner->rules);
+      rule->srcp=token->srcp;
+      rule->scanner=grmScanner;
+      rule->token=token;
+      rule->ast=ast;
+      rule->type=rulePREDEF;
+    }
+    else
+      smkLog(&token->srcp,220,sevERR,"");
       }
   }
 }	break;}
@@ -407,7 +408,7 @@ int rule			/* IN production number */
     case 78: { /* <action opt> = '%%DO' <identifier>; */
 {
   Definition definition;
-  
+
   definition=definitionGet(smkSeSt[smkStkP+2].name);
   if(definition==NULL || definition->action==NULL)
     smkLog(&smkSeSt[smkStkP+2].srcp,245,sevERR,"");
@@ -464,7 +465,7 @@ int rule			/* IN production number */
     case 94: { /* <operand> = <identifier>; */
 {
   Definition definition;
-  
+
   definition=definitionGet(smkSeSt[smkStkP+1].name);
   if(definition==NULL || definition->ast==NULL)
     smkLog(&smkSeSt[smkStkP+1].srcp,239,sevERR,"");
@@ -500,14 +501,14 @@ int rule			/* IN production number */
     case 99: { /* <identifier> = Identifier; */
 { smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp; smkSeSt[smkStkP+1].name=smkSySt[smkStkP+1].name;}	break;}
     case 100: { /* <string> = String; */
-{ 
-  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp; 
+{
+  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp;
   smkSeSt[smkStkP+1].name=smkSySt[smkStkP+1].name;
 }	break;}
     case 101: { /* <number> = Number; */
-{ 
-  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp; 
-  smkSeSt[smkStkP+1].inumber=smkSySt[smkStkP+1].inumber; 
+{
+  smkSeSt[smkStkP+1].srcp=smkSySt[smkStkP+1].srcp;
+  smkSeSt[smkStkP+1].inumber=smkSySt[smkStkP+1].inumber;
 }	break;}
     case 102: { /* <class> = Class; */
 {

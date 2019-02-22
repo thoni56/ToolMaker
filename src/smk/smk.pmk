@@ -1,6 +1,6 @@
 %%OPTIONS
 
-	List Grammar, Items, Tables, Statistics;
+    List Grammar, Items, Tables, Statistics;
 
 %%IMPORT
 
@@ -34,7 +34,7 @@ extern smkScContext lexContext;
 
 %%INSERTSYMBOL
 
-  /* 
+  /*
    * Make the requested token
    */
 
@@ -60,32 +60,33 @@ extern smkScContext lexContext;
 
 %%ATTRIBUTES
 
-	srcp    %% TmkSrcp %1%%,
-	inumber %% int %1%%,
-	fnumber %% double %1%%,
-	name    %% Name %1%%,
-	ast     %% AST %1%%,
-	action  %% Action %1%%;
+    srcp    %% TmkSrcp %1%%,
+    inumber %% int %1%%,
+    fnumber %% double %1%%,
+    name    %% Name %1%%,
+    ast     %% AST %1%%,
+    action  %% Action %1%%;
 
 %%TERMINALS
 
-	'%%' = 99, 3, 2 => '%%...%%';
+    '%%' = 99, 3, 2 => '%%...%%';
 
 %%RULES
 
-<goal> 
-  = <skip sections opt> 
+<goal>
+  = <skip sections opt>
 %%{
   /* Read vocabulary file */
   vocabularyRead(optVocabulary);
 }%%
     <code sections opt> <set definition sections opt>
 %%{
-  if(getBoolOpt(SET_OPT))
-    if(setGet(getStrOpt(SET_OPT))) 
-      setUse(getStrOpt(SET_OPT)); 
+  if(getBoolOpt(SET_OPT)) {
+    if(setGet(getStrOpt(SET_OPT)))
+      setUse(getStrOpt(SET_OPT));
     else
       smkLog(NULL,254,sevERR,getStrOpt(SET_OPT));
+  }
 }%%
     <definition sections opt> <vocabulary sections>
 %%{
@@ -99,10 +100,10 @@ extern smkScContext lexContext;
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       scanner->code=scannerCodes++;
       for(rule=scanner->rules;rule;rule=rule->next)
-	if(rule->type==ruleUNDEF)
-	  rule->code=codeSKIP;
-	else
-	  rule->code=ruleCodes++;
+    if(rule->type==ruleUNDEF)
+      rule->code=codeSKIP;
+    else
+      rule->code=ruleCodes++;
     }
 }%%
   ;
@@ -185,7 +186,7 @@ extern smkScContext lexContext;
   static int count=0;
   if(count++) smkLog(`&%'%%ACTION'.srcp,262,sevERR,"");
 }%%
-  ! '%%POSTHOOK'	<end opt> 
+  ! '%%POSTHOOK'	<end opt>
 %%{
   static int count=0;
   if(count++) smkLog(`&%'%%POSTHOOK'.srcp,262,sevERR,"");
@@ -218,7 +219,7 @@ extern smkScContext lexContext;
   = <class> '=' <class> ';'
 %%{
   mapPut(%1<class>.name,%2<class>.name);
-}%%  
+}%%
   ;
 
 
@@ -242,7 +243,7 @@ extern smkScContext lexContext;
   if(definition==NULL) definition=definitionPut(%<identifier>.name);
   if(definition->ast)
     smkLog(`&%<identifier>.srcp,233,sevERR,"");
-  else 
+  else
     definition->ast=%<selection rule>.ast;
 }%%
   ! <identifier> '=' '%%' ';'
@@ -251,7 +252,7 @@ extern smkScContext lexContext;
 
   definition=definitionGet(%<identifier>.name);
   if(definition==NULL) definition=definitionPut(%<identifier>.name);
-  if(definition->action) 
+  if(definition->action)
     smkLog(`&%<identifier>.srcp,246,sevERR,"");
   else
     definition->action=%'%%'.action;
@@ -264,9 +265,9 @@ extern smkScContext lexContext;
   if(definition==NULL) definition=definitionPut(%<identifier>.name);
   if(definition->ast)
     smkLog(`&%<identifier>.srcp,233,sevERR,"");
-  else 
+  else
     definition->ast=%<selection rule>.ast;
-  if(definition->action) 
+  if(definition->action)
     smkLog(`&%<identifier>.srcp,246,sevERR,"");
   else
     definition->action=%'%%'.action;
@@ -332,9 +333,9 @@ extern smkScContext lexContext;
     Token token=tokenNew(&grmVocabulary->tokens, %<token name>.name, %<number>.inumber);
     if(token==0) {
       if(tokenGetByName(grmVocabulary->tokens, %<token name>.name))
-	smkLog(`&%<token name>.srcp,233,sevERR,"");
+    smkLog(`&%<token name>.srcp,233,sevERR,"");
       if(tokenGetByCode(grmVocabulary->tokens, %<number>.inumber))
-	smkLog(`&%<number>.srcp,212,sevERR,"");
+    smkLog(`&%<number>.srcp,212,sevERR,"");
     }
     else {
       token->srcp=%<token name>.srcp;
@@ -352,25 +353,25 @@ extern smkScContext lexContext;
   ;
 
 <scanner section>
-  = '%%SCANNER' <scanner name> <scanner inherit opt> 
+  = '%%SCANNER' <scanner name> <scanner inherit opt>
 %%{
   if(grmScanner && grmScanner==grmVocabulary->scanners) {
     Token token;
-    for(token=grmVocabulary->tokens;token;token=token->next) 
+    for(token=grmVocabulary->tokens;token;token=token->next)
       if(token->name[0]=='"' || token->name[0]=='\'') {
-	Rule rule;
-	AST ast;
+    Rule rule;
+    AST ast;
 
-	if((ast=astString(token->name))) {
-	  rule=ruleNew(&grmScanner->rules);
-	  rule->srcp=token->srcp;
-	  rule->scanner=grmScanner;
-	  rule->token=token;
-	  rule->ast=ast;
-	  rule->type=rulePREDEF;
-	}
-	else
-	  smkLog(`&token->srcp,220,sevERR,"");
+    if((ast=astString(token->name))) {
+      rule=ruleNew(&grmScanner->rules);
+      rule->srcp=token->srcp;
+      rule->scanner=grmScanner;
+      rule->token=token;
+      rule->ast=ast;
+      rule->type=rulePREDEF;
+    }
+    else
+      smkLog(`&token->srcp,220,sevERR,"");
       }
   }
 }%%
@@ -422,7 +423,7 @@ extern smkScContext lexContext;
 
 <undefined token names opt>
   = <undefined token names opt> <undefined token name>
-  ! 
+  !
   ;
 
 <undefined token name>
@@ -440,7 +441,7 @@ extern smkScContext lexContext;
 ----: Screening section
 
 <screening section opt>
-  = '%%SCREENING' 
+  = '%%SCREENING'
 %%{
    if(grmVocabulary && optScreen) {
      Token token;
@@ -578,7 +579,7 @@ extern smkScContext lexContext;
   ! '%%DO' <identifier>
 %%{
   Definition definition;
-  
+
   definition=definitionGet(%<identifier>.name);
   if(definition==NULL || definition->action==NULL)
     smkLog(`&%<identifier>.srcp,245,sevERR,"");
@@ -618,7 +619,7 @@ extern smkScContext lexContext;
   ;
 
 <closure rule>
-  = <operand> '*' 
+  = <operand> '*'
 %%{
   %<closure rule>.ast=astClosure(%<operand>.ast,0,-1);
 }%%
@@ -656,7 +657,7 @@ extern smkScContext lexContext;
   = <identifier>
 %%{
   Definition definition;
-  
+
   definition=definitionGet(%<identifier>.name);
   if(definition==NULL || definition->ast==NULL)
     smkLog(`&%<identifier>.srcp,239,sevERR,"");
@@ -699,25 +700,24 @@ extern smkScContext lexContext;
 
 <string>
   = String
-%%{ 
-  %<string>.srcp=%String.srcp; 
+%%{
+  %<string>.srcp=%String.srcp;
   %<string>.name=%String.name;
 }%%
   ;
 
 <number>
   = Number
-%%{ 
-  %<number>.srcp=%Number.srcp; 
-  %<number>.inumber=%Number.inumber; 
+%%{
+  %<number>.srcp=%Number.srcp;
+  %<number>.inumber=%Number.inumber;
 }%%
   ;
 
 <class>
-  = Class	
+  = Class
 %%{
   %<class>.srcp=%Class.srcp;
   %<class>.name=%Class.name;
 }%%
   ;
-

@@ -1,41 +1,3 @@
-/*
- * AUTHOR : Tony Olsson
- * DATE   : 1993-04-30/tools@wolf
- * CREATED: 1990-06-25
- * 
- * SoftLab ab (c) 1990
- *
- * $Header: /Repository/ToolMaker/src/smk/map.c,v 1.1 2002/06/25 20:04:45 Thomas Nilsson Exp $
- *
- * $Log: map.c,v $
- * Revision 1.1  2002/06/25 20:04:45  Thomas Nilsson
- * Initial version of ToolMaker source import
- *
- * Revision 1.2  1993/04/30 12:32:54  tools
- * Adoption to ANSI-C completed.
- * Explicit register allocation removed.
- *
- * Revision 1.1  1993/03/24  09:24:08  tools
- * Ursprunglig version av smk testsvit
- *
- * Revision 1.5  1991/12/11  13:00:32  tools
- * Not modified
- *
- * Revision 1.4  91/07/11  10:38:37  tools
- * Added Inherited scanners and Undefined tokens
- * 
- * Revision 1.3  1991/07/10  14:20:01  tools
- * New SET handling
- *
- * Revision 1.2  1991/07/09  07:33:35  tools
- * Fix map bug and added mapping in DFA-table
- *
- * Revision 1.1  1991/01/10  13:37:57  tools
- * Initial revision
- *
- *
- */
-
 #include <stdio.h>
 #include "char.h"
 #include "lmprintf.h"
@@ -66,138 +28,142 @@ short mapUsed=0;
 
 void mapPut(char *map1, char *map2)
 {
-  char *class1;
-  char *class2;
-  int rev1;
-  int rev2;
-  short p1;
-  short p2;
-  short p3;
+    char *class1;
+    char *class2;
+    int rev1;
+    int rev2;
+    short p1;
+    short p2;
+    short p3;
 
-  class1=charClass(map1);
-  class2=charClass(map2);
-  rev1=charIsRevClass(map1);
-  rev2=charIsRevClass(map2);
-      
+    class1=charClass(map1);
+    class2=charClass(map2);
+    rev1=charIsRevClass(map1);
+    rev2=charIsRevClass(map2);
 
- /* The code is devided into four parts depending on the order the */
- /* character classes should be processed. */
-  
-  if(rev1)
-    if(rev2) {
-      p2=255;
-      for(p3=0;p3<256 && !class2[p3];p3++);
-      for(p1=255;p1>=0 && !class1[p1];p1--);
-      if(p1<0) { free(class1); free(class2); return; }
+
+    /* The code is devided into four parts depending on the order the */
+    /* character classes should be processed. */
+
+    if(rev1)
+        if(rev2) {
+            p2=255;
+            for(p3=0;p3<256 && !class2[p3];p3++);
+            for(p1=255;p1>=0 && !class1[p1];p1--);
+            if(p1<0) { free(class1); free(class2); return; }
 #if 0
-/*
- * ??? What in hell am I doing here
- */
-      if(p3>255) 
-	if(mapSkip<0)
-	  class2[p3=mapSkip=p1];
-	else
-	  class2[p3=mapSkip];
+            /*
+             * ??? What in hell am I doing here
+             */
+            if(p3>255)
+                if(mapSkip<0)
+                    class2[p3=mapSkip=p1];
+                else
+                    class2[p3=mapSkip];
 #else
-      if(p3>255) 
-	if(mapSkip<0)
-	  p3=mapSkip=p1;
-	else
-	  p3=mapSkip;
+            if(p3>255) {
+                if(mapSkip<0)
+                    p3=mapSkip=p1;
+                else
+                    p3=mapSkip;
+            }
 #endif
-      for(;p1>=0;p1--)
-	if(class1[p1]) {
-	  while(!class2[p2] && p2>p3) p2--;
-	  mapTable[p1]=p2;
-	  if(p2>p3) p2--;
-	}
-    }
-    else {
-      p2=0;
-      for(p3=255;p3>=0 && !class2[p3];p3--);
-      for(p1=255;p1>=0 && !class1[p1];p1--);
-      if(p1<0) { free(class1); free(class2); return; }
+            for(;p1>=0;p1--)
+                if(class1[p1]) {
+                    while(!class2[p2] && p2>p3) p2--;
+                    mapTable[p1]=p2;
+                    if(p2>p3) p2--;
+                }
+        }
+        else {
+            p2=0;
+            for(p3=255;p3>=0 && !class2[p3];p3--);
+            for(p1=255;p1>=0 && !class1[p1];p1--);
+            if(p1<0) { free(class1); free(class2); return; }
 #if 0
-/*
- * ??? What in hell am I doing here
- */
-      if(p3<0) 
-	if(mapSkip<0)
-	  class2[p3=mapSkip=p1];
-	else
-	  class2[p3=mapSkip];
+            /*
+             * ??? What in hell am I doing here
+             */
+            if(p3<0)
+                if(mapSkip<0)
+                    class2[p3=mapSkip=p1];
+                else
+                    class2[p3=mapSkip];
 #else
-      if(p3<0) 
-	if(mapSkip<0)
-	  p3=mapSkip=p1;
-	else
-	  p3=mapSkip;
+            if(p3<0) {
+                if(mapSkip<0)
+                    p3=mapSkip=p1;
+                else
+                    p3=mapSkip;
+            }
 #endif
-      for(p1=255;p1>=0;p1--)
-	if(class1[p1]) {
-	  while(!class2[p2] && p2<p3) p2++;
-	  mapTable[p1]=p2;
-	  if(p2<p3) p2++;
-	}
-    }
-  else
-    if(rev2) {
-      p2=255;
-      for(p3=0;p3<256 && !class2[p3];p3++);
-      for(p1=0;p1<256 && !class1[p1];p1++);
-      if(p1>255) { free(class1); free(class2); return; }
+            for(p1=255;p1>=0;p1--)
+                if(class1[p1]) {
+                    while(!class2[p2] && p2<p3) p2++;
+                    mapTable[p1]=p2;
+                    if(p2<p3) p2++;
+                }
+        }
+    else
+        if(rev2) {
+            p2=255;
+            for(p3=0;p3<256 && !class2[p3];p3++);
+            for(p1=0;p1<256 && !class1[p1];p1++);
+            if(p1>255) { free(class1); free(class2); return; }
 #if 0
-/*
- * ??? What in hell am I doing here
- */
-      if(p3>255) 
-	if(mapSkip<0)
-	  class2[p3=mapSkip=p1];
-	else
-	  class2[p3=mapSkip];
+            /*
+             * ??? What in hell am I doing here
+             */
+            if(p3>255)
+                if(mapSkip<0)
+                    class2[p3=mapSkip=p1];
+                else
+                    class2[p3=mapSkip];
 #else
-      if(p3>255) 
-	if(mapSkip<0)
-	  p3=mapSkip=p1;
-	else
-	  p3=mapSkip;
+            if(p3>255) {
+                if(mapSkip<0)
+                    p3=mapSkip=p1;
+                else
+                    p3=mapSkip;
+            }
 #endif
-      for(p1=0;p1<256;p1++)
-	if(class1[p1]) {
-	  while(!class2[p2] && p2>p3) p2--;
-	  mapTable[p1]=p2;
-	  if(p2>p3) p2--;
-	}
-    }
-    else {
-      p2=0;
-      for(p3=255;p3>=0 && !class2[p3];p3--);
-      for(p1=0;p1<256 && !class1[p1];p1++);
-      if(p1>255) { free(class1); free(class2); return; }
+            for(p1=0;p1<256;p1++)
+                if(class1[p1]) {
+                    while(!class2[p2] && p2>p3) p2--;
+                    mapTable[p1]=p2;
+                    if(p2>p3) p2--;
+                }
+        }
+        else {
+            p2=0;
+            for(p3=255;p3>=0 && !class2[p3];p3--);
+            for(p1=0;p1<256 && !class1[p1];p1++);
+            if(p1>255) { free(class1); free(class2); return; }
 #if 0
-/*
- * ??? What in hell am I doing here
- */
-      if(p3<0)
-      	if(mapSkip<0)
-	  class2[p3=mapSkip=p1];
-	else
-	  class2[p3=mapSkip];
+            /*
+             * ??? What in hell am I doing here
+             */
+            if(p3<0)
+                if(mapSkip<0)
+                    class2[p3=mapSkip=p1];
+                else
+                    class2[p3=mapSkip];
 #else
-      if(p3<0) 
-	if(mapSkip<0)
-	  p3=mapSkip=p1;
-	else
-	  p3=mapSkip;
+            if(p3<0) {
+                if(mapSkip<0)
+                    p3=mapSkip=p1;
+                else
+                    p3=mapSkip;
+            }
 #endif
-      for(p1=0;p1<256;p1++)
-	if(class1[p1]) {
-	  while(!class2[p2] && p2<p3) p2++;
-	  mapTable[p1]=p2;
-	  if(p2<p3) p2++;
-	}
-    }
-  { free(class1); free(class2); return; }
+            for(p1=0;p1<256;p1++)
+                if(class1[p1]) {
+                    while(!class2[p2] && p2<p3) p2++;
+                    mapTable[p1]=p2;
+                    if(p2<p3) p2++;
+                }
+        }
+    { free(class1); free(class2); return; }
 }
 
 void mapDump()
