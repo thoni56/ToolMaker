@@ -273,14 +273,23 @@ void codeISym(
     TmToken *token		/* OUT the created scanner symbol */
 )
 {
+    char *selectedString;
+
     if (insToks < MaxTokens) {
 	/* Concatenate the token string
 	 */
 	if (insToks > 0) strcat(insStr, " ");
-	if (Code == 0) strcat(insStr, "Unknown Token");
-	else if (Code == 1) strcat(insStr, "End Of File");
-	else if (*printString != '\0') strcat(insStr, printString);
-	else strcat(insStr, symString);
+	if (Code == 0) strcat(insStr, "<unknown token>");
+	else if (Code == 1) strcat(insStr, "<end of file>");
+        else {
+            if (*printString != '\0') selectedString = printString;
+            else selectedString = symString;
+            if (selectedString[0] == '\'') {
+                strcat(insStr, &selectedString[1]);
+                insStr[strlen(insStr)-1] = '\0';
+            } else
+                strcat(insStr, selectedString);
+        }
     } else if (insToks == MaxTokens) {
 	strcat(insStr, " ...");
     }/*if*/
@@ -301,13 +310,26 @@ void codeDSym(
     char *printString			/* IN terminals print string */
 )
 {
+    char *selectedString;
+
     if (delToks < MaxTokens) {
 	/* Concatenate the symbol strings */
 	if (delToks > 0) strcat(delStr, " ");
-	if (token->Code == 0) strcat(delStr, "Unknown Token");
-	else if (token->Code == 1) strcat(delStr, "End Of File");
-	else if (*printString != '\0') strcat(delStr, printString);
-	else strcat(delStr, symString);
+	if (token->Code == 0) strcat(delStr, "<unknown token>");
+	else if (token->Code == 1) strcat(delStr, "<end of file>");
+	else {
+#ifdef DELETEIDENTIFIERASINPUTTED
+            if (token->Code == 2) selectedString = token->chars;
+            else
+#endif
+            if (*printString != '\0') selectedString = printString;
+            else selectedString = symString;
+            if (selectedString[0] == '\'') {
+                strcat(delStr, &selectedString[1]);
+                delStr[strlen(delStr)-1] = '\0';
+            } else
+                strcat(delStr, selectedString);
+        }
     } else if (delToks == MaxTokens) {
 	strcat(delStr, " ...");
     }/*if*/
