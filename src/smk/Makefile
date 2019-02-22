@@ -54,8 +54,7 @@ mingw cygwin sun3 sun4 solaris1 solaris2: $(OBJECTS) $(LIBS)
 
 
 test:
-	cd testing; jregr
-	cd testing/gen-test; jregr
+	cd testing; make
 
 #--
 clean:

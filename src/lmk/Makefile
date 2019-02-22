@@ -39,7 +39,7 @@ all debug opt: lmkobj
 	install -C List.imp ../../lib/ansi-c
 
 test:
-	cd testing; jregr
+	cd testing; make
 
 install:
 	install -d $(DESTROOT)/lib/ToolMaker/ansi-c

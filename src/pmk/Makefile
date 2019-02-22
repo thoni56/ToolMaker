@@ -82,8 +82,7 @@ pmkScSema.o: pmkScSema.c
 pmkList.o: pmkList.c
 
 test:
-	cd testing; jregr
-	cd testing/gen-test; jregr
+	cd testing; make
 
 #--
 clean:
