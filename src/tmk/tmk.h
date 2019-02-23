@@ -150,6 +150,7 @@ extern void mergeOptions();
 extern void setOpts();
 extern void setCliOpts();
 extern Boolean getBoolOpt();
+extern Boolean optAssigned();
 extern int getNumOpt();
 extern char *getStrOpt();
 extern unsigned getSetOpt();

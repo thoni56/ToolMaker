@@ -16,15 +16,16 @@
 extern void pmkParse(void); /* Parser */
 
 /* Export */
+#line 34 "pmk.pmk"
 
 
 extern TmkSrcp
-	rulesSrcp,
-	declarationsSrcp,
-	exportSrcp,
-	scannerSrcp,
-	insertsymbolSrcp,
-	deletesymbolSrcp;
+    rulesSrcp,
+    declarationsSrcp,
+    exportSrcp,
+    scannerSrcp,
+    insertsymbolSrcp,
+    deletesymbolSrcp;
 
 
 #endif

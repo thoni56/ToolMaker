@@ -4,11 +4,13 @@
 --
 
 %%OPTIONS
-	Escape '`';
-	Target 'c';
+
+    Escape '`';
+    Target 'c';
 
 %%IMPORT
 
+#include <unistd.h>
 #include "pws.h"
 #include "pwsLexCode.h"
 
@@ -80,57 +82,57 @@ static char *newStr(smThis, skip)
 
 %%SCANNER main %%RULES
 
-  IDENTIFIER       = Identifier    	%% smToken->sval = newStr(smThis, 0); %%;
-  INTEGER 	   = Number ! hexint	%% smToken->ival = atoi(smThis->smText); %%;
+  IDENTIFIER       = Identifier     %% smToken->sval = newStr(smThis, 0); %%;
+  INTEGER      = Number ! hexint	%% smToken->ival = atoi((char *)smThis->smText); %%;
   STRING	   = String		%% smToken->sval = newStr(smThis, 0); %%;
-  ANG_BRACK_STRING = '<' [^>\n]* '>'	%% smToken->sval = newStr(smThis, 0); %%;	
+  ANG_BRACK_STRING = '<' [^>\n]* '>'	%% smToken->sval = newStr(smThis, 0); %%;
   '%%DECLARATIONS' = '%%DECLARATIONS'
-	  %%
-	    /* Read past declarations */
-	    tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	  %%
-	;
+      %%
+        /* Read past declarations */
+        tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+      %%
+    ;
 
   '%%EXPORT' = '%%EXPORT'
-	%%
+    %%
           tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	%%;
+                  &(smToken->length), pmkEscape);
+    %%;
   '%%SCANNER' = '%%SCANNER'
-	%%
-	  tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	%%;
+    %%
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+    %%;
   '%%INSERTSYMBOL' = '%%INSERTSYMBOL'
-	%%
-	  tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	%%;
+    %%
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+    %%;
 
   '%%DELETESYMBOL' = '%%DELETESYMBOL'
-	%%
-	  tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	%%;
+    %%
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+    %%;
 
   SKIPHEADER    = Skiphead1
       %%
-	tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
+    tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
       %%;
   SKIPHEADER    = Skiphead2
       %%
-	tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos), &(smToken->length),  pmkEscape);
+    tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos), &(smToken->length),  pmkEscape);
       %%;
 
   '%%' = '%%'
-	  %%
-	    /* Read past action */
-	    tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
-	    smToken->sval = newStr(smThis, 2);
-	    smToken->sval[smToken->length] = '\0';
-	  %%
-	;
+      %%
+        /* Read past action */
+        tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
+        smToken->sval = newStr(smThis, 2);
+        smToken->sval[smToken->length] = '\0';
+      %%
+    ;
 
   Unknown	= _Unknown;
   EndOfText     = _EndOfText;
@@ -139,4 +141,3 @@ static char *newStr(smThis, skip)
   comment	= '%%COMMENT';
   comment	= '--'[^\n]*;
   blank		= [ \t\n\r]+;
-

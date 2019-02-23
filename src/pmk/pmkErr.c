@@ -15,6 +15,7 @@
 #include "pws.h"
 #include "pmkList.h"
 #include "pwsLexCode.h"
+#include "pwsOrd.h"
 #include "set.h"
 #include "pmk_i.h"
 #include "tmk.h"
@@ -74,14 +75,23 @@ void pmkISym(
     PmkToken *token		/* OUT the created scanner symbol */
 )
 {
+    char *selectedString;
+
     if (insToks < MaxTokens) {
 	/* Concatenate the token string
 	 */
 	if (insToks > 0) strcat(insStr, " ");
-	if (code == 0) strcat(insStr, "Unknown Token");
-	else if (code == 1) strcat(insStr, "End Of File");
-	else if (*printString != '\0') strcat(insStr, printString);
-	else strcat(insStr, symString);
+	if (code == 0) strcat(insStr, "<unknown token>");
+	else if (code == 1) strcat(insStr, "<end of file>");
+        else {
+            if (*printString != '\0') selectedString = printString;
+            else selectedString = symString;
+            if (selectedString[0] == '\'') {
+                strcat(insStr, &selectedString[1]);
+                insStr[strlen(insStr)-1] = '\0';
+            } else
+                strcat(insStr, selectedString);
+        }
     } else if (insToks == MaxTokens) {
 	strcat(insStr, " ...");
     }/*if*/
@@ -89,6 +99,7 @@ void pmkISym(
 #define sym token
 #define sstr symString
 #define pstr printString
+#line 46 "pmk.pmk"
 
 
     /* Make the requested token */
@@ -99,19 +110,19 @@ void pmkISym(
     case 2:			/* IDENTIFIER */
     case 3:			/* QUOTED_STRING */
     case 4:			/* ANGLE_BRACKETED_STRING */
-	if (*pstr != '\0') {
-	    sym->sval = (char *)malloc(strlen(pstr) + 1);
-	    strcpy(sym->sval, pstr);
-	} else {
-	    sym->sval = (char *)malloc(strlen(sstr) + 1);
-	    strcpy(sym->sval, sstr);
-	}/*if*/
-	sym->ival = 0;
-	break;
+    if (*pstr != '\0') {
+        sym->sval = (char *)malloc(strlen(pstr) + 1);
+        strcpy(sym->sval, pstr);
+    } else {
+        sym->sval = (char *)malloc(strlen(sstr) + 1);
+        strcpy(sym->sval, sstr);
+    }/*if*/
+    sym->ival = 0;
+    break;
 
     case 5:			/* INTEGER */
-	sym->ival = 0;
-	break;
+    sym->ival = 0;
+    break;
     }/*switch*/
 
 #undef sym
@@ -131,13 +142,26 @@ void pmkDSym(
     char *printString			/* IN terminals print string */
 )
 {
+    char *selectedString;
+
     if (delToks < MaxTokens) {
 	/* Concatenate the symbol strings */
 	if (delToks > 0) strcat(delStr, " ");
-	if (token->code == 0) strcat(delStr, "Unknown Token");
-	else if (token->code == 1) strcat(delStr, "End Of File");
-	else if (*printString != '\0') strcat(delStr, printString);
-	else strcat(delStr, symString);
+	if (token->code == 0) strcat(delStr, "<unknown token>");
+	else if (token->code == 1) strcat(delStr, "<end of file>");
+	else {
+#ifdef DELETEIDENTIFIERASINPUTTED
+            if (token->code == 2) selectedString = token->chars;
+            else
+#endif
+            if (*printString != '\0') selectedString = printString;
+            else selectedString = symString;
+            if (selectedString[0] == '\'') {
+                strcat(delStr, &selectedString[1]);
+                delStr[strlen(delStr)-1] = '\0';
+            } else
+                strcat(delStr, selectedString);
+        }
     } else if (delToks == MaxTokens) {
 	strcat(delStr, " ...");
     }/*if*/

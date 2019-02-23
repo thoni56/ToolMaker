@@ -22,6 +22,7 @@
 %%DECLARATIONS
 
 #include <stdlib.h>
+#include <unistd.h>
 #ifdef WIN32
 #include <io.h>
 #endif
@@ -63,7 +64,7 @@ static char *newStr(this, skip)
 %%SCANNER main %%RULES
 
   IDENTIFIER    = Identifier    %% smToken->sval = newStr(smThis, 0); %%;
-  NUMBER        = Number        %% smToken->ival = atoi(smThis->smText); %%;
+  NUMBER        = Number        %% smToken->ival = atoi((const char *)smThis->smText); %%;
   STRING        = String        %% smToken->sval = newStr(smThis, 1); %%;
   SKIPHEADER    = Skiphead1
       %%

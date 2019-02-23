@@ -18,6 +18,7 @@
 
 
 #include <stdlib.h>
+#include <unistd.h>
 #ifdef WIN32
 #include <io.h>
 #endif
@@ -77,7 +78,7 @@ int lmkScAction(
     break;
 
   case   4:		/* NUMBER*/ 
-    { smToken->ival = atoi(smThis->smText); 
+    { smToken->ival = atoi((const char *)smThis->smText); 
 }
     break;
 

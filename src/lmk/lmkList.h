@@ -31,11 +31,11 @@ typedef int lmkSev;
 /* Listing types */
 typedef int lmkTyp;
 #define liNONE  0
-#define liSUM   (1<<0)		/* Summary */
-#define liMSG   (1<<1)		/* Source lines with messages*/
-#define liOK    (1<<2)		/* Correct source lines */
-#define liINCL  (1<<3)		/* Look also in PUSHed files */
-#define liHEAD  (1<<4)		/* Heading */
+#define liSUM   (1<<0)      /* Summary */
+#define liMSG   (1<<1)      /* Source lines with messages*/
+#define liOK    (1<<2)      /* Correct source lines */
+#define liINCL  (1<<3)      /* Look also in PUSHed files */
+#define liHEAD  (1<<4)      /* Heading */
 
 #define liTINY (liSUM|liMSG|liHEAD|liINCL)
 #define liFULL (liTINY|liOK)

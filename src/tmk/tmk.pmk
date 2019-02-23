@@ -2,6 +2,7 @@
 
     Library '../../lib/c';
     Escape '`';
+    Line;
 
 %%IMPORT
 #include "tmkScan.h"

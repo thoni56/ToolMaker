@@ -33,7 +33,7 @@ OBJECTS		= $(VERSIONOBJECTS) version.o
 ################################################################################
 #
 #
-all debug : smkobj
+all debug : tm smkobj
 	install -C Scan.imp ../../lib/ansi-c
 
 ################################################################################
@@ -51,8 +51,8 @@ mingw cygwin sun3 sun4 solaris1 solaris2: $(OBJECTS) $(LIBS)
 	$(CC) -o smk $(CFLAGS) $(OBJECTS) $(LIBS) $(LDFLAGS) $(MALLOCDEBUG)
 
 tm:
-	smk smk
 	pmk smk
+	smk smk
 	lmk smk
 
 test:

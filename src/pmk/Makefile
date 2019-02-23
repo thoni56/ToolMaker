@@ -4,8 +4,6 @@
 # without license...
 #
 
-DESTROOT = /usr/local
-
 TMARCH	= cygwin
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin
@@ -57,13 +55,17 @@ LIBS	= \
 
 #--
 
-all debug: pmkobj
+all debug: tm pmkobj
 	install -C Parse.imp Err.imp ../../lib/ansi-c
 
 install: installdirs
 	install	-C  Parse.imp Err.imp $(DESTLIB)/lib/ansi-c
 	install pmk $(DESTROOT)/bin
 
+tm:
+	pmk pmk
+	smk pmk
+	lmk pmk
 
 pmkobj: checkARCH $(TMARCH)
 	install pmk ../../bin/

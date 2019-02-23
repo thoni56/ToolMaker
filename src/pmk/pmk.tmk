@@ -1,6 +1,5 @@
 %%OPTIONS
     Prefix 'pmk';
-    Library '/home/projects/ToolMaker/lib/ansi-c/';
 
 %%IMPORT
 #include "tmkCommon.h"

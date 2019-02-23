@@ -86,7 +86,7 @@ void tmkISym(
 #define sym token
 #define sstr symString
 #define pstr printString
-#line 16 "tmk.pmk"
+#line 17 "tmk.pmk"
 
     /* Make the requested token */
     sym->code = code;

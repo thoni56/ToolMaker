@@ -9,6 +9,7 @@
 /* %%IMPORT */
 
 
+#include <unistd.h>
 #include "pws.h"
 #include "pwsLexCode.h"
 
@@ -832,8 +833,8 @@ int pmkScMapCopy(smThis,smBuffer,smFrom,smTo)
   if(smTo>smThis->smLength) smTo=smThis->smLength;
   len=0;
   for(n=smFrom,at=smThis->smText+smFrom;n<smTo;n++) {
-      *smBuffer++=smMap[*at++];
-      len++;
+*smBuffer++=smMap[*at++];
+    len++;
   }
   return len;
 }

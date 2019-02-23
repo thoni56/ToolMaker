@@ -9,6 +9,7 @@
 /* %%IMPORT */
 
 
+#include <unistd.h>
 #include "pws.h"
 #include "pwsLexCode.h"
 
@@ -88,7 +89,7 @@ int pmkScAction(smThis,smInternalCode,smToken)
     break;
 
   case  30:		/* INTEGER*/ 
-    { smToken->ival = atoi(smThis->smText); 
+    { smToken->ival = atoi((char *)smThis->smText); 
 }
     break;
 
@@ -104,66 +105,66 @@ int pmkScAction(smThis,smInternalCode,smToken)
 
   case  26:		/* '%%DECLARATIONS'*/ 
     {
-	    /* Read past declarations */
-	    tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	  
+        /* Read past declarations */
+        tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+      
 }
     break;
 
   case  20:		/* '%%EXPORT'*/ 
     {
           tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	
+                  &(smToken->length), pmkEscape);
+    
 }
     break;
 
   case  22:		/* '%%SCANNER'*/ 
     {
-	  tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+    
 }
     break;
 
   case  27:		/* '%%INSERTSYMBOL'*/ 
     {
-	  tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+    
 }
     break;
 
   case  28:		/* '%%DELETESYMBOL'*/ 
     {
-	  tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-	              &(smToken->length), pmkEscape);
-	
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                  &(smToken->length), pmkEscape);
+    
 }
     break;
 
   case  33:		/* SKIPHEADER*/ 
     {
-	tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
+    tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
       
 }
     break;
 
   case  34:		/* SKIPHEADER*/ 
     {
-	tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos), &(smToken->length),  pmkEscape);
+    tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos), &(smToken->length),  pmkEscape);
       
 }
     break;
 
   case   0:		/* '%%'*/ 
     {
-	    /* Read past action */
-	    tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
-	    smToken->sval = newStr(smThis, 2);
-	    smToken->sval[smToken->length] = '\0';
-	  
+        /* Read past action */
+        tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
+        smToken->sval = newStr(smThis, 2);
+        smToken->sval[smToken->length] = '\0';
+      
 }
     break;
   }

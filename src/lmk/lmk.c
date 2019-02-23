@@ -1,22 +1,22 @@
-/*------------------------------------------------------------------- */ 
-/* TITLE                                                              */ 
-/* ------                                                             */ 
+/*------------------------------------------------------------------- */
+/* TITLE                                                              */
+/* ------                                                             */
 /* lmk.c                                                              */
-/*                                                                    */ 
+/*                                                                    */
 /* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* REVISION DATA                                                      */ 
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* REVISION DATA                                                      */
 /* -------------                                                      */
 /* CREATED:   92-07-20  Micael Dahlgren                               */
 /* BASED ON:                                                          */
-/* MODIFIED:                                                          */ 
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* DESCRIPTION                                                        */ 
-/* -----------                                                        */ 
+/* MODIFIED:                                                          */
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* DESCRIPTION                                                        */
+/* -----------                                                        */
 /* ListerMaker main module                                            */
-/*                                                                    */ 
+/*                                                                    */
 /* ------------------------------------------------------------------ */
 /* IMPORT */
 #include <stdio.h>
@@ -26,6 +26,7 @@
 #include <io.h>
 #endif
 #include <fcntl.h>
+#include <unistd.h>
 #include "lmk_i.h"
 #include "lmkParse.h"
 #include "lmkList.h"
@@ -59,7 +60,7 @@ OptTabRec tmkOptTab[] = {
      {"Tables", "Source", NULL}},
   {FORCE_OPT, BOOL_TMO, "force", "force", FALSE,
      "do [not] force generating of source code"},
-  
+
   {LAST_OPT}
 };
 
@@ -81,13 +82,13 @@ OptTabRec lmkOptTab[] = {
 #else
      (unsigned) "SunOS"},
 #endif
-  {LMKPREFIX_OPT, STR_TMO, "prefix", "", 
+  {LMKPREFIX_OPT, STR_TMO, "prefix", "",
      (unsigned) "lm", "set [no] prefix"},
   {TMKPREFIX_OPT, STR_TMO, "prefix", "prefix",
      (unsigned) "tm", "set [no] prefix"},
-  {LMKLIBRARY_OPT, STR_TMO, "library", "library", 
+  {LMKLIBRARY_OPT, STR_TMO, "library", "library",
      (unsigned) "%%(TMHOME)/lib/%%(lmkTarget)/", "set library"},
-  {TMKLIBRARY_OPT, STR_TMO, "library", "", 
+  {TMKLIBRARY_OPT, STR_TMO, "library", "",
      (unsigned) "%%(TMHOME)/lib/%%(tmkTarget)/"},
   {LMKESCAPE_OPT, BOOLSTR_TMO, "escape", "escape",
      (unsigned) "`", "set [no] escape character"},
@@ -107,7 +108,7 @@ OptTabRec lmkOptTab[] = {
      "set [no] limit on number of messages in listings", {0, MAX}},
   {MESSAGE_OPT, ENUM_TMO, "message", "message", 1,
      "storage of messages {file | embedded}", {0}, {"file", "embedded", NULL}},
-  {LMT_OPT, STR_TMO, "", "lmt <file>", (unsigned) "", 
+  {LMT_OPT, STR_TMO, "", "lmt <file>", (unsigned) "",
      "use <file> for tables"},
   {TMK_OPT, STR_TMO, "", "tmk <file>", (unsigned) "", "read common options from <file>"},
   {HELP_OPT, HELP_TMO, "", "help", 0,
@@ -252,14 +253,14 @@ int main(argc, argv)
   default:
     lmkLog((TmkSrcp *)NULL,506,sevFAT,"");
     break;
-  }    
+  }
 #endif
 
   if (lmkSeverity() & (sevERR+sevFAT+sevSYS)) {
     lmkListm("", 0, 0x7FFFFFFF, liTINY, sevOK+sevWAR+sevERR+sevFAT+sevSYS, inFiles);
-    exit(lmkSeverity()); 
-  }  
-  
+    exit(lmkSeverity());
+  }
+
   /* CLI OPTIONS */
   initOpts(LAST_OPT, lmkOptTab);
   setCliOpts(lmkOptTab, argc, argv, &listerName);
@@ -279,7 +280,7 @@ int main(argc, argv)
     ext1 = (char *)strrchr(inFiles[1], '.');
   }/*if*/
   listerName[ext1 - inFiles[1]] = '\0';
-  
+
   if (optAssigned(TMK_OPT)) {
     char *tmp;
     tmp = getStrOpt(TMK_OPT);
@@ -315,26 +316,26 @@ int main(argc, argv)
   lmkLiInit(product.version.string, inFiles[1], lmk_ENGLISH_Messages);
 #endif
 
-  tmkExists = tmkCParse(inFiles[0], tmkOptTab, lmkOptTab, argc, argv, 
-		       &tokenNode, &srcpNode, &importSection, 0, 
-		       TMK_FILE, TMKESCAPE_OPT);
+  tmkExists = tmkCParse(inFiles[0], tmkOptTab, lmkOptTab, argc, argv,
+               &tokenNode, &srcpNode, &importSection, 0,
+               TMK_FILE, TMKESCAPE_OPT);
 
   /* options in input file */
   if (tmkExists) {
-    if (tmkCParse(inFiles[1], lmkOptTab, lmkOptTab, argc, argv, 
-		 &tmpToken, &tmpSrcp, &lmkImportSection, 1, 
-		 LMK_FILE, LMKESCAPE_OPT)) {
+    if (tmkCParse(inFiles[1], lmkOptTab, lmkOptTab, argc, argv,
+         &tmpToken, &tmpSrcp, &lmkImportSection, 1,
+         LMK_FILE, LMKESCAPE_OPT)) {
       if (tmpToken)
         lmkLog(NULL, 52, sevERR, "TOKEN");
       if (tmpSrcp)
         lmkLog(NULL, 52, sevERR, "SRCP");
     } else
-      lmkLog(NULL, 70, sevFAT, inFiles[1]);    
+      lmkLog(NULL, 70, sevFAT, inFiles[1]);
   } else {
-    if (!tmkCParse(inFiles[1], lmkOptTab, lmkOptTab, argc, argv, 
-		  &tokenNode, &srcpNode, &lmkImportSection, 1, 
-		  LMK_FILE, LMKESCAPE_OPT))
-      lmkLog(NULL, 70, sevFAT, inFiles[1]);    
+    if (!tmkCParse(inFiles[1], lmkOptTab, lmkOptTab, argc, argv,
+          &tokenNode, &srcpNode, &lmkImportSection, 1,
+          LMK_FILE, LMKESCAPE_OPT))
+      lmkLog(NULL, 70, sevFAT, inFiles[1]);
   }
 
   if (!SeriousErr) {
@@ -350,15 +351,15 @@ int main(argc, argv)
     mergeOptions(LMKTARGET_OPT, TMKTARGET_OPT, tmkExists);
 
     if ((strcmp(getStrOpt(TMKTARGET_OPT), "c") != 0) &&
-	(strcmp(getStrOpt(TMKTARGET_OPT), "ansi-c") != 0) &&
-	(strcmp(getStrOpt(TMKTARGET_OPT), "c++") != 0)) {
+    (strcmp(getStrOpt(TMKTARGET_OPT), "ansi-c") != 0) &&
+    (strcmp(getStrOpt(TMKTARGET_OPT), "c++") != 0)) {
       lmkLog(NULL, 405, sevWAR, getStrOpt(TMKTARGET_OPT));
     }
 
     if ((strcmp(getStrOpt(LMKTARGET_OPT), getStrOpt(TMKTARGET_OPT)) != 0) &&
-	(strcmp(getStrOpt(LMKTARGET_OPT), "c") != 0) &&
-	(strcmp(getStrOpt(LMKTARGET_OPT), "ansi-c") != 0) &&
-	(strcmp(getStrOpt(LMKTARGET_OPT), "c++") != 0)) {
+    (strcmp(getStrOpt(LMKTARGET_OPT), "c") != 0) &&
+    (strcmp(getStrOpt(LMKTARGET_OPT), "ansi-c") != 0) &&
+    (strcmp(getStrOpt(LMKTARGET_OPT), "c++") != 0)) {
       lmkLog(NULL, 405, sevWAR, getStrOpt(LMKTARGET_OPT));
     }
 
@@ -384,17 +385,17 @@ int main(argc, argv)
     if (!SeriousErr) {
      fileName = (char *) malloc(strlen(listerName) + 5);
       if (strcmp(getStrOpt(LMT_OPT), "") == 0) {
-	strcpy(fileName, listerName);
-	strcat(fileName, ".lmt");
+    strcpy(fileName, listerName);
+    strcat(fileName, ".lmt");
       } else {
-	strcpy(fileName, getStrOpt(LMT_OPT));
+    strcpy(fileName, getStrOpt(LMT_OPT));
       }
       if ((lmtFile = fopen(fileName, "wb")) == NULL)
-	lmkLog(NULL, 71, sevFAT, fileName);
+    lmkLog(NULL, 71, sevFAT, fileName);
       else {
-	lmkTab(lmtFile, messSectRoot, tokenNode, srcpNode,
-	       importSection, lmkImportSection);
-	fclose(lmtFile);
+    lmkTab(lmtFile, messSectRoot, tokenNode, srcpNode,
+           importSection, lmkImportSection);
+    fclose(lmtFile);
       }
     }
 
@@ -419,15 +420,15 @@ int main(argc, argv)
     printDb(lmkOptTab, stderr);
     if (messSectRoot)
       { MessNodeP p;
-	printf("\nName: %s\n", messSectRoot->name);
-	printf("Messages:\n");
-	for (p=messSectRoot->messages; p; p=p->next)
-	  printf("%4i %s\n", p->number, p->text);
+    printf("\nName: %s\n", messSectRoot->name);
+    printf("Messages:\n");
+    for (p=messSectRoot->messages; p; p=p->next)
+      printf("%4i %s\n", p->number, p->text);
       }
     /* EOJ (END OF JUNK) */
 #endif
 
-  } else {   
+  } else {
 #ifdef SEPL
     lmkListsi("", 0, 78, liTINY);
     lmkLists(sevALL, 0, inFiles[0]);
