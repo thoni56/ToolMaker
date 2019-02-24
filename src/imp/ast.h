@@ -1,12 +1,13 @@
+#ifndef _ast_h_
+#define _ast_h_
 /*
  * AUTHOR : Otto Strukelj
  * CREATED: 1991-09-18
  */
 
-#ifndef _ast_h_
-#define _ast_h_
 #include "impCommon.h"
 #include "impMacro.h"
+#include "impList.h"
 
 #define MAX_LEVELS 50
 extern char *impReportFile;
@@ -38,7 +39,7 @@ typedef enum {
   AST_ELSIF,
   AST_LOOP1,
   AST_LOOP2,
-  AST_MESSAGE,  
+  AST_MESSAGE,
   /* Condition nodes */
   AST__OR,
   AST__AND,
@@ -53,7 +54,7 @@ typedef enum {
   AST__RDEFINED,
   AST__NONEMPTY,
   AST__IN,
-  AST__SYSTEM, 
+  AST__SYSTEM,
   AST__STRINGMATCH,
   /* Expression nodes */
   AST__PLUS,
@@ -241,9 +242,9 @@ typedef struct Ast_SystemItem {
 typedef struct Ast_StringmatchItem *Ast_Stringmatch;
 typedef struct Ast_StringmatchItem {
   ImpBoolean evaluatedOK;
-  Ast expression;		
+  Ast expression;
   Ast pattern;
-  Ast position;  		
+  Ast position;
 } Ast_StringmatchItem;
 
 /*================================ Expression nodes =================================*/
@@ -375,7 +376,7 @@ typedef struct AstItem {
     Ast_IfItem         ast_if;
     Ast_ElsifItem      ast_elsif;
     Ast_LoopItem       ast_loop;
-    Ast_MessageItem    ast_message; 
+    Ast_MessageItem    ast_message;
     Ast_ExitItem       ast_exit;
     /* Conditions */
     Ast_OrItem         ast_or;
@@ -391,7 +392,7 @@ typedef struct AstItem {
     Ast_NonemptyItem   ast_nonempty;
     Ast_InItem         ast_in;
     Ast_SystemItem     ast_system;
-    Ast_StringmatchItem  ast_stringmatch;   
+    Ast_StringmatchItem  ast_stringmatch;
     /* Expressions */
     Ast_PlusItem       ast_plus;
     Ast_MinusItem      ast_minus;
@@ -468,6 +469,7 @@ extern ImpBoolean impInterpretAst();
 extern void impReportCnt();
 extern void impInitOutput();
 extern char *impItoa();
-extern void impResetSev();
+extern void impMyResetSev();
+extern impSev impMySeverity();
 extern void impMyLog();
 #endif

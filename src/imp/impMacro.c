@@ -14,7 +14,7 @@
  *				 Bug fix: wrong file name passed to impInit.
  *		90-12-03 by Tom. impSetVar changed to allow empty values.
  *-----------------------------------------------------------------------------
- * Entries:								     
+ * Entries:
  *	impSetVar
  *	impMacro
  *-----------------------------------------------------------------------------
@@ -41,6 +41,7 @@
 #include "impMacro.h"
 #include "impList.h"
 #include "impScan.h"
+#include "impParse.h"
 #include "ast.h"
 #include "name.h"
 #include "timing.h"
@@ -97,49 +98,49 @@ char *chars;			/* OUT the scanned characters if pertinent */
 {
     while (isspace(str[*ind])) (*ind)++;
     if (isdigit(str[*ind])) {
-	while (isdigit(str[*ind])) *(chars++) = str[(*ind)++];
-	if (!(isalnum(str[*ind]) || str[*ind] == '_')) {
-	    *chars = '\0';
-	    return INTEGER;
-	}/*if*/
+    while (isdigit(str[*ind])) *(chars++) = str[(*ind)++];
+    if (!(isalnum(str[*ind]) || str[*ind] == '_')) {
+        *chars = '\0';
+        return INTEGER;
+    }/*if*/
     }/*if*/
     if (isalnum(str[*ind]) || str[*ind] == '_') {
-	while (isalnum(str[*ind]) || str[*ind] == '_') {
-	    *(chars++) = str[(*ind)++];
-	}/*while*/
-	*chars = '\0';
-	return ID;
+    while (isalnum(str[*ind]) || str[*ind] == '_') {
+        *(chars++) = str[(*ind)++];
+    }/*while*/
+    *chars = '\0';
+    return ID;
     } else {
-	switch (str[(*ind)++]) {
+    switch (str[(*ind)++]) {
 
-	case '"':
-/*	    *(chars++) = '"'; */
-	    for (;;) {
-		if (str[*ind] == '\0') return UNKNOWN;
-		else if (str[*ind] == '"') {
-		    *(chars++) = str[(*ind)++];
-		    if (str[*ind] != '"') {
+    case '"':
+/*      *(chars++) = '"'; */
+        for (;;) {
+        if (str[*ind] == '\0') return UNKNOWN;
+        else if (str[*ind] == '"') {
+            *(chars++) = str[(*ind)++];
+            if (str[*ind] != '"') {
 /*			*chars = '\0'; */
-			*(chars-1) = '\0';
-			return STRING;
-		    }/*if*/
-		}/*if*/
-		*(chars++) = str[(*ind)++];
-	    }/*for*/    
+            *(chars-1) = '\0';
+            return STRING;
+            }/*if*/
+        }/*if*/
+        *(chars++) = str[(*ind)++];
+        }/*for*/
 
-	case ',':
-	    return COMMA;
+    case ',':
+        return COMMA;
 
-	case '(':
-	    return LPAR;
+    case '(':
+        return LPAR;
 
-	case ')':
-	    return RPAR;
+    case ')':
+        return RPAR;
 
-	default:
-	    return UNKNOWN;
+    default:
+        return UNKNOWN;
 
-	}/*switch*/
+    }/*switch*/
     }/*if*/
 }/*strScan()*/
 
@@ -150,7 +151,7 @@ char *chars;			/* OUT the scanned characters if pertinent */
  */
 int impSetVar(str)
 char *str;			/* IN variable string, format "Var(val, ...)"*/
-				/* RET non-zero if syntax error */
+                /* RET non-zero if syntax error */
 {
     int ind = 0;
     char *val, *var, *valdup;
@@ -172,53 +173,53 @@ char *str;			/* IN variable string, format "Var(val, ...)"*/
       switch (strScan(str, &ind, val)) {
 
       case INTEGER:
-	if (tok == LPAR || tok == COMMA) {
-	  valdup = strdup(val);
-	  if (!valdup)
-	    return -1;
-	  impNameAppend(var, impAstNode(nulSrcp, nulSrcp, nulSrcp, 
-					AST_INTEGER, strlen(val), valdup, 
-					NULL, NULL, NULL, NULL));
-	  tok = INTEGER;
-	} else return 1;
-	break;
+    if (tok == LPAR || tok == COMMA) {
+      valdup = strdup(val);
+      if (!valdup)
+        return -1;
+      impNameAppend(var, impAstNode(nulSrcp, nulSrcp, nulSrcp,
+                    AST_INTEGER, strlen(val), valdup,
+                    NULL, NULL, NULL, NULL));
+      tok = INTEGER;
+    } else return 1;
+    break;
 
       case ID:
-	if (tok == LPAR || tok == COMMA) {
-	  valdup = strdup(val);
-	  if (!valdup)
-	    return -1;
-	  impNameAppend(var, impAstNode(nulSrcp, nulSrcp, nulSrcp, 
-					AST_UNQUOTED_STRING, strlen(val), valdup, 
-					NULL, NULL, NULL, NULL));
-	  tok = ID;
-	} else return 1;
-	break;
-	
+    if (tok == LPAR || tok == COMMA) {
+      valdup = strdup(val);
+      if (!valdup)
+        return -1;
+      impNameAppend(var, impAstNode(nulSrcp, nulSrcp, nulSrcp,
+                    AST_UNQUOTED_STRING, strlen(val), valdup,
+                    NULL, NULL, NULL, NULL));
+      tok = ID;
+    } else return 1;
+    break;
+
       case STRING:
-	if (tok == LPAR || tok == COMMA) {
-	  valdup = strdup(val);
-	  if (!valdup)
-	    return -1;
-	  impNameAppend(var, impAstNode(nulSrcp, nulSrcp, nulSrcp, 
-					AST_STRING, strlen(val), valdup, 
-					NULL, NULL, NULL, NULL));
-	  tok = STRING;
-	} else return 1;
-	break;
-	
+    if (tok == LPAR || tok == COMMA) {
+      valdup = strdup(val);
+      if (!valdup)
+        return -1;
+      impNameAppend(var, impAstNode(nulSrcp, nulSrcp, nulSrcp,
+                    AST_STRING, strlen(val), valdup,
+                    NULL, NULL, NULL, NULL));
+      tok = STRING;
+    } else return 1;
+    break;
+
       case COMMA:
-	if (tok != COMMA) tok = COMMA;
-	else return 1;
-	break;
-	
+    if (tok != COMMA) tok = COMMA;
+    else return 1;
+    break;
+
       case RPAR:
-	if (tok == COMMA) return 1;
-	if (tok == LPAR) impNameAppend(var, NULL);
-	return 0;
-	
+    if (tok == COMMA) return 1;
+    if (tok == LPAR) impNameAppend(var, NULL);
+    return 0;
+
       default:
-	return 1;
+    return 1;
       }/*switch*/
     }/*for*/
   }/*impSetVar()*/
@@ -248,83 +249,83 @@ int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
     inFileName = malloc(strlen(inName) + 5);
     if (!inFileName) {
       if (!(impAstGarb() && (inFileName = malloc(strlen(inName) + 5))))
-	longjmp(jmpEnv, 1);
+    longjmp(jmpEnv, 1);
     }
     strcpy(inFileName, inName);
-  
+
     if ((libPath = (char *)getenv("TMHOME")) == NULL) libPath = HOME;
-  
+
     /* Check for .imp extension and add one if missing.
      */
     if ((fd=open(inFileName,OFLAG)) < 0) {
 #ifdef WIN32
       tail = strrchr(inFileName, '.');
       if (tail && strpbrk(tail, "/\\"))
-	tail = NULL;
+    tail = NULL;
       if (!tail) {
 #else
       if ((((tail = strrchr(inFileName, '/')) != 0) &&
-	   (strrchr(tail, '.') == 0)) ||
-	  (strrchr(inFileName, '.') == 0)) {
+       (strrchr(tail, '.') == 0)) ||
+      (strrchr(inFileName, '.') == 0)) {
 #endif
-	strcat(inFileName, ".imp");
+    strcat(inFileName, ".imp");
       }/*if*/
       fd = open(inFileName, OFLAG);
     }
-  
+
     impLiInit(product.version.string, inFileName, imp_ENGLISH_Messages);
-  
+
     /* Create list file name if listing should be done.
      */
     if (listType) {
       listFileName = malloc(strlen(inName) + 5);
       if (!listFileName) {
-	if (!(impAstGarb() && (listFileName = malloc(strlen(inName) + 5))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (listFileName = malloc(strlen(inName) + 5))))
+      longjmp(jmpEnv, 1);
       }
       strcpy(listFileName, inFileName);
       strcpy(strrchr(listFileName, '.'), ".iml");
     }/*if*/
-  
+
     /* Create code coverage file if code coverage should be reported */
     if (flags & covBit) {
       codeCovFile = malloc(strlen(inName) + 5);
       if (!codeCovFile) {
-	if (!(impAstGarb() && (codeCovFile = malloc(strlen(inName) + 5))))
-	  longjmp(jmpEnv, 1);
+    if (!(impAstGarb() && (codeCovFile = malloc(strlen(inName) + 5))))
+      longjmp(jmpEnv, 1);
       }
       strcpy(codeCovFile, inFileName);
       strcpy(strrchr(codeCovFile, '.'), ".imc");
       if (!(impCcFile = impWriteOpen(codeCovFile, &nulSrcp))) {
-	impMyLog(&nulSrcp, 207, sevERR, codeCovFile);
+    impMyLog(&nulSrcp, 207, sevERR, codeCovFile);
       }
     } else impCcFile = NULL;
-    
+
     /* Open output file if it is given.
      */
     if (outName != NULL && outName[0] != 0) {
       if ((outFile = impWriteOpen(outName, &nulSrcp)) != NULL) {
-	impInitOutput(outFile);
+    impInitOutput(outFile);
       } else {
-	impInitOutput(NULL);
-	impMyLog(&nulSrcp, 207, sevERR, outName);
+    impInitOutput(NULL);
+    impMyLog(&nulSrcp, 207, sevERR, outName);
       }/*if*/
     } else {
       outFile = (FILE*)0;
       impInitOutput(stdout);
     }/*if*/
-  
+
     impEsc = escChar;
     impFileNo = 0;
     impLastPass = !(flags & intBit);
     impUseEnv = flags & envBit;
     impCodeCov = flags & covBit;
-  
+
     impcontext = impScNew(imp_MAIN_MAIN_Scanner);
     if((impcontext->fd = fd) < 0)
       perror(inFileName),exit(1);
     impcontext->fileNo = 0;
-  
+
 #ifdef DEBUG
     printf("--------------------------------------------------\n");
 #endif
@@ -344,16 +345,16 @@ int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
   if (impSeverity() != sevOK) {
     impList("", 0, 78, liTINY, sevALL);
   } else {
-      
+
     if (!setjmp(jmpEnv)) {
       if (!setjmp(jmpExit))
-	impInterpretAst(topAst);
+    impInterpretAst(topAst);
       else
-	*exitCode = impExitCode;
+    *exitCode = impExitCode;
       if (impCodeCov) {
-	impReportFile = inFileName;
-	impReportCnt(topAst);
-	impReportFiles();
+    impReportFile = inFileName;
+    impReportCnt(topAst);
+    impReportFiles();
       }
     } else {
       impMyLog(&nulSrcp, 304, sevSYS, "");
@@ -371,13 +372,13 @@ int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
       impList("", 0, 78, liTINY, sevALL);
     /*      nameDump(stdout);*/
   }
-  
+
   /* And a list file if asked to.
    */
   if (listType) {
     impList(listFileName, 60, 78, listType, sevALL);
   }/*if*/
-  
+
   impLiTerminate();
   if (listType) free(listFileName);
   if (flags & covBit) free(codeCovFile);
@@ -388,4 +389,3 @@ int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
     impWriteClose(impCcFile);
   return impSeverity();
 }/*impMacro()*/
-

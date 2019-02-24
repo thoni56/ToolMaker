@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1991-08-23/tools@heffa
  * CREATED: 1991-08-23
- * 
+ *
  * SoftLab ab (c) 1991
  */
 
@@ -77,6 +77,8 @@ extern void impPopLocalSymtab();
 extern void impPushLocalSymtab();
 extern void impReportFiles();
 extern ParseResult impAstGet();
+extern ImpBoolean impAstGarb();
+extern void impAstRelease();
 extern FILE *impWriteOpen();
 extern void impWriteClose();
 #endif

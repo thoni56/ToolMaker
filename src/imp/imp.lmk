@@ -38,12 +38,14 @@
 213     'Incorrect number of parameters given in INCLUDE statement';
 214     'Empty string not allowed as variable name';
 215     'More than %1 levels of evaluation, probably infinite loop';
-216	'Output file \"%1\" already open for writing.';
-217	'Input file \"%1\" already open for writing.';
-218	'Unable to open input file \"%1\".';
+216     'Output file \"%1\" already open for writing.';
+217     'Input file \"%1\" already open for writing.';
+218     'Unable to open input file \"%1\".';
 
 301     'Erroneous argument to ast access routine : %1';
 302     'Erroneous node type found in %1';
 303     '%1 times';
 304     'Unable to allocate memory !';
+
+999     'System error: %1';
 %%END

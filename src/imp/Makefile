@@ -18,7 +18,6 @@ GCC	= gcc
 
 IMPLIB = imp.a
 
-
 #--
 
 VERSIONOBJECTS= impParse.o impPaSema.o impErr.o impList.o impScan.o impScSema.o \
@@ -26,13 +25,21 @@ VERSIONOBJECTS= impParse.o impPaSema.o impErr.o impList.o impScan.o impScSema.o 
 
 OBJECTS	= $(VERSIONOBJECTS) version.o
 
-all debug trace : impobj
+all debug trace : tm impobj
 
 install:
 	install imp $(DESTROOT)/bin
 
 test:
 	cd testing; make
+
+
+# Utility targets below
+
+tm:
+	smk imp
+	pmk imp
+	lmk imp
 
 impobj:	checkARCH $(TMARCH)
 	install imp.exe ../../bin/
