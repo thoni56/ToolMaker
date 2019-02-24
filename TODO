@@ -1,7 +1,2 @@
-- Re-generate all tools with itself
-  + lmk + tmk
-  + smk
-  + pmk
-  + imp
-- Fix a lot of compile warnings
 - TMARCH = cygwin32 and cygwin64
+- ansi-fy prototypes and definitions
