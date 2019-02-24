@@ -7,7 +7,7 @@ all test tm install clean:
 	cd smk; make $@
 	cd pmk; make $@
 
-arch:
-	@echo TMARCH=$(TMARCH)
+archs:
+	for f in */.arch ; do echo -n $$f=; cat $$f; echo ; done
 
 include common.mk

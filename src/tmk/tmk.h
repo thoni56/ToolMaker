@@ -1,26 +1,8 @@
 #ifndef _tmk_h
 #define _tmk_h
-/*------------------------------------------------------------------- */
-/* TITLE                                                              */
-/* ------                                                             */
-/* tmk.h                                                              */
-/*                                                                    */
-/* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */
-/*                                                                    */
-/* REVISION DATA                                                      */
-/* -------------                                                      */
-/* CREATED:   92-04-30  Micael Dahlgren                               */
-/* BASED ON:                                                          */
-/* MODIFIED:                                                          */
-/* ------------------------------------------------------------------ */
-/*                                                                    */
-/* DESCRIPTION                                                        */
-/* -----------                                                        */
-/*                                                                    */
-/*                                                                    */
-/* ------------------------------------------------------------------ */
+
 /* IMPORT */
+#include <stdint.h>
 #include "tmkCommon.h"
 
 /* UNIT CONSTANTS */
@@ -85,7 +67,7 @@ typedef struct OptTabRec {
   TmoKind dirKind;                 /* Option type */
   char *optName;                   /* Option name */
   char *cliName;                   /* Cli option name */
-  unsigned defval;                 /* Default value */
+  intptr_t defval;                 /* Default value */
   char *optHelp;                   /* Option help string */
 
   /* Values used for semantic checks */
