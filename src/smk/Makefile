@@ -34,14 +34,14 @@ OBJECTS		= $(VERSIONOBJECTS) version.o
 #
 #
 all debug : tm smkobj
-	install -C Scan.imp ../../lib/ansi-c
+	install -C -b Scan.imp ../../lib/ansi-c
 
 ################################################################################
 #
 #
 # Install in DESTROOT/bin, DESTROOT/lib/ToolMaker=DESTLIB & DESTROOT/man
 install: installdirs
-	install	-C Scan.imp $(DESTLIB)/lib/ansi-c
+	install -C Scan.imp $(DESTLIB)/lib/ansi-c
 	install smk $(DESTROOT)/bin
 
 smkobj: checkARCH $(TMARCH)

@@ -32,7 +32,7 @@ all debug: tm $(TMARCH)
 
 # Install in DESTROOT/bin, DESTROOT/lib/ToolMaker=DESTLIB & DESTROOT/man
 install: installdirs
-	install -C Common.imp $(DESTLIB)/lib//ansi-c
+	install -C Common.imp $(DESTLIB)/lib/ansi-c
 
 tm:
 	smk tmk

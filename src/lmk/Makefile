@@ -36,13 +36,13 @@ OBJECTS = $(VERSIONOBJECTS) version.o
 #
 # Normal compilation
 all debug opt: tm lmkobj
-	install -C List.imp ../../lib/ansi-c/
+	install -C -b List.imp ../../lib/ansi-c/
 
 test:
 	cd testing; make
 
 install: installdirs
-	install	-C List.imp $(DESTLIB)/lib/ansi-c
+	install -C List.imp $(DESTLIB)/lib/ansi-c
 	install lmk $(DESTROOT)/bin
 
 # Utility targets down here
