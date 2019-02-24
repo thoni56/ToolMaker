@@ -25,7 +25,7 @@ VERSIONOBJECTS= impParse.o impPaSema.o impErr.o impList.o impScan.o impScSema.o 
 
 OBJECTS	= $(VERSIONOBJECTS) version.o
 
-all debug trace : tm impobj
+all debug trace : impobj
 
 install:
 	install imp $(DESTROOT)/bin
@@ -33,13 +33,15 @@ install:
 test:
 	cd testing; make
 
+tm: tmk impobj
 
-# Utility targets below
 
-tm:
-	smk imp
-	pmk imp
-	lmk imp
+#-- Utility targets below
+
+tmk:
+	../../bin/smk imp
+	../../bin/pmk imp
+	../../bin/lmk imp
 
 impobj:	checkARCH $(TMARCH)
 	install imp.exe ../../bin/

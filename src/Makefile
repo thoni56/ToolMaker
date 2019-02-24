@@ -1,46 +1,11 @@
 #
 
-all: tmk imp lmk smk pmk
-
-.PHONY: tmk
-tmk:
-	cd tmk; make TMARCH=$(TMARCH)
-
-.PHONY: imp
-imp:
-	cd imp; make TMARCH=$(TMARCH)
-
-.PHONY: lmk
-lmk:
-	cd lmk; make TMARCH=$(TMARCH)
-
-.PHONY: smk
-smk:
-	cd smk; make TMARCH=$(TMARCH)
-
-.PHONY: pmk
-pmk:
-	cd pmk; make TMARCH=$(TMARCH)
-
-test:
-	cd imp; make test
-	cd lmk; make test
-	cd smk; make test
-	cd pmk; make test
-
-clean:
-	cd tmk; make clean
-	cd imp; make clean
-	cd lmk; make clean
-	cd smk; make clean
-	cd pmk; make clean
-
-install:
-	cd tmk; make install
-	cd imp; make install
-	cd lmk; make install
-	cd smk; make install
-	cd pmk; make install
+all test tm install clean:
+	cd tmk; make $@
+	cd imp; make $@
+	cd lmk; make $@
+	cd smk; make $@
+	cd pmk; make $@
 
 arch:
 	@echo TMARCH=$(TMARCH)

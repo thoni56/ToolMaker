@@ -27,17 +27,23 @@ OBJS=   $(OBJS.c)
 .PRECIOUS: $(LIB)
 
 #--
-all debug: tm $(TMARCH)
+all debug: $(TMARCH)
 	install -C -b Common.imp ../../lib/ansi-c
 
 # Install in DESTROOT/bin, DESTROOT/lib/ToolMaker=DESTLIB & DESTROOT/man
 install: installdirs
 	install -C Common.imp $(DESTLIB)/lib/ansi-c
 
-tm:
-	smk tmk
-	pmk tmk
-	lmk tmk
+tm: tmk $(TMARCH)
+
+test:
+
+#-- Utility targets below
+
+tmk:
+	../../bin/smk tmk
+	../../bin/pmk tmk
+	../../bin/lmk tmk
 
 .PHONY: $(TMARCH)
 $(TMARCH): tmkobj

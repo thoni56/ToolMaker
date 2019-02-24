@@ -58,19 +58,19 @@ static Action lexWriteAction(
     for(;at<smThis->smLength;at++,ch++)
       switch(state) {
       case 0:
-	if(*ch=='%') state=1;
-	else if(*ch==smkEscape) state=3;
-	break;
+    if(*ch=='%') state=1;
+    else if(*ch==smkEscape) state=3;
+    break;
       case 1:
-	if(*ch=='%') state=2;
-	else if(*ch==smkEscape) state=3;
-	else state=0;
-	break;
+    if(*ch=='%') state=2;
+    else if(*ch==smkEscape) state=3;
+    else state=0;
+    break;
       case 2:
-	goto Exit;
+    goto Exit;
       case 3:
-	state=0;
-	break;
+    state=0;
+    break;
       }
   }
   skip=0;
@@ -92,7 +92,7 @@ static Name lexName(
   smThis->smText[smThis->smLength]=rem;
   return name;
 }
- 
+
 static Name lexMapName(
      smkScContext smThis)
 {
@@ -106,7 +106,7 @@ static Name lexMapName(
   free(text);
   return name;
 }
- 
+
 static int lexNumber(
      smkScContext smThis)
 {

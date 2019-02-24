@@ -624,12 +624,7 @@ static void insert(istr, mstr)
   int iptr;
 
   /* Allocate temporary buffer */
-%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
-  if ((rb = (char *) malloc((size_t)(istr? strlen(istr): 0) +
-%%ELSE
-  if ((rb = (char *) malloc((istr? strlen(istr): 0) +
-%%ENDIF
-      (mstr? strlen(mstr): 0) + 1)) == NULL) {
+  if (!(rb = (char *) malloc(1000))) { /* We can't calculate length since insert strings maybe used many times */
     error("Out of memory.");
     return;
   }
@@ -1232,13 +1227,7 @@ static void prerrm(first, last, src)
       msgIndex++;
 
     /* Get formatted message text */
-%%IF({"c++", "ansi-c"} (%%(lmkTarget)))
-    msg = (char *) malloc((size_t)MSGWIDTH +
-%%ELSE
-    msg = (char *) malloc(MSGWIDTH +
-%%ENDIF
-              (mdarr[msarr[msgIndex].ref].insert?
-               strlen(mdarr[msarr[msgIndex].ref].insert): 0));
+    msg = (char *) malloc(1000); /* We can't calculate length since insert strings maybe used many times */
     if (!msg)
       error("Out of memory!");
     else {

@@ -55,17 +55,22 @@ LIBS	= \
 
 #--
 
-all debug: tm pmkobj
+all debug: pmkobj
 	install -C -b Parse.imp Err.imp ../../lib/ansi-c
 
 install: installdirs
 	install -C Parse.imp Err.imp $(DESTLIB)/lib/ansi-c
 	install pmk $(DESTROOT)/bin
 
-tm:
-	pmk pmk
-	smk pmk
-	lmk pmk
+tm: tmk pmkobj
+
+
+#-- Utility targets below
+
+tmk:
+	../../bin/pmk pmk
+	../../bin/smk pmk
+	../../bin/lmk pmk
 
 pmkobj: checkARCH $(TMARCH)
 	install pmk ../../bin/
