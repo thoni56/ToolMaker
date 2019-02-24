@@ -1,4 +1,3 @@
-/*	@(#)pwGe.h	1.2 (90/11/07 09:49:17)    */
 #ifndef _pwGe
 #define _pwGe
 
@@ -23,7 +22,7 @@ extern int actMax;		/* Largest value in action table */
 extern int gtoRowCnt;		/* Number of rows in the goto table */
 extern int gtoColCnt;		/* Number of columns in the goto table */
 extern int gtoMax;		/* Largest value in goto table */
-extern int divFactor;		/* Divide factor in tables */
+extern int tableFactor;		/* Divide factor in tables */
 
 typedef struct {
     int tsym;			/* Normal continuation */
@@ -61,7 +60,7 @@ typedef struct {		/* Representation of one item */
     int afterDot;		/* Symbol after the dot */
     int succState;		/* Sucessor state */
     ItemKind typ;		/* Transition type */
-    Boolean sr;			/* Shift reduce item */ 
+    Boolean sr;			/* Shift reduce item */
     PredItem *predList;		/* Predecessors */
     SETPTR laPtr;		/* Look-ahead set */
 } ItemRepr;
@@ -70,8 +69,8 @@ extern ItemRepr *accItem;	/* Item Table */
 
 /*-----------------------------------------------------------------------------
  * nrBytes - Returns the number of bytes a value will occupy. Note that it is
- *	     assumed that there is an unsigned 8-bit data type on the target
- *	     machine.
+ *       assumed that there is an unsigned 8-bit data type on the target
+ *       machine.
  *-----------------------------------------------------------------------------
  */
 #define nrBytes(val) ((val) < 256? 1: ((val) < 65536? 2: 4))

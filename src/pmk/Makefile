@@ -56,10 +56,10 @@ LIBS	= \
 #--
 
 all debug: tm pmkobj
-	install -C Parse.imp Err.imp ../../lib/ansi-c
+	install -C -b Parse.imp Err.imp ../../lib/ansi-c
 
 install: installdirs
-	install	-C  Parse.imp Err.imp $(DESTLIB)/lib/ansi-c
+	install -C Parse.imp Err.imp $(DESTLIB)/lib/ansi-c
 	install pmk $(DESTROOT)/bin
 
 tm:

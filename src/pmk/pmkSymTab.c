@@ -1,16 +1,3 @@
-/*-----------------------------------------------------------------------------
- * pmSymTab - Symbol table handling routines
- *		@(#)pmSymTab.c	1.2 (91/04/03 14:22:40)
- *-----------------------------------------------------------------------------
- * Created:	890801 by Arash
- * Modified:	891202 by Tom. Hash table changed to binary tree.
- *		910402 by Yngve. Changed icost and dcost of '$' (EOF) to 1000.
- *-----------------------------------------------------------------------------
- * Entries:								     
- *	?????
- *-----------------------------------------------------------------------------
- */
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -24,29 +11,30 @@ int vocMaxLn = 0;		/* Length of longest vocabulary name */
  *-----------------------------------------------------------------------------
  */
 static int insertSymbol(symName)
-char *symName;			/* IN the symbol name to look up  */
-				/* RET the entry in vocabulary */
+     char *symName;			/* IN the symbol name to look up  */
+     /* RET the entry in vocabulary */
 {
     sym_ref temp;
 
     vocCnt++;
     if (vocCnt == sym_max) {
-	sym_max *= 2;
-	vocabulary = (sym_ref *)realloc(vocabulary, sym_max * sizeof(sym_ref));
+        sym_max *= 2;
+        vocabulary = (sym_ref *)realloc(vocabulary, sym_max * sizeof(sym_ref));
     }/*if*/
     temp = (sym_ref)malloc(sizeof(sym_rec));
     if (temp != NULL) {
-      if (strlen(symName) > vocMaxLn)
-	vocMaxLn = strlen(symName);
-      temp->name = symName;
-      temp->code = -1;
-      temp->left = temp->right = 0;
-      temp->symbol_typ = unknown_symb;
-      vocabulary[vocCnt] = temp;
-      return vocCnt;
+        if (strlen(symName) > vocMaxLn)
+            vocMaxLn = strlen(symName);
+        temp->name = symName;
+        temp->code = -1;
+        temp->left = temp->right = 0;
+        temp->symbol_typ = unknown_symb;
+        vocabulary[vocCnt] = temp;
+        return vocCnt;
     } else {
-      pmkLog(NULL, 197, sevFAT, "");
+        pmkLog(NULL, 197, sevFAT, "");
     }/*if*/
+    return 0;
 }/*insertSymbol()*/
 
 /*-----------------------------------------------------------------------------
@@ -63,16 +51,16 @@ void initSymTab()
      */
     temp = (sym_ref)malloc(sizeof(sym_rec));
     if (temp != NULL) {
-	temp->name = "ParserMaker";
-	temp->code = 0;
-	temp->left = temp->right = 0;
-	temp->symbol_typ = nts_symb;
-	temp->syminfo.firstp = 0;
-	vocabulary[0] = temp;
+        temp->name = "ParserMaker";
+        temp->code = 0;
+        temp->left = temp->right = 0;
+        temp->symbol_typ = nts_symb;
+        temp->syminfo.firstp = 0;
+        vocabulary[0] = temp;
     } else {
-	pmkLog(NULL,197,sevFAT,"");
+        pmkLog(NULL,197,sevFAT,"");
     }/*if*/
-    
+
     vocCnt = -1;
     i = insertSymbol("Unknown");
     vocabulary[i]->code = 0;
@@ -95,40 +83,40 @@ void initSymTab()
  *-----------------------------------------------------------------------------
  */
 void lookup(symbol, class, ref, search)
-char *symbol; 
-SET class;			/* legal symbol types */
-int *ref;			/* OUT Index in vocabulary */
-search_kind *search;		/* OUT Search result */
+     char *symbol;
+     SET class;			/* legal symbol types */
+     int *ref;			/* OUT Index in vocabulary */
+     search_kind *search;		/* OUT Search result */
 {
     register int i = 0;
     register int key;
 
     for (;;) {
-	if ((key = strcmp(vocabulary[i]->name, symbol)) == 0) break;
-	else if (key < 0) {
-	    if (vocabulary[i]->left) i = vocabulary[i]->left;
-	    else {
-		vocabulary[i]->left = insertSymbol(symbol);
-		i = vocabulary[i]->left;
-		break;
-	    }/*if*/
-	} else {
-	    if (vocabulary[i]->right) i = vocabulary[i]->right;
-	    else {
-		vocabulary[i]->right = insertSymbol(symbol);
-		i = vocabulary[i]->right;
-		break;
-	    }/*if*/
-	}/*if*/
+        if ((key = strcmp(vocabulary[i]->name, symbol)) == 0) break;
+        else if (key < 0) {
+            if (vocabulary[i]->left) i = vocabulary[i]->left;
+            else {
+                vocabulary[i]->left = insertSymbol(symbol);
+                i = vocabulary[i]->left;
+                break;
+            }/*if*/
+        } else {
+            if (vocabulary[i]->right) i = vocabulary[i]->right;
+            else {
+                vocabulary[i]->right = insertSymbol(symbol);
+                i = vocabulary[i]->right;
+                break;
+            }/*if*/
+        }/*if*/
     }/*for*/
 
     *ref = i;
     if (SetMem(class, vocabulary[i]->symbol_typ)) {
-	/* Symbol exists */
-	*search = found_search;
+        /* Symbol exists */
+        *search = found_search;
     } else if (vocabulary[i]->symbol_typ == unknown_symb) {
-	*search = new_search;
+        *search = new_search;
     } else {
-	*search = confl_search;
+        *search = confl_search;
     }/*if*/
 }/*lookup()*/
