@@ -1,2 +1,5 @@
+- make it 64-bit compatible (somethings seems to crash when compiled for x64)
 - TMARCH = cygwin32 and cygwin64
 - ansi-fy prototypes and definitions
+- remove 'make depend', use -MDD
+- remove conditional settings for OS, use TMARCH, or something similar instead
