@@ -1,2 +1,2 @@
-.tst : imp $2
+.tst : ../../imp $2
 .tst : cat *.cc *.hh *.dbLoad
