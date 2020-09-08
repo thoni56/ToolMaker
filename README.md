@@ -1,6 +1,6 @@
-= ToolMaker
+# ToolMaker
 
-== What it is
+## What it is
 
 ToolMaker is a set of tools to make compilers, analyzers and similar
 tools. It creates a lexcial scanner (like `lex` et.al) and a parser
@@ -9,7 +9,7 @@ tools. It creates a lexcial scanner (like `lex` et.al) and a parser
 top of a powerful macro tool, `imp`, similar in function to m4 and
 others.
 
-== License
+## License
 
 This is a project which contains original work by Kenth Ericsson,
 Jerker Willander and others at SoftLab AB Sweden, including
@@ -28,7 +28,7 @@ Although this would strictly be copyrighted material, but considering
 I'm making this repo of resurrected sources available, mostly for my
 own use. Please consult me before creating forks.
 
-== Current state
+## Current state
 
 All licensing is removed, but the source for the licensing mechanism
 is still here, but not cleaned or compiled recently. The same goes for
@@ -36,10 +36,10 @@ the `toolmake` utility, which creates an initial set of files for your
 new ToolMaker-based project.
 
 Otherwise the source compiles on cygwin and all tests run (using
-[Jregr](https://github.com/thoni56/jregr).
+[Jregr](https://github.com/thoni56/jregr)).
 
 
-== Acknowledgement
+## Acknowledgement
 
 We, who where at SoftLab at that time, where all involved in this in
 some way. Special thanks to
