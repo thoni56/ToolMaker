@@ -51,3 +51,8 @@ some way. Special thanks to
 
 - Myself, Reibert Arbring, Michael Dahlgren and Håkan Pettersson for
   structuring this as a project and filling out the blanks.
+
+## Building
+
+To build `binutils` and `gcc` should suffice. If you want to run tests
+you need [Jregr](https://github.com/thoni56/Jregr).
