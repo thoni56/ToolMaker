@@ -1,3 +1,2 @@
-*.pml
 .arch
-dependencies.mk
+*.exe
