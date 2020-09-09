@@ -29,15 +29,12 @@
 
 #ifdef CYGWIN
 #define OFLAG O_TEXT
-#define TARGETOS "cygwin"
 #else
 #ifdef MINGW
 #define OFLAG _O_RAW
-#define TARGETOS "mingw"
 #else
 #ifdef WIN32
 #define OFLAG _O_TEXT
-#define TARGETOS "WIN32"
 #else
 #define OFLAG 0
 #endif
