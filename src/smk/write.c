@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-19/tony@wolf
  * CREATED: 1990-06-26
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/write.c,v 1.1 2002/06/25 20:05:04 Thomas Nilsson Exp $
@@ -75,7 +75,7 @@
  *
  * Revision 1.10  91/09/20  05:20:06  tools
  * Fixed SKIP test in writeToken
- * 
+ *
  * Revision 1.9  1991/08/22  07:24:46  tools
  * Changed handling of EOT and UNKNOWN tokens.
  * Fix size bug in smDebugScanner
@@ -97,16 +97,16 @@
  *
  * Revision 1.4  91/02/18  10:45:39  tools
  * Allocated to little memory when writing debug info.
- * 
+ *
  * Revision 1.3  91/02/15  16:35:16  tools
  * Added TRACE option
- * 
+ *
  * Revision 1.2  91/02/15  15:11:19  tools
  * Debug text for token was not correctly sorted.
- * 
+ *
  * Revision 1.1  91/01/10  12:22:51  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -156,7 +156,7 @@ static char *gArrayDelimiter=",";
 /*======================================================================
     smkCopyCode()
 
-    Copy a code segment with length "length" from position "pos" 
+    Copy a code segment with length "length" from position "pos"
     in "inFile" to "outFile". In "inFile" use the escape character
     "inEscape" and in "outFile" use "outEscape"
  */
@@ -170,21 +170,21 @@ static void smkCopyCode(inFile, pos, length, inEscape, outFile, outEscape)
 {
   int i;			/* Loop variable              */
   char ch;			/* Temporary character holder */
-  
+
   lseek(inFile, pos, 0);
   for (i = 0; i < length; i++) {
     if ((read(inFile, &ch, 1) == 1) && (ch == '%'))
       putc(outEscape, outFile);
     else if (ch == inEscape) {
       if ((read(inFile, &ch, 1) == 1) && (ch == '%'))
-	putc(outEscape, outFile);
+    putc(outEscape, outFile);
       i++;
     }
     putc(ch, outFile);
   }
 }
 
-void writeAll(pack,size,maxsize,unoptsize) 
+void writeAll(pack,size,maxsize,unoptsize)
      Pack pack;
      int *size;
      int *maxsize;
@@ -194,7 +194,7 @@ void writeAll(pack,size,maxsize,unoptsize)
   int aSize, inFile;
   long clock;
   char *date, *target;
-  
+
   *size=0;
   *maxsize=0;
   if((fd=fopen(optSmtfile,"wb"))==NULL) return;
@@ -207,11 +207,7 @@ void writeAll(pack,size,maxsize,unoptsize)
   fprintf(fd, "%%%%SET tmkForce(%d)\n",getBoolOpt(FORCE_OPT) ? 1 : 0);
   fprintf(fd, "%%%%SET tmkOs(\"%s\")\n", getStrOpt(TMKOS_OPT));
   fprintf(fd, "%%%%SET smkOs(\"%s\")\n", getStrOpt(SMKOS_OPT));
-#ifdef WIN32
-  fprintf(fd, "%%%%SET currentOs(\"WIN32\")\n");
-#else
-  fprintf(fd, "%%%%SET currentOs(\"SunOS\")\n");
-#endif
+  fprintf(fd, "%%%%SET currentOs(\"%s\")\n", TARGETOS);
   fprintf(fd, "%%%%SET tmkTarget(\"%s\")\n", getStrOpt(TMKTARGET_OPT));
   fprintf(fd, "%%%%SET smkTarget(\"%s\")\n", target);
   fprintf(fd, "%%%%SET tmkLibrary(\"%s\")\n", getStrOpt(TMKLIBRARY_OPT));
@@ -221,8 +217,8 @@ void writeAll(pack,size,maxsize,unoptsize)
   if ((smkImportSection) &&
       (inFile = open(smkImportSection->fname, OFLAG)) >= 0) {
     fprintf(fd, "%%%%BEGIN(smIMPORT)\n");
-    smkCopyCode(inFile, smkImportSection->fpos, smkImportSection->length, 
-		smkEscape, fd, '`');
+    smkCopyCode(inFile, smkImportSection->fpos, smkImportSection->length,
+        smkEscape, fd, '`');
     close(inFile);
     fprintf(fd, "%%%%END(smIMPORT)\n");
   }
@@ -237,7 +233,7 @@ void writeAll(pack,size,maxsize,unoptsize)
     gArrayBegin="{";
     gArrayEnd="}";
     gArrayDelimiter=",";
-  }    
+  }
   if(optExclude>=0) fprintf(fd,"%%%%SET smExclude(\"%d\")\n",optExclude);
   fprintf(fd,"%%%%SET smTokenSize(\"%d\")\n",getNumOpt(TOKENSIZE_OPT));
   fprintf(fd,"%%%%SET smTokenMaxSize(\"%d\")\n",getNumOpt(TOKENLIMIT_OPT));
@@ -249,37 +245,37 @@ void writeAll(pack,size,maxsize,unoptsize)
   writeVoc(fd);
   writeDebug(fd);
   writeActions(fd);
-  
+
   if(mapUsed) {
     aSize=writeMap(fd);
     *size+=aSize;
     *maxsize+=aSize;
   }
-  
+
   aSize=writeScanner(fd);
   *size+=aSize;
   *maxsize+=aSize;
-  
+
   aSize=writeAccept(fd);
   *size+=aSize;
   *maxsize+=aSize;
-  
+
   aSize=writeRuleCode(fd);
   *size+=aSize;
   *maxsize+=aSize;
-  
+
   if(lookaheadRoot) {
     aSize=writeLookahead(fd);
     *size+=aSize;
     *maxsize+=aSize;
   }
-  
+
   if(screenHasScreening) {
     aSize=writeScreening(fd);
     *size+=aSize;
     *maxsize+=aSize;
   }
-  
+
   aSize=writeDFA(fd,pack);
   *size+=aSize;
   if(unoptsize<256)
@@ -359,22 +355,22 @@ static void writeCode(fd,buffer,length)
   while((ch=strpbrk(buffer,brk))) {
     fwrite(buffer,1,ch-buffer,fd);
     if(*ch=='%') {
-      fwrite("`%",1,2,fd); 
+      fwrite("`%",1,2,fd);
       length-=ch-buffer+1;
       buffer=ch+1;
     }
     else {
-      if(ch[1]=='%') 
-	fwrite("`%",1,2,fd); 
+      if(ch[1]=='%')
+    fwrite("`%",1,2,fd);
       else
-	fwrite(ch+1,1,1,fd);
+    fwrite(ch+1,1,1,fd);
       length-=ch-buffer+2;
       buffer=ch+2;
-    }      
+    }
   }
   fwrite(buffer,1,length,fd);
 }
-	
+
 /*
  * Write Vector data
  */
@@ -482,7 +478,7 @@ static int writeErrorMatrix(fd,pack)
   int rows;
   int row;
   char *target;
-  
+
   size=0;
 
   /* Write the error table, NOTE that this is target specific */
@@ -558,7 +554,7 @@ static int writeDFA(fd, pack)
 
   if(pack->type & ePackROW) {
     fprintf(fd,"%%%%BEGIN(smROWvec)\n");
-    if((pack->type & (ePackRDS|ePackLES|ePackGCS))==0) 
+    if((pack->type & (ePackRDS|ePackLES|ePackGCS))==0)
       for(row=0;row<pack->ROWrows;row++) pack->ROWrow[row]*=pack->cols;
     type=writeVector(fd,pack->ROWrow,pack->ROWrows);
     fprintf(fd,"%%%%END(smROWvec)\n");
@@ -579,7 +575,7 @@ static int writeDFA(fd, pack)
   }
 
 /* Write LES and GCS */
-  
+
   if(pack->type & (ePackLES|ePackGCS)) {
 
     /* if LES, write determination row and column */
@@ -598,7 +594,7 @@ static int writeDFA(fd, pack)
     }
 
     /* write LES or GCS row and column index vectors */
-    
+
     fprintf(fd,"%%%%BEGIN(smLESorGCSrow)\n");
     type=writeVector(fd,pack->LESorGCSrow,pack->LESorGCSrows);
     fprintf(fd,"%%%%END(smLESorGCSrow)\n");
@@ -627,11 +623,11 @@ static int writeDFA(fd, pack)
       size+=type*pack->LESorGCScols;
     }
   }
-  
+
 /* Write RDS or normal matrix */
 
   if(pack->type & ePackRDS) {
-    
+
     /* write RDS vector */
 
     fprintf(fd,"%%%%BEGIN(smRDSvec)\n");
@@ -640,7 +636,7 @@ static int writeDFA(fd, pack)
     fprintf(fd,"%%%%SET smRDSvecLen(%d)\n",pack->RDSvectorLen?pack->RDSvectorLen:1);
     fprintf(fd,"%%%%SET smRDSvecTyp(%d)\n",type);
     size+=type*pack->RDSvectorLen;
-    
+
     /* if not LES or GCS, write base and check vectors */
 
     if(!(pack->type & (ePackLES|ePackGCS))) {
@@ -659,9 +655,9 @@ static int writeDFA(fd, pack)
     }
   }
   else {
-    
+
     /* write normal matrix */
-      
+
     if((pack->type & ePackROW) && !(pack->type & (ePackLES|ePackGCS|ePackRDS))) {
       fprintf(fd,"%%%%BEGIN(smDFAmat)\n");
       type=writeMatrixAsVector(fd,pack->matrix,pack->rows,pack->cols);
@@ -759,51 +755,51 @@ static void writeActions(FILE *fd)
     free(buffer);
   }
   close(ifd);
-  
+
   if(hasSemanticActions) {
     fprintf(fd,"%%%%SET smACTIONS(1)\n");
     fprintf(fd,"%%%%BEGIN(smACTIONS)\n");
     target = getStrOpt(SMKTARGET_OPT);
     if ((strcmp(target, "c") == 0) ||
-	(strcmp(target, "ansi-c") == 0) ||
-	(strcmp(target, "c++") == 0)) {
+    (strcmp(target, "ansi-c") == 0) ||
+    (strcmp(target, "c++") == 0)) {
       fprintf(fd,"  switch(%%%%(smACTIONS[1])) {");
       for(action=actionRoot;action;action=action->next)
-	if(action->type==actionSEMANTIC) {
-	  Vocabulary vocabulary;
-	  Scanner scanner;
-	  Rule rule;
-	  
-	  for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
-	    for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
-	      for(rule=scanner->rules;rule;rule=rule->next)
-		if(rule->action==action) {
-		  fprintf(fd,"\n  case %3d:\t\t",rule->code);
-		  writeComment(fd,rule->token->name,strlen(rule->token->name));
+    if(action->type==actionSEMANTIC) {
+      Vocabulary vocabulary;
+      Scanner scanner;
+      Rule rule;
+
+      for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
+        for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
+          for(rule=scanner->rules;rule;rule=rule->next)
+        if(rule->action==action) {
+          fprintf(fd,"\n  case %3d:\t\t",rule->code);
+          writeComment(fd,rule->token->name,strlen(rule->token->name));
 /* fprintf(fd," in %s::%s", vocabulary->name, scanner->name); */
-		}
-	  fprintf(fd,"\n    {%%%%INCLUDE(smACTION%d)}\n    break;\n",action->code);
-	}
+        }
+      fprintf(fd,"\n    {%%%%INCLUDE(smACTION%d)}\n    break;\n",action->code);
+    }
       fprintf(fd,"  }\n");
     }
     else {
       fprintf(fd,"  switch(%%%%(smACTIONS[1])) {");
       for(action=actionRoot;action;action=action->next)
-	if(action->type==actionSEMANTIC) {
-	  Vocabulary vocabulary;
-	  Scanner scanner;
-	  Rule rule;
-	  
-	  for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
-	    for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
-	      for(rule=scanner->rules;rule;rule=rule->next)
-		if(rule->action==action) {
-		  fprintf(fd,"\n  case %3d:\t\t",rule->code);
-		  writeComment(fd,rule->token->name,strlen(rule->token->name));
+    if(action->type==actionSEMANTIC) {
+      Vocabulary vocabulary;
+      Scanner scanner;
+      Rule rule;
+
+      for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
+        for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
+          for(rule=scanner->rules;rule;rule=rule->next)
+        if(rule->action==action) {
+          fprintf(fd,"\n  case %3d:\t\t",rule->code);
+          writeComment(fd,rule->token->name,strlen(rule->token->name));
 /* fprintf(fd," in %s::%s", vocabulary->name, scanner->name); */
-		}
-	  fprintf(fd,"\n    {%%%%INCLUDE(smACTION%d)}\n    break;\n",action->code);
-	}
+        }
+      fprintf(fd,"\n    {%%%%INCLUDE(smACTION%d)}\n    break;\n",action->code);
+    }
       fprintf(fd,"  }\n");
     }
     fprintf(fd,"%%%%END(smACTIONS)\n");
@@ -857,8 +853,8 @@ static int writeAccept(fd)
   free((char *)table);
   return size;
 }
-    
-    
+
+
 static int writeRuleCode(fd)
      FILE *fd;
 {
@@ -874,9 +870,9 @@ static int writeRuleCode(fd)
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next)
-	if(rule->type!=ruleUNDEF)
-	  table[rule->code]=(rule->type==ruleSKIP) ? 0 : rule->token->code+1;
-  fprintf(fd,"%%%%-- rule code is 1 to high (0=skip)!\n"); 
+    if(rule->type!=ruleUNDEF)
+      table[rule->code]=(rule->type==ruleSKIP) ? 0 : rule->token->code+1;
+  fprintf(fd,"%%%%-- rule code is 1 to high (0=skip)!\n");
   fprintf(fd,"%%%%BEGIN(smTOKENCODEvec)\n");
   type=writeVector(fd,table,ruleCodes);
   fprintf(fd,"%%%%END(smTOKENCODEvec)\n");
@@ -892,7 +888,7 @@ static int writeRuleCode(fd)
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next)
-	if(rule->ast==astEOT) table[scanner->code]=rule->code;
+    if(rule->ast==astEOT) table[scanner->code]=rule->code;
   type=writeVector(fd,table,scannerCodes);
   fprintf(fd,"%%%%END(smEOTCODEvec)\n");
   fprintf(fd,"%%%%SET smEOTCODEvecLen(%d)\n",scannerCodes);
@@ -957,17 +953,17 @@ static int writeLookahead(fd)
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next)
-	if (rule->type != ruleUNDEF) {
-	  if(rule->lookahead)
-	    if(rule->lookahead->lengthPrefix>0)
-	      table[rule->code]=1;
-	    else if(rule->lookahead->lengthSuffix>0)
-	      table[rule->code]=2;
-	    else 
-	      table[rule->code]=3;
-	  else
-	    table[rule->code]=0;
-	}
+    if (rule->type != ruleUNDEF) {
+      if(rule->lookahead)
+        if(rule->lookahead->lengthPrefix>0)
+          table[rule->code]=1;
+        else if(rule->lookahead->lengthSuffix>0)
+          table[rule->code]=2;
+        else
+          table[rule->code]=3;
+      else
+        table[rule->code]=0;
+    }
   fprintf(fd,"%%%%BEGIN(smLOOKAHEADtypeVec)\n");
   type=writeVector(fd,table,ruleCodes);
   fprintf(fd,"%%%%END(smLOOKAHEADtypeVec)\n");
@@ -980,16 +976,16 @@ static int writeLookahead(fd)
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next)
-	if (rule->type != ruleUNDEF) {
-	  if(rule->lookahead==NULL)
-	    table[rule->code]=0;
-	  else if(rule->lookahead->dfaPrefix)
-	    table[rule->code]=rule->lookahead->dfaPrefix->node;
-	  else if(rule->lookahead->lengthPrefix>0)
-	    table[rule->code]=rule->lookahead->lengthPrefix;
-	  else
-	    table[rule->code]=0;
-	}
+    if (rule->type != ruleUNDEF) {
+      if(rule->lookahead==NULL)
+        table[rule->code]=0;
+      else if(rule->lookahead->dfaPrefix)
+        table[rule->code]=rule->lookahead->dfaPrefix->node;
+      else if(rule->lookahead->lengthPrefix>0)
+        table[rule->code]=rule->lookahead->lengthPrefix;
+      else
+        table[rule->code]=0;
+    }
   fprintf(fd,"%%%%BEGIN(smLOOKAHEADprefixVec)\n");
   type=writeVector(fd,table,ruleCodes);
   fprintf(fd,"%%%%END(smLOOKAHEADprefixVec)\n");
@@ -1002,16 +998,16 @@ static int writeLookahead(fd)
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next)
-	if (rule->type != ruleUNDEF) {
-	  if(rule->lookahead==NULL)
-	    table[rule->code]=0;
-	  else if(rule->lookahead->dfaSuffix)
-	    table[rule->code]=rule->lookahead->dfaSuffix->node;
-	  else if(rule->lookahead->lengthSuffix>0)
-	    table[rule->code]=rule->lookahead->lengthSuffix;
-	  else
-	    table[rule->code]=0;
-	}
+    if (rule->type != ruleUNDEF) {
+      if(rule->lookahead==NULL)
+        table[rule->code]=0;
+      else if(rule->lookahead->dfaSuffix)
+        table[rule->code]=rule->lookahead->dfaSuffix->node;
+      else if(rule->lookahead->lengthSuffix>0)
+        table[rule->code]=rule->lookahead->lengthSuffix;
+      else
+        table[rule->code]=0;
+    }
   fprintf(fd,"%%%%BEGIN(smLOOKAHEADsuffixVec)\n");
   type=writeVector(fd,table,ruleCodes);
   fprintf(fd,"%%%%END(smLOOKAHEADsuffixVec)\n");
@@ -1106,7 +1102,7 @@ static int writeScreening(fd)
   fprintf(fd,"%%%%SET smSCREENtokensLen(%d)\n",screenTokensPackedSize);
   fprintf(fd,"%%%%SET smSCREENtokensTyp(%d)\n",type);
   size+=type*screenTokensPackedSize;
-  
+
   return size;
 }
 
@@ -1117,38 +1113,38 @@ static void writeVoc(fd)
   Scanner scanner;
   Token token;
   char *target;
-  
+
   target = getStrOpt(SMKTARGET_OPT);
   if ((strcmp(target, "c") == 0) ||
       (strcmp(target, "ansi-c") == 0) ||
       (strcmp(target, "c++") == 0)) {
     fprintf(fd,"%%%%BEGIN(smVOCABULARY)\n");
-    fprintf(fd,"typedef enum %%%%(smkPrefix)ScScanner {\n");    
+    fprintf(fd,"typedef enum %%%%(smkPrefix)ScScanner {\n");
     for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
       for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
-	fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Scanner = %d",
-		vocabulary->name,scanner->name,scanner->code);
-	if(vocabulary->next || scanner->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
+    fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Scanner = %d",
+        vocabulary->name,scanner->name,scanner->code);
+    if(vocabulary->next || scanner->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
       }
     fprintf(fd,"} %%%%(smkPrefix)ScScanner;\n\n");
     for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next) {
       fprintf(fd,"typedef enum %%%%(smkPrefix)_%s_ScToken {\n",vocabulary->name);
       for(token=vocabulary->tokens;token;token=token->next) {
-	if(token->name[0]=='"' || token->name[0]=='\'')
-	  if(token->code<0) {
-	    char* c;
-	    fprintf(fd,"\t%%%%(smkPrefix)_%s_c",vocabulary->name);
-	    for(c=token->name;*c;c++)
-	      fprintf(fd,(*c>='0' && *c<='9') || (*c>='A' && *c<='Z') || (*c>='a' && *c<='z') ? "%c" : "%X",*c);
-	    fprintf(fd,"_Token = %d",token->code);
-	  }
-	  else
-	    fprintf(fd,"\t%%%%(smkPrefix)_%s_%d_Token = %d",
-		    vocabulary->name,token->code,token->code);
-	else
-	  fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Token = %d",
-		  vocabulary->name,token->name,token->code);
-	if(token->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
+    if(token->name[0]=='"' || token->name[0]=='\'')
+      if(token->code<0) {
+        char* c;
+        fprintf(fd,"\t%%%%(smkPrefix)_%s_c",vocabulary->name);
+        for(c=token->name;*c;c++)
+          fprintf(fd,(*c>='0' && *c<='9') || (*c>='A' && *c<='Z') || (*c>='a' && *c<='z') ? "%c" : "%X",*c);
+        fprintf(fd,"_Token = %d",token->code);
+      }
+      else
+        fprintf(fd,"\t%%%%(smkPrefix)_%s_%d_Token = %d",
+            vocabulary->name,token->code,token->code);
+    else
+      fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Token = %d",
+          vocabulary->name,token->name,token->code);
+    if(token->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
       }
       fprintf(fd,"} %%%%(smkPrefix)_%s_ScToken;\n\n",vocabulary->name);
     }
@@ -1156,24 +1152,24 @@ static void writeVoc(fd)
   }
   else {
     fprintf(fd,"%%%%BEGIN(smVOCABULARY)\n");
-    fprintf(fd,"typedef enum %%%%(smkPrefix)ScScanner {\n");    
+    fprintf(fd,"typedef enum %%%%(smkPrefix)ScScanner {\n");
     for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
       for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
-	fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Scanner = %d",
-		vocabulary->name,scanner->name,scanner->code);
-	if(vocabulary->next || scanner->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
+    fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Scanner = %d",
+        vocabulary->name,scanner->name,scanner->code);
+    if(vocabulary->next || scanner->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
       }
     fprintf(fd,"} %%%%(smkPrefix)ScScanner;\n\n");
     for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next) {
       fprintf(fd,"typedef enum %%%%(smkPrefix)_%s_ScToken {\n",vocabulary->name);
       for(token=vocabulary->tokens;token;token=token->next) {
-	if(token->name[0]=='"' || token->name[0]=='\'')
-	  fprintf(fd,"\t%%%%(smkPrefix)_%s_%d_Token = %d",
-		  vocabulary->name,token->code,token->code);
-	else
-	  fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Token = %d",
-		  vocabulary->name,token->name,token->code);
-	if(token->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
+    if(token->name[0]=='"' || token->name[0]=='\'')
+      fprintf(fd,"\t%%%%(smkPrefix)_%s_%d_Token = %d",
+          vocabulary->name,token->code,token->code);
+    else
+      fprintf(fd,"\t%%%%(smkPrefix)_%s_%s_Token = %d",
+          vocabulary->name,token->name,token->code);
+    if(token->next) fprintf(fd,",\n"); else fprintf(fd,"\n");
       }
       fprintf(fd,"} %%%%(smkPrefix)_%s_ScToken;\n\n",vocabulary->name);
     }
@@ -1197,28 +1193,28 @@ static void writeDebug(fd)
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next)
-	if (rule->type != ruleUNDEF)
-	  table[rule->code]=(char *)(rule->token->name);
+    if (rule->type != ruleUNDEF)
+      table[rule->code]=(char *)(rule->token->name);
   target = getStrOpt(SMKTARGET_OPT);
   if ((strcmp(target, "c") == 0) ||
       (strcmp(target, "ansi-c") == 0) ||
       (strcmp(target, "c++") == 0)) {
     fprintf(fd,"%%%%BEGIN(smDEBUG)\n");
     fprintf(fd,"static char *smDebugTokens[%d]={\n",ruleCodes);
-    
+
     ch1=0;
     for(index=0;index<ruleCodes;) {
-      if(table[index]==NULL) 
-	fprintf(fd,"<UNDEFINED>");
+      if(table[index]==NULL)
+    fprintf(fd,"<UNDEFINED>");
       else {
-	fprintf(fd,"\t\"");
-	for(ch1=ch2=(unsigned char *)table[index];(ch2=(unsigned char *)strpbrk((char *)ch2,"\"\\`%"));ch1=ch2,ch2++) {
-	  fwrite((char *)ch1,1,ch2-ch1,fd);
-	  if(*ch2=='"' || *ch2=='\\')
-	    fwrite("\\",1,1,fd);
-	  else
-	    fwrite("`",1,1,fd);
-	}
+    fprintf(fd,"\t\"");
+    for(ch1=ch2=(unsigned char *)table[index];(ch2=(unsigned char *)strpbrk((char *)ch2,"\"\\`%"));ch1=ch2,ch2++) {
+      fwrite((char *)ch1,1,ch2-ch1,fd);
+      if(*ch2=='"' || *ch2=='\\')
+        fwrite("\\",1,1,fd);
+      else
+        fwrite("`",1,1,fd);
+    }
       }
       index++;
       fprintf(fd,index < ruleCodes ? "%s\",\n" : "%s\"};\n",ch1);
@@ -1226,26 +1222,26 @@ static void writeDebug(fd)
     fprintf(fd,"static char *smDebugScanners[%d]={\n",scannerCodes+1);
     for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
       for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
-	fprintf(fd,"\t\"%s::%s\",",vocabulary->name,scanner->name);
+    fprintf(fd,"\t\"%s::%s\",",vocabulary->name,scanner->name);
     fprintf(fd,"\"\"};\n%%%%END(smDEBUG)\n");
   }
   else {
     fprintf(fd,"%%%%BEGIN(smDEBUG)\n");
     fprintf(fd,"static char *smDebugTokens[%d]={\n",ruleCodes);
-    
+
     ch1=0;
     for(index=0;index<ruleCodes;) {
-      if(table[index]==NULL) 
-	fprintf(fd,"<UNDEFINED>");
+      if(table[index]==NULL)
+    fprintf(fd,"<UNDEFINED>");
       else {
-	fprintf(fd,"\t\"");
-	for(ch1=ch2=(unsigned char *)table[index];(ch2=(unsigned char *)strpbrk((char *)ch2,"\"\\`%"));ch1=ch2,ch2++) {
-	  fwrite((char *)ch1,1,ch2-ch1,fd);
-	  if(*ch2=='"' || *ch2=='\\')
-	    fwrite("\\",1,1,fd);
-	  else
-	    fwrite("`",1,1,fd);
-	}
+    fprintf(fd,"\t\"");
+    for(ch1=ch2=(unsigned char *)table[index];(ch2=(unsigned char *)strpbrk((char *)ch2,"\"\\`%"));ch1=ch2,ch2++) {
+      fwrite((char *)ch1,1,ch2-ch1,fd);
+      if(*ch2=='"' || *ch2=='\\')
+        fwrite("\\",1,1,fd);
+      else
+        fwrite("`",1,1,fd);
+    }
       }
       index++;
       fprintf(fd,index < ruleCodes ? "%s\",\n" : "%s\"};\n",ch1);
@@ -1253,7 +1249,7 @@ static void writeDebug(fd)
     fprintf(fd,"static char *smDebugScanners[%d]={\n",scannerCodes+1);
     for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
       for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
-	fprintf(fd,"\t\"%s::%s\",",vocabulary->name,scanner->name);
+    fprintf(fd,"\t\"%s::%s\",",vocabulary->name,scanner->name);
     fprintf(fd,"\"\"};\n%%%%END(smDEBUG)\n");
   }
   free((char *)table);
