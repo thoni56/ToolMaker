@@ -3,9 +3,8 @@
 # This makefile is to compile directly from existing sources
 #
 
-DESTROOT = /usr/local
 
-TMARCH	= cygwin
+TMARCH	= $(shell uname)
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin -DMINGW
 
@@ -44,9 +43,9 @@ tmk:
 	../../bin/lmk imp
 
 impobj:	checkARCH $(TMARCH)
-	install imp.exe ../../bin/
+	mkdir -p ../../bin && cp imp.exe ../../bin/
 
-mingw cygwin sun3 sun4 solaris1: $(IMPLIB) imp.o
+mingw cygwin Linux : $(IMPLIB) imp.o
 	$(CC) -o imp $(CFLAGS) imp.o $(IMPLIB) $(LDFLAGS)
 
 solaris2: $(IMPLIB) imp.o

@@ -2,9 +2,12 @@
 #
 # This makefile is to make from already existing sources
 
-DESTROOT=/usr/local
-
+ifeq ($(shell uname),Linux)
+TMARCH	= linux
+else
 TMARCH	= cygwin
+endif
+
 mingw:	TMARCH	= mingw
 mingw:	MINGW	= -mno-cygwin
 mingw: CQ = -DMINGW
@@ -53,7 +56,6 @@ $(LIB): $(OBJS)
 	-ranlib $(LIB)
 
 tmkobj: checkARCH $(LIB) version.c
-	-ranlib $(LIB)
 
 tmkParse.o: tmkParse.c
 tmkPaSema.o: tmkPaSema.c
