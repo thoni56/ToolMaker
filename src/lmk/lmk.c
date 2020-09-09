@@ -216,16 +216,8 @@ int main(argc, argv)
 #endif
 #endif
 
-#ifdef _AMOSDEV
-  /* Print welcome greetings */
-  printf("%s\n", product.longHeader);
-  printf("Licensed to ASTRA for AMOS CLD/CLR Development\n");
-  /* Temporarily initialize lister */
-  lmkLiInit(product.version.string, "", lmk_AMOS_Messages);
-#else
   /* Temporarily initialize lister */
   lmkLiInit(product.version.string, "", lmk_ENGLISH_Messages);
-#endif
 
   /* License handling */
 #ifdef HAVE_LICENSEHANDLING
@@ -308,13 +300,8 @@ int main(argc, argv)
     listerName = &ext1[1];
   }/*if*/
 
-#ifdef _AMOSDEV
-  /* initialize lister */
-  lmkLiInit(product.version.string, inFiles[1], lmk_AMOS_Messages);
-#else
   /* initialize lister */
   lmkLiInit(product.version.string, inFiles[1], lmk_ENGLISH_Messages);
-#endif
 
   tmkExists = tmkCParse(inFiles[0], tmkOptTab, lmkOptTab, argc, argv,
                &tokenNode, &srcpNode, &importSection, 0,

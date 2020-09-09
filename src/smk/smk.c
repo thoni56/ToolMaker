@@ -580,15 +580,7 @@ int main( int argc, char **argv )
 #endif
 #endif
 
-#ifdef _AMOSDEV
-  /* Print welcome greetings */
-  printf("%s\n", product.longHeader);
-  printf("Licensed to ASTRA for AMOS CLD/CLR Development\n");
-  /* Temporarily initialize lister */
-  smkLiInit(product.longHeader, "", smk_AMOS_Messages);
-#else
   smkLiInit(product.longHeader, "", smk_ENGLISH_Messages);
-#endif
 
   mainLicense();
   if(smkSeverity() & (sevERR+sevFAT+sevSYS)) goto Exit;
@@ -612,11 +604,7 @@ int main( int argc, char **argv )
   mainListFiles[2] = optTmkfile;
 
   setInit();
-#ifdef _AMOSDEV
-  smkLiInit(product.longHeader, optScanner, smk_AMOS_Messages);
-#else
   smkLiInit(product.longHeader, optScanner, smk_ENGLISH_Messages);
-#endif
 
   mainCreate(argc, argv);
 

@@ -267,14 +267,7 @@ int main(argc, argv)
 #endif
 #endif
 
-#ifdef _AMOSDEV
-    /* Print welcome greetings */
-    printf("%s\n", product.longHeader);
-    printf("Licensed to ASTRA for AMOS CLD/CLR Development\n");
-    pmkLiInit(product.version.string, "", pmk_AMOS_Messages);
-#else
     pmkLiInit(product.version.string, "", pmk_ENGLISH_Messages);
-#endif
 
 #ifdef HAVE_LICENSEHANDLING
     /* License handling */
@@ -361,11 +354,7 @@ int main(argc, argv)
         }/*if*/
 
         /* initialize lister */
-#ifdef _AMOSDEV
         pmkLiInit(product.version.string, inFiles[1], pmk_ENGLISH_Messages);
-#else
-        pmkLiInit(product.version.string, inFiles[1], pmk_ENGLISH_Messages);
-#endif
 
         init_grm();   /* This should be done before init_hash_sym_tbl */
         initSymTab();
