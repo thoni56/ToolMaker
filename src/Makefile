@@ -9,5 +9,3 @@ all test tm install clean:
 
 archs:
 	for f in */.arch ; do echo -n $$f=; cat $$f; echo ; done
-
-include common.mk

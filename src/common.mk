@@ -1,5 +1,15 @@
 # Some common targets for all ToolMaker components
 
+# So you can do <target>: <dependents> | ../../bin
+../../bin:
+	mkdir -p ../../bin
+
+clean:
+	rm -f *~ *.o *.d core *.pml *.sml *.smt *.pmt *.lmt
+
+veryclean: clean
+	rm -f *.voc *Parse.* *Scan.* *ScSema.* *PaSema.* *Common.h *List.* *Err.*
+
 .PHONY: installdirs
 installdirs:
 	install -d $(DESTLIB)/lib/ansi-c
