@@ -22,4 +22,6 @@ checkARCH:
 	fi
 
 arch:
-	echo TMARCH=$(TMARCH)
+	@echo TMARCH=$(TMARCH)
+
+TMARCH = $(shell uname)

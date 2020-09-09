@@ -1,37 +1,22 @@
 # Makefile for tmk
 #
-# This makefile is to make from already existing sources
+# To build from current sources do: make
+# To re-generate sources from ToolMaker sources: make tm
 
-ifeq ($(shell uname),Linux)
-TMARCH	= linux
-else
-TMARCH	= cygwin
-endif
-
-mingw:	TMARCH	= mingw
-mingw:	MINGW	= -mno-cygwin
-mingw: CQ = -DMINGW
-cygwin: CQ = -DCYGWIN
-
-DEBUG	= -g
+include ../defines.mk
 
 LIB     = libtmk.a
 
-LDFLAGS	= $(LQ)
+CFLAGS	= -Wall $(DEBUG) -MMD
 
-CC = gcc -Wall
-CFLAGS	= $(DEBUG) $(CQ) $(MINGW)
+SRCS= tmkPaSema.c tmkParse.c tmkErr.c tmkScan.c tmkScSema.c tmkOpts.c tmkCommon.c
 
-SRCS.c= tmkPaSema.c tmkParse.c tmkErr.c tmkScan.c tmkScSema.c tmkOpts.c tmkCommon.c
+OBJS= ${SRCS:.c=.o}
 
-OBJS.c= ${SRCS.c:.c=.o}
-OBJS=   $(OBJS.c)
-
-.PRECIOUS: $(LIB)
+debug: DEBUG = -g
 
 #--
 all debug: $(TMARCH)
-	install -C -b Common.imp ../../lib/ansi-c
 
 # Install in DESTROOT/bin, DESTROOT/lib/ToolMaker=DESTLIB & DESTROOT/man
 install: installdirs
@@ -43,6 +28,8 @@ test:
 
 #-- Utility targets below
 
+# To regenerate from tmk sources, do:
+.PHONY: tmk
 tmk:
 	../../bin/smk tmk
 	../../bin/pmk tmk
@@ -51,30 +38,22 @@ tmk:
 .PHONY: $(TMARCH)
 $(TMARCH): tmkobj
 
+tmkobj: checkARCH $(LIB) version.c
+
+.PRECIOUS: $(LIB)
 $(LIB): $(OBJS)
 	ar r $(LIB) $?
 	-ranlib $(LIB)
+	install -C -b Common.imp ../../lib/ansi-c
 
-tmkobj: checkARCH $(LIB) version.c
-
-tmkParse.o: tmkParse.c
-tmkPaSema.o: tmkPaSema.c
-tmkErr.o: tmkErr.c
-tmkScan.o: tmkScan.c
-tmkScSema.o: tmkScSema.c
-tmkList.o: tmkList.c
+print:
+	@echo TMARCH=$(TMARCH)
+	@echo OBJS=$(OBJS)
+	@echo LIB=$(LIB)
 
 #--
 clean:
 	rm -f *~ *.o core *.pml *.sml *.smt *.pmt *.lmt $(LIB)
 
-depend file:
-	@echo -n "Make depend "
-	@mv Makefile Makefile.~
-	@sed -n '1,/^# DO NOT DELETE THIS LINE -- make depend depends on it.$$/ p' Makefile.~ > Makefile
-	@for file in $(OBJS:.o=.c) ; do /lib/cpp $(INCLUDE) -M $$file | egrep -v '/usr/include|\.c$$' | cat >> Makefile ; echo -n . ; done
-	@echo "done."
-
 include ../common.mk
-
-# DO NOT DELETE THIS LINE -- make depend depends on it.
+-include *.d
