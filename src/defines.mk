@@ -8,4 +8,4 @@ DESTROOT=/usr/local
 DESTLIB=$(DESTROOT)/lib/ToolMaker
 
 CC = gcc
-CFLAGS = -Wall -g $(INCLUDE) -DTARGETOS=\"$(TMARCH)\"
+CFLAGS = -Wall -g $(INCLUDE) -DTARGETOS=\"$(TMARCH)\" -m32
