@@ -1,11 +1,4 @@
-#Some common targets for all ToolMaker components
-
-# TODO: generate 'cygwin32' or 'cygwin64' and handle that in all skeleton files to
-UNAME = ${shell uname}
-TMARCH = ${if ${findstring CYGWIN,$(UNAME)},${if ${findstring WOW, $(UNAME)},cygwin32,cygwin64},${strip ${shell uname}}}
-
-DESTROOT=/usr/local
-DESTLIB=$(DESTROOT)/lib/ToolMaker
+# Some common targets for all ToolMaker components
 
 .PHONY: installdirs
 installdirs:
@@ -23,5 +16,3 @@ checkARCH:
 
 arch:
 	@echo TMARCH=$(TMARCH)
-
-TMARCH = $(shell uname)
