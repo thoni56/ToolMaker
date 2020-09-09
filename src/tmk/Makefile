@@ -7,13 +7,7 @@ include ../defines.mk
 
 LIB     = libtmk.a
 
-CFLAGS	= -Wall $(DEBUG) -MMD
-
-SRCS= tmkPaSema.c tmkParse.c tmkErr.c tmkScan.c tmkScSema.c tmkOpts.c tmkCommon.c
-
-OBJS= ${SRCS:.c=.o}
-
-debug: DEBUG = -g
+OBJECTS = tmkPaSema.o tmkParse.o tmkErr.o tmkScan.o tmkScSema.o tmkOpts.o tmkCommon.o
 
 #--
 all debug: $(TMARCH)
@@ -41,14 +35,14 @@ $(TMARCH): tmkobj
 tmkobj: checkARCH $(LIB) version.c
 
 .PRECIOUS: $(LIB)
-$(LIB): $(OBJS)
+$(LIB): $(OBJECTS)
 	ar r $(LIB) $?
 	-ranlib $(LIB)
 	install -C -b Common.imp ../../lib/ansi-c
 
 print:
 	@echo TMARCH=$(TMARCH)
-	@echo OBJS=$(OBJS)
+	@echo OBJECTS=$(OBJECTS)
 	@echo LIB=$(LIB)
 
 #--
