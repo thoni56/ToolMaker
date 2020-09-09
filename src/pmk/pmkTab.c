@@ -22,15 +22,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef WIN32
+#if defined(WIN32) || defined(MINGW)
 #include <io.h>
 #endif
-#ifdef MINGW
-#include <io.h>
-#endif
-#ifdef CYGWIN
 #include <unistd.h>
-#endif
 #include "pmk_i.h"
 #include "pws.h"
 #include "pwGe.h"
@@ -760,7 +755,7 @@ static void writeSemantics()
     if (semActCnt < 0) {
         fprintf(pmTbl, "%%%%SET pmSem(On)\n");
         fprintf(pmTbl, "%%%%BEGIN(pmSemantics)\n");
-        fprintf(pmTbl, caseHead);
+        fprintf(pmTbl, "%s", caseHead);
         fprintf(pmTbl, "%%%%END(pmSemantics)\n");
     } else {
         att = 0;

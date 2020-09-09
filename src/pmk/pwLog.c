@@ -97,7 +97,7 @@ void logInputStats()
         fprintf(pwsLog, ";\n");
 
         fprintf(pwsLog, "Target '");
-        fprintf(pwsLog, getStrOpt(PMKTARGET_OPT));
+        fprintf(pwsLog, "%s", getStrOpt(PMKTARGET_OPT));
         fprintf(pwsLog, "';\n");
 
         fprintf(pwsLog, "Escape ");
