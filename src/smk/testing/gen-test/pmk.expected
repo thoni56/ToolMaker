@@ -876,9 +876,9 @@ typedef struct pmkScContextItem {
 ==> pmkScan.c <==
 /*----------------------------------------------------------------------*\
 
-	pmkScan.c
+    pmkScan.c
 
-	ScannerMaker generated scanner
+    ScannerMaker generated scanner
 
 \*----------------------------------------------------------------------*/
 
@@ -1402,10 +1402,10 @@ static UByte1 smDFAval[5236]={
 
 
 /*
- * Source position calculation 
+ * Source position calculation
  */
 
-static void smSourcePosition(smThis,smAt,smEnd) 
+static void smSourcePosition(smThis,smAt,smEnd)
      pmkScContext smThis;
      unsigned char *smAt;
      unsigned char *smEnd;
@@ -1413,10 +1413,10 @@ static void smSourcePosition(smThis,smAt,smEnd)
   if(smThis->smPosContinue<smEnd) {
     if(smThis->smPosContinue>smAt) smAt=smThis->smPosContinue;
     smThis->smNextPosition+=smEnd-smAt;
-    for(;smAt<smEnd;smAt++) 
+    for(;smAt<smEnd;smAt++)
       if(*smAt==10) {
-	smThis->smPosLine=smAt;
-	smThis->smNextLine++;
+    smThis->smPosLine=smAt;
+    smThis->smNextLine++;
       }
 
     smThis->smNextColumn=smEnd-smThis->smPosLine;
@@ -1432,10 +1432,10 @@ static void smRewindSourcePosition(smThis,smAt,smEnd)
   if(smThis->smPosContinue>smEnd) return;
   smThis->smNextPosition-=smEnd-smAt;
   while(smAt<smEnd--) if(*smEnd==10) smThis->smNextLine--;
-  while(smThis->smBegining<smEnd) 
+  while(smThis->smBegining<smEnd)
     if(*smEnd==10) {
       smThis->smPosLine=smEnd;
-      break; 
+      break;
     }
     else smEnd--;
   if(smAt<smThis->smPosLine) smThis->smPosLine=smThis->smPosPrevLine;
@@ -1494,20 +1494,20 @@ static int smReadBuffer(smThis)
       /* Enlarge buffer */
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,size+1);
       if(smThis->smBegining==NULL) {
-	/* Cut Buffer */
-	smThis->smBegining = begining;	/* Restore to original buffer */
-	smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
-	memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), 1024);
-	mod=smThis->smEnd-smThis->smBegining-1024;
-	smThis->smContinue-=mod;
-	smThis->smEnd-=mod;
-	smThis->smPosPrevLine-=mod;
-	smThis->smPosLine-=mod;
-	smThis->smPosContinue-=mod;
+    /* Cut Buffer */
+    smThis->smBegining = begining;	/* Restore to original buffer */
+    smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
+    memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), 1024);
+    mod=smThis->smEnd-smThis->smBegining-1024;
+    smThis->smContinue-=mod;
+    smThis->smEnd-=mod;
+    smThis->smPosPrevLine-=mod;
+    smThis->smPosLine-=mod;
+    smThis->smPosContinue-=mod;
         smThis->smBufferOverflow+=mod;
       }
       else
-	smThis->smSize=size;
+    smThis->smSize=size;
     }
   }
   if(smThis->smBegining!=smThis->smText) {
@@ -1534,7 +1534,7 @@ static int smReadBuffer(smThis)
  */
 
 pmkScContext pmkScNew(smScanner)
-	pmkScScanner smScanner;
+    pmkScScanner smScanner;
 {
   pmkScContext smThis;
 
@@ -1554,7 +1554,7 @@ pmkScContext pmkScNew(smScanner)
   smThis->smPosLine=smThis->smBegining-1;
   smThis->smPosContinue=smThis->smBegining;
   smThis->smText=smThis->smBegining;
-  
+
   smThis->smLength=0;
   smThis->smNextLine=1;
   smThis->smNextColumn=1;
@@ -1636,7 +1636,7 @@ int pmkScModify(smThis,smBuffer,smLength)
   else if(smLength>0) {
     int length1;
     int length2;
-    
+
     for(length2=smLength;(length1=pmkScSkip(smThis,length2));length2-=length1) {
       if(length1<0) return length1;
       memcpy((void *)(smThis->smContinue-length1),(void *)smBuffer,length1);
@@ -1729,20 +1729,20 @@ int pmkScan(smThis,smToken)
       at=(smThis->smContinue);
       state=smScanner[smThis->smScanner];
       for (;;) {
-	if(at==end) {
-	  int mod;
-	  
-	  if(state>=150) state-=150+1;
-	  smThis->smContinue=end;
-	  mod=smReadBuffer(smThis);
-	  if(mod<0) return mod;
-	  rew_at-=end-smThis->smContinue;
-	  at=smThis->smContinue;
-	  end=smThis->smEnd;
-          if(at==end) 
-	    break;
+    if(at==end) {
+      int mod;
+
+      if(state>=150) state-=150+1;
+      smThis->smContinue=end;
+      mod=smReadBuffer(smThis);
+      if(mod<0) return mod;
+      rew_at-=end-smThis->smContinue;
+      at=smThis->smContinue;
+      end=smThis->smEnd;
+          if(at==end)
+        break;
         }
-	  ch = *at++;
+      ch = *at++;
 {
 
   
@@ -1753,22 +1753,22 @@ int pmkScan(smThis,smToken)
     
   
 }
-	  if(state>=150) break;
-	  if(smAccept[state]>0) {
-	    rew_state=state;
-	    rew_at=at;
-	  }
+      if(state>=150) break;
+      if(smAccept[state]>0) {
+        rew_state=state;
+        rew_at=at;
+      }
       }
       if(rew_state==150) {
         if(rew_at>end) {
-  	  code=smEOTCode[smThis->smScanner];
-	  rew_at=end;
+      code=smEOTCode[smThis->smScanner];
+      rew_at=end;
         }
         else
-	  code=smUnknownCode[smThis->smScanner];
-      }	
+      code=smUnknownCode[smThis->smScanner];
+      }
       else
-	code=smAccept[rew_state]-1;	
+    code=smAccept[rew_state]-1;
       smThis->smContinue=rew_at;
       smThis->smLength=smThis->smContinue-smThis->smText;
       smSourcePosition(smThis,smThis->smText,smThis->smContinue);
@@ -1782,9 +1782,9 @@ int pmkScan(smThis,smToken)
 ==> pmkScSema.c <==
 /*----------------------------------------------------------------------*\
 
-	pmkScSema.c
+    pmkScSema.c
 
-	ScannerMaker generated semantic actions
+    ScannerMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
 
@@ -1832,7 +1832,7 @@ int pmkScReader(smThis,smBuffer,smLength)
   return read(this->fd,smBuffer,smLength);
 
 
-}    
+}
 
 int pmkScPreHook(smThis,smToken)
      pmkScContext smThis;
