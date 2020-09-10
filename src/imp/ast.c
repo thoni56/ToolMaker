@@ -20,7 +20,6 @@
 Ast impAstRoot = NULL;
 char *impReportFile = NULL;
 TmSrcp nulSrcp = {0,0,0};
-int impFileNo;
 
 extern char *strdup(const char *);
 

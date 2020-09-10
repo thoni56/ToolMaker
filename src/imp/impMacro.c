@@ -62,8 +62,7 @@ static char *inFileName;
 static FILE *outFile;
 FILE *impCcFile;
 
-/* Global data
- */
+/* Global data */
 int impFileNo;
 int impExitCode;
 char impEsc;		/* Escape character in macro files */
