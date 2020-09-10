@@ -15,7 +15,7 @@
 
 extern double atof();
 
-smkScContext lexContext;
+extern smkScContext lexContext;
 
 %%CONTEXT
 

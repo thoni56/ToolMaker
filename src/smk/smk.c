@@ -4,110 +4,6 @@
  * CREATED: 1990-06-27
  *
  * SoftLab ab (c) 1990
- *
- * $Header: /Repository/ToolMaker/src/smk/smk.c,v 1.1 2002/06/25 20:04:53 Thomas Nilsson Exp $
- *
- * $Log: smk.c,v $
- * Revision 1.1  2002/06/25 20:04:53  Thomas Nilsson
- * Initial version of ToolMaker source import
- *
- * Revision 1.20  1997/06/26 11:53:51  hakan
- * <CR><LF> problematiken åtgärdad
- *
- * Revision 1.19  1997/01/22 16:29:35  gunilla
- * Adapted for WIN32
- *
- * Revision 1.18  1995/10/25 12:48:41  thoni
- * Changed file name in impMacro call to be NULL instead of /dev/null
- * which cause duplicate file openings...
- *
- * Revision 1.17  1994/01/05  16:06:21  thoni
- * Better -help messages
- *
- * Revision 1.16  1993/08/20  11:33:54  tony
- * Conforms more to ANSI C standard.
- *
- * Revision 1.15  1993/07/12  12:58:40  tony
- * Fixed warnings from gcc 2.4.5
- *
- * Revision 1.14  1993/07/01  20:39:58  thoni
- * Changed ERR packing to Error (same as pmk)
- * Fixed skeleton mistakes in complex packing including RDS
- *
- * Revision 1.13  1993/06/22  11:01:41  thoni
- * Improved help info
- *
- * Revision 1.12  1993/06/22  10:26:02  tony
- * Fixed SET option bug. The set option was checked before sets was
- * defined.
- *
- * Revision 1.11  1993/06/20  16:51:25  thoni
- * Allowed c++ as supported language
- *
- * Revision 1.10  1993/06/04  12:52:28  tools
- * Changed back xScScan to xScan
- *
- * Revision 1.9  1993/05/24  21:54:52  tools
- * First 2.0 gamma installation (at SoftLab, /usr/local/ware/ToolMaker)!!!
- *
- * Revision 1.8  1993/05/21  16:08:47  tools
- * Modfied venum handling
- * Changed order of command line options
- * Fixed this -> smThis
- *
- * Revision 1.7  1993/05/11  12:08:04  tools
- * Alla verkygen ska se lika ut. Uppsnyggning.
- *    /hp
- *
- * Revision 1.6  1993/05/06  12:29:16  tools
- * Ger varning om man anvýnder annat sprÊk ýn de som vi stÙder
- *   /hp
- *
- * Revision 1.5  1993/05/03  21:08:54  tools
- * New pmk-compatability
- *
- * Revision 1.4  1993/05/03  12:02:58  tools
- * *** empty log message ***
- *
- * Revision 1.3  1993/04/30  12:33:32  tools
- * Adoption to ANSI-C completed.
- * Explicit register allocation removed.
- *
- * Revision 1.2  1993/04/27  14:22:00  tools
- * scannerPrefix changed to smkPrefix.
- * Port of ScannerMaker to ANSI-C started.
- *
- * Revision 1.1  1993/04/23  10:33:56  tools
- * Initial revision. Replaces old main.c
- *
- * Revision 1.1  1993/03/24  09:24:03  tools
- * Ursprunglig version av smk testsvit
- *
- * Revision 1.7  1991/12/11  13:00:32  tools
- * Not modified
- *
- * Revision 1.6  91/08/22  07:19:42  tools
- * Silence when there are no messages
- *
- * Revision 1.5  1991/08/20  11:10:28  tools
- * Added code for malloc_debug if DEBUG is defined
- *
- * Revision 1.4  1991/07/12  05:12:12  tools
- * Change %%SCREEN to be automatically generated as a packing scheme.
- * This includes a new rule NO SCREENING which is given in the %%VOCABULARY
- * section.
- * Fixed size notes in verbose mode (I hope).
- *
- * Revision 1.3  1991/07/11  10:38:37  tools
- * Added Inherited scanners and Undefined tokens
- *
- * Revision 1.2  1991/07/10  14:20:01  tools
- * New SET handling
- *
- * Revision 1.1  1991/01/10  13:02:04  tools
- * Initial revision
- *
- *
  */
 
 #include <stdio.h>
@@ -143,7 +39,8 @@
 #include "version.h"
 #include "write.h"
 
-extern smkScContext lexContext;
+smkScContext lexContext;
+
 #define MAX 0x7FFFFFFF
 
 OptTabRec tmkOptTab[] = {
