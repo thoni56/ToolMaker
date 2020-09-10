@@ -1,7 +1,19 @@
 # Common defines for ToolMaker build system
 
 UNAME = ${shell uname}
-TMARCH := ${if ${findstring CYGWIN,$(UNAME)},${if ${findstring WOW, $(UNAME)},cygwin32,cygwin64},${strip ${UNAME}}}
+ifeq ($(findstring CYGWIN,$(UNAME)),CYGWIN)
+  TMARCH := $(if $(findstring WOW,$(UNAME)),WOW),cygwin32,cygwin64)
+else
+ifeq ($(findstring MINGW,$(UNAME)),MINGW)
+  TMARCH := $(if $(findstring 32,$(UNAME)),mingw32,mingw64)
+else
+ifeq ($(findstring MSYS,$(UNAME)),MSYS)
+  TMARCH := msys2
+else
+  TMARCH := $(UNAME)
+endif
+endif
+endif
 
 DESTROOT=/usr/local
 DESTLIB=$(DESTROOT)/lib/ToolMaker
