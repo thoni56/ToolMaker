@@ -29,5 +29,8 @@ DESTLIB=$(DESTROOT)/lib/ToolMaker
 ifeq ($(TMARCH),cygwin64)
 $(error Cygwin64 not supported, build on Cygwin32)
 endif
+ifeq ($(TMARCH),mingw64)
+$(error MINGW64 not supported, build on MINGW32)
+endif
 CC = gcc
 CFLAGS = -Wall -g $(INCLUDE) -DTARGETOS=\"$(TMARCH)\" -m32
