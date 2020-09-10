@@ -413,7 +413,8 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%PROCESS(, "NUL")
 %%ELSE
-	Illegal OS option
+    *** Unknown current OS in Err.imp: %%(currentOs)
+    %%MESSAGE("*** Unknown current OS in Err.imp: %%(currentOs)")
 %%ENDIF
 %%IF(tmkForce(0))
 %%--
@@ -437,7 +438,8 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%          ENDIF
 %%      ELSE
-	Illegal OS option
+          *** Unknown current OS in Err.imp: %%(currentOs)
+          %%MESSAGE("*** Unknown current OS in Err.imp: %%(currentOs)")
 %%      ENDIF
 %%  ENDLOOP(file)
 %%ENDIF

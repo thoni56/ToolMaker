@@ -2235,7 +2235,8 @@ int rule;			/* IN production number */
 %%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%PROCESS(, "NUL")
 %%ELSE
-    Illegal OS option
+    *** Unknown current OS in Parser.imp: %%(currentOs)
+    %%MESSAGE("*** Unknown current OS in Parser.imp: %%(currentOs)")
 %%ENDIF
 %%IF(tmkForce(0))
 %%--
@@ -2260,7 +2261,8 @@ int rule;			/* IN production number */
 %%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%          ENDIF
 %%      ELSE
-    Illegal OS option
+          *** Unknown current OS in Parser.imp: %%(currentOs)
+          %%MESSAGE("*** Unknown current OS in Parser.imp: %%(currentOs)")
 %%      ENDIF
 %%  ENDLOOP(file)
 %%ENDIF
