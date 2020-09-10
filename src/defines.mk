@@ -26,7 +26,7 @@ endif
 DESTROOT=/usr/local
 DESTLIB=$(DESTROOT)/lib/ToolMaker
 
-ifeq ($(UNAME),cygwin64))
+ifeq ($(TMARCH),cygwin64)
 $(error Cygwin64 not supported, build on Cygwin32)
 endif
 CC = gcc
