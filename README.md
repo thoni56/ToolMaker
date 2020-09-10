@@ -50,9 +50,10 @@ some way. Special thanks to
 - Tony Olsson for the core of the scanner logic.
 
 - Myself, Reibert Arbring, Michael Dahlgren and Håkan Pettersson for
-  structuring this as a project and filling out the blanks.
+  structuring this into a project and filling out all the blanks.
 
 ## Building
 
-To build `binutils` and `gcc` should suffice. If you want to run tests
+To build you need `gcc` with `binutils` for 32-bit. ToolMaker cannot
+currently be built for 64-bit architectures. If you want to run tests
 you need [Jregr](https://github.com/thoni56/Jregr).
