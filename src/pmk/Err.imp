@@ -1,10 +1,10 @@
 %%COMMENT @(#)Err.imp	1.4 (90/06/28 18:35:17)
 
-   Err.imp				     Date: 1991-03-07/reibert@roo
+   Err.imp                   Date: 1991-03-07/reibert@roo
 
    C/ANSI-C/C++ module Err - imp script
 
-   Written by SoftLab ab. 
+   Written by SoftLab ab.
 
 %%ENDCOMMENT
 %%COMMENT
@@ -37,7 +37,7 @@
 
   %%(parserPrefix)Err.%%(targetLanguageExtension)
 
-  Parser error handler 
+  Parser error handler
 
 \*----------------------------------------------------------------------*/
 
@@ -113,7 +113,7 @@ void %%(parserPrefix)RPoi(token)
 
 /*-----------------------------------------------------------------------------
  * %%(parserPrefix)ISym - A symbol is to be inserted, collect it for later output, and
- *	    construct the requested token for use by the parser.
+ *      construct the requested token for use by the parser.
  *-----------------------------------------------------------------------------
  */
 %%IF ({"ansi-c","c++"} (%%(pmkTarget)))
@@ -142,11 +142,11 @@ void %%(parserPrefix)ISym(%%(tmkTokenCode), symString, printString, token)
     char *selectedString;
 
     if (insToks < MaxTokens) {
-	/* Concatenate the token string
-	 */
-	if (insToks > 0) strcat(insStr, " ");
-	if (%%(tmkTokenCode) == 0) strcat(insStr, "<unknown token>");
-	else if (%%(tmkTokenCode) == 1) strcat(insStr, "<end of file>");
+    /* Concatenate the token string
+     */
+    if (insToks > 0) strcat(insStr, " ");
+    if (%%(tmkTokenCode) == 0) strcat(insStr, "<unknown token>");
+    else if (%%(tmkTokenCode) == 1) strcat(insStr, "<end of file>");
         else {
             if (*printString != '\0') selectedString = printString;
             else selectedString = symString;
@@ -157,7 +157,7 @@ void %%(parserPrefix)ISym(%%(tmkTokenCode), symString, printString, token)
                 strcat(insStr, selectedString);
         }
     } else if (insToks == MaxTokens) {
-	strcat(insStr, " ...");
+    strcat(insStr, " ...");
     }/*if*/
     insToks++;
 %%IF (pmISym(?R))
@@ -177,7 +177,7 @@ void %%(parserPrefix)ISym(%%(tmkTokenCode), symString, printString, token)
 
 /*-----------------------------------------------------------------------------
  * %%(parserPrefix)DSym - The indicated symbol is deleted by the parser, collect its string
- *	    for later output.
+ *      for later output.
  *-----------------------------------------------------------------------------
  */
 %%IF ({"ansi-c","c++"} (%%(pmkTarget)))
@@ -199,11 +199,11 @@ void %%(parserPrefix)DSym(token, symString, printString)
     char *selectedString;
 
     if (delToks < MaxTokens) {
-	/* Concatenate the symbol strings */
-	if (delToks > 0) strcat(delStr, " ");
-	if (token->%%(tmkTokenCode) == 0) strcat(delStr, "<unknown token>");
-	else if (token->%%(tmkTokenCode) == 1) strcat(delStr, "<end of file>");
-	else {
+    /* Concatenate the symbol strings */
+    if (delToks > 0) strcat(delStr, " ");
+    if (token->%%(tmkTokenCode) == 0) strcat(delStr, "<unknown token>");
+    else if (token->%%(tmkTokenCode) == 1) strcat(delStr, "<end of file>");
+    else {
 #ifdef DELETEIDENTIFIERASINPUTTED
             if (token->%%(tmkTokenCode) == 2) selectedString = token->chars;
             else
@@ -217,7 +217,7 @@ void %%(parserPrefix)DSym(token, symString, printString)
                 strcat(delStr, selectedString);
         }
     } else if (delToks == MaxTokens) {
-	strcat(delStr, " ...");
+    strcat(delStr, " ...");
     }/*if*/
     delToks++;
 %%IF (pmDSym(?R))
@@ -235,10 +235,10 @@ void %%(parserPrefix)DSym(token, symString, printString)
 /*-----------------------------------------------------------------------------
  * %%(parserPrefix)Mess - An error message should be output, symbol indicates point of error.
  *-----------------------------------------------------------------------------
- * Method:	1 = Symbol(s) insertion	       Message:	% inserted
+ * Method:	1 = Symbol(s) insertion        Message:	% inserted
  *		2 = Symbol(s) deletion			% deleted
  *		3 = Symbol(s) replacement		% replaced by %
- *	        4 = Stack backup			Malformed phrase
+ *          4 = Stack backup			Malformed phrase
  *		5 = Halted				%. System halted
  *
  * Code:	1 = Unknown token (error token from scanner)
@@ -282,133 +282,133 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
     switch (code) {
 
     case 1:
-	/* Unknown symbol, deleted */
+    /* Unknown symbol, deleted */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	%%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 102, sev, "Unknown Token");
+    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 102, sev, "Unknown Token");
 %%ELSE
-	%%(listerPrefix)Log(NULL, 102, sev, "Unknown Token");
+    %%(listerPrefix)Log(NULL, 102, sev, "Unknown Token");
 %%ENDIF
 %%ELSE
-	fprintf(stderr, "Unknown token deleted\n");
+    fprintf(stderr, "Unknown token deleted\n");
 %%ENDIF
-	break;
+    break;
 
     case 2:
-	/* Syntax Error */
-	switch (method) {
+    /* Syntax Error */
+    switch (method) {
 
-	case 1:
-	    /* Insert */
+    case 1:
+        /* Insert */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 101, sev, insStr);
+        %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 101, sev, insStr);
 %%ELSE
-	    %%(listerPrefix)Log(NULL, 101, sev, insStr);
+        %%(listerPrefix)Log(NULL, 101, sev, insStr);
 %%ENDIF
 %%ELSE
-	    fprintf(stderr, "%s inserted\n", insStr);
+        fprintf(stderr, "%s inserted\n", insStr);
 %%ENDIF
-	    break;
+        break;
 
-	case 2:
-	    /* Delete */
+    case 2:
+        /* Delete */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 102, sev, delStr);
+        %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 102, sev, delStr);
 %%ELSE
-	    %%(listerPrefix)Log(NULL, 102, sev, delStr);
+        %%(listerPrefix)Log(NULL, 102, sev, delStr);
 %%ENDIF
 %%ELSE
-	    fprintf(stderr, "%s deleted\n", delStr);
+        fprintf(stderr, "%s deleted\n", delStr);
 %%ENDIF
-	    break;
+        break;
 
-	case 3:
-	    /* Replace */
+    case 3:
+        /* Replace */
 %%IF (installed(lm))
-	    delStr[strlen(delStr)+1] = '\0';
-	    delStr[strlen(delStr)] = %%(listerPrefix)SEPARATOR; /* Separator */
-	    strcat(delStr, insStr);
+        delStr[strlen(delStr)+1] = '\0';
+        delStr[strlen(delStr)] = %%(listerPrefix)SEPARATOR; /* Separator */
+        strcat(delStr, insStr);
 %%IF (tmkTokenSrcp(?))
-	    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 103, sev, delStr);
+        %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 103, sev, delStr);
 %%ELSE
-	    %%(listerPrefix)Log(NULL, 103, sev, delStr);
+        %%(listerPrefix)Log(NULL, 103, sev, delStr);
 %%ENDIF
 %%ELSE
             fprintf(stderr, "%s replaced by %s\n", delStr, insStr);
 %%ENDIF
-	    break;
+        break;
 
-	case 4:
-	    /* Stack backed up */
+    case 4:
+        /* Stack backed up */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 104, sev, "");
+        %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 104, sev, "");
 %%ELSE
-	    %%(listerPrefix)Log(NULL, 104, sev, "");
+        %%(listerPrefix)Log(NULL, 104, sev, "");
 %%ENDIF
 %%ELSE
             fprintf(stderr, "Syntax error, stack backed up\n");
 %%ENDIF
-	    break;
+        break;
 
-	case 5:
-	    /* Syntax error, system halted */
+    case 5:
+        /* Syntax error, system halted */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 105, sev, "");
+        %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 105, sev, "");
 %%ELSE
-	    %%(listerPrefix)Log(NULL, 105, sev, "");
+        %%(listerPrefix)Log(NULL, 105, sev, "");
 %%ENDIF
 %%ELSE
             fprintf(stderr, "Syntax error\n");
 %%ENDIF
-	    break;
-	}
-	break;
+        break;
+    }
+    break;
 
     case 3:
-	/* Parse stack overflow */
+    /* Parse stack overflow */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	%%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 106, sev, "");
+    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 106, sev, "");
 %%ELSE
-	%%(listerPrefix)Log(NULL, 106, sev, "");
+    %%(listerPrefix)Log(NULL, 106, sev, "");
 %%ENDIF
 %%ELSE
-	fprintf(stderr, "Parse stack overflow\n");
+    fprintf(stderr, "Parse stack overflow\n");
 %%ENDIF
-	break;
+    break;
 
     case 4:
-	/* Parse table error */
+    /* Parse table error */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	%%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 107, sev, "");
+    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 107, sev, "");
 %%ELSE
-	%%(listerPrefix)Log(NULL, 107, sev, "");
+    %%(listerPrefix)Log(NULL, 107, sev, "");
 %%ENDIF
 %%ELSE
-	fprintf(stderr, "Parse table error\n");
+    fprintf(stderr, "Parse table error\n");
 %%ENDIF
-	break;
+    break;
     }
 
     if (method == 5) {
-	/* System halted, output informational message */
+    /* System halted, output informational message */
 %%IF (installed(lm))
 %%IF (tmkTokenSrcp(?))
-	%%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 108, sevINF, "");
+    %%(listerPrefix)Log(&(sym->%%(tmkTokenSrcp)), 108, sevINF, "");
 %%ELSE
-	%%(listerPrefix)Log(NULL, 108, sevINF, "");
+    %%(listerPrefix)Log(NULL, 108, sevINF, "");
 %%ENDIF
 %%ELSE
-	fprintf(stderr, "Parsing terminated\n");
+    fprintf(stderr, "Parsing terminated\n");
 %%ENDIF
     }
 }/*%%(parserPrefix)Mess()*/
-%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin", "Linux"} (%%(currentOs)))
+%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "Linux"} (%%(currentOs)))
 %%PROCESS(, "/dev/null")
 %%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%PROCESS(, "NUL")
@@ -423,18 +423,18 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%--
 %%  ESET files ("%%(parserPrefix)Err.%%(targetLanguageExtension)")
 %%  LOOP(file, files)
-%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin", "Linux"} (%%(currentOs)))
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "Linux"} (%%(currentOs)))
 %%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
-%%	        IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
-%%	            EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
-%%	        ENDIF
+%%          IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
+%%              EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
+%%          ENDIF
 %%          ELSE
-%%	        IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
-%%	            EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
-%%	        ENDIF
+%%          IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
+%%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%          ENDIF
 %%          ENDIF
 %%      ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
-%%	    IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
+%%      IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
 %%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%          ENDIF
 %%      ELSE

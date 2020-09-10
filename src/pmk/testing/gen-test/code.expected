@@ -211,7 +211,7 @@ typedef struct TmToken {
 
   codeErr.c
 
-  Parser error handler 
+  Parser error handler
 
 \*----------------------------------------------------------------------*/
 
@@ -260,7 +260,7 @@ void codeRPoi(
 
 /*-----------------------------------------------------------------------------
  * codeISym - A symbol is to be inserted, collect it for later output, and
- *	    construct the requested token for use by the parser.
+ *      construct the requested token for use by the parser.
  *-----------------------------------------------------------------------------
  */
 void codeISym(
@@ -273,11 +273,11 @@ void codeISym(
     char *selectedString;
 
     if (insToks < MaxTokens) {
-	/* Concatenate the token string
-	 */
-	if (insToks > 0) strcat(insStr, " ");
-	if (Code == 0) strcat(insStr, "<unknown token>");
-	else if (Code == 1) strcat(insStr, "<end of file>");
+    /* Concatenate the token string
+     */
+    if (insToks > 0) strcat(insStr, " ");
+    if (Code == 0) strcat(insStr, "<unknown token>");
+    else if (Code == 1) strcat(insStr, "<end of file>");
         else {
             if (*printString != '\0') selectedString = printString;
             else selectedString = symString;
@@ -288,7 +288,7 @@ void codeISym(
                 strcat(insStr, selectedString);
         }
     } else if (insToks == MaxTokens) {
-	strcat(insStr, " ...");
+    strcat(insStr, " ...");
     }/*if*/
     insToks++;
     /* Make the requested token */
@@ -298,7 +298,7 @@ void codeISym(
 
 /*-----------------------------------------------------------------------------
  * codeDSym - The indicated symbol is deleted by the parser, collect its string
- *	    for later output.
+ *      for later output.
  *-----------------------------------------------------------------------------
  */
 void codeDSym(
@@ -310,11 +310,11 @@ void codeDSym(
     char *selectedString;
 
     if (delToks < MaxTokens) {
-	/* Concatenate the symbol strings */
-	if (delToks > 0) strcat(delStr, " ");
-	if (token->Code == 0) strcat(delStr, "<unknown token>");
-	else if (token->Code == 1) strcat(delStr, "<end of file>");
-	else {
+    /* Concatenate the symbol strings */
+    if (delToks > 0) strcat(delStr, " ");
+    if (token->Code == 0) strcat(delStr, "<unknown token>");
+    else if (token->Code == 1) strcat(delStr, "<end of file>");
+    else {
 #ifdef DELETEIDENTIFIERASINPUTTED
             if (token->Code == 2) selectedString = token->chars;
             else
@@ -328,7 +328,7 @@ void codeDSym(
                 strcat(delStr, selectedString);
         }
     } else if (delToks == MaxTokens) {
-	strcat(delStr, " ...");
+    strcat(delStr, " ...");
     }/*if*/
     delToks++;
 }/*codeDSym()*/
@@ -337,10 +337,10 @@ void codeDSym(
 /*-----------------------------------------------------------------------------
  * codeMess - An error message should be output, symbol indicates point of error.
  *-----------------------------------------------------------------------------
- * Method:	1 = Symbol(s) insertion	       Message:	% inserted
+ * Method:	1 = Symbol(s) insertion        Message:	% inserted
  *		2 = Symbol(s) deletion			% deleted
  *		3 = Symbol(s) replacement		% replaced by %
- *	        4 = Stack backup			Malformed phrase
+ *          4 = Stack backup			Malformed phrase
  *		5 = Halted				%. System halted
  *
  * Code:	1 = Unknown token (error token from scanner)
@@ -374,58 +374,58 @@ void codeMess(
     switch (code) {
 
     case 1:
-	/* Unknown symbol, deleted */
-	codeLog(&(sym->srcp), 102, sev, "Unknown Token");
-	break;
+    /* Unknown symbol, deleted */
+    codeLog(&(sym->srcp), 102, sev, "Unknown Token");
+    break;
 
     case 2:
-	/* Syntax Error */
-	switch (method) {
+    /* Syntax Error */
+    switch (method) {
 
-	case 1:
-	    /* Insert */
-	    codeLog(&(sym->srcp), 101, sev, insStr);
-	    break;
+    case 1:
+        /* Insert */
+        codeLog(&(sym->srcp), 101, sev, insStr);
+        break;
 
-	case 2:
-	    /* Delete */
-	    codeLog(&(sym->srcp), 102, sev, delStr);
-	    break;
-
-	case 3:
-	    /* Replace */
-	    delStr[strlen(delStr)+1] = '\0';
-	    delStr[strlen(delStr)] = codeSEPARATOR; /* Separator */
-	    strcat(delStr, insStr);
-	    codeLog(&(sym->srcp), 103, sev, delStr);
-	    break;
-
-	case 4:
-	    /* Stack backed up */
-	    codeLog(&(sym->srcp), 104, sev, "");
-	    break;
-
-	case 5:
-	    /* Syntax error, system halted */
-	    codeLog(&(sym->srcp), 105, sev, "");
-	    break;
-	}
-	break;
+    case 2:
+        /* Delete */
+        codeLog(&(sym->srcp), 102, sev, delStr);
+        break;
 
     case 3:
-	/* Parse stack overflow */
-	codeLog(&(sym->srcp), 106, sev, "");
-	break;
+        /* Replace */
+        delStr[strlen(delStr)+1] = '\0';
+        delStr[strlen(delStr)] = codeSEPARATOR; /* Separator */
+        strcat(delStr, insStr);
+        codeLog(&(sym->srcp), 103, sev, delStr);
+        break;
 
     case 4:
-	/* Parse table error */
-	codeLog(&(sym->srcp), 107, sev, "");
-	break;
+        /* Stack backed up */
+        codeLog(&(sym->srcp), 104, sev, "");
+        break;
+
+    case 5:
+        /* Syntax error, system halted */
+        codeLog(&(sym->srcp), 105, sev, "");
+        break;
+    }
+    break;
+
+    case 3:
+    /* Parse stack overflow */
+    codeLog(&(sym->srcp), 106, sev, "");
+    break;
+
+    case 4:
+    /* Parse table error */
+    codeLog(&(sym->srcp), 107, sev, "");
+    break;
     }
 
     if (method == 5) {
-	/* System halted, output informational message */
-	codeLog(&(sym->srcp), 108, sevINF, "");
+    /* System halted, output informational message */
+    codeLog(&(sym->srcp), 108, sevINF, "");
     }
 }/*codeMess()*/
 
