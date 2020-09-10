@@ -1,18 +1,26 @@
 # Common defines for ToolMaker build system
 
-UNAME = ${shell uname}
+UNAME = $(shell uname)
 ifeq ($(findstring CYGWIN,$(UNAME)),CYGWIN)
-  TMARCH := $(if $(findstring WOW,$(UNAME)),WOW),cygwin32,cygwin64)
+  ifeq ($(findstring WOW,$(UNAME)),WOW)
+	TMARCH := cygwin32
+  else
+	TMARCH := cygwin64
+  endif
 else
-ifeq ($(findstring MINGW,$(UNAME)),MINGW)
-  TMARCH := $(if $(findstring 32,$(UNAME)),mingw32,mingw64)
-else
-ifeq ($(findstring MSYS,$(UNAME)),MSYS)
-  TMARCH := msys2
-else
-  TMARCH := $(UNAME)
-endif
-endif
+  ifeq ($(findstring MINGW,$(UNAME)),MINGW)
+	ifeq ($(findstring 32,$(UNAME)),32)
+	  TMARCH := mingw32
+	else
+	  TMARCH := mingw64
+	endif
+  else
+	ifeq ($(findstring MSYS,$(UNAME)),MSYS)
+	  TMARCH := msys2
+	else
+	  TMARCH := $(UNAME)
+	endif
+  endif
 endif
 
 DESTROOT=/usr/local
