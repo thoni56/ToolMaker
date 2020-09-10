@@ -64,18 +64,9 @@ OptTabRec pmkOptTab[] = {
         "generate file for target language <lang>"},
     {TMKTARGET_OPT, STR_TMO, "", "", (intptr_t) "ansi-c",
         ""},
-#ifdef WIN32
-    {PMKOS_OPT, STR_TMO, "os", "os <os>", (intptr_t) "WIN32",
+    {PMKOS_OPT, STR_TMO, "os", "os <os>", (intptr_t) TARGETOS,
         "generate source files for target operating system <os>"},
-#else
-    {PMKOS_OPT, STR_TMO, "os", "os <os>", (intptr_t) "SunOS",
-        "generate source files for target operating system <os>"},
-#endif
-#ifdef WIN32
-    {TMKOS_OPT, STR_TMO, "", "", (intptr_t) "WIN32", ""},
-#else
-    {TMKOS_OPT, STR_TMO, "", "", (intptr_t) "SunOS", ""},
-#endif
+    {TMKOS_OPT, STR_TMO, "", "", (intptr_t) TARGETOS, ""},
     {PMKPREFIX_OPT, BOOLSTR_TMO, "prefix", "prefix [<prefix>]", (intptr_t) "pm",
      "set [no] parser prefix"},
     {TMKPREFIX_OPT, BOOLSTR_TMO, "", "", (intptr_t) "tm",
