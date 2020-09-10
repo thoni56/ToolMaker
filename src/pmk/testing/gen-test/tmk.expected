@@ -12,7 +12,7 @@ No warnings or errors detected.
 %%OPTIONS
     Prefix 'tmk';
     Target 'c';
-    Library '../../../../lib/c';
+    Library '../../../tmk';
 %%IMPORT
 typedef int TmkNatural;
 %%END
@@ -70,12 +70,9 @@ typedef int TmkNatural;
 typedef int TmkNatural;
 %%END(tmkImport)
 %%SET tmkForce(1)
-%%SET tmkOs("SunOS")
-%%SET pmkOs("SunOS")
-%%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
-%%SET tmkLibrary("../../../../lib/c")
+%%SET tmkLibrary("../../../tmk")
 %%SET pmkLibrary("../..")
 %%SET tmkPrefix("tmk")
 %%SET parserPrefix("tmk")

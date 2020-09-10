@@ -1,2 +1,2 @@
 .pmk : ../../pmk -force $1
-.pmk : head -n-0 $1.tmk $1.pml $1.pmt $1.voc $1Common.h $1Err.c $1PaSema.c $1Parse.c $1Parse.h
+.pmk : ./.filter $1.tmk $1.pml $1.pmt $1.voc $1Common.h $1Err.c $1PaSema.c $1Parse.c $1Parse.h

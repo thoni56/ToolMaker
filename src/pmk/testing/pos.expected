@@ -40,7 +40,7 @@ No warnings or errors detected.
 %%OPTIONS
     Prefix 'pmk';
     Target 'c';
-    Library '../../../lib/c';
+    Library '../../tmk';
 %%IMPORT
 #include "tmkCommon.h"
 %%END
@@ -96,12 +96,9 @@ No warnings or errors detected.
 #include "tmkCommon.h"
 %%END(tmkImport)
 %%SET tmkForce(1)
-%%SET tmkOs("SunOS")
-%%SET pmkOs("SunOS")
-%%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
-%%SET tmkLibrary("../../../lib/c")
+%%SET tmkLibrary("../../tmk")
 %%SET pmkLibrary("..")
 %%SET tmkPrefix("pmk")
 %%SET parserPrefix("pmk")

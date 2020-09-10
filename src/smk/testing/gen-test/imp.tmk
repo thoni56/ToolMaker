@@ -1,7 +1,7 @@
 %%OPTIONS
   TARGET 'c';
   PREFIX 'imp';
-  LIBRARY '/home/Thomas/Utveckling/ToolMaker/lib/ansi-c';
+  LIBRARY '../../../tmk';
 %%END
 %%IMPORT
 /* .tmk-import */

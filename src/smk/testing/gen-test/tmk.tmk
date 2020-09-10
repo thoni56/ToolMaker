@@ -1,6 +1,6 @@
 %%OPTIONS
     PREFIX 'tmk';
-    LIBRARY '/home/Thomas/Utveckling/ToolMaker/lib/ansi-c';
+    LIBRARY '../../../tmk';
 %%IMPORT
 typedef int TmkNatural;
 %%END

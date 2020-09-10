@@ -3,7 +3,7 @@
 %%OPTIONS
     Prefix 'smk';
     Target 'c';
-    Library '../../../../lib/c';
+    Library '../../../tmk';
 %%IMPORT
 #include "tmkCommon.h"
 #include "name.h"
@@ -44,12 +44,9 @@
 #include "action.h"
 %%END(tmkImport)
 %%SET tmkForce(1)
-%%SET tmkOs("SunOS")
-%%SET pmkOs("SunOS")
-%%SET currentOs("cygwin")
 %%SET tmkTarget("c")
 %%SET pmkTarget("c")
-%%SET tmkLibrary("../../../../lib/c")
+%%SET tmkLibrary("../../../tmk")
 %%SET pmkLibrary("../..")
 %%SET tmkPrefix("smk")
 %%SET parserPrefix("smk")

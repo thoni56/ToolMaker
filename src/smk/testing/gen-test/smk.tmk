@@ -1,6 +1,6 @@
 %%OPTIONS
     PREFIX 'smk';
-    LIBRARY '/home/Thomas/Utveckling/ToolMaker/lib/ansi-c';
+    LIBRARY '../../../tmk';
 %%IMPORT
 #include "tmkCommon.h"
 #include "name.h"

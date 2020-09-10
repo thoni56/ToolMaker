@@ -1,7 +1,7 @@
 %%OPTIONS
     Prefix 'pmk';
     Target 'c';
-    Library '../../../lib/c';
+    Library '../../tmk';
 %%IMPORT
 #include "tmkCommon.h"
 %%END

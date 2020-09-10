@@ -9,7 +9,7 @@
 ----------------------------------------------------------------------------
 
 %%OPTIONS
-    Library '../../../../lib/ansi-c';
+    LIBRARY '../../../tmk';
     Prefix 'skipcode';
 %%IMPORT
 typedef int TmNatural;     /* A natural number of "reasonable" length. */

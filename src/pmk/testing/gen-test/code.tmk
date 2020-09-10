@@ -10,7 +10,7 @@
 
 %%OPTIONS
     Prefix 'code';
-    Library '../../../../lib/ansi-c';
+    LIBRARY '../../../tmk';
 
 %%IMPORT
 typedef int TmNatural;

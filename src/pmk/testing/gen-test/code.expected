@@ -12,7 +12,7 @@
 
 %%OPTIONS
     Prefix 'code';
-    Library '../../../../lib/ansi-c';
+    LIBRARY '../../../tmk';
 
 %%IMPORT
 typedef int TmNatural;
@@ -49,12 +49,9 @@ typedef int TmNatural;
 typedef int TmCode;
 %%END(tmkImport)
 %%SET tmkForce(1)
-%%SET tmkOs("SunOS")
-%%SET pmkOs("SunOS")
-%%SET currentOs("cygwin")
 %%SET tmkTarget("ansi-c")
 %%SET pmkTarget("ansi-c")
-%%SET tmkLibrary("../../../../lib/ansi-c")
+%%SET tmkLibrary("../../../tmk")
 %%SET pmkLibrary("../..")
 %%SET tmkPrefix("code")
 %%SET parserPrefix("code")

@@ -11,7 +11,7 @@
 ----------------------------------------------------------------------------
 
 %%OPTIONS
-    Library '../../../../lib/ansi-c';
+    LIBRARY '../../../tmk';
     Prefix 'skipcode';
 %%IMPORT
 typedef int TmNatural;     /* A natural number of "reasonable" length. */
@@ -50,12 +50,9 @@ typedef int TmNatural;     /* A natural number of "reasonable" length. */
 typedef int TmCode;        /* The type of a token code. */
 %%END(tmkImport)
 %%SET tmkForce(1)
-%%SET tmkOs("SunOS")
-%%SET pmkOs("SunOS")
-%%SET currentOs("cygwin")
 %%SET tmkTarget("ansi-c")
 %%SET pmkTarget("ansi-c")
-%%SET tmkLibrary("../../../../lib/ansi-c")
+%%SET tmkLibrary("../../../tmk")
 %%SET pmkLibrary("../..")
 %%SET tmkPrefix("skipcode")
 %%SET parserPrefix("skipcode")
