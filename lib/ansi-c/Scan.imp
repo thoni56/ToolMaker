@@ -28,13 +28,13 @@ Copyright (c) SoftLab ab 1990-1993
 %%IF(tmkTokenSrcp(?))
 %%  IF(tmkSrcpRow(?))
 %%	IF(tmkSrcpCol(?))
-%%	    SET smSRCP(ROWCOL)
+%%      SET smSRCP(ROWCOL)
 %%	ELSE
-%%	    SET smSRCP(ROW)
+%%      SET smSRCP(ROW)
 %%	ENDIF
 %%  ELSE
 %%	IF(tmkSrcpCol(?))
-%%	    EXIT(1,"source position: row must be specified if column is specified");
+%%      EXIT(1,"source position: row must be specified if column is specified");
 %%	ENDIF
 %%  ENDIF
 %%ELSE
@@ -130,9 +130,9 @@ typedef struct %%(smkPrefix)ScContextItem {
 %%ENDIF
 /*----------------------------------------------------------------------*\
 
-	%%(smkPrefix)ScSema.%%(targetLanguageExtension)
+    %%(smkPrefix)ScSema.%%(targetLanguageExtension)
 
-	ScannerMaker generated semantic actions
+    ScannerMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
 
@@ -175,7 +175,7 @@ int %%(smkPrefix)ScReader(smThis,smBuffer,smLength)
 %%ENDIF
   return read(0,smBuffer,smLength);
 %%ENDIF
-}    
+}
 
 %%IF(smPREHOOK(?R))
 %%IF(smkTarget("ansi-c") OR smkTarget("c++"))
@@ -260,9 +260,9 @@ int %%(smkPrefix)ScPostHook(smThis,smToken)
 %%ENDIF
 /*----------------------------------------------------------------------*\
 
-	%%(smkPrefix)Scan.%%(targetLanguageExtension)
+    %%(smkPrefix)Scan.%%(targetLanguageExtension)
 
-	ScannerMaker generated scanner
+    ScannerMaker generated scanner
 
 \*----------------------------------------------------------------------*/
 
@@ -429,7 +429,7 @@ static UByte%%(smDFAtyp) smDFAval[%%(smDFArowLen)][%%(smDFAcolLen)]=%%INCLUDE(sm
   %%ELSE
   smERRindex=%%(smDoDFA[2])*%%(smERRcolLen)+%%(smDoDFA[1]);
   %%ENDIF
-  if(smDFAerr[smERRindex>>3] & (0x80>>(smERRindex&0x7))) 
+  if(smDFAerr[smERRindex>>3] & (0x80>>(smERRindex&0x7)))
     %%(smDoDFA[2])=%%(smError);
   else {
   %%IF(smLES(1))
@@ -524,8 +524,8 @@ static unsigned char *smLookahead(smCode,smAt,smEnd)
 %%INCLUDE(smDoDFA("ch","state"))
       if(state==%%(smError)) break;
       if(smAccept[state]>0) {
-	halt=smAt;
-	continue;
+    halt=smAt;
+    continue;
       }
     }
     /* Scan bakward */
@@ -583,7 +583,7 @@ static int smScreening(smScanner,smCode,smText,smLength)
   stop=smScreenTableEnd[smScanner];
   while(start<=stop) {
     int screenLength;
-    
+
     middle=(start+stop)>>1;
     screenLength=smScreenTokenLength[middle];
     if(screenLength<smLength) start=middle+1;
@@ -593,10 +593,10 @@ static int smScreening(smScanner,smCode,smText,smLength)
       unsigned char *at1;
       unsigned char *at2;
       unsigned char ch;
-      
+
       for(at1=smText,at2=(unsigned char *)smScreenTokens+smScreenTokenStart[middle];screenLength-->0;*at1++,*at2++) {
 %%INCLUDE(smDoMap("ch","*at1"))
-	if(ch!=*at2) break;
+    if(ch!=*at2) break;
       }
       if(screenLength<0) break;
       else if(ch>*at2) start=middle+1;
@@ -616,7 +616,7 @@ static int smScreening(smScanner,smCode,smText,smLength)
 %%IF(NOT smSRCP(NONE))
 
 /*
- * Source position calculation 
+ * Source position calculation
  */
 
 %%IF(smkTarget("ansi-c") OR smkTarget("c++"))
@@ -625,7 +625,7 @@ static void smSourcePosition(
      unsigned char *smAt,
      unsigned char *smEnd)
 %%ELSE
-static void smSourcePosition(smThis,smAt,smEnd) 
+static void smSourcePosition(smThis,smAt,smEnd)
      %%(smkPrefix)ScContext smThis;
      unsigned char *smAt;
      unsigned char *smEnd;
@@ -635,23 +635,23 @@ static void smSourcePosition(smThis,smAt,smEnd)
     if(smThis->smPosContinue>smAt) smAt=smThis->smPosContinue;
     smThis->smNextPosition+=smEnd-smAt;
 %%IF(smSRCP("ROWCOL"))
-    for(;smAt<smEnd;smAt++) 
+    for(;smAt<smEnd;smAt++)
       if(*smAt==%%(smNewLine)) {
-	smThis->smPosLine=smAt;
-	smThis->smNextLine++;
+    smThis->smPosLine=smAt;
+    smThis->smNextLine++;
 %%IF({"MSDOS", "WIN32"} (%%(smkOs)))
       } else if ((*smAt==%%(smCarriageReturn)) && (*(smAt+1)==%%(smNewLine))) {
-	smThis->smPosLine=smAt++;
-	smThis->smNextLine++;
+    smThis->smPosLine=smAt++;
+    smThis->smNextLine++;
 %%ENDIF
       }
 
     smThis->smNextColumn=smEnd-smThis->smPosLine;
 %%ELSIF(smSRCP("ROW"))
-    for(;smAt<smEnd;smAt++) 
+    for(;smAt<smEnd;smAt++)
        if ((*smAt==%%(smNewLine))
 %%IF({"MSDOS", "WIN32"} (%%(smkOs)))
-           || ((*smAt==%%(smCarriageReturn)) && (*(smAt+1)==%%(smNewLine)))) 
+           || ((*smAt==%%(smCarriageReturn)) && (*(smAt+1)==%%(smNewLine))))
 %%ELSE
            )
 %%ENDIF
@@ -677,10 +677,10 @@ static void smRewindSourcePosition(smThis,smAt,smEnd)
   smThis->smNextPosition-=smEnd-smAt;
 %%IF(smSRCP("ROWCOL"))
   while(smAt<smEnd--) if(*smEnd==%%(smNewLine)) smThis->smNextLine--;
-  while(smThis->smBegining<smEnd) 
+  while(smThis->smBegining<smEnd)
     if(*smEnd==%%(smNewLine)) {
       smThis->smPosLine=smEnd;
-      break; 
+      break;
     }
     else smEnd--;
   if(smAt<smThis->smPosLine) smThis->smPosLine=smThis->smPosPrevLine;
@@ -793,15 +793,15 @@ static int smReadBuffer(smThis)
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,size+1);
 %%ENDIF
       if(smThis->smBegining==NULL) {
-	/* Cut Buffer */
-	smThis->smBegining = begining;	/* Restore to original buffer */
+    /* Cut Buffer */
+    smThis->smBegining = begining;	/* Restore to original buffer */
 %%IF(NOT smSRCP(NONE))
-	smSourcePosition(smThis,smThis->smText,smThis->smEnd-%%(smTokenSize));
+    smSourcePosition(smThis,smThis->smText,smThis->smEnd-%%(smTokenSize));
 %%ENDIF
 %%IF(smkTarget("ansi-c") OR smkTarget("c++"))
-	memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-%%(smTokenSize)), (size_t)%%(smTokenSize));
+    memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-%%(smTokenSize)), (size_t)%%(smTokenSize));
 %%ELSE
-	memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-%%(smTokenSize)), %%(smTokenSize));
+    memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-%%(smTokenSize)), %%(smTokenSize));
 %%ENDIF
 %%IF(smkOs(MSDOS))
 #ifdef NEED_HUGE_ARITHM
@@ -810,17 +810,17 @@ static int smReadBuffer(smThis)
         mod=(long)(((char *)smThis->smEnd-(char *)smThis->smBegining)-(long)%%(smTokenSize));
 #endif
 %%ELSE
-	mod=smThis->smEnd-smThis->smBegining-%%(smTokenSize);
+    mod=smThis->smEnd-smThis->smBegining-%%(smTokenSize);
 %%ENDIF
-	smThis->smContinue-=mod;
-	smThis->smEnd-=mod;
-	smThis->smPosPrevLine-=mod;
-	smThis->smPosLine-=mod;
-	smThis->smPosContinue-=mod;
+    smThis->smContinue-=mod;
+    smThis->smEnd-=mod;
+    smThis->smPosPrevLine-=mod;
+    smThis->smPosLine-=mod;
+    smThis->smPosContinue-=mod;
         smThis->smBufferOverflow+=mod;
       }
       else
-	smThis->smSize=size;
+    smThis->smSize=size;
     }
   }
   if(smThis->smBegining!=smThis->smText) {
@@ -861,7 +861,7 @@ static int smReadBuffer(smThis)
 %%(smkPrefix)ScContext %%(smkPrefix)ScNew(%%(smkPrefix)ScScanner smScanner)
 %%ELSE
 %%(smkPrefix)ScContext %%(smkPrefix)ScNew(smScanner)
-	%%(smkPrefix)ScScanner smScanner;
+    %%(smkPrefix)ScScanner smScanner;
 %%ENDIF
 {
   %%(smkPrefix)ScContext smThis;
@@ -890,7 +890,7 @@ static int smReadBuffer(smThis)
   smThis->smPosLine=smThis->smBegining-1;
   smThis->smPosContinue=smThis->smBegining;
   smThis->smText=smThis->smBegining;
-  
+
   smThis->smLength=0;
   smThis->smNextLine=1;
   smThis->smNextColumn=1;
@@ -1001,7 +1001,7 @@ int %%(smkPrefix)ScModify(smThis,smBuffer,smLength)
   else if(smLength>0) {
     int length1;
     int length2;
-    
+
     for(length2=smLength;(length1=%%(smkPrefix)ScSkip(smThis,length2));length2-=length1) {
       if(length1<0) return length1;
 %%IF(smkTarget("ansi-c") OR smkTarget("c++"))
@@ -1101,8 +1101,8 @@ void %%(smkPrefix)ScScrToken(smScanner, smCode, smOnOff)
 %%IF(smSCREEN(?))
   int i;
   for(i=0;i<%%(smSCREENcheckCodeLen);i++)
-    if(smScreenCheckCode[i] && 
-       smTokenCode[smScreenCheckCode[i]]==smCode && 
+    if(smScreenCheckCode[i] &&
+       smTokenCode[smScreenCheckCode[i]]==smCode &&
        smScreenCheckCodeScan[i]==smScanner) {
       smScreenCheckCode[i]= smOnOff ? 2 : 1;
       break;
@@ -1128,7 +1128,7 @@ void %%(smkPrefix)ScScrRule(smScanner, smCode, smOnOff)
 {
 %%IF(smSCREEN(?))
   int i;
-  for(i=smScreenTableBegin[smScanner];i<=smScreenTableEnd[smScanner];i++) 
+  for(i=smScreenTableBegin[smScanner];i<=smScreenTableEnd[smScanner];i++)
     if(smTokenCode[smScreenTokenCode[i]]==smCode) {
       smScreenCheckToken[i]=smOnOff ? 1 : 0;
       break;
@@ -1165,7 +1165,7 @@ int %%(smkPrefix)Scan(smThis,smToken)
 
   do {				/* Skip loop */
 %%IF(NOT smSRCP(NONE))
-%%IF(smSRCP("ROWCOL")) 
+%%IF(smSRCP("ROWCOL"))
     smThis->smLine=smThis->smNextLine;
     smThis->smColumn=smThis->smNextColumn;
 %%ELSIF(smSRCP("ROW"))
@@ -1180,7 +1180,7 @@ int %%(smkPrefix)Scan(smThis,smToken)
     smThis->smText=smThis->smContinue;
     smThis->smBufferOverflow=0;
 %%IF(NOT smSRCP(NONE))
-%%IF(smSRCP("ROWCOL")) 
+%%IF(smSRCP("ROWCOL"))
     smToken->%%(tmkTokenSrcp).%%(tmkSrcpRow)=smThis->smNextLine;
     smToken->%%(tmkTokenSrcp).%%(tmkSrcpCol)=smThis->smNextColumn;
 %%ELSIF(smSRCP("ROW"))
@@ -1196,66 +1196,66 @@ int %%(smkPrefix)Scan(smThis,smToken)
       state=smScanner[smThis->smScanner];
       for (;;) {
 %%IF(NOT smExclude(?))
-	if(at==end) {
-	  int mod;
-	  
-	  if(state>=%%(smError)) state-=%%(smError)+1;
-	  smThis->smContinue=end;
-	  mod=smReadBuffer(smThis);
-	  if(mod<0) return mod;
-	  rew_at-=end-smThis->smContinue;
-	  at=smThis->smContinue;
-	  end=smThis->smEnd;
-          if(at==end) 
-	    break;
+    if(at==end) {
+      int mod;
+
+      if(state>=%%(smError)) state-=%%(smError)+1;
+      smThis->smContinue=end;
+      mod=smReadBuffer(smThis);
+      if(mod<0) return mod;
+      rew_at-=end-smThis->smContinue;
+      at=smThis->smContinue;
+      end=smThis->smEnd;
+          if(at==end)
+        break;
         }
 %%ELSE
-	for (;;) {
+    for (;;) {
 %%ENDIF
-	  ch = *at++;
+      ch = *at++;
 %%INCLUDE(smDoDFA("ch","state"))
-	  if(state>=%%(smError)) break;
-	  if(smAccept[state]>0) {
-	    rew_state=state;
-	    rew_at=at;
-	  }
+      if(state>=%%(smError)) break;
+      if(smAccept[state]>0) {
+        rew_state=state;
+        rew_at=at;
+      }
 %%IF(smExclude(?))
-	}
-	if(at>end) {
-	  int mod;
-	  
-	  if(state>=%%(smError)) state-=%%(smError)+1;
-	  smThis->smContinue=end;
-	  mod=smReadBuffer(smThis);
-	  if(mod<0) return mod;
-	  rew_at-=end-smThis->smContinue;
-	  at=smThis->smContinue;
-	  end=smThis->smEnd;
-          if(at==end) 
-	    break;
+    }
+    if(at>end) {
+      int mod;
+
+      if(state>=%%(smError)) state-=%%(smError)+1;
+      smThis->smContinue=end;
+      mod=smReadBuffer(smThis);
+      if(mod<0) return mod;
+      rew_at-=end-smThis->smContinue;
+      at=smThis->smContinue;
+      end=smThis->smEnd;
+          if(at==end)
+        break;
         }
-	else
-	  break;
+    else
+      break;
 %%ENDIF
       }
       if(rew_state==%%(smError)) {
         if(rew_at>end) {
-  	  code=smEOTCode[smThis->smScanner];
-	  rew_at=end;
+      code=smEOTCode[smThis->smScanner];
+      rew_at=end;
         }
         else
-	  code=smUnknownCode[smThis->smScanner];
-      }	
+      code=smUnknownCode[smThis->smScanner];
+      }
       else
-	code=smAccept[rew_state]-1;	
+    code=smAccept[rew_state]-1;
 %%IF(smTrace(1))
       ocode2=code;
 %%ENDIF
 %%IF(smLOOKAHEAD(?))
       if(smLookaheadType[code])
-	smThis->smContinue=smLookahead(code,smThis->smText,rew_at);
+    smThis->smContinue=smLookahead(code,smThis->smText,rew_at);
       else
-	smThis->smContinue=rew_at;
+    smThis->smContinue=rew_at;
 %%ELSE
       smThis->smContinue=rew_at;
 %%ENDIF
@@ -1282,38 +1282,38 @@ int %%(smkPrefix)Scan(smThis,smToken)
 %%IF(smTrace(1))
     {
       unsigned char rem;
-      
+
       rem=smThis->smText[smThis->smLength];
-      smThis->smText[smThis->smLength]=0;	
+      smThis->smText[smThis->smLength]=0;
 %%IF(smSCREEN(?))
       if ((smTokenCode[ocode2]-1 != code) && (code>=0))
-	printf("AT: %3d,%3d (%8d+%6d) TOKEN: (%-15s) -> %-15s (%3d) IN %-8s",
-	       smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
-	       smDebugTokens[ocode2],smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
+    printf("AT: %3d,%3d (%8d+%6d) TOKEN: (%-15s) -> %-15s (%3d) IN %-8s",
+           smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
+           smDebugTokens[ocode2],smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
       else
-	printf("AT: %3d,%3d (%8d+%6d) TOKEN: %-15s                      (%3d) IN %-8s",
-	       smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
-	       smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
+    printf("AT: %3d,%3d (%8d+%6d) TOKEN: %-15s                      (%3d) IN %-8s",
+           smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
+           smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
 %%ELSE
-	printf("AT: %3d,%3d (%8d+%6d) TOKEN: %-15s (%3d) IN %-8s",
-	       smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
-	       smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
+    printf("AT: %3d,%3d (%8d+%6d) TOKEN: %-15s (%3d) IN %-8s",
+           smThis->smLine,smThis->smColumn,smThis->smPosition,smThis->smLength,
+           smDebugTokens[ocode1],ocode1,smDebugScanners[traceScanner]);
 %%ENDIF
-      if(smTokenCode[ocode2]==0) 
-	printf(" =>SKIP"); 
+      if(smTokenCode[ocode2]==0)
+    printf(" =>SKIP");
       else if ((smTokenCode[ocode2]-1 != code) && (code>=0))
-	printf(" => (%3d)",smTokenCode[ocode2]-1);
+    printf(" => (%3d)",smTokenCode[ocode2]-1);
       else
-	printf(" => %3d",smTokenCode[ocode2]-1);
-      if(smTokenCode[ocode2]-1 != code) 
-	if(code<0) 
-	  printf(" -> SKIP"); 
-	else 
-	  printf(" -> %3d",code);
-      if(smThis->smBufferOverflow) 
-	printf(" IS (OVERFLOW %d)",smThis->smBufferOverflow); 
-      else 
-	printf(" IS");
+    printf(" => %3d",smTokenCode[ocode2]-1);
+      if(smTokenCode[ocode2]-1 != code)
+    if(code<0)
+      printf(" -> SKIP");
+    else
+      printf(" -> %3d",code);
+      if(smThis->smBufferOverflow)
+    printf(" IS (OVERFLOW %d)",smThis->smBufferOverflow);
+      else
+    printf(" IS");
       printf(" \"%s\"\n",smThis->smText);
       smThis->smText[smThis->smLength]=rem;
     }
@@ -1325,12 +1325,13 @@ int %%(smkPrefix)Scan(smThis,smToken)
   } while(code<0);
   return smToken->%%(tmkTokenCode)=code;
 }
-%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
-%%PROCESS(, "/dev/null")
+%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "Linux"} (%%(currentOs)))
+%%  PROCESS(, "/dev/null")
 %%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
-%%PROCESS(, "NUL")
+%%  PROCESS(, "NUL")
 %%ELSE
-	Unknown current OS!!! 
+    *** Unknown current OS in Scan.imp: %%(currentOs)
+    %%MESSAGE("*** Unknown current OS in Scan.imp: %%(currentOs)")
 %%ENDIF
 %%IF(tmkForce(0))
 %%--
@@ -1339,24 +1340,23 @@ int %%(smkPrefix)Scan(smThis,smToken)
 %%--
 %%  ESET files ("%%(smkPrefix)Scan.h", "%%(smkPrefix)Scan.%%(targetLanguageExtension)", "%%(smkPrefix)ScSema.%%(targetLanguageExtension)")
 %%  LOOP(file, files)
-%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "Linux"} (%%(currentOs)))
 %%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
-%%	        IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
-%%	            EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
-%%	        ENDIF
+%%          IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
+%%              EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
+%%          ENDIF
 %%          ELSE
-%%	        IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
-%%	            EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
-%%	        ENDIF
+%%          IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).tmp %%(file)", output))
+%%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%          ENDIF
 %%          ENDIF
 %%      ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
-%%	    IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
+%%      IF(NOT IMP$SYSTEM("move /Y %%(file).tmp %%(file)", output))
 %%              EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%          ENDIF
 %%      ELSE
-	Illegal OS option
+          *** Unknown current OS in Scan.imp: %%(currentOs)
+          %%MESSAGE("*** Unknown current OS in Scan.imp: %%(currentOs)")
 %%      ENDIF
 %%  ENDLOOP(file)
 %%ENDIF
-
-

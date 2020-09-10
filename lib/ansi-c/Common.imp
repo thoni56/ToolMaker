@@ -1,19 +1,12 @@
 %%-- Common.imp					Date: 1990-01-09/tools@roo
 %%-- %W% %G%
 %%-- This imp script will NOT generate common source code modules
-%%-- for srcpDeclaration and tokenDeclaration if generateCommon is 
+%%-- for srcpDeclaration and tokenDeclaration if generateCommon is
 %%-- set to "OFF".
-%%-- 
-%%  IF(NOT {"SunOS", "HP", "Apollo", "VMS", "MSDOS", "WIN32", "cygwin"} (%%(tmkOs)))
-%%MESSAGE("Unsupported value of OS option: '%%(tmkOs)'")
-%%MESSAGE("	Use one of:")
-%%MESSAGE("		SunOS")
-%%MESSAGE("		HP")
-%%MESSAGE("		Apollo")
-%%MESSAGE("		VMS")
-%%MESSAGE("		MSDOS")
-%%MESSAGE("		WIN32")
-%%EXIT(1, "")
+%%--
+%%IF(NOT {"SunOS", "HP", "Apollo", "VMS", "MSDOS", "WIN32", "cygwin32", "Linux"} (%%(tmkOs)))
+%%  MESSAGE("*** Unsupported value for OS option: '%%(tmkOs)' in Common.imp")
+%%  EXIT(1, "")
 %%ENDIF
 %%IF (NOT generateCommon(?))
 %%  SET generateCommon(ON)
@@ -24,7 +17,7 @@
 /* These datatypes should be defined to be unsigned integers of length 1, 2
  * and 4 bytes respectively.
  */
-%%  IF({"SunOS", "HP", "Apollo", "VMS", "WIN32", "cygwin"} (%%(tmkOs)))
+%%  IF({"SunOS", "HP", "Apollo", "VMS", "WIN32", "cygwin32", "Linux"} (%%(tmkOs)))
 typedef unsigned char UByte1;
 typedef unsigned short UByte2;
 typedef unsigned int UByte4;
@@ -34,14 +27,8 @@ typedef unsigned int UByte2;
 typedef unsigned long UByte4;
 %%  ELSE
 
-	Unsupported value of OS option
-	Use one of:
-		SunOS
-		HP
-		Apollo
-		VMS
-		MSDOS
-		WIN32
+      *** Unsupported value for OS option in Common.imp: %%(tmkOs)
+%%    MESSAGE("*** Unsupported value for OS option: '%%(tmkOs)' in Common.imp")
 
 %%  ENDIF
 %%END(systemDependencies)
@@ -102,12 +89,13 @@ typedef struct %%(tmkTokenName) {
 %%SET currentOs(%%(tmkOs))
 %%ENDIF
 
-%%  IF({"SunOS", "HP", "Apollo", "VMS", "cygwin"} (%%(currentOs)))
+%%  IF({"SunOS", "HP", "Apollo", "VMS", "cygwin32", "Linux"} (%%(currentOs)))
 %%  PROCESS(, "/dev/null")
 %%  ELSIF({"MSDOS", "WIN32"} (%%(currentOs)))
 %%  PROCESS(, "NUL")
 %%  ELSE
-	Illegal OS option
+    *** Unknown current OS in Common.imp: %%(currentOs)
+    %%MESSAGE("*** Unknown current OS in Common.imp: %%(currentOs)")
 %%  ENDIF
 %%  IF(tmkForce(0))
 %%--
@@ -116,22 +104,23 @@ typedef struct %%(tmkTokenName) {
 %%--
 %%    ESET files ("%%(tmkPrefix)Common.h")
 %%    LOOP(file, files)
-%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin"} (%%(currentOs)))
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "Linux"} (%%(currentOs)))
 %%        IF(IMP$SYSTEM("cmp -s %%(file).new %%(file)", output))
-%%	    IF(NOT IMP$SYSTEM("rm -f %%(file).new", output))
-%%	      EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
-%%	    ENDIF
+%%      IF(NOT IMP$SYSTEM("rm -f %%(file).new", output))
+%%        EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
+%%      ENDIF
 %%        ELSE
-%%	    IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).new %%(file)", output))
-%%	      EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
-%%	    ENDIF
+%%      IF(NOT IMP$SYSTEM("rm -f %%(file); mv %%(file).new %%(file)", output))
+%%        EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
+%%      ENDIF
 %%        ENDIF
 %%      ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%	  IF(NOT IMP$SYSTEM("move /Y %%(file).new %%(file)", output))
 %%          EXIT(1,"Trouble generating %%(file) '%%(output)', try to remove the old file")
 %%        ENDIF
 %%      ELSE
-	Illegal OS option
+    *** Unknown current OS in Common.imp: %%(currentOs)
+    %%MESSAGE("*** Unknown current OS in Common.imp: %%(currentOs)")
 %%      ENDIF
 %%    ENDLOOP(file)
 %%  ENDIF
