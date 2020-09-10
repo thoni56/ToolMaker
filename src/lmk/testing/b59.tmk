@@ -1,7 +1,7 @@
 %%OPTIONS
 
     Prefix 'b59';
-    Library '../../../lib/c';
+    Library '../../tmk';
 
 %%SRCP Name TmSrcp;
     Row line %% int %1 %%;

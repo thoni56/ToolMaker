@@ -1,6 +1,6 @@
 %%OPTIONS
     PREFIX 'lmk';
-    LIBRARY '../../../lib/ansi-c';
+    LIBRARY '../../tmk';
 %%IMPORT
 #include "tmkCommon.h"
 %%END

@@ -1,7 +1,7 @@
 %%OPTIONS
   TARGET 'ansi-c';
   PREFIX 'ansi';
-  LIBRARY '../../../lib/ansi-c';
+  LIBRARY '../../tmk';
 %%END
 %%IMPORT
 /* .tmk-import */

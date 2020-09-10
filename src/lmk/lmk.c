@@ -71,17 +71,9 @@ OptTabRec lmkOptTab[] = {
   {TMKTARGET_OPT, STR_TMO, "target", "",
      (intptr_t) "ansi-c"},
   {LMKOS_OPT, STR_TMO, "os", "os",
-#ifdef WIN32
-     (intptr_t) "WIN32", "set target operating system"},
-#else
-     (intptr_t) "SunOS", "set target operating system"},
-#endif
+     (intptr_t) TARGETOS, "set target operating system"},
   {TMKOS_OPT, STR_TMO, "os", "",
-#ifdef WIN32
-     (intptr_t) "WIN32"},
-#else
-     (intptr_t) "SunOS"},
-#endif
+     (intptr_t) TARGETOS},
   {LMKPREFIX_OPT, STR_TMO, "prefix", "",
      (intptr_t) "lm", "set [no] prefix"},
   {TMKPREFIX_OPT, STR_TMO, "prefix", "prefix",

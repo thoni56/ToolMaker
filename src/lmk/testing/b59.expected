@@ -3,7 +3,7 @@
 %%OPTIONS
 
     Prefix 'b59';
-    Library '../../../lib/c';
+    Library '../../tmk';
 
 %%SRCP Name TmSrcp;
     Row line %% int %1 %%;
@@ -17,9 +17,7 @@
 %%SET tmkForce(0)
 %%SET tmkTarget("ansi-c")
 %%SET lmkTarget("ansi-c")
-%%SET tmkOs("SunOS")
-%%SET lmkOs("SunOS")
-%%SET tmkLibrary("../../../lib/c")
+%%SET tmkLibrary("../../tmk")
 %%SET lmkLibrary("..")
 %%SET tmkPrefix("b59")
 %%SET lmkPrefix("b59")

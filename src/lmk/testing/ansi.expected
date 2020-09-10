@@ -3,7 +3,7 @@
 %%OPTIONS
   TARGET 'ansi-c';
   PREFIX 'ansi';
-  LIBRARY '../../../lib/ansi-c';
+  LIBRARY '../../tmk';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -32,9 +32,7 @@ typedef int TmNatural;
 %%SET tmkForce(0)
 %%SET tmkTarget("ansi-c")
 %%SET lmkTarget("ansi-c")
-%%SET tmkOs("SunOS")
-%%SET lmkOs("SunOS")
-%%SET tmkLibrary("../../../lib/ansi-c")
+%%SET tmkLibrary("../../tmk")
 %%SET lmkLibrary("..")
 %%SET tmkPrefix("ansi")
 %%SET lmkPrefix("ansi")

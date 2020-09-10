@@ -3,7 +3,7 @@
 %%OPTIONS
   TARGET 'c';
   PREFIX 'imp';
-  LIBRARY '../../../lib/c';
+  LIBRARY '../../tmk';
 %%END
 %%IMPORT
 /* .tmk-import */
@@ -32,9 +32,7 @@ typedef int TmNatural;
 %%SET tmkForce(0)
 %%SET tmkTarget("c")
 %%SET lmkTarget("c")
-%%SET tmkOs("SunOS")
-%%SET lmkOs("SunOS")
-%%SET tmkLibrary("../../../lib/c")
+%%SET tmkLibrary("../../tmk")
 %%SET lmkLibrary("..")
 %%SET tmkPrefix("imp")
 %%SET lmkPrefix("imp")

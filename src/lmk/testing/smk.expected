@@ -2,7 +2,7 @@
 ==> smk.tmk <==
 %%OPTIONS
     PREFIX 'smk';
-    LIBRARY '../../../lib/ansi-c';
+    LIBRARY '../../tmk';
 %%IMPORT
 #include "tmkCommon.h"
 #include "name.h"
@@ -33,9 +33,7 @@
 %%SET tmkForce(0)
 %%SET tmkTarget("ansi-c")
 %%SET lmkTarget("ansi-c")
-%%SET tmkOs("SunOS")
-%%SET lmkOs("SunOS")
-%%SET tmkLibrary("../../../lib/ansi-c")
+%%SET tmkLibrary("../../tmk")
 %%SET lmkLibrary("..")
 %%SET tmkPrefix("smk")
 %%SET lmkPrefix("smk")

@@ -1,2 +1,2 @@
 .lmk : ../lmk $1
-.lmk : head -n-0 $1.tmk $1.lmt $1Common.h $1List.c $1List.cc $1List.h
+.lmk : ./.filter $1.tmk $1.lmt $1Common.h $1List.c $1List.cc $1List.h

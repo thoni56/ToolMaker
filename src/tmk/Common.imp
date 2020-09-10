@@ -4,15 +4,8 @@
 %%-- for srcpDeclaration and tokenDeclaration if generateCommon is 
 %%-- set to "OFF".
 %%-- 
-%%  IF(NOT {"SunOS", "HP", "Apollo", "VMS", "MSDOS", "WIN32", "cygwin"} (%%(tmkOs)))
-%%MESSAGE("Unsupported value of OS option: '%%(tmkOs)'")
-%%MESSAGE("	Use one of:")
-%%MESSAGE("		SunOS")
-%%MESSAGE("		HP")
-%%MESSAGE("		Apollo")
-%%MESSAGE("		VMS")
-%%MESSAGE("		MSDOS")
-%%MESSAGE("		WIN32")
+%%  IF(NOT {"SunOS", "HP", "Apollo", "VMS", "MSDOS", "WIN32", "cygwin", "Linux"} (%%(tmkOs)))
+%%MESSAGE("Unsupported value of OS option: '%%(tmkOs)' in Common.imp")
 %%EXIT(1, "")
 %%ENDIF
 %%IF (NOT generateCommon(?))
