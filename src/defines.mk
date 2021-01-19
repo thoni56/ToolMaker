@@ -27,10 +27,15 @@ DESTROOT=/usr/local
 DESTLIB=$(DESTROOT)/lib/ToolMaker
 
 ifeq ($(TMARCH),cygwin64)
-$(error Cygwin64 not supported, build on Cygwin32)
-endif
+$(info INFO: Cross-compiling to Cygwin32)
+$(info INFO: The you need the packages 'cygwin32-gcc-core' (for cross-compiler) and 'cygwin32-w32api-runtime' (for runtime))
+$(info INFO: You also need to 'export PATH=/usr/i686-pc-cygwin/sys-root/usr/bin/:$$PATH' to run the binaries)
+CC = i686-pc-cygwin-gcc
+CFLAGS = -Wall -g $(INCLUDE) -DTARGETOS=\"$(TMARCH)\"
+else
 ifeq ($(TMARCH),mingw64)
 $(error MINGW64 not supported, build on MINGW32)
 endif
 CC = gcc
 CFLAGS = -Wall -g $(INCLUDE) -DTARGETOS=\"$(TMARCH)\" -m32
+endif
