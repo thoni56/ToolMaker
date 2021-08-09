@@ -17,11 +17,11 @@ SHELL	=	/bin/sh
 TMLIB	= /home/projects/ToolMaker/lib/c
 TMBIN	= /home/projects/ToolMaker/bin/bin-$(TMARCH)
 
-SMKQ	= 
+SMKQ	=
 SMK	= ../../../smk $(SMKQ)
 
-INCLUDE	= 
-LIBS    = 
+INCLUDE	=
+LIBS    =
 CFLAGS	= -O -DINLINE $(CQ) $(INCLUDE)
 LDFLAGS	= -lm $(LQ)
 

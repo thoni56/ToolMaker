@@ -39,7 +39,7 @@ release releaseARCH RELEASE := DEBUG=-O
 all debug: 	toolmake
 
 toolmake: init checkARCH $(OBJECTS) $(LIBS)
-	$(LINK.c) -o $@ $(OBJECTS) $(LIBS) 
+	$(LINK.c) -o $@ $(OBJECTS) $(LIBS)
 
 init: ../license/license.h ../imp/impMacro.h version.h
 

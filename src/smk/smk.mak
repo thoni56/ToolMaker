@@ -6,31 +6,31 @@
 !IF "$(CFG)" == ""
 CFG=smk - Win32 Test
 !MESSAGE No configuration specified.  Defaulting to smk - Win32 Test.
-!ENDIF 
+!ENDIF
 
 !IF "$(CFG)" != "smk - Win32 Release" && "$(CFG)" != "smk - Win32 Debug" &&\
  "$(CFG)" != "smk - Win32 Test" && "$(CFG)" != "smk - Win32 AMOS"
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE on this makefile
 !MESSAGE by defining the macro CFG on the command line.  For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "smk.mak" CFG="smk - Win32 Test"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "smk - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "smk - Win32 Debug" (based on "Win32 (x86) Console Application")
 !MESSAGE "smk - Win32 Test" (based on "Win32 (x86) Console Application")
 !MESSAGE "smk - Win32 AMOS" (based on "Win32 (x86) Console Application")
-!MESSAGE 
+!MESSAGE
 !ERROR An invalid configuration is specified.
-!ENDIF 
+!ENDIF
 
 !IF "$(OS)" == "Windows_NT"
 NULL=
-!ELSE 
+!ELSE
 NULL=nul
-!ENDIF 
+!ENDIF
 ################################################################################
 # Begin Project
 # PROP Target_Last_Scanned "smk - Win32 Debug"
@@ -54,7 +54,7 @@ INTDIR=.\bin
 
 ALL : "$(OUTDIR)\smk.exe"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\action.obj"
 	-@erase "$(INTDIR)\ast.obj"
 	-@erase "$(INTDIR)\char.obj"
@@ -97,7 +97,7 @@ CLEAN :
 # ADD CPP /nologo /W3 /GX /O2 /I "..\license" /I "..\tmk" /I "..\imp" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /YX /c
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\license" /I "..\tmk" /I "..\imp" /D\
  "NDEBUG" /D "WIN32" /D "_CONSOLE" /Fp"$(INTDIR)/smk.pch" /YX /Fo"$(INTDIR)/" /c\
- 
+
 CPP_OBJS=.\bin/
 CPP_SBRS=.\.
 # ADD BASE RSC /l 0x41d /d "NDEBUG"
@@ -105,9 +105,9 @@ CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc"
 BSC32_SBRS= \
-	
+
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
 # ADD LINK32 ..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
@@ -115,7 +115,7 @@ LINK32_FLAGS=..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib\
  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib\
  shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo\
  /subsystem:console /incremental:no /pdb:"$(OUTDIR)/smk.pdb" /machine:I386\
- /out:"$(OUTDIR)/smk.exe" 
+ /out:"$(OUTDIR)/smk.exe"
 LINK32_OBJS= \
 	"$(INTDIR)\action.obj" \
 	"$(INTDIR)\ast.obj" \
@@ -170,7 +170,7 @@ INTDIR=.\bin
 
 ALL : "$(OUTDIR)\smk.exe"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\action.obj"
 	-@erase "$(INTDIR)\ast.obj"
 	-@erase "$(INTDIR)\char.obj"
@@ -217,7 +217,7 @@ CLEAN :
 # ADD CPP /nologo /W3 /Gm /GX /Zi /Od /I "..\license" /I "..\tmk" /I "..\imp" /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /YX /c
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\license" /I "..\tmk" /I\
  "..\imp" /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /Fp"$(INTDIR)/smk.pch" /YX\
- /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
+ /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c
 CPP_OBJS=.\bin/
 CPP_SBRS=.\.
 # ADD BASE RSC /l 0x41d /d "_DEBUG"
@@ -225,9 +225,9 @@ CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc"
 BSC32_SBRS= \
-	
+
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386
 # ADD LINK32 ..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386
@@ -235,7 +235,7 @@ LINK32_FLAGS=..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib\
  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib\
  shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo\
  /subsystem:console /incremental:yes /pdb:"$(OUTDIR)/smk.pdb" /debug\
- /machine:I386 /out:"$(OUTDIR)/smk.exe" 
+ /machine:I386 /out:"$(OUTDIR)/smk.exe"
 LINK32_OBJS= \
 	"$(INTDIR)\action.obj" \
 	"$(INTDIR)\ast.obj" \
@@ -290,7 +290,7 @@ INTDIR=.\bin
 
 ALL : "$(OUTDIR)\smk.exe"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\action.obj"
 	-@erase "$(INTDIR)\ast.obj"
 	-@erase "$(INTDIR)\char.obj"
@@ -337,7 +337,7 @@ CLEAN :
 # ADD CPP /nologo /W3 /Gm /GX /Zi /Od /I "..\license" /I "..\tmk" /I "..\imp" /D "_DEBUG" /D "TMTEST" /D "WIN32" /D "_CONSOLE" /YX /c
 CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\license" /I "..\tmk" /I\
  "..\imp" /D "_DEBUG" /D "TMTEST" /D "WIN32" /D "_CONSOLE"\
- /Fp"$(INTDIR)/smk.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c 
+ /Fp"$(INTDIR)/smk.pch" /YX /Fo"$(INTDIR)/" /Fd"$(INTDIR)/" /c
 CPP_OBJS=.\bin/
 CPP_SBRS=.\.
 # ADD BASE RSC /l 0x41d /d "_DEBUG"
@@ -345,9 +345,9 @@ CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc"
 BSC32_SBRS= \
-	
+
 LINK32=link.exe
 # ADD BASE LINK32 ..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386
 # ADD LINK32 ..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386
@@ -355,7 +355,7 @@ LINK32_FLAGS=..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib\
  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib\
  shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo\
  /subsystem:console /incremental:yes /pdb:"$(OUTDIR)/smk.pdb" /debug\
- /machine:I386 /out:"$(OUTDIR)/smk.exe" 
+ /machine:I386 /out:"$(OUTDIR)/smk.exe"
 LINK32_OBJS= \
 	"$(INTDIR)\action.obj" \
 	"$(INTDIR)\ast.obj" \
@@ -410,7 +410,7 @@ INTDIR=.\smk___Wi
 
 ALL : ".\smk.exe"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\action.obj"
 	-@erase "$(INTDIR)\ast.obj"
 	-@erase "$(INTDIR)\char.obj"
@@ -450,7 +450,7 @@ CLEAN :
 # ADD CPP /nologo /W3 /GX /O2 /I "..\license" /I "..\tmk" /I "..\imp" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_AMOSDEV" /YX /c
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\license" /I "..\tmk" /I "..\imp" /D\
  "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_AMOSDEV" /Fp"$(INTDIR)/smk.pch" /YX\
- /Fo"$(INTDIR)/" /c 
+ /Fo"$(INTDIR)/" /c
 CPP_OBJS=.\smk___Wi/
 CPP_SBRS=.\.
 # ADD BASE RSC /l 0x41d /d "NDEBUG"
@@ -458,9 +458,9 @@ CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/smk.bsc"
 BSC32_SBRS= \
-	
+
 LINK32=link.exe
 # ADD BASE LINK32 ..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
 # ADD LINK32 ..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386 /out:"smk.exe"
@@ -468,7 +468,7 @@ LINK32_FLAGS=..\license\license.lib ..\tmk\tmklib.lib ..\imp\implib.lib\
  kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib\
  shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo\
  /subsystem:console /incremental:no /pdb:"$(OUTDIR)/smk.pdb" /machine:I386\
- /out:"smk.exe" 
+ /out:"smk.exe"
 LINK32_OBJS= \
 	"$(INTDIR)\action.obj" \
 	"$(INTDIR)\ast.obj" \
@@ -506,25 +506,25 @@ LINK32_OBJS= \
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
 
-!ENDIF 
+!ENDIF
 
 .c{$(CPP_OBJS)}.obj:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cpp{$(CPP_OBJS)}.obj:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cxx{$(CPP_OBJS)}.obj:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .c{$(CPP_SBRS)}.sbr:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cpp{$(CPP_SBRS)}.sbr:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cxx{$(CPP_SBRS)}.sbr:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 ################################################################################
 # Begin Target
@@ -542,7 +542,7 @@ LINK32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "smk - Win32 AMOS"
 
-!ENDIF 
+!ENDIF
 
 ################################################################################
 # Begin Source File
@@ -550,7 +550,7 @@ LINK32_OBJS= \
 SOURCE=.\version.c
 DEP_CPP_VERSI=\
 	".\version.h"\
-	
+
 
 !IF  "$(CFG)" == "smk - Win32 Release"
 
@@ -576,7 +576,7 @@ DEP_CPP_VERSI=\
 "$(INTDIR)\version.obj" : $(SOURCE) $(DEP_CPP_VERSI) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -597,7 +597,7 @@ DEP_CPP_AST_C=\
 	".\smkList.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\ast.obj" : $(SOURCE) $(DEP_CPP_AST_C) "$(INTDIR)"
 
@@ -626,7 +626,7 @@ DEP_CPP_AST_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\ast.obj" : $(SOURCE) $(DEP_CPP_AST_C) "$(INTDIR)"
 
@@ -655,7 +655,7 @@ DEP_CPP_AST_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\ast.obj" : $(SOURCE) $(DEP_CPP_AST_C) "$(INTDIR)"
 
@@ -684,12 +684,12 @@ DEP_CPP_AST_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\ast.obj" : $(SOURCE) $(DEP_CPP_AST_C) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -724,7 +724,7 @@ DEP_CPP_CHAR_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\char.obj" : $(SOURCE) $(DEP_CPP_CHAR_) "$(INTDIR)"
 
@@ -756,7 +756,7 @@ DEP_CPP_CHAR_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\char.obj" : $(SOURCE) $(DEP_CPP_CHAR_) "$(INTDIR)"
 
@@ -788,7 +788,7 @@ DEP_CPP_CHAR_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\char.obj" : $(SOURCE) $(DEP_CPP_CHAR_) "$(INTDIR)"
 
@@ -820,12 +820,12 @@ DEP_CPP_CHAR_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\char.obj" : $(SOURCE) $(DEP_CPP_CHAR_) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -836,7 +836,7 @@ DEP_CPP_COMMO=\
 	".\common.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 !IF  "$(CFG)" == "smk - Win32 Release"
 
@@ -862,7 +862,7 @@ DEP_CPP_COMMO=\
 "$(INTDIR)\common.obj" : $(SOURCE) $(DEP_CPP_COMMO) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -896,7 +896,7 @@ DEP_CPP_DEFIN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\definition.obj" : $(SOURCE) $(DEP_CPP_DEFIN) "$(INTDIR)"
 
@@ -927,7 +927,7 @@ DEP_CPP_DEFIN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\definition.obj" : $(SOURCE) $(DEP_CPP_DEFIN) "$(INTDIR)"
 
@@ -958,7 +958,7 @@ DEP_CPP_DEFIN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\definition.obj" : $(SOURCE) $(DEP_CPP_DEFIN) "$(INTDIR)"
 
@@ -989,12 +989,12 @@ DEP_CPP_DEFIN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\definition.obj" : $(SOURCE) $(DEP_CPP_DEFIN) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1031,7 +1031,7 @@ DEP_CPP_DFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\dfa.obj" : $(SOURCE) $(DEP_CPP_DFA_C) "$(INTDIR)"
 
@@ -1065,7 +1065,7 @@ DEP_CPP_DFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\dfa.obj" : $(SOURCE) $(DEP_CPP_DFA_C) "$(INTDIR)"
 
@@ -1099,7 +1099,7 @@ DEP_CPP_DFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\dfa.obj" : $(SOURCE) $(DEP_CPP_DFA_C) "$(INTDIR)"
 
@@ -1133,12 +1133,12 @@ DEP_CPP_DFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\dfa.obj" : $(SOURCE) $(DEP_CPP_DFA_C) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1155,7 +1155,7 @@ DEP_CPP_LMPRI=\
 	".\smkList.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lmprintf.obj" : $(SOURCE) $(DEP_CPP_LMPRI) "$(INTDIR)"
 
@@ -1182,7 +1182,7 @@ DEP_CPP_LMPRI=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lmprintf.obj" : $(SOURCE) $(DEP_CPP_LMPRI) "$(INTDIR)"
 
@@ -1209,7 +1209,7 @@ DEP_CPP_LMPRI=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lmprintf.obj" : $(SOURCE) $(DEP_CPP_LMPRI) "$(INTDIR)"
 
@@ -1236,12 +1236,12 @@ DEP_CPP_LMPRI=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lmprintf.obj" : $(SOURCE) $(DEP_CPP_LMPRI) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1269,7 +1269,7 @@ DEP_CPP_LOOKA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lookahead.obj" : $(SOURCE) $(DEP_CPP_LOOKA) "$(INTDIR)"
 
@@ -1294,7 +1294,7 @@ DEP_CPP_LOOKA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lookahead.obj" : $(SOURCE) $(DEP_CPP_LOOKA) "$(INTDIR)"
 
@@ -1319,7 +1319,7 @@ DEP_CPP_LOOKA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lookahead.obj" : $(SOURCE) $(DEP_CPP_LOOKA) "$(INTDIR)"
 
@@ -1344,12 +1344,12 @@ DEP_CPP_LOOKA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\lookahead.obj" : $(SOURCE) $(DEP_CPP_LOOKA) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1369,7 +1369,7 @@ DEP_CPP_MAP_C=\
 	".\smk_i.h"\
 	".\smkCommon.h"\
 	".\smkList.h"\
-	
+
 
 "$(INTDIR)\map.obj" : $(SOURCE) $(DEP_CPP_MAP_C) "$(INTDIR)"
 
@@ -1400,7 +1400,7 @@ DEP_CPP_MAP_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\map.obj" : $(SOURCE) $(DEP_CPP_MAP_C) "$(INTDIR)"
 
@@ -1431,7 +1431,7 @@ DEP_CPP_MAP_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\map.obj" : $(SOURCE) $(DEP_CPP_MAP_C) "$(INTDIR)"
 
@@ -1462,12 +1462,12 @@ DEP_CPP_MAP_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\map.obj" : $(SOURCE) $(DEP_CPP_MAP_C) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1486,7 +1486,7 @@ DEP_CPP_NAME_=\
 	".\smk_i.h"\
 	".\smkCommon.h"\
 	".\smkList.h"\
-	
+
 
 "$(INTDIR)\name.obj" : $(SOURCE) $(DEP_CPP_NAME_) "$(INTDIR)"
 
@@ -1516,7 +1516,7 @@ DEP_CPP_NAME_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\name.obj" : $(SOURCE) $(DEP_CPP_NAME_) "$(INTDIR)"
 
@@ -1546,7 +1546,7 @@ DEP_CPP_NAME_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\name.obj" : $(SOURCE) $(DEP_CPP_NAME_) "$(INTDIR)"
 
@@ -1576,12 +1576,12 @@ DEP_CPP_NAME_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\name.obj" : $(SOURCE) $(DEP_CPP_NAME_) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1615,7 +1615,7 @@ DEP_CPP_NFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfa.obj" : $(SOURCE) $(DEP_CPP_NFA_C) "$(INTDIR)"
 
@@ -1646,7 +1646,7 @@ DEP_CPP_NFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfa.obj" : $(SOURCE) $(DEP_CPP_NFA_C) "$(INTDIR)"
 
@@ -1677,7 +1677,7 @@ DEP_CPP_NFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfa.obj" : $(SOURCE) $(DEP_CPP_NFA_C) "$(INTDIR)"
 
@@ -1708,12 +1708,12 @@ DEP_CPP_NFA_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfa.obj" : $(SOURCE) $(DEP_CPP_NFA_C) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1742,7 +1742,7 @@ DEP_CPP_NFAS_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfas.obj" : $(SOURCE) $(DEP_CPP_NFAS_) "$(INTDIR)"
 
@@ -1768,7 +1768,7 @@ DEP_CPP_NFAS_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfas.obj" : $(SOURCE) $(DEP_CPP_NFAS_) "$(INTDIR)"
 
@@ -1794,7 +1794,7 @@ DEP_CPP_NFAS_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfas.obj" : $(SOURCE) $(DEP_CPP_NFAS_) "$(INTDIR)"
 
@@ -1820,12 +1820,12 @@ DEP_CPP_NFAS_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\nfas.obj" : $(SOURCE) $(DEP_CPP_NFAS_) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1841,7 +1841,7 @@ DEP_CPP_PACK_=\
 	".\name.h"\
 	".\pack.h"\
 	".\smk_i.h"\
-	
+
 
 "$(INTDIR)\pack.obj" : $(SOURCE) $(DEP_CPP_PACK_) "$(INTDIR)"
 
@@ -1854,7 +1854,7 @@ DEP_CPP_PACK_=\
 	".\name.h"\
 	".\pack.h"\
 	".\smk_i.h"\
-	
+
 
 "$(INTDIR)\pack.obj" : $(SOURCE) $(DEP_CPP_PACK_) "$(INTDIR)"
 
@@ -1867,7 +1867,7 @@ DEP_CPP_PACK_=\
 	".\name.h"\
 	".\pack.h"\
 	".\smk_i.h"\
-	
+
 
 "$(INTDIR)\pack.obj" : $(SOURCE) $(DEP_CPP_PACK_) "$(INTDIR)"
 
@@ -1880,12 +1880,12 @@ DEP_CPP_PACK_=\
 	".\name.h"\
 	".\pack.h"\
 	".\smk_i.h"\
-	
+
 
 "$(INTDIR)\pack.obj" : $(SOURCE) $(DEP_CPP_PACK_) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -1918,7 +1918,7 @@ DEP_CPP_RULE_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\rule.obj" : $(SOURCE) $(DEP_CPP_RULE_) "$(INTDIR)"
 
@@ -1948,7 +1948,7 @@ DEP_CPP_RULE_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\rule.obj" : $(SOURCE) $(DEP_CPP_RULE_) "$(INTDIR)"
 
@@ -1978,7 +1978,7 @@ DEP_CPP_RULE_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\rule.obj" : $(SOURCE) $(DEP_CPP_RULE_) "$(INTDIR)"
 
@@ -2008,12 +2008,12 @@ DEP_CPP_RULE_=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\rule.obj" : $(SOURCE) $(DEP_CPP_RULE_) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2045,7 +2045,7 @@ DEP_CPP_SCANN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\scanner.obj" : $(SOURCE) $(DEP_CPP_SCANN) "$(INTDIR)"
 
@@ -2074,7 +2074,7 @@ DEP_CPP_SCANN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\scanner.obj" : $(SOURCE) $(DEP_CPP_SCANN) "$(INTDIR)"
 
@@ -2103,7 +2103,7 @@ DEP_CPP_SCANN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\scanner.obj" : $(SOURCE) $(DEP_CPP_SCANN) "$(INTDIR)"
 
@@ -2132,12 +2132,12 @@ DEP_CPP_SCANN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\scanner.obj" : $(SOURCE) $(DEP_CPP_SCANN) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2169,7 +2169,7 @@ DEP_CPP_SCREE=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\screen.obj" : $(SOURCE) $(DEP_CPP_SCREE) "$(INTDIR)"
 
@@ -2198,7 +2198,7 @@ DEP_CPP_SCREE=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\screen.obj" : $(SOURCE) $(DEP_CPP_SCREE) "$(INTDIR)"
 
@@ -2227,7 +2227,7 @@ DEP_CPP_SCREE=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\screen.obj" : $(SOURCE) $(DEP_CPP_SCREE) "$(INTDIR)"
 
@@ -2256,12 +2256,12 @@ DEP_CPP_SCREE=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\screen.obj" : $(SOURCE) $(DEP_CPP_SCREE) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2282,7 +2282,7 @@ DEP_CPP_SET_C=\
 	".\smkCommon.h"\
 	".\smkList.h"\
 	".\smkScan.h"\
-	
+
 
 "$(INTDIR)\set.obj" : $(SOURCE) $(DEP_CPP_SET_C) "$(INTDIR)"
 
@@ -2314,7 +2314,7 @@ DEP_CPP_SET_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\set.obj" : $(SOURCE) $(DEP_CPP_SET_C) "$(INTDIR)"
 
@@ -2346,7 +2346,7 @@ DEP_CPP_SET_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\set.obj" : $(SOURCE) $(DEP_CPP_SET_C) "$(INTDIR)"
 
@@ -2378,12 +2378,12 @@ DEP_CPP_SET_C=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\set.obj" : $(SOURCE) $(DEP_CPP_SET_C) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2395,7 +2395,7 @@ DEP_CPP_SMALL=\
 	".\smalloc.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 !IF  "$(CFG)" == "smk - Win32 Release"
 
@@ -2421,7 +2421,7 @@ DEP_CPP_SMALL=\
 "$(INTDIR)\smalloc.obj" : $(SOURCE) $(DEP_CPP_SMALL) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2465,7 +2465,7 @@ DEP_CPP_SMK_C=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smk.obj" : $(SOURCE) $(DEP_CPP_SMK_C) "$(INTDIR)"
 
@@ -2506,7 +2506,7 @@ DEP_CPP_SMK_C=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smk.obj" : $(SOURCE) $(DEP_CPP_SMK_C) "$(INTDIR)"
 
@@ -2547,7 +2547,7 @@ DEP_CPP_SMK_C=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smk.obj" : $(SOURCE) $(DEP_CPP_SMK_C) "$(INTDIR)"
 
@@ -2588,12 +2588,12 @@ DEP_CPP_SMK_C=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smk.obj" : $(SOURCE) $(DEP_CPP_SMK_C) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2628,7 +2628,7 @@ DEP_CPP_SMKER=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkErr.obj" : $(SOURCE) $(DEP_CPP_SMKER) "$(INTDIR)"
 
@@ -2660,7 +2660,7 @@ DEP_CPP_SMKER=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkErr.obj" : $(SOURCE) $(DEP_CPP_SMKER) "$(INTDIR)"
 
@@ -2692,7 +2692,7 @@ DEP_CPP_SMKER=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkErr.obj" : $(SOURCE) $(DEP_CPP_SMKER) "$(INTDIR)"
 
@@ -2724,12 +2724,12 @@ DEP_CPP_SMKER=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkErr.obj" : $(SOURCE) $(DEP_CPP_SMKER) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2743,7 +2743,7 @@ DEP_CPP_SMKLI=\
 	".\smkCommon.h"\
 	".\smkList.h"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkList.obj" : $(SOURCE) $(DEP_CPP_SMKLI) "$(INTDIR)"
 
@@ -2769,7 +2769,7 @@ DEP_CPP_SMKLI=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkList.obj" : $(SOURCE) $(DEP_CPP_SMKLI) "$(INTDIR)"
 
@@ -2795,7 +2795,7 @@ DEP_CPP_SMKLI=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkList.obj" : $(SOURCE) $(DEP_CPP_SMKLI) "$(INTDIR)"
 
@@ -2821,12 +2821,12 @@ DEP_CPP_SMKLI=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkList.obj" : $(SOURCE) $(DEP_CPP_SMKLI) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -2862,7 +2862,7 @@ DEP_CPP_SMKPA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkParse.obj" : $(SOURCE) $(DEP_CPP_SMKPA) "$(INTDIR)"
 
@@ -2895,7 +2895,7 @@ DEP_CPP_SMKPA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkParse.obj" : $(SOURCE) $(DEP_CPP_SMKPA) "$(INTDIR)"
 
@@ -2928,7 +2928,7 @@ DEP_CPP_SMKPA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkParse.obj" : $(SOURCE) $(DEP_CPP_SMKPA) "$(INTDIR)"
 
@@ -2961,12 +2961,12 @@ DEP_CPP_SMKPA=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkParse.obj" : $(SOURCE) $(DEP_CPP_SMKPA) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3001,7 +3001,7 @@ DEP_CPP_SMKPAS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkPaSema.obj" : $(SOURCE) $(DEP_CPP_SMKPAS) "$(INTDIR)"
 
@@ -3033,7 +3033,7 @@ DEP_CPP_SMKPAS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkPaSema.obj" : $(SOURCE) $(DEP_CPP_SMKPAS) "$(INTDIR)"
 
@@ -3065,7 +3065,7 @@ DEP_CPP_SMKPAS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkPaSema.obj" : $(SOURCE) $(DEP_CPP_SMKPAS) "$(INTDIR)"
 
@@ -3097,12 +3097,12 @@ DEP_CPP_SMKPAS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkPaSema.obj" : $(SOURCE) $(DEP_CPP_SMKPAS) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3136,7 +3136,7 @@ DEP_CPP_SMKSC=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScan.obj" : $(SOURCE) $(DEP_CPP_SMKSC) "$(INTDIR)"
 
@@ -3167,7 +3167,7 @@ DEP_CPP_SMKSC=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScan.obj" : $(SOURCE) $(DEP_CPP_SMKSC) "$(INTDIR)"
 
@@ -3198,7 +3198,7 @@ DEP_CPP_SMKSC=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScan.obj" : $(SOURCE) $(DEP_CPP_SMKSC) "$(INTDIR)"
 
@@ -3229,12 +3229,12 @@ DEP_CPP_SMKSC=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScan.obj" : $(SOURCE) $(DEP_CPP_SMKSC) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3268,7 +3268,7 @@ DEP_CPP_SMKSCS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScSema.obj" : $(SOURCE) $(DEP_CPP_SMKSCS) "$(INTDIR)"
 
@@ -3299,7 +3299,7 @@ DEP_CPP_SMKSCS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScSema.obj" : $(SOURCE) $(DEP_CPP_SMKSCS) "$(INTDIR)"
 
@@ -3330,7 +3330,7 @@ DEP_CPP_SMKSCS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScSema.obj" : $(SOURCE) $(DEP_CPP_SMKSCS) "$(INTDIR)"
 
@@ -3361,12 +3361,12 @@ DEP_CPP_SMKSCS=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\smkScSema.obj" : $(SOURCE) $(DEP_CPP_SMKSCS) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3380,7 +3380,7 @@ DEP_CPP_TIME_=\
 	".\time.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\time.obj" : $(SOURCE) $(DEP_CPP_TIME_) "$(INTDIR)"
 
@@ -3391,7 +3391,7 @@ DEP_CPP_TIME_=\
 	".\time.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\time.obj" : $(SOURCE) $(DEP_CPP_TIME_) "$(INTDIR)"
 
@@ -3402,7 +3402,7 @@ DEP_CPP_TIME_=\
 	".\time.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\time.obj" : $(SOURCE) $(DEP_CPP_TIME_) "$(INTDIR)"
 
@@ -3413,12 +3413,12 @@ DEP_CPP_TIME_=\
 	".\time.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\time.obj" : $(SOURCE) $(DEP_CPP_TIME_) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3446,7 +3446,7 @@ DEP_CPP_TOKEN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\token.obj" : $(SOURCE) $(DEP_CPP_TOKEN) "$(INTDIR)"
 
@@ -3471,7 +3471,7 @@ DEP_CPP_TOKEN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\token.obj" : $(SOURCE) $(DEP_CPP_TOKEN) "$(INTDIR)"
 
@@ -3496,7 +3496,7 @@ DEP_CPP_TOKEN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\token.obj" : $(SOURCE) $(DEP_CPP_TOKEN) "$(INTDIR)"
 
@@ -3521,12 +3521,12 @@ DEP_CPP_TOKEN=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\token.obj" : $(SOURCE) $(DEP_CPP_TOKEN) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3554,7 +3554,7 @@ DEP_CPP_ACTIO=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\action.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
 
@@ -3579,7 +3579,7 @@ DEP_CPP_ACTIO=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\action.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
 
@@ -3604,7 +3604,7 @@ DEP_CPP_ACTIO=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\action.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
 
@@ -3629,12 +3629,12 @@ DEP_CPP_ACTIO=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\action.obj" : $(SOURCE) $(DEP_CPP_ACTIO) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3668,7 +3668,7 @@ DEP_CPP_VOCAB=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\vocabulary.obj" : $(SOURCE) $(DEP_CPP_VOCAB) "$(INTDIR)"
 
@@ -3699,7 +3699,7 @@ DEP_CPP_VOCAB=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\vocabulary.obj" : $(SOURCE) $(DEP_CPP_VOCAB) "$(INTDIR)"
 
@@ -3730,7 +3730,7 @@ DEP_CPP_VOCAB=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\vocabulary.obj" : $(SOURCE) $(DEP_CPP_VOCAB) "$(INTDIR)"
 
@@ -3761,12 +3761,12 @@ DEP_CPP_VOCAB=\
 	".\vocabulary.h"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\vocabulary.obj" : $(SOURCE) $(DEP_CPP_VOCAB) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -3804,7 +3804,7 @@ DEP_CPP_WRITE=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\write.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
 
@@ -3839,7 +3839,7 @@ DEP_CPP_WRITE=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\write.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
 
@@ -3874,7 +3874,7 @@ DEP_CPP_WRITE=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\write.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
 
@@ -3909,12 +3909,12 @@ DEP_CPP_WRITE=\
 	{$(INCLUDE)}"\sys\STAT.H"\
 	{$(INCLUDE)}"\sys\TYPES.H"\
 	{$(INCLUDE)}"\TIME.H"\
-	
+
 
 "$(INTDIR)\write.obj" : $(SOURCE) $(DEP_CPP_WRITE) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # End Target

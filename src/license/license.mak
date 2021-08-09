@@ -6,7 +6,7 @@
 !IF "$(CFG)" == ""
 CFG=license - Win32 AMOS Debug
 !MESSAGE No configuration specified.  Defaulting to license - Win32 AMOS Debug.
-!ENDIF 
+!ENDIF
 
 !IF "$(CFG)" != "license - Win32 Release" && "$(CFG)" !=\
  "license - Win32 Debug" && "$(CFG)" != "license - Win32 AMOS Debug" && "$(CFG)"\
@@ -14,24 +14,24 @@ CFG=license - Win32 AMOS Debug
 !MESSAGE Invalid configuration "$(CFG)" specified.
 !MESSAGE You can specify a configuration when running NMAKE on this makefile
 !MESSAGE by defining the macro CFG on the command line.  For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "license.mak" CFG="license - Win32 AMOS Debug"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "license - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "license - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "license - Win32 AMOS Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "license - Win32 AMOS Release" (based on "Win32 (x86) Static Library")
-!MESSAGE 
+!MESSAGE
 !ERROR An invalid configuration is specified.
-!ENDIF 
+!ENDIF
 
 !IF "$(OS)" == "Windows_NT"
 NULL=
-!ELSE 
+!ELSE
 NULL=nul
-!ENDIF 
+!ENDIF
 ################################################################################
 # Begin Project
 # PROP Target_Last_Scanned "license - Win32 Debug"
@@ -54,7 +54,7 @@ INTDIR=.\bin
 
 ALL : "$(OUTDIR)\license.lib"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\licenseClient.obj"
 	-@erase "$(INTDIR)\passwd.obj"
 	-@erase "$(INTDIR)\readParam.obj"
@@ -69,19 +69,19 @@ CLEAN :
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /YX /c
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS"\
- /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c 
+ /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c
 CPP_OBJS=.\bin/
 CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc"
 BSC32_SBRS= \
-	
+
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)/license.lib" 
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)/license.lib"
 LIB32_OBJS= \
 	"$(INTDIR)\licenseClient.obj" \
 	"$(INTDIR)\passwd.obj" \
@@ -109,7 +109,7 @@ INTDIR=.\bin
 
 ALL : "$(OUTDIR)\license.lib"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\licenseClient.obj"
 	-@erase "$(INTDIR)\passwd.obj"
 	-@erase "$(INTDIR)\readParam.obj"
@@ -124,19 +124,19 @@ CLEAN :
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /YX /c
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS"\
- /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c 
+ /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c
 CPP_OBJS=.\bin/
 CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc"
 BSC32_SBRS= \
-	
+
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)/license.lib" 
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)/license.lib"
 LIB32_OBJS= \
 	"$(INTDIR)\licenseClient.obj" \
 	"$(INTDIR)\passwd.obj" \
@@ -164,7 +164,7 @@ INTDIR=.\license_
 
 ALL : ".\license.lib"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\licenseClient.obj"
 	-@erase "$(INTDIR)\passwd.obj"
 	-@erase "$(INTDIR)\readParam.obj"
@@ -176,19 +176,19 @@ CLEAN :
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AMOSDEV" /YX /c
 CPP_PROJ=/nologo /MLd /W3 /GX /Z7 /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D\
- "_AMOSDEV" /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c 
+ "_AMOSDEV" /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c
 CPP_OBJS=.\license_/
 CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc"
 BSC32_SBRS= \
-	
+
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo /out:"license.lib"
-LIB32_FLAGS=/nologo /out:"license.lib" 
+LIB32_FLAGS=/nologo /out:"license.lib"
 LIB32_OBJS= \
 	"$(INTDIR)\licenseClient.obj" \
 	"$(INTDIR)\passwd.obj" \
@@ -216,7 +216,7 @@ INTDIR=.\license0
 
 ALL : "$(OUTDIR)\license.lib"
 
-CLEAN : 
+CLEAN :
 	-@erase "$(INTDIR)\licenseClient.obj"
 	-@erase "$(INTDIR)\passwd.obj"
 	-@erase "$(INTDIR)\readParam.obj"
@@ -228,19 +228,19 @@ CLEAN :
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /YX /c
 # ADD CPP /nologo /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AMOSDEV" /YX /c
 CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D\
- "_AMOSDEV" /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c 
+ "_AMOSDEV" /Fp"$(INTDIR)/license.pch" /YX /Fo"$(INTDIR)/" /c
 CPP_OBJS=.\license0/
 CPP_SBRS=.\.
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
-BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc" 
+BSC32_FLAGS=/nologo /o"$(OUTDIR)/license.bsc"
 BSC32_SBRS= \
-	
+
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
-LIB32_FLAGS=/nologo /out:"$(OUTDIR)/license.lib" 
+LIB32_FLAGS=/nologo /out:"$(OUTDIR)/license.lib"
 LIB32_OBJS= \
 	"$(INTDIR)\licenseClient.obj" \
 	"$(INTDIR)\passwd.obj" \
@@ -251,25 +251,25 @@ LIB32_OBJS= \
   $(LIB32_FLAGS) $(DEF_FLAGS) $(LIB32_OBJS)
 <<
 
-!ENDIF 
+!ENDIF
 
 .c{$(CPP_OBJS)}.obj:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cpp{$(CPP_OBJS)}.obj:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cxx{$(CPP_OBJS)}.obj:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .c{$(CPP_SBRS)}.sbr:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cpp{$(CPP_SBRS)}.sbr:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 .cxx{$(CPP_SBRS)}.sbr:
-   $(CPP) $(CPP_PROJ) $<  
+   $(CPP) $(CPP_PROJ) $<
 
 ################################################################################
 # Begin Target
@@ -287,7 +287,7 @@ LIB32_OBJS= \
 
 !ELSEIF  "$(CFG)" == "license - Win32 AMOS Release"
 
-!ENDIF 
+!ENDIF
 
 ################################################################################
 # Begin Source File
@@ -296,7 +296,7 @@ SOURCE=.\readParam.c
 DEP_CPP_READP=\
 	".\common.h"\
 	".\readParam.h"\
-	
+
 
 !IF  "$(CFG)" == "license - Win32 Release"
 
@@ -322,7 +322,7 @@ DEP_CPP_READP=\
 "$(INTDIR)\readParam.obj" : $(SOURCE) $(DEP_CPP_READP) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -331,7 +331,7 @@ DEP_CPP_READP=\
 SOURCE=.\passwd.c
 DEP_CPP_PASSW=\
 	".\passwd.h"\
-	
+
 
 !IF  "$(CFG)" == "license - Win32 Release"
 
@@ -357,7 +357,7 @@ DEP_CPP_PASSW=\
 "$(INTDIR)\passwd.obj" : $(SOURCE) $(DEP_CPP_PASSW) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 ################################################################################
@@ -371,7 +371,7 @@ DEP_CPP_LICEN=\
 	".\passwd.h"\
 	".\readParam.h"\
 	{$(INCLUDE)}"\sys\types.h"\
-	
+
 
 !IF  "$(CFG)" == "license - Win32 Release"
 
@@ -397,7 +397,7 @@ DEP_CPP_LICEN=\
 "$(INTDIR)\licenseClient.obj" : $(SOURCE) $(DEP_CPP_LICEN) "$(INTDIR)"
 
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # End Target

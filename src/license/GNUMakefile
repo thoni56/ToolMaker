@@ -11,7 +11,7 @@
 # NOTE: This file is intended for use on HP ONLY. It does NOT support
 #       any other platform. Use gmake on this file.
 #
-# 
+#
 
 ROOT		= /home/projects/ToolMaker
 RELEASEROOT	= $(ROOT)
@@ -40,7 +40,7 @@ LDFLAGS		= -static
 #LDFLAGS	= -lnsl -L/usr/local/lib/4.1.2
 
 SERVEROBJECTS	= license_rpc_svc.o readParam.o passwd.o version.o \
-		  common.o licenseServer.o 
+		  common.o licenseServer.o
 CLIENTOBJECTS	= client.o
 PASSWDOBJECTS	= getpasswd.o passwd.o version.o
 LICENSEOBJECTS	= licenseClient.o readParam.o passwd.o common.o
@@ -48,7 +48,7 @@ VERSIONSRCS	= licenseServer.c readParam.c passwd.c \
 		  client.c getpasswd.c licenseClient.c common.c
 VERSIONOBJECTS	= ${VERSIONSRCS:.c=.o}
 
-# Set CFLAGS to default value. It is set to specific values in the 
+# Set CFLAGS to default value. It is set to specific values in the
 # debug and purify targets.
 
 CFLAGS		= -O4 $(CQ) $(INCLUDE)
@@ -65,7 +65,7 @@ debug:
 
 all: licenseobj
 
-purify: 
+purify:
 	$(MAKE) CFLAGS='-g $(CQ) $(INCLUDE)' -f GNUMakefile purify_server purify_client
 
 clean:

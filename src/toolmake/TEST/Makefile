@@ -39,7 +39,7 @@ af: $(OBJECTS)
 	$(CC) -o $@ $(CFLAGS) $(OBJECTS) $(LDFLAGS)
 
 #--
-ToolMaker: .pmkstamp .smkstamp .lmkstamp 
+ToolMaker: .pmkstamp .smkstamp .lmkstamp
 
 .pmkstamp: af.pmk af.tmk
 	$(PMK) af
