@@ -1,10 +1,10 @@
-/* system.c					Date: 1993-05-24/reibert@roo
+/* system.c                                     Date: 1993-05-24/reibert@roo
 
-	system -- toolmake (System Specific)
+        system -- toolmake (System Specific)
 
-	Written by Reibert Arbring, SoftLab ab.
+        Written by Reibert Arbring, SoftLab ab.
 
-	Copyright (c) 1988, 1989, 1993 SoftLab ab.
+        Copyright (c) 1988, 1989, 1993 SoftLab ab.
 
 */
 #include <stdio.h>
@@ -30,7 +30,7 @@
 
 #include "system.h"
 
-PUBLIC char *targetOS = 
+PUBLIC char *targetOS =
 #ifdef sun
     "SunOS"
 #else
@@ -79,7 +79,7 @@ PRIVATE char* getFileName(name)
     char *name;
 {
     char newName[256], *fileName;
-    
+
     strcpy(newName, name);
 #ifdef vms
     if ( (fileName= strrchr(newName, ']')) != NULL ) fileName++;
@@ -101,7 +101,7 @@ PRIVATE char* getPathName(name)
     char *name;
 {
     char newName[256], *fileName;
-    
+
     strcpy(newName, name);
 #ifdef vms
     if ( (fileName= strrchr(newName, ']')) != NULL ) fileName++;
@@ -119,13 +119,13 @@ PRIVATE char* getPathName(name)
 /* -- Memory allocation -- */
 
 PUBLIC void *new(sz, cp)
-    unsigned long sz;		/* bytes */
+    unsigned long sz;           /* bytes */
     void *cp;
-{				/* Allocate and check a trunc of memory */
+{                               /* Allocate and check a trunc of memory */
     char *n;
 
     if ( (n=(char *)malloc(sz)) == NULL)
-	perr('S', "malloc", "out of memory");
+        perr('S', "malloc", "out of memory");
     if (cp) memcpy(n, cp, sz);
     else memset(n, 0, sz);
     return n;
@@ -134,7 +134,7 @@ PUBLIC void *new(sz, cp)
 
 PUBLIC char *newString(s)
     char *s;
-{				/* Get a fresh copy of a string */
+{                               /* Get a fresh copy of a string */
     char *n;
     int len;
 
@@ -152,9 +152,9 @@ PUBLIC char *strip(s)
     int i;
 
     if (s!=NULL) {
-	i= strlen(s)-1;
-	while (i>=0 && s[i]<=' ') --i;
-	s[i+1]= '\0';
+        i= strlen(s)-1;
+        while (i>=0 && s[i]<=' ') --i;
+        s[i+1]= '\0';
     }
     return s;
 }
@@ -168,7 +168,7 @@ PUBLIC char *strupr(s)
     for (u=s; *u; u++) *u= TOUPPER(*u);
     return s;
 }
- 
+
 
 PUBLIC char *strlwr(s)
     char *s;
@@ -178,7 +178,7 @@ PUBLIC char *strlwr(s)
     for (u=s; *u; u++) *u= TOLOWER(*u);
     return s;
 }
- 
+
 
 PUBLIC char *makePathName(dir, file)
     char *dir;
@@ -187,19 +187,19 @@ PUBLIC char *makePathName(dir, file)
     char buf[512];
 
     if (dir) {
-	strcpy(buf, dir);
+        strcpy(buf, dir);
 #ifndef vms
 #ifdef WIN32
-	if (*dir) strcat(buf, "\\");
+        if (*dir) strcat(buf, "\\");
 #else
-	if (*dir) strcat(buf, "/");
+        if (*dir) strcat(buf, "/");
 #endif
 #endif
     } else
-	buf[0]= 0;
+        buf[0]= 0;
     strcat(buf, file);
     return newString(buf);
-}    
+}
 
 
 PUBLIC int getFileList(pn, fl)
@@ -223,10 +223,10 @@ PUBLIC int getFileList(pn, fl)
     ndsc.dsc$b_dtype   = DSC$K_DTYPE_T;
     ndsc.dsc$b_class   = DSC$K_CLASS_S;
 
-    rdsc.dsc$a_pointer 	= buf;
-    rdsc.dsc$w_length  	= 256;
-    rdsc.dsc$b_dtype   	= DSC$K_DTYPE_T;
-    rdsc.dsc$b_class   	= DSC$K_CLASS_S;
+    rdsc.dsc$a_pointer  = buf;
+    rdsc.dsc$w_length   = 256;
+    rdsc.dsc$b_dtype    = DSC$K_DTYPE_T;
+    rdsc.dsc$b_class    = DSC$K_CLASS_S;
     buf[0]= 0;
 #else
     strcpy(buf, "ls -1d ");
@@ -237,16 +237,16 @@ PUBLIC int getFileList(pn, fl)
 
 #ifdef vms
     while (LIB$FIND_FILE(&ndsc, &rdsc, &context, 0,0,0, &flag)==RMS$_NORMAL) {
-	pos= strchr(buf, ' ');	/* Remove trailing spaces */
-	if (pos!=NULL) *pos=0;
+        pos= strchr(buf, ' ');  /* Remove trailing spaces */
+        if (pos!=NULL) *pos=0;
 #else
     while (fgets(buf, 256, ls)!=NULL) {
-	strip(buf);		/* Remove trailing \n */
+        strip(buf);             /* Remove trailing \n */
 #endif
 #ifdef DBG
         perr('D', "Found file", buf);
 #endif
-	tmp[found++]= newString(buf); /* Should check found<256 */
+        tmp[found++]= newString(buf); /* Should check found<256 */
     }
     tmp[found++]= NULL;
 #ifdef vms
@@ -341,12 +341,12 @@ PUBLIC int imp(va_alist)
     farg = va_arg(ap, char *);
 #endif
     sprintf(args, "imp '-s_D(\"%s\")' '-s_T(\"%s\")' %s",
-	    getDate(0), getTime(0), farg?farg:"");
+            getDate(0), getTime(0), farg?farg:"");
     for (;;) {
-	this= va_arg(ap, char *);
-	if (!this) break;
-	strcat(args, " ");
-	strcat(args, this);
+        this= va_arg(ap, char *);
+        if (!this) break;
+        strcat(args, " ");
+        strcat(args, this);
     }
     va_end (ap);
     dperr("CALLING", args);

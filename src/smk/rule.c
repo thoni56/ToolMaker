@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/rule.c,v 1.1 2002/06/25 20:04:48 Thomas Nilsson Exp $
@@ -28,22 +28,22 @@
 #include "smalloc.h"
 #include "smkList.h"
 #include "smk_i.h"
- 
-Code ruleCodes=0;		/* ALL rules share the same internal code numbers */
+
+Code ruleCodes=0;   /* ALL rules share the same internal code numbers */
 
 Rule ruleGet(Rule rule, Code code)
 {
-  for(;rule;rule=rule->next) 
+  for(;rule;rule=rule->next)
     if(rule->code==code) return rule;
   return 0;
-}  
+}
 
 Rule rulePredefined(Rule rule, Name name)
 {
-  for(;rule;rule=rule->next) 
+  for(;rule;rule=rule->next)
     if(rule->type==rulePREDEF && rule->token && rule->token->name==name) return rule;
   return 0;
-}  
+}
 
 Rule ruleNew(Rule* rules)
 {
@@ -98,12 +98,12 @@ void ruleCopy(Rule to, Rule from)
 void ruleDump(Rule rule)
 {
   printf("    %%RULE code=%3d   name='%s'   type=%s   AST=%s   lookahead=%s   action=%s\n",
-	 rule->code,
-	 rule->token ? rule->token->name : "<<<NIL>>>",
-	 rule->type==ruleMATCH ? "MATCH" : rule->type==ruleSKIP ? "SKIP" : rule->type==ruleUNDEF ? "UNDEFINED" : rule->type==rulePREDEF ? "PREDEFINED" : "<<<NIL>>>",
-	 rule->ast ? "YES" : "NO",
-	 rule->lookahead ? "YES" : "NO",
-	 rule->action ? "YES" : "NO");	 
+   rule->code,
+   rule->token ? rule->token->name : "<<<NIL>>>",
+   rule->type==ruleMATCH ? "MATCH" : rule->type==ruleSKIP ? "SKIP" : rule->type==ruleUNDEF ? "UNDEFINED" : rule->type==rulePREDEF ? "PREDEFINED" : "<<<NIL>>>",
+   rule->ast ? "YES" : "NO",
+   rule->lookahead ? "YES" : "NO",
+   rule->action ? "YES" : "NO");
 }
 
 void rulePrint()
@@ -111,18 +111,18 @@ void rulePrint()
   Vocabulary vocabulary;
   Scanner scanner;
   Rule rule;
-  
+
   for(vocabulary=vocabularies;vocabulary;vocabulary=vocabulary->next)
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       smkSkipLines(getNumOpt(HEIGHT_OPT)-6);
       lmPrintf("Scanner %3d: %s::%s\n", scanner->code, vocabulary->name, scanner->name);
       for(rule=scanner->rules;rule;rule=rule->next) {
-	if(rule->token->code==codeSKIP)
-	  lmPrintf("    %3d SKIP %-15s\t= ",rule->code, rule->token->name);
-	else
-	  lmPrintf("    %3d %4d %-15s\t= ",rule->code, rule->token->code, rule->token->name);
-	astPrint(rule->ast);
-	lmPrintf("\n");
+  if(rule->token->code==codeSKIP)
+    lmPrintf("    %3d SKIP %-15s\t= ",rule->code, rule->token->name);
+  else
+    lmPrintf("    %3d %4d %-15s\t= ",rule->code, rule->token->code, rule->token->name);
+  astPrint(rule->ast);
+  lmPrintf("\n");
       }
     }
 }

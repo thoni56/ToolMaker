@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-07-11
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/smalloc.c,v 1.1 2002/06/25 20:04:51 Thomas Nilsson Exp $
@@ -23,7 +23,7 @@
  *
  * Revision 1.1  91/01/10  13:52:39  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -38,7 +38,7 @@ char *smalloc(unsigned int size)
 
 
   buffer=(char *)malloc(size);
-  if(buffer==NULL) 
+  if(buffer==NULL)
     fprintf(stderr,"\n\t241 F : Out of Memory\n"),exit(1);
   return buffer;
 }
@@ -46,7 +46,7 @@ char *smalloc(unsigned int size)
 char *srealloc(char *buffer, unsigned int size)
 {
   buffer=(char *)realloc(buffer,size);
-  if(buffer==NULL) 
+  if(buffer==NULL)
     fprintf(stderr,"\n\t241 F : Out of Memory\n"),exit(1);
   return buffer;
 }

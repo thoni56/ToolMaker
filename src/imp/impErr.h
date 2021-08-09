@@ -11,8 +11,7 @@ typedef unsigned int UByte4;
 
 #define MaxTokens 3
 
-extern void impRPoi();	/* Error recovery - restart point  */
-extern void impISym();	/* Error recovery - insert symbol  */
-extern void impDSym();	/* Error recovery - delete symbol  */
-extern void impMess();	/* Error recovery - error message  */
-
+extern void impRPoi();  /* Error recovery - restart point  */
+extern void impISym();  /* Error recovery - insert symbol  */
+extern void impDSym();  /* Error recovery - delete symbol  */
+extern void impMess();  /* Error recovery - error message  */

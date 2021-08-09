@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-27
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/write.h,v 1.1 2002/06/25 20:05:05 Thomas Nilsson Exp $
@@ -27,7 +27,7 @@
  *
  * Revision 1.1  91/01/10  10:36:19  tools
  * Initial revision
- * 
+ *
  *
  */
 

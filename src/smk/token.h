@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/token.h,v 1.1 2002/06/25 20:05:02 Thomas Nilsson Exp $
@@ -36,12 +36,12 @@ typedef struct Token *Token;
  */
 
 typedef struct Token {
-  TmkSrcp srcp;			/* The token source position */
-  Name name;			/* The token name */
-  Code code;			/* The tokens external code */
-  Vocabulary vocabulary;	/* The vocabulary which the token is defined in */
-  Bool defined;			/* Is the token defined */
-  Bool screening;		/* Is screening enabled for token (temporary, reset for each scanner and transfered to rule) */
+  TmkSrcp srcp;           /* The token source position */
+  Name name;              /* The token name */
+  Code code;              /* The tokens external code */
+  Vocabulary vocabulary;  /* The vocabulary which the token is defined in */
+  Bool defined;           /* Is the token defined */
+  Bool screening;         /* Is screening enabled for token (temporary, reset for each scanner and transferred to rule) */
   Token next;
 } TokenItem;
 

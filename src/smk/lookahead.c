@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-17/tools@lion
  * CREATED: 1990-06-21
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/lookahead.c,v 1.1 2002/06/25 20:04:44 Thomas Nilsson Exp $
@@ -26,7 +26,7 @@
  *
  * Revision 1.1  91/01/10  13:35:24  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -41,11 +41,11 @@ Lookahead lookaheadRoot=NULL;
 static Lookahead lookaheadEnd=NULL;
 
 Lookahead lookaheadPut(rule,astPrefix,lengthPrefix,astSuffix,lengthSuffix)
-     Rule rule;
-     AST astPrefix;
-     short lengthPrefix;
-     AST astSuffix;
-     short lengthSuffix;
+    Rule rule;
+    AST astPrefix;
+    short lengthPrefix;
+    AST astSuffix;
+    short lengthSuffix;
 {
   Lookahead lookahead;
 

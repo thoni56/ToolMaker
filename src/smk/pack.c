@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1991-01-10
- * 
+ *
  * SoftLab ab (c) 1991
  *
  * $Header: /Repository/ToolMaker/src/smk/pack.c,v 1.1 2002/06/25 20:04:48 Thomas Nilsson Exp $
@@ -23,7 +23,7 @@
  *
  * Revision 1.1  91/01/10  13:38:36  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -94,11 +94,11 @@ int packMatrix(Pack matrix)
       result=packGCS();
       if(result!=0) return result;
       for(row1=0,row2=0;row1<LESrows;row1++)
-	if(pack->LESdetRow[row1]<0)
-	  LESrow[row1]=pack->LESorGCSrow[row2++];
+  if(pack->LESdetRow[row1]<0)
+    LESrow[row1]=pack->LESorGCSrow[row2++];
       for(col1=0,col2=0;col1<LEScols;col1++)
-	if(pack->LESdetCol[col1]<0)
-	  LEScol[col1]=pack->LESorGCScol[col2++];
+  if(pack->LESdetCol[col1]<0)
+    LEScol[col1]=pack->LESorGCScol[col2++];
       free((char *)(pack->LESorGCSrow));
       free((char *)(pack->LESorGCScol));
       pack->LESorGCSrows=LESrows;
@@ -110,14 +110,14 @@ int packMatrix(Pack matrix)
       result=packRDS();
       if(result!=0) return result;
       for(row1=0;row1<pack->LESorGCSrows;row1++)
-	if(pack->LESdetRow[row1]<0)
-	  pack->LESorGCSrow[row1]=pack->RDSbase[pack->LESorGCSrow[row1]];
+  if(pack->LESdetRow[row1]<0)
+    pack->LESorGCSrow[row1]=pack->RDSbase[pack->LESorGCSrow[row1]];
       free((char *)(pack->RDSbase));
       free((char *)(pack->RDScheck));
       pack->RDSbase=NULL;
       pack->RDScheck=NULL;
     }
-      
+
 
 /* fill unused entries in determination vectors */
 
@@ -133,7 +133,7 @@ int packMatrix(Pack matrix)
       result=packRDS();
       if(result!=0) return result;
       for(row1=0;row1<pack->LESorGCSrows;row1++)
-	pack->LESorGCSrow[row1]=pack->RDSbase[pack->LESorGCSrow[row1]];
+  pack->LESorGCSrow[row1]=pack->RDSbase[pack->LESorGCSrow[row1]];
       free((char *)(pack->RDSbase));
       free((char *)(pack->RDScheck));
       pack->RDSbase=NULL;
@@ -171,13 +171,13 @@ static int packROW()
       m1=pack->matrix[row1];
       pack->ROWrow[row1]=pack->rows;
       for(row2=row1+1;row2<pack->ROWrows;row2++)
-	if(pack->ROWrow[row2]<0) {
-	  m2=pack->matrix[row2];
-	  for(col1=0;col1<pack->cols;col1++)
-	    if(m1[col1]!=m2[col1]) break;
-	  if(col1<pack->cols) continue;
-	  pack->ROWrow[row2]=pack->rows;
-	}
+  if(pack->ROWrow[row2]<0) {
+    m2=pack->matrix[row2];
+    for(col1=0;col1<pack->cols;col1++)
+      if(m1[col1]!=m2[col1]) break;
+    if(col1<pack->cols) continue;
+    pack->ROWrow[row2]=pack->rows;
+  }
       pack->rows++;
     }
 
@@ -186,9 +186,9 @@ static int packROW()
   for(row1=0;row1<pack->ROWrows;row1++)
     if(pack->ROWrow[row1]!=row1) {
       if(pack->matrix[pack->ROWrow[row1]]!=NULL)
-	free((char *)(pack->matrix[row1]));
+  free((char *)(pack->matrix[row1]));
       else
-	pack->matrix[pack->ROWrow[row1]]=pack->matrix[row1];
+  pack->matrix[pack->ROWrow[row1]]=pack->matrix[row1];
       pack->matrix[row1]=NULL;
     }
 
@@ -216,12 +216,12 @@ static int packCOL()
     if(pack->COLcol[col1]<0) {
       pack->COLcol[col1]=pack->cols;
       for(col2=col1+1;col2<pack->COLcols;col2++)
-	if(pack->COLcol[col2]<0) {
-	  for(row1=0;row1<pack->rows;row1++)
-	    if(pack->matrix[row1][col1]!=pack->matrix[row1][col2]) break;
-	  if(row1<pack->rows) continue;
-	  pack->COLcol[col2]=pack->cols;
-	}
+  if(pack->COLcol[col2]<0) {
+    for(row1=0;row1<pack->rows;row1++)
+      if(pack->matrix[row1][col1]!=pack->matrix[row1][col2]) break;
+    if(row1<pack->rows) continue;
+    pack->COLcol[col2]=pack->cols;
+  }
       pack->cols++;
     }
 
@@ -230,7 +230,7 @@ static int packCOL()
   for(row1=0;row1<pack->rows;row1++) {
     for(col1=0;col1<pack->COLcols;col1++)
       if(pack->COLcol[col1]!=col1)
-	pack->matrix[row1][pack->COLcol[col1]]=pack->matrix[row1][col1];
+  pack->matrix[row1][pack->COLcol[col1]]=pack->matrix[row1][col1];
     pack->matrix[row1]=(int *)realloc((char *)(pack->matrix[row1]),(unsigned int)(sizeof(int)*pack->cols));
   }
   return packNoErr;
@@ -254,38 +254,38 @@ static int packERR(int packed)
     pack->ERRcol=(int *)malloc((unsigned int)(sizeof(int)*pack->cols));
     if(pack->ERRrow==NULL || pack->ERRcol==NULL)
       return packErrNoMem;
-    
+
     for(row1=0;row1<pack->rows;row1++) pack->ERRrow[row1]= -1;
     for(col1=0;col1<pack->cols;col1++) pack->ERRcol[col1]= -1;
     pack->ERRrows=0;
     pack->ERRcols=0;
-    
+
     for(col1=0;col1<pack->cols;col1++)
       if(pack->ERRcol[col1]<0) {
-	pack->ERRcol[col1]=pack->ERRcols;
-	for(col2=col1+1;col2<pack->cols;col2++)
-	  if(pack->ERRcol[col2]<0) {
-	    for(row1=0;row1<pack->rows;row1++)
-	      if((pack->matrix[row1][col1]==pack->insign) ==
-		 (pack->matrix[row1][col2]!=pack->insign)) break;
-	    if(row1<pack->rows) continue;
-	    pack->ERRcol[col2]=pack->ERRcols;
-	  }
-	pack->ERRcols++;
+  pack->ERRcol[col1]=pack->ERRcols;
+  for(col2=col1+1;col2<pack->cols;col2++)
+    if(pack->ERRcol[col2]<0) {
+      for(row1=0;row1<pack->rows;row1++)
+        if((pack->matrix[row1][col1]==pack->insign) ==
+     (pack->matrix[row1][col2]!=pack->insign)) break;
+      if(row1<pack->rows) continue;
+      pack->ERRcol[col2]=pack->ERRcols;
+    }
+  pack->ERRcols++;
       }
-		
-    for(row1=0;row1<pack->rows;row1++) 
+
+    for(row1=0;row1<pack->rows;row1++)
       if(pack->ERRrow[row1]<0) {
-	pack->ERRrow[row1]=pack->ERRrows;
-	for(row2=row1+1;row2<pack->rows;row2++)
-	  if(pack->ERRrow[row2]<0) {
-	    for(col1=0;col1<pack->cols;col1++)
-	      if((pack->matrix[row1][col1]==pack->insign) ==
-		 (pack->matrix[row2][col1]!=pack->insign)) break;
-	    if(col1<pack->cols) continue;
-	    pack->ERRrow[row2]=pack->ERRrows;
-	  }
-	pack->ERRrows++;
+  pack->ERRrow[row1]=pack->ERRrows;
+  for(row2=row1+1;row2<pack->rows;row2++)
+    if(pack->ERRrow[row2]<0) {
+      for(col1=0;col1<pack->cols;col1++)
+        if((pack->matrix[row1][col1]==pack->insign) ==
+     (pack->matrix[row2][col1]!=pack->insign)) break;
+      if(col1<pack->cols) continue;
+      pack->ERRrow[row2]=pack->ERRrows;
+    }
+  pack->ERRrows++;
       }
 
     pack->ERRvect=(unsigned char *)malloc((unsigned int)(pack->ERRrows*((pack->ERRcols+7)/8)));
@@ -295,19 +295,19 @@ static int packERR(int packed)
     *ERRptr=0;
     for(row1=0,row2=0;row1<pack->rows;row1++)
       if(pack->ERRrow[row1]==row2) {
-	for(col1=0,col2=0;col1<pack->cols;col1++) 
-	  if(pack->ERRcol[col1]==col2) {
-	    if(pack->matrix[row1][col1]==pack->insign)
-	      *ERRptr|=mask;
-	    mask>>=1;
-	    if(mask==0) {
-	      ERRptr++;
-	      mask=0x80;
-	      *ERRptr=0;
-	    }
-	    col2++;
-	  }
-	row2++;
+  for(col1=0,col2=0;col1<pack->cols;col1++)
+    if(pack->ERRcol[col1]==col2) {
+      if(pack->matrix[row1][col1]==pack->insign)
+        *ERRptr|=mask;
+      mask>>=1;
+      if(mask==0) {
+        ERRptr++;
+        mask=0x80;
+        *ERRptr=0;
+      }
+      col2++;
+    }
+  row2++;
       }
   }
   else {
@@ -323,17 +323,17 @@ static int packERR(int packed)
     *ERRptr=0;
     for(row1=0;row1<pack->rows;row1++) {
       for(col1=0;col1<pack->cols;col1++) {
-	if(pack->matrix[row1][col1]==pack->insign)
-	  *ERRptr|=mask;
-	mask>>=1;
-	if(mask==0) {
-	  ERRptr++;
-	  mask=0x80;
-	  *ERRptr=0;
-	}
+  if(pack->matrix[row1][col1]==pack->insign)
+    *ERRptr|=mask;
+  mask>>=1;
+  if(mask==0) {
+    ERRptr++;
+    mask=0x80;
+    *ERRptr=0;
+  }
       }
     }
-  }  
+  }
   return packNoErr;
 }
 
@@ -361,7 +361,7 @@ static int packLES()
   pack->rows=0;
   pack->cols=0;
   pack->LESscan=0;
-  
+
   for(row1=0;row1<pack->LESorGCSrows;row1++) pack->LESdetRow[row1]= -1;
   for(col1=0;col1<pack->LESorGCScols;col1++) pack->LESdetCol[col1]= -1;
   while(1) {
@@ -371,48 +371,48 @@ static int packLES()
     nomod=1;
     for(row1=0;row1<pack->LESorGCSrows;row1++)
       if(pack->LESdetRow[row1]<0) {
-	value=pack->insign;
-	for(col1=0;col1<pack->LESorGCScols;col1++)
-	  if(pack->matrix[row1][col1]!=pack->insign &&
-	     pack->LESdetCol[col1]<0) break;
-	if(col1<pack->LESorGCScols) {
-	  for(value=pack->matrix[row1][col1];col1<pack->LESorGCScols;col1++)
-	    if(pack->matrix[row1][col1]!=pack->insign &&
-	       pack->matrix[row1][col1]!=value &&
-	       pack->LESdetCol[col1]<0) break;
-	  if(col1<pack->LESorGCScols) continue;
-	}
-	pack->LESdetRow[row1]=pack->LESscan;
-	pack->LESorGCSrow[row1]=value;
-	nomod=0;
+  value=pack->insign;
+  for(col1=0;col1<pack->LESorGCScols;col1++)
+    if(pack->matrix[row1][col1]!=pack->insign &&
+       pack->LESdetCol[col1]<0) break;
+  if(col1<pack->LESorGCScols) {
+    for(value=pack->matrix[row1][col1];col1<pack->LESorGCScols;col1++)
+      if(pack->matrix[row1][col1]!=pack->insign &&
+         pack->matrix[row1][col1]!=value &&
+         pack->LESdetCol[col1]<0) break;
+    if(col1<pack->LESorGCScols) continue;
+  }
+  pack->LESdetRow[row1]=pack->LESscan;
+  pack->LESorGCSrow[row1]=value;
+  nomod=0;
       }
     if(nomod) break;
     pack->LESscan++;
 
 /* check for lonely entries in columns */
-    
+
     nomod=1;
     for(col1=0;col1<pack->LESorGCScols;col1++)
       if(pack->LESdetCol[col1]<0) {
-	value=pack->insign;
-	for(row1=0;row1<pack->LESorGCSrows;row1++)
-	  if(pack->matrix[row1][col1]!=pack->insign &&
-	     pack->LESdetRow[row1]<0) break;
-	if(row1<pack->LESorGCSrows) {
-	  for(value=pack->matrix[row1][col1];row1<pack->LESorGCSrows;row1++)
-	    if(pack->matrix[row1][col1]!=pack->insign &&
-	       pack->matrix[row1][col1]!=value &&
-	       pack->LESdetRow[row1]<0) break;
-	  if(row1<pack->LESorGCSrows) continue;
-	}
-	pack->LESdetCol[col1]=pack->LESscan;
-	pack->LESorGCScol[col1]=value;
-	nomod=0;
+  value=pack->insign;
+  for(row1=0;row1<pack->LESorGCSrows;row1++)
+    if(pack->matrix[row1][col1]!=pack->insign &&
+       pack->LESdetRow[row1]<0) break;
+  if(row1<pack->LESorGCSrows) {
+    for(value=pack->matrix[row1][col1];row1<pack->LESorGCSrows;row1++)
+      if(pack->matrix[row1][col1]!=pack->insign &&
+         pack->matrix[row1][col1]!=value &&
+         pack->LESdetRow[row1]<0) break;
+    if(row1<pack->LESorGCSrows) continue;
+  }
+  pack->LESdetCol[col1]=pack->LESscan;
+  pack->LESorGCScol[col1]=value;
+  nomod=0;
       }
     if(nomod) break;
     pack->LESscan++;
   }
-  
+
 /* fill unused entris in row/column vectors */
 
   for(row1=0;row1<pack->LESorGCSrows;row1++) if(pack->LESdetRow[row1]<0) pack->LESorGCSrow[row1]=pack->rows++;
@@ -423,8 +423,8 @@ static int packLES()
   for(row1=0;row1<pack->LESorGCSrows;row1++) {
     if(pack->LESdetRow[row1]<0) {
       if(pack->LESorGCSrow[row1]!=row1) {
-	pack->matrix[pack->LESorGCSrow[row1]]=pack->matrix[row1];
-	pack->matrix[row1]=NULL;
+  pack->matrix[pack->LESorGCSrow[row1]]=pack->matrix[row1];
+  pack->matrix[row1]=NULL;
       }
     }
     else {
@@ -435,9 +435,9 @@ static int packLES()
   for(row1=0;row1<pack->rows;row1++) {
     for(col1=0;col1<pack->LESorGCScols;col1++)
       if(pack->LESdetCol[col1]<0)
-	if(pack->LESorGCScol[col1]!=col1){
-	  pack->matrix[row1][pack->LESorGCScol[col1]]=pack->matrix[row1][col1];
-	}
+  if(pack->LESorGCScol[col1]!=col1){
+    pack->matrix[row1][pack->LESorGCScol[col1]]=pack->matrix[row1][col1];
+  }
     pack->matrix[row1]=(int *)realloc((char *)(pack->matrix[row1]),(unsigned int)(sizeof(int)*pack->cols));
   }
   return packNoErr;
@@ -476,20 +476,20 @@ static int packGCS()
     map[row1]= -1;
     for(row2=row1+1;row2<pack->rows;row2++)
       if(size[row1]<size[row2]) {
-	tmp=size[row1];
-	size[row1]=size[row2];
-	size[row2]=tmp;
-	tmp=pack->LESorGCSrow[row1];
-	pack->LESorGCSrow[row1]=pack->LESorGCSrow[row2];
-	pack->LESorGCSrow[row2]=tmp;
-	m1=pack->matrix[row1];
-	pack->matrix[row1]=pack->matrix[row2];
-	pack->matrix[row2]=m1;
+  tmp=size[row1];
+  size[row1]=size[row2];
+  size[row2]=tmp;
+  tmp=pack->LESorGCSrow[row1];
+  pack->LESorGCSrow[row1]=pack->LESorGCSrow[row2];
+  pack->LESorGCSrow[row2]=tmp;
+  m1=pack->matrix[row1];
+  pack->matrix[row1]=pack->matrix[row2];
+  pack->matrix[row2]=m1;
       }
   }
 
 /* Pack the table */
-	
+
   pack->LESorGCSrows=pack->rows;
   pack->rows=0;
 
@@ -498,21 +498,21 @@ static int packGCS()
       map[row1]=pack->rows;
       m1=pack->matrix[row1];
       for(row2=row1+1;row2<pack->LESorGCSrows;row2++)
-	if(map[row2]<0) {
-	  m2=pack->matrix[row2];
-	  for(col1=0;col1<pack->cols;col1++)
-	    if(m1[col1]!=pack->insign &&
-	       m2[col1]!=pack->insign &&
-	       m1[col1]!=m2[col1]) break;
-	  if(col1<pack->cols) continue;
-	  map[row2]=pack->rows;
-	  for(col1=0;col1<pack->cols;col1++)
-	    if(m1[col1]==pack->insign) m1[col1]=m2[col1];
-	  free((char *)(m2));
-	  pack->matrix[row2]=NULL;
-	}
+  if(map[row2]<0) {
+    m2=pack->matrix[row2];
+    for(col1=0;col1<pack->cols;col1++)
+      if(m1[col1]!=pack->insign &&
+         m2[col1]!=pack->insign &&
+         m1[col1]!=m2[col1]) break;
+    if(col1<pack->cols) continue;
+    map[row2]=pack->rows;
+    for(col1=0;col1<pack->cols;col1++)
+      if(m1[col1]==pack->insign) m1[col1]=m2[col1];
+    free((char *)(m2));
+    pack->matrix[row2]=NULL;
+  }
       if(pack->rows!=row1)
-	pack->matrix[pack->rows]=pack->matrix[row1];
+  pack->matrix[pack->rows]=pack->matrix[row1];
       pack->rows++;
     }
 
@@ -549,22 +549,22 @@ static int packGCS()
     map[col1]= -1;
     for(col2=col1+1;col2<pack->cols;col2++)
       if(size[col1]<size[col2]) {
-	tmp=size[col1];
-	size[col1]=size[col2];
-	size[col2]=tmp;
-	tmp=pack->LESorGCScol[col1];
-	pack->LESorGCScol[col1]=pack->LESorGCScol[col2];
-	pack->LESorGCScol[col2]=tmp;
-	for(row1=0;row1<pack->rows;row1++) {
-	  tmp=pack->matrix[row1][col1];
-	  pack->matrix[row1][col1]=pack->matrix[row1][col2];
-	  pack->matrix[row1][col2]=tmp;
-	}
+  tmp=size[col1];
+  size[col1]=size[col2];
+  size[col2]=tmp;
+  tmp=pack->LESorGCScol[col1];
+  pack->LESorGCScol[col1]=pack->LESorGCScol[col2];
+  pack->LESorGCScol[col2]=tmp;
+  for(row1=0;row1<pack->rows;row1++) {
+    tmp=pack->matrix[row1][col1];
+    pack->matrix[row1][col1]=pack->matrix[row1][col2];
+    pack->matrix[row1][col2]=tmp;
+  }
       }
   }
 
 /* Pack the table */
-	
+
   pack->LESorGCScols=pack->cols;
   pack->cols=0;
 
@@ -572,25 +572,25 @@ static int packGCS()
     if(map[col1]<0) {
       map[col1]=pack->cols;
       for(col2=col1+1;col2<pack->LESorGCScols;col2++)
-	if(map[col2]<0) {
-	  for(row1=0;row1<pack->rows;row1++) {
-	    m1=pack->matrix[row1];
-	    if(m1[col1]!=pack->insign &&
-	       m1[col2]!=pack->insign &&
-	       m1[col1]!=m1[col2]) break;
-	  }
-	  if(row1<pack->rows) continue;
-	  map[col2]=pack->cols;
-	  for(row1=0;row1<pack->rows;row1++) {
-	    m1=pack->matrix[row1];
-	    if(m1[col1]==pack->insign) m1[col1]=m1[col2];
-	  }
-	}
+  if(map[col2]<0) {
+    for(row1=0;row1<pack->rows;row1++) {
+      m1=pack->matrix[row1];
+      if(m1[col1]!=pack->insign &&
+         m1[col2]!=pack->insign &&
+         m1[col1]!=m1[col2]) break;
+    }
+    if(row1<pack->rows) continue;
+    map[col2]=pack->cols;
+    for(row1=0;row1<pack->rows;row1++) {
+      m1=pack->matrix[row1];
+      if(m1[col1]==pack->insign) m1[col1]=m1[col2];
+    }
+  }
       if(pack->cols!=col1)
-	for(row1=0;row1<pack->rows;row1++) {
-	  m1=pack->matrix[row1];
-	  m1[pack->cols]=m1[col1];
-	}
+  for(row1=0;row1<pack->rows;row1++) {
+    m1=pack->matrix[row1];
+    m1[pack->cols]=m1[col1];
+  }
       pack->cols++;
     }
 
@@ -632,7 +632,7 @@ static int packRDS()
   /* are processed first */
 
   for(row1=0;row1<pack->rows;row1++) {
-    size[row1]=0;		/* Temporary use of pack->RDSbase as size */
+    size[row1]=0;   /* Temporary use of pack->RDSbase as size */
     for(col1=0;col1<pack->cols;col1++)
       if(pack->matrix[row1][col1]!=pack->insign) size[row1]++;
     index[row1]=row1;
@@ -640,20 +640,20 @@ static int packRDS()
   for(row1=0;row1<pack->rows;row1++)
     for(row2=row1+1;row2<pack->rows;row2++)
       if(size[row1]<size[row2]) {
-	/* swap size and index entries using col1 (!) */
-	col1=size[row1];
-	size[row1]=size[row2];
-	size[row2]=col1;
-	col1=index[row1];
-	index[row1]=index[row2];
-	index[row2]=col1;
+  /* swap size and index entries using col1 (!) */
+  col1=size[row1];
+  size[row1]=size[row2];
+  size[row2]=col1;
+  col1=index[row1];
+  index[row1]=index[row2];
+  index[row2]=col1;
       }
 
 /* Create the RDS value vector and base vector */
 
   pack->RDScheckLen=0;
   for(row1=pack->rows*pack->cols;row1-->0;) vect[row1]=0;
-  for(row1=0;row1<pack->rows;row1++) { 
+  for(row1=0;row1<pack->rows;row1++) {
 /* use index[row1] instead of row1 to use sorted rows */
     int *m;
     int col2;
@@ -669,10 +669,10 @@ static int packRDS()
     for(;;col1++) {
       for(;vect[col1];col1++);
       for(col3=col2,col4=col1;col3<=cols;col3++,col4++)
-	if(vect[col4] && m[col3]!=pack->insign) break;
+  if(vect[col4] && m[col3]!=pack->insign) break;
       if(col3<=cols) continue;
       for(col3=col2,col4=col1;col3<=cols;col3++,col4++)
-	if(m[col3]!=pack->insign) vect[col4]=1;
+  if(m[col3]!=pack->insign) vect[col4]=1;
       pack->RDSbase[index[row1]]=col1-col2;
       if(pack->RDScheckLen<col1-col2) pack->RDScheckLen=col1-col2;
       break;
@@ -691,8 +691,8 @@ static int packRDS()
   for(row1=0;row1<pack->rows;row1++) {
     for(col1=0;col1<pack->cols;col1++)
       if(vect[pack->RDSbase[row1]+col1] && pack->matrix[row1][col1]!=pack->insign) {
-	pack->RDSvector[pack->RDSbase[row1]+col1]=pack->matrix[row1][col1];
-	pack->RDScheck[pack->RDSbase[row1]+col1]=row1;
+  pack->RDSvector[pack->RDSbase[row1]+col1]=pack->matrix[row1][col1];
+  pack->RDScheck[pack->RDSbase[row1]+col1]=row1;
       }
     free((char *)(pack->matrix[row1]));
   }
@@ -700,7 +700,7 @@ static int packRDS()
   pack->RDSvectorLen++;
   free((char *)(vect));
   free((char *)(pack->matrix));
-  pack->matrix=NULL;  
+  pack->matrix=NULL;
   pack->cols=0;
   return packNoErr;
 }

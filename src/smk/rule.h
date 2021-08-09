@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/rule.h,v 1.1 2002/06/25 20:04:49 Thomas Nilsson Exp $
@@ -36,20 +36,20 @@ typedef struct Rule *Rule;
 typedef enum {ruleMATCH, ruleSKIP, rulePREDEF, ruleUNDEF} RuleType;
 
 /*
- * UNIQUE KEY: code 
+ * UNIQUE KEY: code
  */
 
 typedef struct Rule {
-  TmkSrcp srcp;			/* The rules source position */
-  Code code;			/* The rule's internal code */
-  Token token;			/* The rule's external token */
-  Scanner scanner;		/* The scanner which the rule is defined in */
-  RuleType type;		/* The type of the rule */
-  Bool screening;		/* Per rule screening flag */
-  Bool screens;			/* Is true if this rule screens another rule */
-  AST ast;			/* The rule */
-  Lookahead lookahead;		/* The rules lookahead */
-  Action action;		/* The rule's action */
+  TmkSrcp srcp;         /* The rules source position */
+  Code code;            /* The rule's internal code */
+  Token token;          /* The rule's external token */
+  Scanner scanner;      /* The scanner which the rule is defined in */
+  RuleType type;        /* The type of the rule */
+  Bool screening;       /* Per rule screening flag */
+  Bool screens;         /* Is true if this rule screens another rule */
+  AST ast;              /* The rule */
+  Lookahead lookahead;  /* The rules lookahead */
+  Action action;        /* The rule's action */
   Rule next;
 } RuleItem;
 

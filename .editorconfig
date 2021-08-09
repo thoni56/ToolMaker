@@ -14,6 +14,22 @@ insert_final_newline = true
 indent_style = tab
 
 
+## C Source Files
+#################
+[*.{c,h}]
+indent_style = space
+indent_size = unset
+end_of_line = unset
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+; C-style doc comments:
+block_comment_start = /*
+block_comment = *
+block_comment_end = */
+
+
 ## Shell Scripts
 ################
 [*.sh]

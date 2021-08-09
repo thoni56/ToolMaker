@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1993-08-20
- * 
+ *
  * SoftLab ab (c) 1993
  */
 
@@ -24,7 +24,7 @@ int main(int argc, char **argv)
   int users;
   char *host;
   long hostid;
-  
+
 
   if(argc!=7) fprintf(stderr,"usage: %s year month day users host hostid\n",*argv),exit(1);
   year=atoi(argv[1]);
@@ -49,10 +49,10 @@ int main(int argc, char **argv)
   tm->tm_year+=1900;
   tm->tm_mon++;
   if(tm->tm_year > year ||
-     (tm->tm_year == year &&
-      (tm->tm_mon > month ||
-       (tm->tm_mon == month && tm->tm_mday > day))))
-    fprintf(stderr,"%s: the given date, %d-%02d-%02d, is out of date\n",*argv,year,month,day);
+    (tm->tm_year == year &&
+    (tm->tm_mon > month ||
+    (tm->tm_mon == month && tm->tm_mday > day))))
+      fprintf(stderr,"%s: the given date, %d-%02d-%02d, is out of date\n",*argv,year,month,day);
 
   printf("DATE = %d-%d-%d\n",year,month,day);
   printf("USERS = %d\n",users);
@@ -63,4 +63,4 @@ int main(int argc, char **argv)
   return 0;
 }
 
-  
+

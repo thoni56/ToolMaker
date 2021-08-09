@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-17
- * 
+ *
  * SoftLab ab (c) 1990-1993
  *
  * $Header: /Repository/ToolMaker/src/smk/screen.h,v 1.1 2002/06/25 20:04:50 Thomas Nilsson Exp $
@@ -16,7 +16,7 @@
  * Explicit register allocation removed.
  *
  * Revision 1.2  1993/04/23  11:12:48  tools
- * Totaly rewritten to correctly handle vocabularies and rules.
+ * Totally rewritten to correctly handle vocabularies and rules.
  *
  * Revision 1.1  1993/03/24  09:24:47  tools
  * Ursprunglig version av smk testsvit
@@ -26,7 +26,7 @@
  *
  * Revision 1.1  91/01/10  12:23:15  tools
  * Initial revision
- * 
+ *
  *
  */
 

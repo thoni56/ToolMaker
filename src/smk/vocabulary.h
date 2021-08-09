@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/vocabulary.h,v 1.1 2002/06/25 20:05:04 Thomas Nilsson Exp $
@@ -41,10 +41,10 @@ typedef struct Vocabulary *Vocabulary;
 
 typedef struct Vocabulary {
   TmkSrcp srcp;
-  Name name;			/* The vocabulary name */
-  Bool external;		/* Vocabulary defined in vocabulary file */
-  Token tokens;			/* The tokens in the vocabulary */
-  Scanner scanners;		/* The scanners in the vocabulary */
+  Name name;            /* The vocabulary name */
+  Bool external;        /* Vocabulary defined in vocabulary file */
+  Token tokens;         /* The tokens in the vocabulary */
+  Scanner scanners;     /* The scanners in the vocabulary */
   Vocabulary next;
 } VocabularyItem;
 

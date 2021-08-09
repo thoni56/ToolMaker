@@ -87,79 +87,79 @@ typedef struct AstItem *Ast;
 /*================================ Statement nodes ==================================*/
 typedef struct Ast_SeqItem *Ast_Seq;
 typedef struct Ast_SeqItem {
-  Ast seq;			/* Sequence of nodes */
+  Ast seq;                      /* Sequence of nodes */
 } Ast_SeqItem;
 
 typedef struct Ast_TextItem *Ast_Text;
 typedef struct Ast_TextItem {
-  char *text;			/* Character string */
-  int length;			/* Length of text */
+  char *text;                   /* Character string */
+  int length;                   /* Length of text */
 } Ast_TextItem;
 
 typedef struct Ast_KeepItem *Ast_Keep;
 typedef struct Ast_KeepItem {
-  char *text;			/* Character string */
-  int length;			/* Length of text */
+  char *text;                   /* Character string */
+  int length;                   /* Length of text */
 } Ast_KeepItem;
 
 typedef struct Ast_AssignItem *Ast_Assign;
 typedef struct Ast_AssignItem {
-  Ast ident;			/* Identifier to assign a value list */
-  Ast expression;		/* Value list to assign ident */
+  Ast ident;                    /* Identifier to assign a value list */
+  Ast expression;               /* Value list to assign ident */
 } Ast_AssignItem;
 
 typedef struct Ast_AppendItem *Ast_Append;
 typedef struct Ast_AppendItem {
-  Ast ident;			/* Identifier to assign a value list */
-  Ast expression;		/* Value list to assign ident */
+  Ast ident;                    /* Identifier to assign a value list */
+  Ast expression;               /* Value list to assign ident */
 } Ast_AppendItem;
 
 typedef struct Ast_EvalItem *Ast_Eval;
 typedef struct Ast_EvalItem {
-  Ast expression;		/* Expression to evaluate */
-  char *trailingBlanks;		/* Text string containing trailing blanks */
+  Ast expression;               /* Expression to evaluate */
+  char *trailingBlanks;         /* Text string containing trailing blanks */
 } Ast_EvalItem;
 
 typedef struct Ast_RegionItem *Ast_Region;
 typedef struct Ast_RegionItem {
-  Ast beginId;			/* Identifier at BEGIN */
-  Ast params;			/* Parameters */
-  Ast locals;			/* Local variables */
-  Ast statement;		/* Statements inside region */
-  Ast endId;			/* Identifier at END */
+  Ast beginId;                  /* Identifier at BEGIN */
+  Ast params;                   /* Parameters */
+  Ast locals;                   /* Local variables */
+  Ast statement;                /* Statements inside region */
+  Ast endId;                    /* Identifier at END */
 } Ast_RegionItem;
 
 typedef struct Ast_IfItem *Ast_If;
 typedef struct Ast_IfItem {
-  Ast condition;		/* Boolean condition */
-  Ast then_clause;		/* Statements in THEN-clause */
-  Ast else_clause;		/* Statements in ELSE-clause (could be %%ELSIF) */
+  Ast condition;                /* Boolean condition */
+  Ast then_clause;              /* Statements in THEN-clause */
+  Ast else_clause;              /* Statements in ELSE-clause (could be %%ELSIF) */
 } Ast_IfItem;
 
 typedef struct Ast_ElsifItem *Ast_Elsif;
 typedef struct Ast_ElsifItem {
-  Ast condition;		/* Boolean condition */
-  Ast then_clause;		/* Statements in THEN-clause */
-  Ast else_clause;		/* Statements in ELSE-clause (could be %%ELSIF) */
+  Ast condition;                /* Boolean condition */
+  Ast then_clause;              /* Statements in THEN-clause */
+  Ast else_clause;              /* Statements in ELSE-clause (could be %%ELSIF) */
 } Ast_ElsifItem;
 
 typedef struct Ast_LoopItem *Ast_Loop;
 typedef struct Ast_LoopItem {
-  Ast beginId;			/* Identifier at BEGIN */
-  Ast expression;		/* Loop expression */
-  Ast statement;		/* Statement inside loop */
-  Ast endId;			/* Identifier at END */
+  Ast beginId;                  /* Identifier at BEGIN */
+  Ast expression;               /* Loop expression */
+  Ast statement;                /* Statement inside loop */
+  Ast endId;                    /* Identifier at END */
 } Ast_LoopItem;
 
 typedef struct Ast_MessageItem *Ast_Message;
 typedef struct Ast_MessageItem {
-  Ast expression;		/* Expression to print on stderr */
+  Ast expression;               /* Expression to print on stderr */
 } Ast_MessageItem;
 
 typedef struct Ast_ExitItem *Ast_Exit;
 typedef struct Ast_ExitItem {
-  Ast expression1;		/* Expression to use as arg to exit() */
-  Ast expression2;		/* Expression to print on stderr */
+  Ast expression1;              /* Expression to use as arg to exit() */
+  Ast expression2;              /* Expression to print on stderr */
 } Ast_ExitItem;
 
 /*================================ Condition nodes ==================================*/
@@ -298,17 +298,17 @@ typedef struct Ast_StrlenItem {
 /*================================ Not yet implemented nodes ========================*/
 typedef struct Ast_IncludeItem *Ast_Include;
 typedef struct Ast_IncludeItem {
-  Ast ident;			/* Region identifier */
-  Ast expression;		/* Parameter values */
-  char *trailingBlanks;		/* Text string containing trailing blanks */
+  Ast ident;                    /* Region identifier */
+  Ast expression;               /* Parameter values */
+  char *trailingBlanks;         /* Text string containing trailing blanks */
 } Ast_IncludeItem;
 
 typedef struct Ast_ProcessItem *Ast_Process;
 typedef struct Ast_ProcessItem {
-  Ast infile;			/* Input file name ast */
-  Ast outfile;			/* Output file name ast */
-  ImpBoolean silent;		/* Process file silently */
-  char *trailingBlanks;		/* Text string containing trailing blanks */
+  Ast infile;                   /* Input file name ast */
+  Ast outfile;                  /* Output file name ast */
+  ImpBoolean silent;            /* Process file silently */
+  char *trailingBlanks;         /* Text string containing trailing blanks */
 } Ast_ProcessItem;
 
 typedef struct Ast_GetItem *Ast_Get;
@@ -446,7 +446,7 @@ typedef struct SrcpListItem {
 typedef struct InputFileListItem {
   SrcpList pSrcp;
   char* fileName;
-  Ast astroot;			/* Ast for this input file */
+  Ast astroot;                  /* Ast for this input file */
   ImpBoolean processed;
   int noProcStm;
   InputFileList next;

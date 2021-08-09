@@ -9,8 +9,8 @@
 #include "smalloc.h"
 #include "smkList.h"
 
-static ASTItem astEOT_item;	/* Dummy */
-static ASTItem astUNKNOWN_item;	/* Dummy */
+static ASTItem astEOT_item;     /* Dummy */
+static ASTItem astUNKNOWN_item; /* Dummy */
 
 AST astEOT=&astEOT_item;
 AST astUNKNOWN=&astUNKNOWN_item;

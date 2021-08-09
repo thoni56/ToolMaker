@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-21
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/dfa.h,v 1.1 2002/06/25 20:04:43 Thomas Nilsson Exp $
@@ -27,7 +27,7 @@
  *
  * Revision 1.1  91/01/10  12:22:58  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -45,15 +45,15 @@ typedef struct DFA *DFA;
  */
 
 typedef struct DFA {
-  int node;			/* Node number */
-  DFA *transition;		/* Transisition vector to other nodes */
-  NFAs closure;			/* DFA closure (key) */
-  Rule accept;			/* Accepting rule for this DFA node */
-  int set;			/* Used when optimizing  */
-  DFA list;			/* Also used when optimizing */
+  int node;             /* Node number */
+  DFA *transition;      /* Transisition vector to other nodes */
+  NFAs closure;         /* DFA closure (key) */
+  Rule accept;          /* Accepting rule for this DFA node */
+  int set;              /* Used when optimizing  */
+  DFA list;             /* Also used when optimizing */
   DFA next;
 } DFAItem;
-  
+
 extern DFA dfaRoot;
 extern int dfaSize;
 

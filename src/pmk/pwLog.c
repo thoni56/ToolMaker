@@ -1,17 +1,17 @@
 /*-----------------------------------------------------------------------------
  * pwLog - Pretty printing routines for log file
- *		@(#)pwLog.c	1.4 (91/04/03 14:18:58)
+ *      @(#)pwLog.c 1.4 (91/04/03 14:18:58)
  *-----------------------------------------------------------------------------
- * Created:	89-09-15 by Tom
- * Modified:	90-07-03 by Yngve. Better formatting in LogInputStats.
- *				Added 'Escape' output, fixed bug in "number of
- *				Semantic Actions" output.
- *		90-11-06 by Yngve. Removed all references to divFactor.
- *		91-04-02 by Yngve. Removed logging of action numbers
- *				 on pwsLog.
+ * Created:     89-09-15 by Tom
+ * Modified:    90-07-03 by Yngve. Better formatting in LogInputStats.
+ *                                 Added 'Escape' output, fixed bug in
+ *                                 "number of Semantic Actions" output.
+ *              90-11-06 by Yngve. Removed all references to divFactor.
+ *              91-04-02 by Yngve. Removed logging of action numbers
+ *                                 on pwsLog.
  *-----------------------------------------------------------------------------
  * Entries:
- *	?????
+ *  ?????
  *-----------------------------------------------------------------------------
  */
 
@@ -26,9 +26,9 @@
 #include <ctype.h>
 
 
-static int tTabSize;		/* Size of t-table */
-static int ntsTabSize;		/* Size of nts-table */
-static int vocTabSize;		/* Size of voc-table */
+static int tTabSize;    /* Size of t-table */
+static int ntsTabSize;  /* Size of nts-table */
+static int vocTabSize;  /* Size of voc-table */
 
 
 /*-----------------------------------------------------------------------------
@@ -36,8 +36,8 @@ static int vocTabSize;		/* Size of voc-table */
  *-----------------------------------------------------------------------------
  */
 int logOptList(file, opt)
-FILE *file;			/* IN the file to write to (log or table) */
-OptTabKind opt;			/* IN option to print*/
+FILE *file;             /* IN the file to write to (log or table) */
+OptTabKind opt;         /* IN option to print*/
 {
     int i = 0, j = 0, optCnt = 0;
 
@@ -119,9 +119,9 @@ void logInputStats()
  *-----------------------------------------------------------------------------
  */
 void logRule(file, rule, escChar)
-FILE *file;			/* IN the file to write to (log or table) */
-int rule;			/* IN the rule number to write */
-char escChar;			/* IN the escape character for '%' if any */
+FILE *file;             /* IN the file to write to (log or table) */
+int rule;               /* IN the rule number to write */
+char escChar;           /* IN the escape character for '%' if any */
 {
     int lhs, rsize, len, i, j;
     char *name;
@@ -258,17 +258,17 @@ void logGrammar()
  *-----------------------------------------------------------------------------
  */
 void logItemSet(state, firstCall)
-int state;			/* IN state number */
-Boolean firstCall;		/* IN first call? */
+int state;              /* IN state number */
+Boolean firstCall;      /* IN first call? */
 {
-    int lnPos;			/* Current line position */
-    int tLnPos;			/* Temporary line position */
-    int firstItem;		/* First item number */
-    int lastItem;		/* Last item number */
-    int symLen;			/* Length of symbol */
-    int i, j, k;		/* for loop variables */
-    prod_rec *prodRef;		/* Temporary production reference */
-    sym_ref symRef;		/* Temporary symbol reference */
+    int lnPos;          /* Current line position */
+    int tLnPos;         /* Temporary line position */
+    int firstItem;      /* First item number */
+    int lastItem;       /* Last item number */
+    int symLen;         /* Length of symbol */
+    int i, j, k;        /* for loop variables */
+    prod_rec *prodRef;  /* Temporary production reference */
+    sym_ref symRef;     /* Temporary symbol reference */
 
     if (firstCall) {
     fprintf(pwsLog, "\f%60s\n\n\n",
@@ -377,7 +377,7 @@ void logParseTables()
     int ent;
     int act;
     int arg;
-    int i, j;			/* Loop index */
+    int i, j;           /* Loop index */
 
     if (((getSetOpt(LIST_OPT))>>3 & 1) != 0) {
     /* Start with the Action Table */
@@ -511,10 +511,10 @@ void logGeStats()
      * ----------
      */
     vocTabSize = termCnt *
-        (nrBytes(tc_val) +	/* Scanner code value */
-         nrBytes(icostMax) + /* Insertion cost */
-         nrBytes(dcostMax) + /* Deletion cost */
-         2 * pointerSize);	/* Name and print name pointers */
+        (nrBytes(tc_val) +      /* Scanner code value */
+         nrBytes(icostMax) +    /* Insertion cost */
+         nrBytes(dcostMax) +    /* Deletion cost */
+         2 * pointerSize);      /* Name and print name pointers */
     for (i = 1; i <= termCnt; i++) {
         vocTabSize += strlen(vocabulary[i]->name) + 1;
         if (vocabulary[i]->syminfo.ter_info.psymb) {
@@ -542,7 +542,7 @@ void logGeStats()
  *-----------------------------------------------------------------------------
  */
 static void outputEntry(entry)
-int entry;			/* IN parser action */
+int entry;          /* IN parser action */
 {
     int act, arg;
 
@@ -585,7 +585,7 @@ void logPackedTables()
     int i, j, k;
 
     if (((getSetOpt(LIST_OPT))>>3 & 1) != 0) {
-      /* ACTION table
+    /* ACTION table
      * ------------
      */
     if (actGCS || actLES || actRDS) {
@@ -951,9 +951,9 @@ void logPackStats()
     ntsTabSize -= stateCnt * nonTermCnt * nrBytes(gtoMax);
 
     if (actRDS) {
-        tTabSize += act.RDSvectorLen * nrBytes(actMax); /* Action vector */
+        tTabSize += act.RDSvectorLen * nrBytes(actMax);     /* Action vector */
     } else {
-        tTabSize += act.rows * act.cols * nrBytes(actMax); /* Action tab */
+        tTabSize += act.rows * act.cols * nrBytes(actMax);  /* Action tab */
     }/*if*/
 
     if (actRDS && !(actLES || actGCS)) {
@@ -999,7 +999,7 @@ void logPackStats()
     }/*if*/
 
     if (gtoRDS) {
-        ntsTabSize += gto.RDSvectorLen * nrBytes(gtoMax); /* Goto vector */
+        ntsTabSize += gto.RDSvectorLen * nrBytes(gtoMax);    /* Goto vector */
     } else {
         ntsTabSize += gto.rows * gto.cols * nrBytes(gtoMax); /* Goto tab */
     }/*if*/

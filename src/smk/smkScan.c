@@ -887,9 +887,9 @@ static UByte1 smDFAval[9116]={
  */
 
 static void smSourcePosition(
-     smkScContext smThis,
-     unsigned char *smAt,
-     unsigned char *smEnd)
+    smkScContext smThis,
+    unsigned char *smAt,
+    unsigned char *smEnd)
 {
   if(smThis->smPosContinue<smEnd) {
     if(smThis->smPosContinue>smAt) smAt=smThis->smPosContinue;
@@ -906,9 +906,9 @@ static void smSourcePosition(
 }
 
 static void smRewindSourcePosition(
-     smkScContext smThis,
-     unsigned char *smAt,
-     unsigned char *smEnd)
+    smkScContext smThis,
+    unsigned char *smAt,
+    unsigned char *smEnd)
 {
   if(smThis->smPosContinue>smEnd) return;
   smThis->smNextPosition-=smEnd-smAt;
@@ -928,7 +928,7 @@ static void smRewindSourcePosition(
 /*
  * int smReadBuffer(SMContext smThis)
  *
- * SmThis function reads charcters using the reader into the buffer in a
+ * SmThis function reads characters using the reader into the buffer in a
  * context. The buffer is enlarged if the current buffer is full
  * (smEnd-smText==smSize) or reduced if current buffer is larger than
  * the standard buffer size and the token may fit the standard buffer
@@ -975,7 +975,7 @@ static int smReadBuffer(smkScContext smThis)
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)size+1);
       if(smThis->smBegining==NULL) {
     /* Cut Buffer */
-    smThis->smBegining = begining;	/* Restore to original buffer */
+    smThis->smBegining = begining;  /* Restore to original buffer */
     smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
     memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), (size_t)1024);
     mod=smThis->smEnd-smThis->smBegining-1024;
@@ -1069,8 +1069,8 @@ void smkScDelete(smkScContext smThis)
  */
 
 int smkScSkip(
-     smkScContext smThis,
-     int smLength)
+    smkScContext smThis,
+    int smLength)
 {
   int empty;
 
@@ -1126,10 +1126,10 @@ int smkScModify(
 }
 
 int smkScCopy(
-     smkScContext smThis,
-     unsigned char *smBuffer,
-     unsigned int smFrom,
-     unsigned int smTo)
+    smkScContext smThis,
+    unsigned char *smBuffer,
+    unsigned int smFrom,
+    unsigned int smTo)
 {
   if(smFrom>smThis->smLength) smFrom=smThis->smLength;
   if(smTo>smThis->smLength) smTo=smThis->smLength;
@@ -1138,10 +1138,10 @@ int smkScCopy(
 }
 
 int smkScMapCopy(
-     smkScContext smThis,
-     unsigned char *smBuffer,
-     unsigned int smFrom,
-     unsigned int smTo)
+    smkScContext smThis,
+    unsigned char *smBuffer,
+    unsigned int smFrom,
+    unsigned int smTo)
 {
   int n;
   int len;
@@ -1158,28 +1158,28 @@ int smkScMapCopy(
 }
 
 void smkScScrScanner(
-     smkScScanner smScanner,
-     int smOnOff)
+    smkScScanner smScanner,
+    int smOnOff)
 {
 }
 
 void smkScScrToken(
-     smkScScanner smScanner,
-     int smCode,
-     int smOnOff)
+    smkScScanner smScanner,
+    int smCode,
+    int smOnOff)
 {
 }
 
 void smkScScrRule(
-     smkScScanner smScanner,
-     int smCode,
-     int smOnOff)
+    smkScScanner smScanner,
+    int smCode,
+    int smOnOff)
 {
 }
 
 int smkScan(
-     smkScContext smThis,
-     SmkToken *smToken)
+    smkScContext smThis,
+    SmkToken *smToken)
 {
   unsigned char *at;
   unsigned char *end;
@@ -1189,7 +1189,7 @@ int smkScan(
   int rew_state;
   int code;
 
-  do {				/* Skip loop */
+  do {              /* Skip loop */
     smThis->smLine=smThis->smNextLine;
     smThis->smColumn=smThis->smNextColumn;
     smThis->smPosition=smThis->smNextPosition;
@@ -1200,7 +1200,7 @@ int smkScan(
     smToken->srcp.col=smThis->smNextColumn;
     smThis->smPosPrevLine=smThis->smPosLine;
     rew_at=smThis->smText;
-    do {			/* Continue loop */
+    do {            /* Continue loop */
       rew_state=219;
       rew_at++;
       at=(smThis->smContinue);

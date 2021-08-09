@@ -4,21 +4,21 @@
 #include "lmkCommon.h"
 
 typedef enum lmkScScanner {
-	lmk_MAIN_MAIN_Scanner = 0
+    lmk_MAIN_MAIN_Scanner = 0
 } lmkScScanner;
 
 typedef enum lmk_MAIN_ScToken {
-	lmk_MAIN_UNKNOWN_Token = 0,
-	lmk_MAIN_ENDOFTEXT_Token = 1,
-	lmk_MAIN_2_Token = 2,
-	lmk_MAIN_NUMBER_Token = 3,
-	lmk_MAIN_STRING_Token = 4,
-	lmk_MAIN_5_Token = 5,
-	lmk_MAIN_SKIPHEADER_Token = 6,
-	lmk_MAIN_IDENTIFIER_Token = 7,
-	lmk_MAIN_8_Token = 8,
-	lmk_MAIN_COMMENT_Token = -1,
-	lmk_MAIN_BLANK_Token = -1
+    lmk_MAIN_UNKNOWN_Token = 0,
+    lmk_MAIN_ENDOFTEXT_Token = 1,
+    lmk_MAIN_2_Token = 2,
+    lmk_MAIN_NUMBER_Token = 3,
+    lmk_MAIN_STRING_Token = 4,
+    lmk_MAIN_5_Token = 5,
+    lmk_MAIN_SKIPHEADER_Token = 6,
+    lmk_MAIN_IDENTIFIER_Token = 7,
+    lmk_MAIN_8_Token = 8,
+    lmk_MAIN_COMMENT_Token = -1,
+    lmk_MAIN_BLANK_Token = -1
 } lmk_MAIN_ScToken;
 
 

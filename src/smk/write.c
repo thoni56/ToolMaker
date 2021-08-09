@@ -15,7 +15,7 @@
  * Added generation of currentOS so that Scan.imp can use the correct commands
  *
  * Revision 1.15  1997/06/26 11:53:49  hakan
- * <CR><LF> problematiken Âtg‰rdad
+ * <CR><LF> problematiken √•tg√§rdad
  *
  * Revision 1.14  1997/01/22 16:28:32  gunilla
  * Adapted for WIN32
@@ -33,7 +33,7 @@
  *
  * Revision 1.10  1995/01/23  19:18:39  thole
  * - Using SEEK_SET instead of L_SET in call to lseek() since L_SET is
- *   not availible on hp. (SEEK_SET is a newer form of L_SET. Both have
+ *   not available on hp. (SEEK_SET is a newer form of L_SET. Both have
  *   the same value.)
  *
  * Revision 1.9  1993/08/20  11:33:57  tony
@@ -161,15 +161,15 @@ static char *gArrayDelimiter=",";
     "inEscape" and in "outFile" use "outEscape"
  */
 static void smkCopyCode(inFile, pos, length, inEscape, outFile, outEscape)
-     int inFile;		/* File to read code from             */
-     int pos;			/* Position to start read from        */
-     int length;		/* Length of code to read             */
-     char inEscape;		/* Escape character to use in infile  */
-     FILE *outFile;		/* File to write code to              */
-     char outEscape;		/* Escape character to use in outfile */
+    int inFile;         /* File to read code from             */
+    int pos;            /* Position to start read from        */
+    int length;         /* Length of code to read             */
+    char inEscape;      /* Escape character to use in infile  */
+    FILE *outFile;      /* File to write code to              */
+    char outEscape;     /* Escape character to use in outfile */
 {
-  int i;			/* Loop variable              */
-  char ch;			/* Temporary character holder */
+  int i;                /* Loop variable              */
+  char ch;              /* Temporary character holder */
 
   lseek(inFile, pos, 0);
   for (i = 0; i < length; i++) {
@@ -185,10 +185,10 @@ static void smkCopyCode(inFile, pos, length, inEscape, outFile, outEscape)
 }
 
 void writeAll(pack,size,maxsize,unoptsize)
-     Pack pack;
-     int *size;
-     int *maxsize;
-     int unoptsize;
+    Pack pack;
+    int *size;
+    int *maxsize;
+    int unoptsize;
 {
   FILE *fd;
   int aSize, inFile;
@@ -202,7 +202,7 @@ void writeAll(pack,size,maxsize,unoptsize)
   clock=time(0);
   date=(char *)ctime(&clock);
   date[strlen(date)-1]=0;
-     fprintf(fd,"%%%%SET smVersion(\"%s\")\n",product.longHeader);
+    fprintf(fd,"%%%%SET smVersion(\"%s\")\n",product.longHeader);
   target = getStrOpt(SMKTARGET_OPT);
   fprintf(fd, "%%%%SET tmkForce(%d)\n",getBoolOpt(FORCE_OPT) ? 1 : 0);
   fprintf(fd, "%%%%SET tmkOs(\"%s\")\n", getStrOpt(TMKOS_OPT));
@@ -294,9 +294,9 @@ void writeAll(pack,size,maxsize,unoptsize)
  */
 
 static void writeComment(fd,buffer,length)
-     FILE *fd;
-     char *buffer;
-     int length;
+    FILE *fd;
+    char *buffer;
+    int length;
 {
   char *ch;
   char *target;
@@ -338,13 +338,13 @@ static void writeComment(fd,buffer,length)
 }
 
 /*
- * Write code removing escape charaters and quoting %
+ * Write code removing escape characters and quoting %
  */
 
 static void writeCode(fd,buffer,length)
-     FILE *fd;
-     char *buffer;
-     int length;
+    FILE *fd;
+    char *buffer;
+    int length;
 {
   char *ch;
   char brk[3];
@@ -376,9 +376,9 @@ static void writeCode(fd,buffer,length)
  */
 
 static int writeVector(fd,vector,cols)
-     FILE *fd;
-     int *vector;
-     int cols;
+    FILE *fd;
+    int *vector;
+    int cols;
 {
   int col;
   int max;
@@ -402,10 +402,10 @@ static int writeVector(fd,vector,cols)
 }
 
 static int writeMatrix(fd,matrix,rows,cols)
-     FILE *fd;
-     int **matrix;
-     int rows;
-     int cols;
+    FILE *fd;
+    int **matrix;
+    int rows;
+    int cols;
 {
   int row;
   int col;
@@ -435,10 +435,10 @@ static int writeMatrix(fd,matrix,rows,cols)
 }
 
 static int writeMatrixAsVector(fd,matrix,rows,cols)
-     FILE *fd;
-     int **matrix;
-     int rows;
-     int cols;
+    FILE *fd;
+    int **matrix;
+    int rows;
+    int cols;
 {
   int row;
   int col;
@@ -471,8 +471,8 @@ static int writeMatrixAsVector(fd,matrix,rows,cols)
  */
 
 static int writeErrorMatrix(fd,pack)
-     FILE *fd;
-     Pack pack;
+    FILE *fd;
+    Pack pack;
 {
   int size;
   int rows;
@@ -527,8 +527,8 @@ static int writeErrorMatrix(fd,pack)
  */
 
 static int writeDFA(fd, pack)
-     FILE *fd;
-     Pack pack;
+    FILE *fd;
+    Pack pack;
 {
   int size;
   int type;
@@ -807,7 +807,7 @@ static void writeActions(FILE *fd)
 }
 
 static int writeScanner(fd)
-     FILE *fd;
+    FILE *fd;
 {
   Vocabulary vocabulary;
   Scanner scanner;
@@ -831,7 +831,7 @@ static int writeScanner(fd)
 }
 
 static int writeAccept(fd)
-     FILE *fd;
+    FILE *fd;
 {
   DFA dfa;
   int *table;
@@ -856,7 +856,7 @@ static int writeAccept(fd)
 
 
 static int writeRuleCode(fd)
-     FILE *fd;
+    FILE *fd;
 {
   int *table;
   Vocabulary vocabulary;
@@ -909,7 +909,7 @@ static int writeRuleCode(fd)
 }
 
 static int writeMap(fd)
-     FILE *fd;
+    FILE *fd;
 {
   int *table;
   int n;
@@ -935,7 +935,7 @@ static int writeMap(fd)
 }
 
 static int writeLookahead(fd)
-     FILE *fd;
+    FILE *fd;
 {
   int *table;
   Vocabulary vocabulary;
@@ -1019,7 +1019,7 @@ static int writeLookahead(fd)
 }
 
 static int writeScreening(fd)
-     FILE *fd;
+   FILE *fd;
 {
   int type;
   int size;
@@ -1107,7 +1107,7 @@ static int writeScreening(fd)
 }
 
 static void writeVoc(fd)
-     FILE *fd;
+    FILE *fd;
 {
   Vocabulary vocabulary;
   Scanner scanner;
@@ -1178,7 +1178,7 @@ static void writeVoc(fd)
 }
 
 static void writeDebug(fd)
-     FILE *fd;
+    FILE *fd;
 {
   Vocabulary vocabulary;
   Scanner scanner;

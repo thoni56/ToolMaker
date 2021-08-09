@@ -128,7 +128,7 @@ int packMatrix(matrix)
 }
 
 /*
-  This function compress the matrix by finding equivallent rows.
+  This function compress the matrix by finding equivalent rows.
 */
 
 static int packROW()
@@ -139,7 +139,7 @@ static int packROW()
   register int *m1;
   register int *m2;
 
-/* Find equivallent rows */
+/* Find equivalent rows */
 
   pack->ROWrow=(int *)malloc(sizeof(int)*pack->rows);
   if(pack->ROWrow==NULL) return packErrNoMem;
@@ -176,7 +176,7 @@ static int packROW()
 }
 
 /*
-  This function compress the matrix by finding equivallent columns.
+  This function compress the matrix by finding equivalent columns.
 */
 
 static int packCOL()
@@ -185,7 +185,7 @@ static int packCOL()
   int col1;
   register int col2;
 
-/* find equivallent columns */
+/* find equivalent columns */
 
   pack->COLcol=(int *)malloc(sizeof(int)*pack->cols);
   if(pack->COLcol==NULL) return packErrNoMem;
@@ -457,15 +457,15 @@ static int packGCS()
     map[row1]= -1;
     for(row2=row1+1;row2<pack->rows;row2++)
       if(size[row1]<size[row2]) {
-    tmp=size[row1];
-    size[row1]=size[row2];
-    size[row2]=tmp;
-    tmp=pack->LESorGCSrow[row1];
-    pack->LESorGCSrow[row1]=pack->LESorGCSrow[row2];
-    pack->LESorGCSrow[row2]=tmp;
-    m1=pack->matrix[row1];
-    pack->matrix[row1]=pack->matrix[row2];
-    pack->matrix[row2]=m1;
+        tmp=size[row1];
+        size[row1]=size[row2];
+        size[row2]=tmp;
+        tmp=pack->LESorGCSrow[row1];
+        pack->LESorGCSrow[row1]=pack->LESorGCSrow[row2];
+        pack->LESorGCSrow[row2]=tmp;
+        m1=pack->matrix[row1];
+        pack->matrix[row1]=pack->matrix[row2];
+        pack->matrix[row2]=m1;
       }
   }
 
@@ -530,17 +530,17 @@ static int packGCS()
     map[col1]= -1;
     for(col2=col1+1;col2<pack->cols;col2++)
       if(size[col1]<size[col2]) {
-    tmp=size[col1];
-    size[col1]=size[col2];
-    size[col2]=tmp;
-    tmp=pack->LESorGCScol[col1];
-    pack->LESorGCScol[col1]=pack->LESorGCScol[col2];
-    pack->LESorGCScol[col2]=tmp;
-    for(row1=0;row1<pack->rows;row1++) {
-      tmp=pack->matrix[row1][col1];
-      pack->matrix[row1][col1]=pack->matrix[row1][col2];
-      pack->matrix[row1][col2]=tmp;
-    }
+        tmp=size[col1];
+        size[col1]=size[col2];
+        size[col2]=tmp;
+        tmp=pack->LESorGCScol[col1];
+        pack->LESorGCScol[col1]=pack->LESorGCScol[col2];
+        pack->LESorGCScol[col2]=tmp;
+        for(row1=0;row1<pack->rows;row1++) {
+          tmp=pack->matrix[row1][col1];
+          pack->matrix[row1][col1]=pack->matrix[row1][col2];
+          pack->matrix[row1][col2]=tmp;
+        }
       }
   }
 
@@ -567,12 +567,12 @@ static int packGCS()
         if(m1[col1]==pack->insign) m1[col1]=m1[col2];
       }
     }
-      if(pack->cols!=col1)
-    for(row1=0;row1<pack->rows;row1++) {
-      m1=pack->matrix[row1];
-      m1[pack->cols]=m1[col1];
-    }
-      pack->cols++;
+    if(pack->cols!=col1)
+      for(row1=0;row1<pack->rows;row1++) {
+        m1=pack->matrix[row1];
+        m1[pack->cols]=m1[col1];
+      }
+    pack->cols++;
     }
 
 /* Reindex the LESorGCScol */
@@ -613,7 +613,7 @@ static int packRDS()
   /* are processed first */
 
   for(row1=0;row1<pack->rows;row1++) {
-    size[row1]=0;		/* Temporary use of pack->RDSbase as size */
+    size[row1]=0;   /* Temporary use of pack->RDSbase as size */
     for(col1=0;col1<pack->cols;col1++)
       if(pack->matrix[row1][col1]!=pack->insign) size[row1]++;
     index[row1]=row1;
@@ -621,13 +621,13 @@ static int packRDS()
   for(row1=0;row1<pack->rows;row1++)
     for(row2=row1+1;row2<pack->rows;row2++)
       if(size[row1]<size[row2]) {
-    /* swap size and index entries using col1 (!) */
-    col1=size[row1];
-    size[row1]=size[row2];
-    size[row2]=col1;
-    col1=index[row1];
-    index[row1]=index[row2];
-    index[row2]=col1;
+        /* swap size and index entries using col1 (!) */
+        col1=size[row1];
+        size[row1]=size[row2];
+        size[row2]=col1;
+        col1=index[row1];
+        index[row1]=index[row2];
+        index[row2]=col1;
       }
 
 /* Create the RDS value vector and base vector */
@@ -672,8 +672,8 @@ static int packRDS()
   for(row1=0;row1<pack->rows;row1++) {
     for(col1=0;col1<pack->cols;col1++)
       if(vect[pack->RDSbase[row1]+col1] && pack->matrix[row1][col1]!=pack->insign) {
-    pack->RDSvector[pack->RDSbase[row1]+col1]=pack->matrix[row1][col1];
-    pack->RDScheck[pack->RDSbase[row1]+col1]=row1;
+        pack->RDSvector[pack->RDSbase[row1]+col1]=pack->matrix[row1][col1];
+        pack->RDScheck[pack->RDSbase[row1]+col1]=row1;
       }
     free(pack->matrix[row1]);
   }

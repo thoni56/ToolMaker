@@ -4,15 +4,15 @@
 #include "pmkList.h"
 #include "pwsGrm.h"
 
-int vocMaxLn = 0;		/* Length of longest vocabulary name */
+int vocMaxLn = 0;       /* Length of longest vocabulary name */
 
 /*-----------------------------------------------------------------------------
  * insertSymbol - creates a new entry in the vocabulary table.
  *-----------------------------------------------------------------------------
  */
 static int insertSymbol(symName)
-     char *symName;			/* IN the symbol name to look up  */
-     /* RET the entry in vocabulary */
+    char *symName;      /* IN the symbol name to look up  */
+                        /* RET the entry in vocabulary */
 {
     sym_ref temp;
 
@@ -38,8 +38,8 @@ static int insertSymbol(symName)
 }/*insertSymbol()*/
 
 /*-----------------------------------------------------------------------------
- * initSymTab - Augments grammar and initializes the vocabulary. Note that
- *		init_gram must be called before this function.
+ * initSymTab - Augments grammar and initializes the vocabulary.
+ *              Note that init_gram must be called before this function.
  *-----------------------------------------------------------------------------
  */
 void initSymTab()
@@ -83,10 +83,10 @@ void initSymTab()
  *-----------------------------------------------------------------------------
  */
 void lookup(symbol, class, ref, search)
-     char *symbol;
-     SET class;			/* legal symbol types */
-     int *ref;			/* OUT Index in vocabulary */
-     search_kind *search;		/* OUT Search result */
+    char *symbol;
+    SET class;                  /* legal symbol types */
+    int *ref;                   /* OUT Index in vocabulary */
+    search_kind *search;        /* OUT Search result */
 {
     register int i = 0;
     register int key;

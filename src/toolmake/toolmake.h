@@ -1,8 +1,8 @@
-/* toolmake.h			      Date: 1993-04-19/reibert@roo
+/* toolmake.h                         Date: 1993-04-19/reibert@roo
 
    Common definitions for toolmake
 
-   1.00 - 
+   1.00 -
 */
 #ifndef _toolmake_H_
 #define _toolmake_H_ 1

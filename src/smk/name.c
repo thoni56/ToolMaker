@@ -25,10 +25,10 @@ Node nil=NULL;
 Node guard=NULL;
 
 static Node nodeNew(name,c,l,r)
-     Name name;
-     NodeColor c;
-     Node l;
-     Node r;
+    Name name;
+    NodeColor c;
+    Node l;
+    Node r;
 {
   Node n;
 
@@ -41,7 +41,7 @@ static Node nodeNew(name,c,l,r)
 }
 
 Name nameSearch(name)
-     Name name;
+    Name name;
 {
   Node x,gg,g,f;
 
@@ -165,7 +165,7 @@ void nameRemove(name)
 
     x->c=RED;
     b->c=RED;
-    f->c=BLACK;		/* If father is not 2-NODE */
+    f->c=BLACK;     /* If father is not 2-NODE */
       }
       else if(bb->c==RED) {
     if(f->l==x) {

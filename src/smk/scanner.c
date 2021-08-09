@@ -16,7 +16,7 @@
  * Explicit register allocation removed.
  *
  * Revision 1.2  1993/04/23  11:12:12  tools
- * Totaly rewritten to correctly handle vocabularies and rules.
+ * Totally rewritten to correctly handle vocabularies and rules.
  *
  */
 

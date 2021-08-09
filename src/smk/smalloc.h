@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-07-11
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/smalloc.h,v 1.1 2002/06/25 20:04:52 Thomas Nilsson Exp $
@@ -23,7 +23,7 @@
  *
  * Revision 1.1  91/01/10  12:23:37  tools
  * Initial revision
- * 
+ *
  *
  */
 

@@ -1,12 +1,12 @@
 /*-----------------------------------------------------------------------------
  * pm - ParserMaker main program.
- *      @(#)pmk.c	1.3 (90/10/18 13:36:42)
+ *      @(#)pmk.c   1.3 (90/10/18 13:36:42)
  *-----------------------------------------------------------------------------
- * Created:	92-08-26 by H}kan. Copied from older pm.c and modified
+ * Created: 92-08-26 by H}kan. Copied from older pm.c and modified
  * Modified:
  *-----------------------------------------------------------------------------
  * Entries:
- *	main
+ *  main
  *-----------------------------------------------------------------------------
  */
 
@@ -41,18 +41,18 @@ static SETDEF(sym_kind_set, unknown_symb + 1); /* For lookup calls */
 #define MAX 0x7FFFFFFF
 
 OptTabRec tmkOptTab[] = {
-    {VERBOSE_OPT, BOOL_TMO,    "verbose", "verbose"},
-    {TMKTARGET_OPT,  STR_TMO,     "target",  "target"},
-    {TMKOS_OPT,      STR_TMO,     "os",      "os"},
-    {TMKPREFIX_OPT,  BOOLSTR_TMO, "prefix",  "prefix"},
-    {TMKLIBRARY_OPT, STR_TMO,     "library", "library"},
-    {TMKESCAPE_OPT,  BOOLSTR_TMO, "escape",  "escape"},
-    {HEIGHT_OPT,  BOOLNUM_TMO, "height",  "height", 0, "", {0, MAX}},
-    {WIDTH_OPT,   BOOLNUM_TMO, "width",   "width",  0, "", {0, MAX}},
-    {GENERATE_OPT, SET_TMO, "generate", "generate", 0x2,
+    {VERBOSE_OPT,    BOOL_TMO,    "verbose",  "verbose"},
+    {TMKTARGET_OPT,  STR_TMO,     "target",   "target"},
+    {TMKOS_OPT,      STR_TMO,     "os",       "os"},
+    {TMKPREFIX_OPT,  BOOLSTR_TMO, "prefix",   "prefix"},
+    {TMKLIBRARY_OPT, STR_TMO,     "library",  "library"},
+    {TMKESCAPE_OPT,  BOOLSTR_TMO, "escape",   "escape"},
+    {HEIGHT_OPT,     BOOLNUM_TMO, "height",   "height", 0, "", {0, MAX}},
+    {WIDTH_OPT,      BOOLNUM_TMO, "width",    "width",  0, "", {0, MAX}},
+    {GENERATE_OPT,   SET_TMO,     "generate", "generate", 0x2,
         "select [no] generated output {tables | source}", {0},
         {"Tables", "Source", NULL}},
-    {FORCE_OPT, BOOL_TMO, "force", "force", FALSE,
+    {FORCE_OPT,      BOOL_TMO, "force", "force", FALSE,
         "do [not] force generation of source code"},
     {LAST_OPT}
 };
@@ -68,70 +68,70 @@ OptTabRec pmkOptTab[] = {
         "generate source files for target operating system <os>"},
     {TMKOS_OPT, STR_TMO, "", "", (intptr_t) TARGETOS, ""},
     {PMKPREFIX_OPT, BOOLSTR_TMO, "prefix", "prefix [<prefix>]", (intptr_t) "pm",
-     "set [no] parser prefix"},
+        "set [no] parser prefix"},
     {TMKPREFIX_OPT, BOOLSTR_TMO, "", "", (intptr_t) "tm",
-     "set [no] system prefix"},
+        "set [no] system prefix"},
     {PMKLIBRARY_OPT, STR_TMO, "library", "library <lib>",
-     (intptr_t) "%%(TMHOME)/lib/%%(pmkTarget)/", "use directory <lib> for library files"},
+        (intptr_t) "%%(TMHOME)/lib/%%(pmkTarget)/", "use directory <lib> for library files"},
     {TMKLIBRARY_OPT, STR_TMO, "", "",
-     (intptr_t) "%%(TMHOME)/lib/%%(tmkTarget)/", ""},
+        (intptr_t) "%%(TMHOME)/lib/%%(tmkTarget)/", ""},
     {PMKESCAPE_OPT, BOOLSTR_TMO, "escape", "escape [<c>]", (intptr_t) "`",
-     "set [no] escape character"},
+        "set [no] escape character"},
     {TMKESCAPE_OPT, BOOLSTR_TMO, "", "", (intptr_t) "`",
-     "set [no] escape character"},
+        "set [no] escape character"},
     {WIDTH_OPT, BOOLNUM_TMO, "width", "width [<n>]", 78,
-     "set [no] listing width", {0, MAX}},
+        "set [no] listing width", {0, MAX}},
     {HEIGHT_OPT, BOOLNUM_TMO, "height", "height [<n>]", 62,
-     "set [no] listing height", {0, MAX}},
+        "set [no] listing height", {0, MAX}},
     {GENERATE_OPT, SET_TMO, "generate", "generate", 0x2,
-     "select [no] generated output {tables | source}", {0},
-     {"Tables", "Source", NULL}},
+        "select [no] generated output {tables | source}", {0},
+        {"Tables", "Source", NULL}},
     {FORCE_OPT, BOOL_TMO, "force", "force", FALSE,
-     "do [not] force generating of source code"},
+        "do [not] force generating of source code"},
     {LISTERPREFIX_OPT, BOOLSTR_TMO, "listerprefix", "listerprefix [<prefix>]", (intptr_t) "lm",
-     "set [no] lister prefix"},
+        "set [no] lister prefix"},
     {ERRORHANDLER_OPT, BOOL_TMO, "errorhandler", "errorhandler", TRUE,
-     "enable [disable] generation of error handler"},
+        "enable [disable] generation of error handler"},
     {TRACE_OPT, BOOL_TMO, "trace", "trace", FALSE,
-     "enable [disable] trace mode"},
+        "enable [disable] trace mode"},
     {LINE_OPT, BOOL_TMO, "line", "line", FALSE,
-     "do [not] generate line information in the semantic actions"},
+        "do [not] generate line information in the semantic actions"},
     {LOOKAHEADMAX_OPT, NUM_TMO, "lookaheadmax", "lookaheadmax <n>", 5,
-     "set max lookahead to <n>", {4, MAX}},
+        "set max lookahead to <n>", {4, MAX}},
     {SHIFTCOST_OPT, NUM_TMO, "shiftcost", "shiftcost <n>", 5,
-     "set shift cost for terminals to <n>", {0, MAX}},
+        "set shift cost for terminals to <n>", {0, MAX}},
     {STACKLIMIT_OPT, NUM_TMO, "stacklimit", "stacklimit <n>", 32,
-     "set parse stack limit to <n> entries", {0, MAX}},
+        "set parse stack limit to <n> entries", {0, MAX}},
     {PACK_OPT, SET_TMO, "pack", "pack", 4,
-     "set [no] table packing { row | column | rds | gcs | les }", {0},
-     {"Row", "Column", "RDS", "GCS", "LES", "Error", NULL}},
+        "set [no] table packing { row | column | rds | gcs | les }", {0},
+        {"Row", "Column", "RDS", "GCS", "LES", "Error", NULL}},
     {ACTIONPACK_OPT, SET_TMO, "actionpack", "actionpack", 0x4,
-     "set [no] packing of action tables", {0},
-     {"Row", "Column", "RDS", "GCS", "LES", "Error", NULL}},
+        "set [no] packing of action tables", {0},
+        {"Row", "Column", "RDS", "GCS", "LES", "Error", NULL}},
     {GOTOPACK_OPT, SET_TMO, "gotopack", "gotopack", 0x4,
-     "set [no] packing of goto tables", {0},
-     {"Row", "Column", "RDS", "GCS", "LES", NULL}},
+        "set [no] packing of goto tables", {0},
+        {"Row", "Column", "RDS", "GCS", "LES", NULL}},
     {LIST_OPT, SET_TMO, "list", "list", 0x20,
-     "set [no] listings { input | grammar | items | tables | statistics | info }", {0},
-     {"Input", "Grammar", "Items", "Tables", "Statistics", "Info", NULL}},
+        "set [no] listings { input | grammar | items | tables | statistics | info }", {0},
+        {"Input", "Grammar", "Items", "Tables", "Statistics", "Info", NULL}},
     {OPTIMIZE_OPT, SET_TMO, "optimize", "optimize", 0x1,
-     "set [no] optimize mode", {0}, {"Lr0", NULL}},
+        "set [no] optimize mode", {0}, {"Lr0", NULL}},
     {RECOVERY_OPT, SET_TMO, "recovery", "recovery", 0x7,
-     "set [no] recovery mode { single | multiple | panic }", {0},
-     {"Single", "Multiple", "Panic", NULL}},
+        "set [no] recovery mode { single | multiple | panic }", {0},
+        {"Single", "Multiple", "Panic", NULL}},
     {RESOLVE_OPT, SET_TMO, "resolve", "resolve", 0x1,
-     "set [no] resolve mode { sr | rr }", {0},
-     {"SR", "RR", NULL}},
+        "set [no] resolve mode { sr | rr }", {0},
+        {"SR", "RR", NULL}},
     {VOC_OPT, STR_TMO, "", "voc <file>", (intptr_t) "",
-     "write vocabulary to <file>"},
+        "write vocabulary to <file>"},
     {PML_OPT, STR_TMO, "", "pml <file>", (intptr_t) "",
-     "write lists to <file> (if any)"},
+        "write lists to <file> (if any)"},
     {PMT_OPT, STR_TMO, "", "pmt <file>", (intptr_t) "",
-     "write tables to <file> (if any)"},
+        "write tables to <file> (if any)"},
     {TMK_OPT, STR_TMO, "", "tmk <file>", (intptr_t) "",
-     "read common options from <file>"},
+        "read common options from <file>"},
     {HELP_OPT, HELP_TMO, "", "help", 0,
-     "this help information"},
+        "this help information"},
     {LAST_OPT}
 };
 
@@ -162,10 +162,10 @@ extern int symRef;
   Interface against pmkLog used by tmk
 */
 void tmkLog(pos, ecode, sev, istrs)
-     TmkSrcp *pos;		/* IN - Source position */
-     int ecode;			/* IN - The error code */
-     pmkSev sev;	/* IN - Severity code */
-     char istrs[];		/* IN - Insert strings */
+     TmkSrcp *pos;      /* IN - Source position */
+     int ecode;         /* IN - The error code */
+     pmkSev sev;        /* IN - Severity code */
+     char istrs[];      /* IN - Insert strings */
 {
     pmkLog(pos, ecode, sev, istrs);
 }
@@ -200,8 +200,8 @@ static void pmkAppend(pml, pmi)
  * appendStrList - put a string last in a list of strings
  */
 StrListP appendStrList(str, list)
-     char *str;
-     StrListP list;
+    char *str;
+    StrListP list;
 {
   StrListP new = (StrListP)malloc(sizeof(StrList));
   new->str = str;
@@ -210,9 +210,9 @@ StrListP appendStrList(str, list)
 }
 
 void printStrList(fil, list, names)
-     FILE *fil;
-     StrListP list;
-     StrListP names;
+    FILE *fil;
+    StrListP list;
+    StrListP names;
 {
   char *buff;
   while (list) {
@@ -243,8 +243,8 @@ void printStrList(fil, list, names)
  *-----------------------------------------------------------------------------
  */
 int main(argc, argv)
-     int argc;	/* IN argument count. */
-     char *argv[];	/* IN program arguments. */
+    int argc;           /* IN argument count. */
+    char *argv[];       /* IN program arguments. */
 {
     Boolean tmkExists;
     char *ext1, *ext2;
@@ -432,7 +432,7 @@ int main(argc, argv)
                         vocabulary[symRef]->syminfo.attr_class = t_attr;
                     } else if (found_search == searchResult) {
                         if (vocabulary[symRef]->syminfo.attr_class != t_attr &&
-                            vocabulary[symRef]->syminfo.attr_class != unk_attr)	{
+                            vocabulary[symRef]->syminfo.attr_class != unk_attr) {
                             vocabulary[symRef]->syminfo.attr_class = voc_attr;
                         } else if (vocabulary[symRef]->syminfo.attr_class == t_attr) {
                             /* ERROR Attribute defined twice */

@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/common.h,v 1.1 2002/06/25 20:04:41 Thomas Nilsson Exp $
@@ -35,9 +35,9 @@
 
 #include <stdlib.h>
 #ifdef WIN32
-#define	F_OK		0	/* does file exist */
-#define	W_OK		2	/* is it writable by caller */
-#define	R_OK		4	/* is it readable by caller */
+#define F_OK        0   /* does file exist */
+#define W_OK        2   /* is it writable by caller */
+#define R_OK        4   /* is it readable by caller */
 #else
 #include <unistd.h>
 #endif

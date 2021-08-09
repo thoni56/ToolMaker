@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-11
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/definition.c,v 1.1 2002/06/25 20:04:41 Thomas Nilsson Exp $
@@ -23,7 +23,7 @@
  *
  * Revision 1.3  91/07/11  10:38:37  tools
  * Added Inherited scanners and Undefined tokens
- * 
+ *
  * Revision 1.2  1991/07/08  16:50:23  tools
  * Added named semantic actions
  *
@@ -75,7 +75,7 @@ Definition definitionPut(Name name)
   definition->ast=NULL;
   definition->action=NULL;
   definition->next=NULL;
-  if(definitionRoot) 
+  if(definitionRoot)
     definitionEnd=(definitionEnd->next=definition);
   else
     definitionRoot=definitionEnd=definition;
@@ -99,7 +99,7 @@ void definitionFix()
 void definitionDump()
 {
   Definition definition;
-  
+
   smkSkipLines(getNumOpt(HEIGHT_OPT)-6);
   lmPrintf("Defined Defintions\n\n");
   for(definition=definitionRoot;definition;definition=definition->next)
@@ -110,7 +110,7 @@ void definitionDump()
 void definitionPrint()
 {
   Definition definition;
-  
+
   smkSkipLines(getNumOpt(HEIGHT_OPT)-6);
   lmPrintf("Definitions\n\n");
   for(definition=definitionRoot;definition;definition=definition->next)

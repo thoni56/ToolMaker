@@ -91,7 +91,7 @@ static OptNodeP newOpt(name, srcp)
  *----------------------------------------------------------------------------
  */
 void tmkPaSema(
-int rule			/* IN production number */
+int rule      /* IN production number */
 )
 {
 #line 66 "tmk.pmk"
@@ -102,17 +102,17 @@ int rule			/* IN production number */
           if (!(srcpOptional || tmkEnv->srcpNode))
         /* SRCP section not found */
             tmkLog(NULL, 64, sevERR, "SRCP");
-    	break;}
+      break;}
     case 8: { /* option_section =; */
 #line 95 "tmk.pmk"
 
       srcpOptional = TRUE;
-    	break;}
+      break;}
     case 9: { /* option_section = '%%OPTIONS' optional_end; */
 #line 99 "tmk.pmk"
 
       srcpOptional = TRUE;
-    	break;}
+      break;}
     case 10: { /* option_section = '%%OPTIONS' option_directives optional_end; */
 #line 103 "tmk.pmk"
 
@@ -120,12 +120,12 @@ int rule			/* IN production number */
           setOpts(tmkEnv->optTab, tmkSeSt[tmkStkP+2].dir);
           setCliOpts(tmkEnv->cliTab, tmkEnv->argc, tmkEnv->argv, &dummy);
       tmkEscape = *getStrOpt(tmkEnv->escapeOpt);
-    	break;}
+      break;}
     case 13: { /* option_directives = option_directive; */
 #line 118 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].dir = tmkSeSt[tmkStkP+1].dir;
-    	break;}
+      break;}
     case 14: { /* option_directives = option_directives option_directive; */
 #line 122 "tmk.pmk"
 {
@@ -138,7 +138,7 @@ int rule			/* IN production number */
         p->next = tmkSeSt[tmkStkP+2].dir;
         tmkSeSt[tmkStkP+1].dir= tmkSeSt[tmkStkP+1].dir;
       }
-    }	break;}
+    } break;}
     case 15: { /* option_directive = identifier ';'; */
 #line 137 "tmk.pmk"
 {
@@ -149,7 +149,7 @@ int rule			/* IN production number */
       p->oval.bval = TRUE;
       p->next = NULL;
       tmkSeSt[tmkStkP+1].dir = p;
-    }	break;}
+    } break;}
     case 16: { /* option_directive = 'NO' identifier ';'; */
 #line 147 "tmk.pmk"
 {
@@ -160,7 +160,7 @@ int rule			/* IN production number */
       p->oval.bval = FALSE;
       p->next = NULL;
       tmkSeSt[tmkStkP+1].dir = p;
-    }	break;}
+    } break;}
     case 17: { /* option_directive = identifier NUMBER ';'; */
 #line 157 "tmk.pmk"
 {
@@ -171,7 +171,7 @@ int rule			/* IN production number */
       p->oval.ival = tmkSySt[tmkStkP+2].ival;
       p->next = NULL;
       tmkSeSt[tmkStkP+1].dir = p;
-    }	break;}
+    } break;}
     case 18: { /* option_directive = identifier STRING ';'; */
 #line 167 "tmk.pmk"
 {
@@ -182,7 +182,7 @@ int rule			/* IN production number */
       p->oval.sval = tmkSySt[tmkStkP+2].sval;
       p->next = NULL;
       tmkSeSt[tmkStkP+1].dir = p;
-    }	break;}
+    } break;}
     case 19: { /* option_directive = identifier options ';'; */
 #line 177 "tmk.pmk"
 {
@@ -193,12 +193,12 @@ int rule			/* IN production number */
       p->oval.opts = tmkSeSt[tmkStkP+2].opt;
       p->next = NULL;
           tmkSeSt[tmkStkP+1].dir = p;
-    }	break;}
+    } break;}
     case 20: { /* options = identifier; */
 #line 190 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].opt = newOpt(tmkSeSt[tmkStkP+1].sval, tmkSeSt[tmkStkP+1].srcp);
-    	break;}
+      break;}
     case 21: { /* options = options ',' identifier; */
 #line 194 "tmk.pmk"
 {
@@ -211,7 +211,7 @@ int rule			/* IN production number */
         p->next = newOpt(tmkSeSt[tmkStkP+3].sval, tmkSeSt[tmkStkP+3].srcp);
         tmkSeSt[tmkStkP+1].opt = tmkSeSt[tmkStkP+1].opt;
       }
-    }	break;}
+    } break;}
     case 22: { /* import_section = '%%IMPORT' optional_end; */
 #line 215 "tmk.pmk"
 
@@ -219,7 +219,7 @@ int rule			/* IN production number */
         tmkLog(&tmkSySt[tmkStkP+1].srcp, 60, sevERR, "");
       else
         tmkEnv->importSection = tmkNewCode(tmkSySt[tmkStkP+1].fpos, tmkSySt[tmkStkP+1].length);
-    	break;}
+      break;}
     case 23: { /* token_section = token_header token_decls optional_end; */
 #line 229 "tmk.pmk"
 {
@@ -257,13 +257,13 @@ int rule			/* IN production number */
               tmkLog(&tmkSeSt[tmkStkP+1].srcp, 65, sevERR, "token");
 
           srcpOptional = (!declFound || tmkEnv->tokenNode->srcpDecl || !tmkEnv->tokenNode->srcp);
-    }	break;}
+    } break;}
     case 24: { /* token_header = '%%TOKEN'; */
 #line 269 "tmk.pmk"
 
           tmkEnv->tokenNode = (TokenNodeP) calloc(1,sizeof(TokenNode));
           tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 27: { /* token_decl = 'NAME' identifier ';'; */
 #line 282 "tmk.pmk"
 
@@ -272,7 +272,7 @@ int rule			/* IN production number */
         tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
       else
         tmkEnv->tokenNode->name = tmkSeSt[tmkStkP+2].sval;
-    	break;}
+      break;}
     case 28: { /* token_decl = 'CODE' identifier optional_decl ';'; */
 #line 290 "tmk.pmk"
 
@@ -283,7 +283,7 @@ int rule			/* IN production number */
         tmkEnv->tokenNode->code = tmkSeSt[tmkStkP+2].sval;
         tmkEnv->tokenNode->codeDecl = tmkSeSt[tmkStkP+3].sval;
       }
-    	break;}
+      break;}
     case 29: { /* token_decl = 'SRCP' identifier optional_decl ';'; */
 #line 300 "tmk.pmk"
 
@@ -294,7 +294,7 @@ int rule			/* IN production number */
         tmkEnv->tokenNode->srcp = tmkSeSt[tmkStkP+2].sval;
         tmkEnv->tokenNode->srcpDecl = tmkSeSt[tmkStkP+3].sval;
       }
-    	break;}
+      break;}
     case 30: { /* token_decl = 'ATTRIBUTES' token_attributes ';'; */
 #line 310 "tmk.pmk"
 
@@ -303,12 +303,12 @@ int rule			/* IN production number */
         tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
       else
         tmkEnv->tokenNode->attrs = tmkSeSt[tmkStkP+2].attr;
-    	break;}
+      break;}
     case 31: { /* token_attributes = token_attribute; */
 #line 321 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+1].attr;
-    	break;}
+      break;}
     case 32: { /* token_attributes = token_attributes ',' token_attribute; */
 #line 325 "tmk.pmk"
 {
@@ -321,22 +321,22 @@ int rule			/* IN production number */
         p->next = tmkSeSt[tmkStkP+3].attr;
         tmkSeSt[tmkStkP+1].attr = tmkSeSt[tmkStkP+1].attr;
       }
-    }	break;}
+    } break;}
     case 33: { /* token_attribute = identifier optional_decl; */
 #line 340 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].attr = newAttr(tmkSeSt[tmkStkP+1].sval, tmkSeSt[tmkStkP+2].sval);
-    	break;}
+      break;}
     case 34: { /* optional_decl =; */
 #line 347 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = NULL;
-    	break;}
+      break;}
     case 35: { /* optional_decl = '%%'; */
 #line 351 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
-    	break;}
+      break;}
     case 36: { /* srcp_section = srcp_header srcp_decls optional_end; */
 #line 363 "tmk.pmk"
 {
@@ -380,13 +380,13 @@ int rule			/* IN production number */
        } else
            /* Source position must have at least one member */
            tmkLog(&tmkSeSt[tmkStkP+1].srcp, 66, sevERR, "");
-    }	break;}
+    } break;}
     case 37: { /* srcp_header = '%%SRCP'; */
 #line 409 "tmk.pmk"
 
           tmkEnv->srcpNode = (SrcpNodeP) calloc(1,sizeof(SrcpNode));
           tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 40: { /* srcp_decl = 'NAME' identifier ';'; */
 #line 422 "tmk.pmk"
 
@@ -395,7 +395,7 @@ int rule			/* IN production number */
         tmkLog(&tmkSySt[tmkStkP+1].srcp, 61, sevERR, "");
       else
         tmkEnv->srcpNode->name = tmkSeSt[tmkStkP+2].sval;
-    	break;}
+      break;}
     case 41: { /* srcp_decl = 'ROW' identifier optional_decl ';'; */
 #line 430 "tmk.pmk"
 
@@ -406,7 +406,7 @@ int rule			/* IN production number */
         tmkEnv->srcpNode->row = tmkSeSt[tmkStkP+2].sval;
         tmkEnv->srcpNode->rowDecl = tmkSeSt[tmkStkP+3].sval;
       }
-    	break;}
+      break;}
     case 42: { /* srcp_decl = 'COLUMN' identifier optional_decl ';'; */
 #line 440 "tmk.pmk"
 
@@ -417,7 +417,7 @@ int rule			/* IN production number */
         tmkEnv->srcpNode->col = tmkSeSt[tmkStkP+2].sval;
         tmkEnv->srcpNode->colDecl = tmkSeSt[tmkStkP+3].sval;
       }
-    	break;}
+      break;}
     case 43: { /* srcp_decl = 'FILE' identifier optional_decl ';'; */
 #line 450 "tmk.pmk"
 
@@ -428,7 +428,7 @@ int rule			/* IN production number */
         tmkEnv->srcpNode->file = tmkSeSt[tmkStkP+2].sval;
         tmkEnv->srcpNode->fileDecl = tmkSeSt[tmkStkP+3].sval;
       }
-    	break;}
+      break;}
     case 44: { /* srcp_decl = 'POSITION' identifier optional_decl ';'; */
 #line 460 "tmk.pmk"
 
@@ -439,73 +439,73 @@ int rule			/* IN production number */
         tmkEnv->srcpNode->pos = tmkSeSt[tmkStkP+2].sval;
         tmkEnv->srcpNode->posDecl = tmkSeSt[tmkStkP+3].sval;
       }
-    	break;}
+      break;}
     case 45: { /* skip_section = SKIPHEADER optional_end; */
 #line 479 "tmk.pmk"
 
       if (tmkEnv->fileType == TMK_FILE)
         tmkLog(&tmkSySt[tmkStkP+1].srcp, 51, sevERR, "");
-    	break;}
+      break;}
     case 46: { /* identifier = IDENTIFIER; */
 #line 491 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-        	break;}
+          break;}
     case 47: { /* identifier = 'ATTRIBUTES'; */
 #line 496 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 48: { /* identifier = 'NAME'; */
 #line 501 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 49: { /* identifier = 'CODE'; */
 #line 506 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 50: { /* identifier = 'SRCP'; */
 #line 511 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 51: { /* identifier = 'ROW'; */
 #line 516 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 52: { /* identifier = 'COLUMN'; */
 #line 521 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 53: { /* identifier = 'FILE'; */
 #line 526 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 54: { /* identifier = 'POSITION'; */
 #line 531 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     case 55: { /* identifier = 'NO'; */
 #line 537 "tmk.pmk"
 
       tmkSeSt[tmkStkP+1].sval = tmkSySt[tmkStkP+1].sval;
       tmkSeSt[tmkStkP+1].srcp = tmkSySt[tmkStkP+1].srcp;
-    	break;}
+      break;}
     default: break; }
 }/*tmkPaSema()*/
 

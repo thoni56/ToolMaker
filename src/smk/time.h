@@ -3,7 +3,7 @@
  * DATE   : 1993-04-30/tools@wolf
  *
  * BASED ON:
- *     time.c/time.h by Reibert Olsson 
+ *     time.c/time.h by Reibert Olsson
  *
  *
  * $Header: /Repository/ToolMaker/src/smk/time.h,v 1.1 2002/06/25 20:05:01 Thomas Nilsson Exp $
@@ -27,7 +27,7 @@
  *
  * Revision 1.1  91/01/10  12:23:39  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -35,16 +35,16 @@
 #define timeIncluded
 
 typedef struct {
-  long proc_user_time;		/* ticks */
-  long proc_system_time;	/* ticks */
-  long child_user_time;		/* ticks */
-  long child_system_time;	/* ticks */
-  long pu_start;		/* ticks */
-  long pu_elapsed;		/* ms */
-  long cu_start;		/* ticks */
-  long cu_elapsed;		/* ms */
+  long proc_user_time;    /* ticks */
+  long proc_system_time;  /* ticks */
+  long child_user_time;   /* ticks */
+  long child_system_time; /* ticks */
+  long pu_start;          /* ticks */
+  long pu_elapsed;        /* ms */
+  long cu_start;          /* ticks */
+  long cu_elapsed;        /* ms */
 } *Time, TimeItem;
-  
+
 
 #ifdef vms
 #define TI_HZ 100
@@ -62,5 +62,3 @@ extern int tistop(Time tb);
 extern char *tistr(int time);
 
 #endif
-
-

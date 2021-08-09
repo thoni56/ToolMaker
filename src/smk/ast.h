@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-13
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/ast.h,v 1.1 2002/06/25 20:04:40 Thomas Nilsson Exp $
@@ -30,7 +30,7 @@
  * This includes a new rule NO SCREENING which is given in the %%VOCABULARY
  * section.
  * Fixed size notes in verbose mode (I hope).
- * 
+ *
  * Revision 1.1  1991/01/10  12:22:54  tools
  * Initial revision
  *
@@ -45,8 +45,8 @@ typedef struct AST *AST;
 #include "name.h"
 
 /*
- * The type AST is used to repressent a node in the abstract syntax 
- * tree of a regular expression (RE). Each node repressent an operator
+ * The type AST is used to represent a node in the abstract syntax
+ * tree of a regular expression (RE). Each node represent an operator
  * in the RE.
  */
 

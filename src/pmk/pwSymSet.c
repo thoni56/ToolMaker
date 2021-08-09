@@ -1,4 +1,4 @@
-/*		@(#)pwSymSet.c	1.2 (90/11/07 09:49:12)		*/
+/*      @(#)pwSymSet.c  1.2 (90/11/07 09:49:12)     */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,13 +14,13 @@ SymSet s;
     int curLen;
 
     if (s->curLen < sym_max) {
-	curLen = s->curLen;
-	ss = s->ss;
-	s->curLen = sym_max;
-	s->ss = (SETPTR)malloc(SETLEN(sym_max));
-	SetClear(s->ss, s->curLen);
-	memcpy((char *)s->ss, (char *)ss, SETLEN(curLen));
-	free((char *)ss);
+        curLen = s->curLen;
+        ss = s->ss;
+        s->curLen = sym_max;
+        s->ss = (SETPTR)malloc(SETLEN(sym_max));
+        SetClear(s->ss, s->curLen);
+        memcpy((char *)s->ss, (char *)ss, SETLEN(curLen));
+        free((char *)ss);
     }/*if*/
 }/*SymSetExpand()*/
 

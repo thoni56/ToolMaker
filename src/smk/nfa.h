@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-21
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/nfa.h,v 1.1 2002/06/25 20:04:46 Thomas Nilsson Exp $
@@ -31,7 +31,7 @@
  *
  * Revision 1.1  91/01/10  12:23:07  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -51,12 +51,12 @@ typedef enum NFAtype {
 } NFAtype;
 
 typedef struct NFA {
-  int node;			/* Node number */
-  short charMin;		/* Lower character of character range */
-  short charMax;		/* Upper character of character range */
-  NFAtype type;			/* Type of node */
-  Rule rule;			/* Rule */
-  NFAs follow;			/* List of nodes following character range */
+  int node;             /* Node number */
+  short charMin;        /* Lower character of character range */
+  short charMax;        /* Upper character of character range */
+  NFAtype type;         /* Type of node */
+  Rule rule;            /* Rule */
+  NFAs follow;          /* List of nodes following character range */
   NFA next;
 } NFAItem;
 
@@ -69,5 +69,3 @@ extern void nfaDump(void);
 extern void nfaPrint(void);
 
 #endif
-
-

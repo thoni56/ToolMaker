@@ -13,19 +13,19 @@
 /*
  * Structure of screen tables:
  *
- *	screenCheckScan[scanner]	-> YES or NO if scanner has screening ON or OFF (default all ON)
- *					   This table may be turned on and off in runtime.
- *	screenCheckCode[icode]		-> YES or NO if rule screens another rule.
+ *  screenCheckScan[scanner]  -> YES or NO if scanner has screening ON or OFF (default all ON)
+ *             This table may be turned on and off in runtime.
+ *  screenCheckCode[icode]    -> YES or NO if rule screens another rule.
  *
- *	screenTableBegin[scanner]	-> Where is the first screened string for the scanner (see table below)
- *	screenTableEnd[scanner]		-> Where is the last screened string for the scanner (see table below)
+ *  screenTableBegin[scanner] -> Where is the first screened string for the scanner (see table below)
+ *  screenTableEnd[scanner]   -> Where is the last screened string for the scanner (see table below)
  *
- *	screenTokenLength[table index]	-> Length of token
- *	screenTokenStart[table index]	-> Start of token in token table
- *	screenTokenCode[table index]	-> Internal code of token, if negative screening is turned OFF
- *					   This table may be turned on and off in runtime.
+ *  screenTokenLength[table index]  -> Length of token
+ *  screenTokenStart[table index]   -> Start of token in token table
+ *  screenTokenCode[table index]    -> Internal code of token, if negative screening is turned OFF
+ *             This table may be turned on and off in runtime.
  *
- *	screenTokens[index]		-> Packed token table
+ *  screenTokens[index]   -> Packed token table
  */
 
 
@@ -119,7 +119,7 @@ void screenCreate()
   screenTableEnd=(int *)smalloc(sizeof(int)*screenTableSize);
   /*
    * Allocate token length/start/code tables
-   * Allocate tokens table (pessemistic approach: names can not be packed)
+   * Allocate tokens table (pessimistic approach: names can not be packed)
    */
   screenTokenSize=0;
   screenTokensSize=0;

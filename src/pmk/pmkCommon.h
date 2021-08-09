@@ -29,5 +29,3 @@ typedef struct PmkToken {
 } PmkToken;
 
 #endif
-
-

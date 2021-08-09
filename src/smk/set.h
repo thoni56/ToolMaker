@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-25
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/set.h,v 1.1 2002/06/25 20:04:51 Thomas Nilsson Exp $
@@ -27,7 +27,7 @@
  *
  * Revision 1.2  91/07/10  14:20:01  tools
  * New SET handling
- * 
+ *
  * Revision 1.1  1991/01/10  12:23:17  tools
  * Initial revision
  *
@@ -61,4 +61,4 @@ extern void setRead(smkScContext context);
 extern void setCheck(Name name, short *code);
 extern void setInit(void);
 
-#endif 
+#endif

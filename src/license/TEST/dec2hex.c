@@ -1,4 +1,4 @@
-/* Read an integer from stdin and writes it hexadecimal 
+/* Read an integer from stdin and writes it hexadecimal
    representation to standard output. Free from error
    handling.
    */

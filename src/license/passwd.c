@@ -2,14 +2,14 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1993-08-20
- * 
+ *
  * SoftLab ab (c) 1993
  */
 
 #include <stdlib.h>
 #include "passwd.h"
 
-#define MOD	67099547
+#define MOD 67099547
 #define RND(x)  ((((((x)<<4)%MOD)<<4)%MOD)<<5)%MOD
 
 int rnd(int rand, unsigned long int n)

@@ -5,18 +5,18 @@
 #include "pmk_i.h"
 #include "pwsGrm.h"
 
-typedef struct sortinfo {	/* Sorting structure */
+typedef struct sortinfo {   /* Sorting structure */
     int key;
     int index;
 } sortinfo;
 
-static int *newprod;		/* New production no (map) */
-int max_sym_len;		/* Max symbol length in vocabulary */
-int *newsym;			/* New symbol no (map). newsym should'nt be */
-                /* deallocated since references in syntax */
-                /* tree nodes are not updated. */
+static int *newprod;    /* New production no (map) */
+int max_sym_len;        /* Max symbol length in vocabulary */
+int *newsym;            /* New symbol no (map). newsym should'nt be */
+                        /* deallocated since references in syntax */
+                        /* tree nodes are not updated. */
 
-static sortinfo *sortvec;	/* Sort vector. */
+static sortinfo *sortvec;   /* Sort vector. */
 
 
 static sortinfo *sortvecAlloc(vec_size)
@@ -53,9 +53,9 @@ int vec_size;
  *-----------------------------------------------------------------------------
  */
 static void gram_sort(spos, epos, typ)
-int spos;			/* IN start position */
-int epos;			/* IN end position */
-Boolean typ;			/* IN array to sort */
+int spos;               /* IN start position */
+int epos;               /* IN end position */
+Boolean typ;            /* IN array to sort */
 {
     /* Quicksort
      */
@@ -102,12 +102,12 @@ Boolean typ;			/* IN array to sort */
  *        Find goal symbol and count symbols
  *
  *        Sort on:   1) Terminal/Nonterminal/Attribute
- *			 2) Terminals
- *				- Code value
- *                          - of symbol length
- *              Others
+ *                   2) Terminals
+ *                      - Code value
+ *                      - of symbol length
+ *                      Others
  *                      - Length of symbol
- *			 3) Original order of occurence
+ *                   3) Original order of occurrence
  *-----------------------------------------------------------------------------
  */
 static void order_voc()
@@ -343,11 +343,11 @@ int *prod_cost;
 int *infinity;
 {
     int *sym_cost;
-    int p;			/* Production */
-    int cost;			/* Current cost */
-    int sym;			/* Symbol */
-    int i;			/* Loop index */
-    Boolean change;		/* Terminator */
+    int p;              /* Production */
+    int cost;           /* Current cost */
+    int sym;            /* Symbol */
+    int i;              /* Loop index */
+    Boolean change;     /* Terminator */
     int temp;
 
     sym_cost = int_vecAlloc(vocCnt + 1);
@@ -384,8 +384,8 @@ int *infinity;
  * order_prod - sorts and orders the transformed productions
  *-----------------------------------------------------------------------------
  *        sorts on: 1) Left hand side
- *			2) Least cost production
- *			3) Original order of occurence
+ *                  2) Least cost production
+ *                  3) Original order of occurrence
  *-----------------------------------------------------------------------------
  */
 static void order_prod()
@@ -489,23 +489,23 @@ static void order_prod()
 /*-----------------------------------------------------------------------------
  * order_action - orders the actions and rewrites the references
  *-----------------------------------------------------------------------------
- *                (O)EBNF references have been rewritten previously
- *		  (modul pwsGrm.c) and these will be processed as
- *		  symbol references (errors are not reported for these).
+ *        (O)EBNF references have been rewritten previously
+ *        (module pwsGrm.c) and these will be processed as
+ *        symbol references (errors are not reported for these).
  *-----------------------------------------------------------------------------
  */
 static void order_action()
 {
-    int prod;			/* Current production */
-    int actPos;			/* Current attribute reference position */
-    int symbol;			/* Current vocabulary symbol */
-    int attribute;		/* Current attribute */
-    int instance;		/* Current symbol instance */
-    Boolean symfound;		/* Symbol is within production? */
-    Boolean instfound;		/* Right instance found? */
-    int count;			/* Instance counter */
-    int i, j;			/* Loop index */
-    int index;			/* Symbol offset within prod. */
+    int prod;           /* Current production */
+    int actPos;         /* Current attribute reference position */
+    int symbol;         /* Current vocabulary symbol */
+    int attribute;      /* Current attribute */
+    int instance;       /* Current symbol instance */
+    Boolean symfound;   /* Symbol is within production? */
+    Boolean instfound;  /* Right instance found? */
+    int count;          /* Instance counter */
+    int i, j;           /* Loop index */
+    int index;          /* Symbol offset within prod. */
     int temp;
     attr_kind attr_class;
     sym_kind sym_typ;
@@ -540,7 +540,7 @@ static void order_action()
     }/*if*/
     instance = attref_storage[j]->symins;
 
-    count = 1;		/* Instance count */
+    count = 1;          /* Instance count */
     symfound = FALSE;
     instfound = FALSE;
 

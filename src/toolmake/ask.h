@@ -1,8 +1,8 @@
-/* ask.h			      Date: 1993-04-17/reibert@roo
+/* ask.h                              Date: 1993-04-17/reibert@roo
 
    Common definitions for ask
 
-   1.00 - 
+   1.00 -
 */
 #ifndef _ask_H_
 #define _ask_H_ 1
@@ -14,7 +14,7 @@
 #define A_NSD 2                         /* not show default */
 #define A_RE  4                         /* return on error */
 #define A_RF  8                         /* return on fatal error */
-#define A_NE 16				/* no echo on input */
+#define A_NE 16                         /* no echo on input */
 
 typedef enum {
     askBuffering,

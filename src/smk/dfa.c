@@ -343,7 +343,7 @@ void dfaOptimize()
    * Make list to point to first DFA in list and remap node numbers
    */
 
-  dfaHashEnd=NULL;		/* from now used to hold states to be removed */
+  dfaHashEnd=NULL;    /* from now used to hold states to be removed */
   for(dfa1=dfaRoot;dfa1;dfa1=dfa1->next) {
     dfa1->node=dfa1->set;
     for(dfa2=dfa1;dfa2;dfa2=dfa3) {

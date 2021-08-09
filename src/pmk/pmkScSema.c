@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------*\
 
-	pmkScSema.c
+  pmkScSema.c
 
-	ScannerMaker generated semantic actions
+  ScannerMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
 
@@ -50,20 +50,20 @@ static char *newStr(smThis, skip)
 /* END %%DECLARATION */
 
 int pmkScReader(smThis,smBuffer,smLength)
-     pmkScContext smThis;
-     unsigned char *smBuffer;
-     unsigned int smLength;
+    pmkScContext smThis;
+    unsigned char *smBuffer;
+    unsigned int smLength;
 {
 
 
   return read(smThis->fd,smBuffer,smLength);
 
 
-}    
+}
 
 int pmkScPreHook(smThis,smToken)
-     pmkScContext smThis;
-     PmkToken *smToken;
+    pmkScContext smThis;
+    PmkToken *smToken;
 {
 
 
@@ -74,101 +74,99 @@ int pmkScPreHook(smThis,smToken)
 }
 
 int pmkScAction(smThis,smInternalCode,smToken)
-     pmkScContext smThis;
-     int smInternalCode;
-     PmkToken *smToken;
+    pmkScContext smThis;
+    int smInternalCode;
+    PmkToken *smToken;
 {
   enum {
-    smSkipToken		= -1,
-    smContinueToken	= -2
+    smSkipToken   = -1,
+    smContinueToken = -2
   };
   switch(smInternalCode) {
-  case  29:		/* IDENTIFIER*/ 
-    { smToken->sval = newStr(smThis, 0); 
+  case  29:   /* IDENTIFIER*/
+    { smToken->sval = newStr(smThis, 0);
 }
     break;
 
-  case  30:		/* INTEGER*/ 
-    { smToken->ival = atoi((char *)smThis->smText); 
+  case  30:   /* INTEGER*/
+    { smToken->ival = atoi((char *)smThis->smText);
 }
     break;
 
-  case  31:		/* STRING*/ 
-    { smToken->sval = newStr(smThis, 0); 
+  case  31:   /* STRING*/
+    { smToken->sval = newStr(smThis, 0);
 }
     break;
 
-  case  32:		/* ANG_BRACK_STRING*/ 
-    { smToken->sval = newStr(smThis, 0); 
+  case  32:   /* ANG_BRACK_STRING*/
+    { smToken->sval = newStr(smThis, 0);
 }
     break;
 
-  case  26:		/* '%%DECLARATIONS'*/ 
+  case  26:   /* '%%DECLARATIONS'*/
     {
-        /* Read past declarations */
-        tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-                  &(smToken->length), pmkEscape);
-      
+      /* Read past declarations */
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+                &(smToken->length), pmkEscape);
+
 }
     break;
 
-  case  20:		/* '%%EXPORT'*/ 
+  case  20:   /* '%%EXPORT'*/
     {
-          tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
-                  &(smToken->length), pmkEscape);
-    
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
+              &(smToken->length), pmkEscape);
+
 }
     break;
 
-  case  22:		/* '%%SCANNER'*/ 
+  case  22:   /* '%%SCANNER'*/
     {
       tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
                   &(smToken->length), pmkEscape);
-    
+
 }
     break;
 
-  case  27:		/* '%%INSERTSYMBOL'*/ 
+  case  27:   /* '%%INSERTSYMBOL'*/
     {
       tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
                   &(smToken->length), pmkEscape);
-    
+
 }
     break;
 
-  case  28:		/* '%%DELETESYMBOL'*/ 
+  case  28:   /* '%%DELETESYMBOL'*/
     {
       tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
                   &(smToken->length), pmkEscape);
-    
+
 }
     break;
 
-  case  33:		/* SKIPHEADER*/ 
+  case  33:   /* SKIPHEADER*/
     {
-    tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
-      
+      tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
+
 }
     break;
 
-  case  34:		/* SKIPHEADER*/ 
+  case  34:   /* SKIPHEADER*/
     {
-    tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos), &(smToken->length),  pmkEscape);
-      
+      tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos), &(smToken->length),  pmkEscape);
+
 }
     break;
 
-  case   0:		/* '%%'*/ 
+  case   0:   /* '%%'*/
     {
-        /* Read past action */
-        tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
-        smToken->sval = newStr(smThis, 2);
-        smToken->sval[smToken->length] = '\0';
-      
+      /* Read past action */
+      tmkSkipCode(SEM_SKIP, smThis, &(smToken->fpos), &(smToken->length), pmkEscape);
+      smToken->sval = newStr(smThis, 2);
+      smToken->sval[smToken->length] = '\0';
+
 }
     break;
   }
   return smToken->code;
 }
-
-

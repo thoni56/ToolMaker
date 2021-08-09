@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1993-08-20
- * 
+ *
  * SoftLab ab (c) 1993
  */
 
@@ -43,7 +43,7 @@ int timeCheck(int year,int month,int day)
   time_t at;
 #endif
   struct tm *tmp;
-  
+
   at=time(0);
   tmp=localtime(&at);
   tmp->tm_year+=1900;
@@ -61,54 +61,54 @@ License license()
 {
 #ifdef WIN32
 #ifdef _AMOSDEV
-	char *file = "C:\\ToolMaker.lic";
+  char *file = "C:\\ToolMaker.lic";
 
-	if(access(file,4)==0) {
+  if(access(file,4)==0) {
     char *value;
     int year, month, day;
     unsigned long hostid;
     int users;
-    
+
     /*
      * Check DATE (must be greater or equal to today)
      */
 
-    if ((value=getParameter(file,"DATE"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if ((value=getParameter(file,"DATE"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     sscanf(value,"%d-%d-%d",&year,&month,&day);
-    if(timeCheck(year,month,day)>0) 
-		return LICENSE_EXPIRED;
+    if(timeCheck(year,month,day)>0)
+    return LICENSE_EXPIRED;
 
     /*
      * Check USER (must be equal to 0)
      */
-    if ((value=getParameter(file,"USERS"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if ((value=getParameter(file,"USERS"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     users=atoi(value);
-    if(users!=0) 
-		return LICENSE_FORMAT_ERROR;
+    if(users!=0)
+    return LICENSE_FORMAT_ERROR;
 
     /*
      * Check hostid (must be equal to this host)
      */
-    if ((value=getParameter(file,"HOSTID"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if ((value=getParameter(file,"HOSTID"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     hostid = strtoul(value,NULL,16);
     /*
      * Check host (must be equal to AMOS_Development_License)
      */
-    if((value=getParameter(file,"HOST"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if((value=getParameter(file,"HOST"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     if(strcmp(value, "AMOS_Development_License") != 0)
-		return LICENSE_DENIED;
+    return LICENSE_DENIED;
 
     /*
      * Check password
      */
 
     if((value=getParameter(file,"PASSWORD"))==NULL) return LICENSE_FORMAT_ERROR;
-    if(passwd(year,month,day,users,hostid)!=strtoul(value,NULL,16)) 
-		return LICENSE_ILLEGAL_PASSWORD;
+    if(passwd(year,month,day,users,hostid)!=strtoul(value,NULL,16))
+    return LICENSE_ILLEGAL_PASSWORD;
 
     /*
      * License is OK
@@ -117,10 +117,10 @@ License license()
     return LICENSE_OK;
   }
     /*
-   * No license file found 
+   * No license file found
    */
 
-  return LICENSE_NO_FILE;  
+  return LICENSE_NO_FILE;
 #else
   return LICENSE_OK;
 #endif
@@ -132,14 +132,14 @@ License license()
   /*
    * Check if standalone system
    */
-    
+
   sprintf(file,"%s/.license.%x",getenv("TMHOME"),gethostid());
   if(access(file,R_OK)==0) {
     char *value;
     int year, month, day;
     long hostid;
     int users;
-    
+
     /*
      * Check DATE (must be greater or equal to today)
      */
@@ -223,10 +223,9 @@ License license()
 #endif
 
   /*
-   * No license file found 
+   * No license file found
    */
 
   return LICENSE_NO_FILE;
 #endif
 }
-    
