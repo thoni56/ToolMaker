@@ -2,7 +2,7 @@
 # AUTHOR : Tony Olsson
 # DATE   : 1993-04-21/tools@lion
 # CREATED: 1990-07-12
-# 
+#
 # SoftLab ab (c) 1990
 #
 

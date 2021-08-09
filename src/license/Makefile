@@ -33,14 +33,14 @@ INCLUDE	=	-I../license
 LDFLAGS	=	-lnsl
 solaris1 sun4:=	LDFLAGS	=	-lnsl -L/usr/local/lib/4.1.2
 
-SERVEROBJECTS	= license_rpc_svc.o readParam.o passwd.o version.o common.o licenseServer.o 
+SERVEROBJECTS	= license_rpc_svc.o readParam.o passwd.o version.o common.o licenseServer.o
 CLIENTOBJECTS	= client.o
 PASSWDOBJECTS	= getpasswd.o passwd.o version.o
 LICENSEOBJECTS	= licenseClient.o readParam.o passwd.o common.o
 VERSIONSRCS	= licenseServer.c license_rpc_svc.c readParam.c passwd.c client.c getpasswd.c licenseClient.c common.c
 VERSIONOBJECTS	= ${VERSIONSRCS:.c=.o}
 
-all	:= CFLAGS= -O4 $(CQ) $(INCLUDE) 
+all	:= CFLAGS= -O4 $(CQ) $(INCLUDE)
 purify debug	:= CFLAGS= -g $(CQ) $(INCLUDE)
 release := CFLAGS= -O4 $(CQ) $(INCLUDE)
 releaseARCH := CFLAGS= -O4 $(CQ) $(INCLUDE)
