@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1991-01-10
- * 
+ *
  * SoftLab ab (c) 1991
  *
  * $Header: /Repository/ToolMaker/src/smk/char.c,v 1.1 2002/06/25 20:04:40 Thomas Nilsson Exp $
@@ -26,7 +26,7 @@
  *
  * Revision 1.3  91/07/10  14:20:01  tools
  * New SET handling
- * 
+ *
  * Revision 1.2  1991/07/09  07:33:35  tools
  * Fix map bug and added mapping in DFA-table
  *
@@ -63,28 +63,28 @@ short charDequote(unsigned char *string)
     if(*string=='x' || *string=='X') {
       string++;
       if(*string>='0' && *string<='9')
-	value = *string-'0';
+  value = *string-'0';
       else if(*string>='A' && *string<='F')
-	value = *string-'A'+10;
+  value = *string-'A'+10;
       else if(*string>='a' && *string<='f')
-	value = *string-'a'+10;
+  value = *string-'a'+10;
       string++;
       if(*string>='0' && *string<='9')
-	value = value*16+*string-'0';
+  value = value*16+*string-'0';
       else if(*string>='A' && *string<='F')
-	value = value*16+*string-'A'+10;
+  value = value*16+*string-'A'+10;
       else if(*string>='a' && *string<='f')
-	value = value*16+*string-'a'+10;
+  value = value*16+*string-'a'+10;
     }
     else if(*string>='0' && *string<='7') {
       if(*string>='0' && *string<='7')
-	value = *string-'0';
+  value = *string-'0';
       string++;
       if(*string>='0' && *string<='7')
-	value = value*8+*string-'0';
+  value = value*8+*string-'0';
       string++;
-	if(*string>='0' && *string<='7')
-	  value = value*8+*string-'0';
+  if(*string>='0' && *string<='7')
+    value = value*8+*string-'0';
     }
     else if(*string=='b')
       value =8;
@@ -98,7 +98,7 @@ short charDequote(unsigned char *string)
       value =12;
     else if(*string=='r')
       value =13;
-    else 
+    else
       value = *string;
   }
   else
@@ -112,7 +112,7 @@ short charDequote(unsigned char *string)
   else
     return value;
 }
-    
+
 /*
  * Return the length of the quote
  */
@@ -133,7 +133,7 @@ int charIsRevClass(char *class)
 {
   int min;
   int max;
-  
+
   class++;
   if(*class=='^') class++;
   min=(*class=='-' ? 0 : charDequote((unsigned char *)class));
@@ -153,7 +153,7 @@ char *charClass(char *string)
   short max;
   short set;
 
-  class=(char *)smalloc(256); 
+  class=(char *)smalloc(256);
   string++;
   if(*string=='^') {
     set=0;
@@ -168,17 +168,17 @@ char *charClass(char *string)
       max=*string==']'?255:charDequote((unsigned char *)string);
       if(max<0) return NULL;
       if(min>max)
-	for(;max<=min;max++) 
-	  if(max==optExclude || (mapUsed && mapTable[max]!=max) || (setUsed && setTable[max]<0))
-	    continue; 
-	  else 
-	    class[max]=set;
+  for(;max<=min;max++)
+    if(max==optExclude || (mapUsed && mapTable[max]!=max) || (setUsed && setTable[max]<0))
+      continue;
+    else
+      class[max]=set;
       else
-	for(;min<=max;min++) 
-	  if(min==optExclude || (mapUsed && mapTable[min]!=min) || (setUsed && setTable[min]<0)) 
-	    continue; 
-	  else 
-	    class[min]=set;
+  for(;min<=max;min++)
+    if(min==optExclude || (mapUsed && mapTable[min]!=min) || (setUsed && setTable[min]<0))
+      continue;
+    else
+      class[min]=set;
       if(*string==']') break;
     }
     min=charDequote((unsigned char *)string);
@@ -189,7 +189,7 @@ char *charClass(char *string)
 }
 
 /*
- * Dequote the string and return the length of the string. 
+ * Dequote the string and return the length of the string.
  * NOTE: the string argument is modified.
  */
 
@@ -213,7 +213,7 @@ int charString(unsigned char *string1)
 void charDumpClass(char *class)
 {
   int n;
-  
+
   printf("Class\n");
   for(n=0;n<256;n++) {
     printf(n<' '||n>'~'?"x%02X %c   ":"'%c' %c   ",n,class[n]?'*':'.');

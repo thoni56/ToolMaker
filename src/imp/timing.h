@@ -1,4 +1,4 @@
-/* @(#)timing.h	1.1 (90/11/27 16:54:41) */
+/* @(#)timing.h 1.1 (90/11/27 16:54:41) */
 #ifndef _timing
 #define _timing
 

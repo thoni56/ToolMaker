@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1990-07-12/tony@whoozle
  * CREATED: 1990-07-02
- * 
+ *
  * SoftLab ab (c) 1990
  */
 
@@ -12,8 +12,8 @@
 int fd;
 
 main(argc,argv)
-     register int argc;
-     register char **argv;
+    register int argc;
+    register char **argv;
 {
   TimeItem tb;
   register int time;

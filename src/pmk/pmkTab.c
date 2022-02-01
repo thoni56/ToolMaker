@@ -1,18 +1,18 @@
 /*-----------------------------------------------------------------------------
  * pmTab - ParserMaker table generator
- *		@(#)pmTab.c	1.5 (91/04/03 14:16:24)
+ *      @(#)pmTab.c 1.5 (91/04/03 14:16:24)
  *-----------------------------------------------------------------------------
- * Created:	89-09-08 by Tom
- * Modified:	90-04-18 by Tom. targetHook and all calls removed.
- *		90-05-02 by Tom. Escape characters in %%CODE & %%DATA removed.
- *		90-06-20 by Yngve. pmTarget options logged on pmTab
- *		90-06-28 by Yngve. setLangVars extended to handle Ansi-C, C++
- *		91-04-01 by Yngve. writeSemantics modified to always define
- *				pmSemantics.
- *		91-04-03 by Yngve. writeOptions extended to define pmVersion.
+ * Created: 89-09-08 by Tom
+ * Modified:    90-04-18 by Tom. targetHook and all calls removed.
+ *      90-05-02 by Tom.   Escape characters in %%CODE & %%DATA removed.
+ *      90-06-20 by Yngve. pmTarget options logged on pmTab
+ *      90-06-28 by Yngve. setLangVars extended to handle Ansi-C, C++
+ *      91-04-01 by Yngve. writeSemantics modified to always define
+ *                         pmSemantics.
+ *      91-04-03 by Yngve. writeOptions extended to define pmVersion.
  *-----------------------------------------------------------------------------
  * Entries:
- *	pmTab
+ *  pmTab
  *-----------------------------------------------------------------------------
  */
 
@@ -64,15 +64,15 @@ static Boolean firstEntry;
   "inEscape" and in "outFile" use "outEscape"
 */
 void pmkCopyCode(inFile, pos, length, inEscape, outFile, outEscape)
-     int inFile;		/* File to read code from             */
-     int pos;			/* Position to start read from        */
-     int length;		/* Length of code to read             */
-     char inEscape;		/* Escape character to use in infile  */
-     FILE *outFile;		/* File to write code to              */
-     char outEscape;		/* Escape character to use in outfile */
+    int inFile;         /* File to read code from             */
+    int pos;            /* Position to start read from        */
+    int length;         /* Length of code to read             */
+    char inEscape;      /* Escape character to use in infile  */
+    FILE *outFile;      /* File to write code to              */
+    char outEscape;     /* Escape character to use in outfile */
 {
-    int i;			/* Loop variable              */
-    char ch;			/* Temporary character holder */
+    int i;              /* Loop variable              */
+    char ch;            /* Temporary character holder */
 
     lseek(inFile, pos, 0);
     for (i = 0; i < length; i++) {
@@ -88,8 +88,8 @@ void pmkCopyCode(inFile, pos, length, inEscape, outFile, outEscape)
 }
 
 /*-----------------------------------------------------------------------------
- * setLangVars - Set a number of variables according to language. Works only
- *		 for C, Ansi-C and C++ at the moment.
+ * setLangVars - Set a number of variables according to language.
+ *               Works only for C, Ansi-C and C++ at the moment.
  *-----------------------------------------------------------------------------
  */
 static void setLangVars()
@@ -135,7 +135,7 @@ static void setLangVars()
 
 
 /*-----------------------------------------------------------------------------
- * writeMisc - Set a number of macro variables, Most of them previously set
+ * writeMisc - Set a number of macro variables, most of them previously set
  *             in the .pm or .tm files
  */
 static void writeMisc()
@@ -234,7 +234,7 @@ static void writeMisc()
 }
 /*-----------------------------------------------------------------------------
  * writeOptions - Set a number of macro variables defining the ParserMaker
- *		  options
+ *                options
  *-----------------------------------------------------------------------------
  */
 static void writeOptions()
@@ -273,7 +273,7 @@ static void writeOptions()
 
 /*-----------------------------------------------------------------------------
  * writeCodeAndData - Copies the code and data parts from the grammar file
- *            to the table file.
+ *                    to the table file.
  *-----------------------------------------------------------------------------
  */
 static void writeCodeAndData()
@@ -349,7 +349,7 @@ static void outSubEnd()
  *-----------------------------------------------------------------------------
  */
 static void outEntry(ent)
-     int ent;			/* IN the entry to write */
+     int ent;           /* IN the entry to write */
 {
     if (firstEntry) {
         fprintf(pmTbl, "%u", ent);
@@ -371,7 +371,7 @@ static void outEntry(ent)
  *-----------------------------------------------------------------------------
  */
 static void outString(string)
-     char *string;			/* IN the string to write */
+     char *string;          /* IN the string to write */
 {
     static char dummy[] = "";
     int i;
@@ -810,7 +810,7 @@ static void writeSemantics()
             while (j < strlen(semAct[i].act)) {
                 if ((ch = semAct[i].act[j++]) == '%') putc('`', pmTbl);
                 putc(ch, pmTbl);
-            }	/*while*/
+            }   /*while*/
             fprintf(pmTbl, "%s", actEnd);
         } /*for*/
         fprintf(pmTbl, "%%%%END(pmSemantics)\n");

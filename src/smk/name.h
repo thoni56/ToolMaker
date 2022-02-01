@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1991-01-10/tools@whoozle
  * CREATED: 1990-06-13
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/name.h,v 1.1 2002/06/25 20:04:45 Thomas Nilsson Exp $
@@ -19,7 +19,7 @@
  *
  * Revision 1.1  91/01/10  12:23:06  tools
  * Initial revision
- * 
+ *
  *
  */
 

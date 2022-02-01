@@ -1,20 +1,20 @@
-/*	ask.c			    DATE: 1990-01-17/tools@roo
+/*      ask.c                       DATE: 1990-01-17/tools@roo
 
-	ask -- a package for nice(r) user i/o
-	Written by Reibert Olsson.
+        ask -- a package for nice(r) user i/o
+        Written by Reibert Olsson.
 
-	Requires: ?
-		    
-	DESCRIPTION -- see ASK.HLP
+        Requires: ?
 
-	Version history:
-	  1.00 Minor version				      84-08-22
-	  1.01 AskBool, AskLim  			      84-10-29
-	  1.02 Better scan, eoln_chars			      84-11-10
-	  1.03 AskLong, trace removed (USE symdeb)	      85-10-10
-	  1.04 AskGet, AskSet changed, A_NE		      85-12-06
-	  1.05 MS-C adaption				      86-01-27
-	  2.0  Sun, most rewritten			      89-11-24
+        DESCRIPTION -- see ASK.HLP
+
+        Version history:
+          1.00 Minor version                                  84-08-22
+          1.01 AskBool, AskLim                                84-10-29
+          1.02 Better scan, eoln_chars                        84-11-10
+          1.03 AskLong, trace removed (USE symdeb)            85-10-10
+          1.04 AskGet, AskSet changed, A_NE                   85-12-06
+          1.05 MS-C adaption                                  86-01-27
+          2.0  Sun, most rewritten                            89-11-24
 */
 #include <stdio.h>
 #include <ctype.h>
@@ -32,7 +32,7 @@ PRIVATE char *VERSION= "2.0";
 #endif
 
 #if LANGUAGE==ENGLISH
-char	      
+char
   *booltab[]= { "YES", "NO", NULL },
   boolhelp[]= "Please answer yes or no!",
   menue1[]=   "One of the following items can be given:",
@@ -66,12 +66,12 @@ char
 /* -- Redefinable structures -- */
 
 PRIVATE char
-  *helpChars=      "?",		/* User request for help */
-  *eolnChars=      ".",		/* Equals user <CR> */
+  *helpChars=      "?",         /* User request for help */
+  *eolnChars=      ".",         /* Equals user <CR> */
   *startDefChars=  " (",
   *stopDefChars=   ")",
   *comPrChars=     "> ",
-  *boolPrChars=    "? ",	
+  *boolPrChars=    "? ",
   *numPrChars=     ": ";
 
 PRIVATE boolean
@@ -85,7 +85,7 @@ PRIVATE int
 /* -- Internal variables -- */
 
 #define LINESZ 256                      /* Size of user input buffer */
-			   
+
 PRIVATE char
   buf[LINESZ],                          /* User input buffer */
   defstr[LINESZ];                       /* Temporary default string */
@@ -99,7 +99,7 @@ PRIVATE char
   *prp,                                 /* Prompt s.p. */
   *qpr;                                 /* Question s.p. */
 
-PRIVATE int acw;			/* Actual command word */
+PRIVATE int acw;                        /* Actual command word */
 
 PRIVATE boolean
   helpFound;                           /* Signal from getAnswer */
@@ -118,7 +118,7 @@ PRIVATE putPrompt()
 /* Writes prompt to user: <qpr>[<default>]<prp> */
 {
   printf("%s",qpr);
-  if (!(acw&(A_NDV|A_NSD))) 		/* show default? */
+  if (!(acw&(A_NDV|A_NSD)))             /* show default? */
     printf("%s%s%s", startDefChars, defp, stopDefChars);
   printf("%s",prp);
 }
@@ -181,9 +181,9 @@ char *s;
 {
   int i,c;
 
-  if(acw&A_NE) {			/* no echo == NYI */
+  if(acw&A_NE) {                        /* no echo == NYI */
     return(fgets(s, LINESZ, stdin));
-  } else 				/* echo */
+  } else                                /* echo */
     return(fgets(s, LINESZ, stdin));
 }
 
@@ -212,10 +212,10 @@ boolean
     } else {
       answer= bufp;
       while(*bufp && !helpFound && !(spaceStop && isstop(bufp))) {
-	if (prefix(helpChars,bufp)) {
-	  if (!retHelp) puts(helpp);
-	  helpFound= TRUE;
-	} else bufp++;
+        if (prefix(helpChars,bufp)) {
+          if (!retHelp) puts(helpp);
+          helpFound= TRUE;
+        } else bufp++;
       }
       eol= eoln(bufp);
       *bufp= '\0';
@@ -242,13 +242,13 @@ PRIVATE getNum(pr, ip, h, e, cw) /* Reads integer */
     if (acw^A_NDV) { defp= defstr; sprintf(defstr, "%d", *ip); }
     qpr=pr; prp=numPrChars;
     helpp= (h==NULL? nohelp: h);
-    errp= (e==NULL? interr: e); 
+    errp= (e==NULL? interr: e);
     for (errc=0; errc==0; ) {
-	if ((errc=getAnswer(TRUE,FALSE,FALSE))!=0) break; /* Read & ret on fatal err */
-	sc=sscanf(answer, "%i", ip);
-	if (sc==0)		/* Error: no digs || not only digs */
-	    if (acw&A_RE) errc= 1; else { puts(errp); flush(); }
-	else break;
+        if ((errc=getAnswer(TRUE,FALSE,FALSE))!=0) break; /* Read & ret on fatal err */
+        sc=sscanf(answer, "%i", ip);
+        if (sc==0)              /* Error: no digs || not only digs */
+            if (acw&A_RE) errc= 1; else { puts(errp); flush(); }
+        else break;
     }
     return(errc);
 }
@@ -264,25 +264,25 @@ PRIVATE getCom(pr,no,ctbl,h,e1,e2,cw) /* Get Command */
     if (acw^A_NDV) defp= ctbl[*no];
     qpr= pr;
     for (;;) {
-	if ((errc=getAnswer(TRUE,TRUE,TRUE))==0) {
-	    if (helpFound) {
-		if (h==NULL) {
-		    puts(menue1);
-		    putMenue(answer, ctbl, comWidth, comCols);
-		    puts("");
-		} else puts(h);
-	    } else switch (getMenue(answer, ctbl, no)) {
-	    case 0:
-		if (acw&A_RE) return 1;
-		else { puts(e1); flush(); }
-		break;
-	    case 1: return errc;
-	    default:
-		if (acw&A_RE) return 2;
-		else { puts(e2); flush(); }
-	    }
-	} else return errc;
-    }			    
+        if ((errc=getAnswer(TRUE,TRUE,TRUE))==0) {
+            if (helpFound) {
+                if (h==NULL) {
+                    puts(menue1);
+                    putMenue(answer, ctbl, comWidth, comCols);
+                    puts("");
+                } else puts(h);
+            } else switch (getMenue(answer, ctbl, no)) {
+            case 0:
+                if (acw&A_RE) return 1;
+                else { puts(e1); flush(); }
+                break;
+            case 1: return errc;
+            default:
+                if (acw&A_RE) return 2;
+                else { puts(e2); flush(); }
+            }
+        } else return errc;
+    }
 /*    return errc; */
 }
 
@@ -346,7 +346,7 @@ int cw;
       if (e==NULL) printf("%s%d%s%d\n",limerr1,lo,limerr2,hi);
       else puts(e);
     else break;
-  *i=j; 
+  *i=j;
   return(errc);
 }
 
@@ -372,7 +372,7 @@ PUBLIC int askString(pr,s,len,h,cw)
 PUBLIC int askCom(pr,no,ctbl,h,cw)
     char *pr, *ctbl[], *h;
     int *no, cw;
-{					      
+{
     prp= comPrChars;
     return getCom(pr, no, ctbl, h, nocom, ambig, cw);
 }
@@ -391,7 +391,7 @@ PUBLIC int askBool(pr,b,h,e,cw)
     hp= (h==NULL? boolhelp: h);
     ep= (e==NULL? boolhelp: e);
     if ((errc= getCom(pr, &no, booltab, hp, ep, ep, cw))==0)
-	*b= no==0;
+        *b= no==0;
     return errc;
 }
 

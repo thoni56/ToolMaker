@@ -8,7 +8,7 @@
 typedef unsigned char SET[];
 typedef unsigned char *SETPTR;
 
-/* Use SETDEF(variable,length) to define a set variable 
+/* Use SETDEF(variable,length) to define a set variable
  * which have a 'length' elements.
  */
 #define SETLEN(length) ((length+7)>>3)
@@ -18,16 +18,16 @@ typedef unsigned char *SETPTR;
 
   Some set operations.
 
-  SetUnion:	setOut <- setIn1 (Union) setIn2
-  SetInter:	setOut <- setIn1 (Intersection) setIn2
-  SetDiff :	setOut <- setIn1 (Not In) setIn2
-  SetCompl:	setOut <- (Complement) setIn1
-  SetClear:	set <- 0
+  SetUnion: setOut <- setIn1 (Union) setIn2
+  SetInter: setOut <- setIn1 (Intersection) setIn2
+  SetDiff : setOut <- setIn1 (Not In) setIn2
+  SetCompl: setOut <- (Complement) setIn1
+  SetClear: set <- 0
   SetEmpty:     return 1 if set is not empty (0), otherwise 0
 
-  SetMem:	return elem (In) set
-  setIns:	set <- set (Intersection) {elem}
-  setDel:	set <- set (Not in) {elem}
+  SetMem: return elem (In) set
+  setIns: set <- set (Intersection) {elem}
+  setDel: set <- set (Not in) {elem}
   setClr:       remove all members from lowermember to uppermember (inclusive)
 
 */

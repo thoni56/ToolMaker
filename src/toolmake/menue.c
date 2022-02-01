@@ -1,10 +1,10 @@
 /*======================================================================
-=	FILE: MENUE.C				DATE: 89-11-28/reibert@roo
+=       FILE: MENUE.C                           DATE: 89-11-28/reibert@roo
 =
-=	menue -- a package for matching strings with a command table
+=       menue -- a package for matching strings with a command table
 =
-=	Written by Reibert Olsson
-=	Source language: MS-C v3.00
+=       Written by Reibert Olsson
+=       Source language: MS-C v3.00
 ======================================================================*/
 #include <stdio.h>
 #include <string.h>
@@ -13,21 +13,21 @@
 
 /*----------------------------------------------------------------------
 - NAME
--	Menue -- check if keyword is in table
+-       Menue -- check if keyword is in table
 - SYNOPSIS
--	found= Menue(p,ma,hit);
--	char *p, *ma[], **hit;
--	int found;
+-       found= Menue(p,ma,hit);
+-       char *p, *ma[], **hit;
+-       int found;
 - DESCRIPTION
--	Counts how many times string p is a prefix to items in
--	string pointer array ma.
+-       Counts how many times string p is a prefix to items in
+-       string pointer array ma.
 - RETURNS
--	Number of hits in table:
--	0  == No hit in ma
--	1  == One hit, and hit points at it
--	>1 == Many hits i.e. ambigouos command
+-       Number of hits in table:
+-       0  == No hit in ma
+-       1  == One hit, and hit points at it
+-       >1 == Many hits i.e. ambigouos command
 - CAUTIONS
--	Last item in ma *MUST* point at empty string!
+-       Last item in ma *MUST* point at empty string!
 ----------------------------------------------------------------------*/
 PUBLIC boolean prefix(p,s)
 char *p,*s;
@@ -47,11 +47,11 @@ PUBLIC int getMenue(p, ma, no)
     plen= strlen(p);
     if (plen==0) c= 2;
     else while (ma[rno]) {
-	if (prefix(p,ma[rno])) {
-	    c++; *no= rno;
-	    if (strlen(ma[rno])==plen) { c= 1; break; }
-	}
-	rno++;
+        if (prefix(p,ma[rno])) {
+            c++; *no= rno;
+            if (strlen(ma[rno])==plen) { c= 1; break; }
+        }
+        rno++;
     }
     return c;
 }
@@ -59,18 +59,18 @@ PUBLIC int getMenue(p, ma, no)
 
 /*----------------------------------------------------------------------
 - NAME
--	PutMenue -- Write keywords from table
+-       PutMenue -- Write keywords from table
 - SYNOPSIS
--	PutMenue(p,ma,w,n);
--	char *p, *ma[];
--	int w, n;
+-       PutMenue(p,ma,w,n);
+-       char *p, *ma[];
+-       int w, n;
 - DESCRIPTION
--	Writes on fp words in ma matched by p, in n columns and 
--	total width w.
+-       Writes on fp words in ma matched by p, in n columns and
+-       total width w.
 - RETURNS
--	Nothing.
+-       Nothing.
 - CAUTIONS
--	Last item in ma *MUST* point at empty string!
+-       Last item in ma *MUST* point at empty string!
 ----------------------------------------------------------------------*/
 PUBLIC void putMenue(p,ma,w,n)
 char *p, *ma[];

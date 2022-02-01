@@ -1,6 +1,6 @@
 /*
 
-   Dummy license handler for systems with no network.
+  Dummy license handler for systems with no network.
 
  */
 #include <io.h>
@@ -20,7 +20,7 @@ int timeCheck(int year,int month,int day)
   time_t at;
 #endif
   struct tm *tmp;
-  
+
   at=time(0);
   tmp=localtime(&at);
   tmp->tm_year+=1900;
@@ -37,51 +37,51 @@ int timeCheck(int year,int month,int day)
 License license()
 {
 #ifdef _AMOSDEV
-	char *file = "C:\\ToolMaker.lic";
+  char *file = "C:\\ToolMaker.lic";
 
-	if(access(file,R_OK)==0) {
+  if(access(file,R_OK)==0) {
     char *value;
     int year, month, day;
-	int tmp1,tmp2;
+  int tmp1,tmp2;
     long hostid;
     int users;
-    
+
     /*
      * Check DATE (must be greater or equal to today)
      */
 
-    if ((value=getParameter(file,"DATE"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if ((value=getParameter(file,"DATE"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     sscanf(value,"%d-%d-%d",&year,&month,&day);
-    if(timeCheck(year,month,day)>0) 
-		return LICENSE_EXPIRED;
+    if(timeCheck(year,month,day)>0)
+    return LICENSE_EXPIRED;
 
     /*
      * Check USER (must be equal to 0)
      */
-    if ((value=getParameter(file,"USERS"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if ((value=getParameter(file,"USERS"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     users=atoi(value);
-    if(users!=0) 
-		return LICENSE_FORMAT_ERROR;
+    if(users!=0)
+    return LICENSE_FORMAT_ERROR;
 
     /*
      * Check hostid (must be equal to this host)
      */
 
-    if((value=getParameter(file,"HOST"))==NULL) 
-		return LICENSE_FORMAT_ERROR;
+    if((value=getParameter(file,"HOST"))==NULL)
+    return LICENSE_FORMAT_ERROR;
     if(strcmp(value, "AMOS_Development_License") != 0)
-		return LICENSE_DENIED;
+    return LICENSE_DENIED;
 
     /*
      * Check password
      */
 
     if((value=getParameter(file,"PASSWORD"))==NULL) return LICENSE_FORMAT_ERROR;
-    if((tmp1 = passwd(year,month,day,users,hostid))!=(tmp2 = strtoul(value,NULL,16))) 
-		return LICENSE_ILLEGAL_PASSWORD;
-    
+    if((tmp1 = passwd(year,month,day,users,hostid))!=(tmp2 = strtoul(value,NULL,16)))
+    return LICENSE_ILLEGAL_PASSWORD;
+
     /*
      * License is OK
      */
@@ -89,12 +89,12 @@ License license()
     return LICENSE_OK;
   }
     /*
-   * No license file found 
-   */
+     * No license file found
+     */
 
   return LICENSE_NO_FILE;
 
-  
+
 #else
   return LICENSE_OK;
 #endif

@@ -12,65 +12,65 @@
 #define reduce 3
 #define accept 4
 
-extern int **actTbl;		/* Action table */
-extern int **gtoTbl;		/* Goto table */
-extern SETPTR *dontCare;	/* Don't care symbols */
-extern int stateCnt;		/* Number of parser states */
-extern int actRowCnt;		/* Number of rows in the action table */
-extern int actColCnt;		/* Number of columns in the action table */
-extern int actMax;		/* Largest value in action table */
-extern int gtoRowCnt;		/* Number of rows in the goto table */
-extern int gtoColCnt;		/* Number of columns in the goto table */
-extern int gtoMax;		/* Largest value in goto table */
-extern int tableFactor;		/* Divide factor in tables */
+extern int **actTbl;        /* Action table */
+extern int **gtoTbl;        /* Goto table */
+extern SETPTR *dontCare;    /* Don't care symbols */
+extern int stateCnt;        /* Number of parser states */
+extern int actRowCnt;       /* Number of rows in the action table */
+extern int actColCnt;       /* Number of columns in the action table */
+extern int actMax;          /* Largest value in action table */
+extern int gtoRowCnt;       /* Number of rows in the goto table */
+extern int gtoColCnt;       /* Number of columns in the goto table */
+extern int gtoMax;          /* Largest value in goto table */
+extern int tableFactor;     /* Divide factor in tables */
 
 typedef struct {
-    int tsym;			/* Normal continuation */
-    int ssym;			/* Separator continuation */
+    int tsym;               /* Normal continuation */
+    int ssym;               /* Separator continuation */
 } ContRec;
 
-extern ContRec *contTbl;	/* Continuation function */
+extern ContRec *contTbl;    /* Continuation function */
 
-typedef struct {		/* Representation of one state */
-    int istart;			/* Start of item set */
-    int setsz;			/* Set size */
-    int top;			/* Top of stack */
+typedef struct {            /* Representation of one state */
+    int istart;             /* Start of item set */
+    int setsz;              /* Set size */
+    int top;                /* Top of stack */
 } StateRepr;
 
-extern StateRepr *stateList;	/* States */
+extern StateRepr *stateList;    /* States */
 
-typedef enum ItemKind {		/* Item classification */
-    tTrans,			/* Terminal transition */
-    ntTrans,			/* Non terminal transition */
-    complete			/* Completed item */
+typedef enum ItemKind {     /* Item classification */
+    tTrans,                 /* Terminal transition */
+    ntTrans,                /* Non terminal transition */
+    complete                /* Completed item */
 } ItemKind;
 
 typedef struct {
-    int prod;			/* Production number */
-    int dot;			/* Position of the dot */
+    int prod;               /* Production number */
+    int dot;                /* Position of the dot */
 } ItemSpec;
 
-typedef struct pi {		/* Predecessor representation */
-    struct pi *nxt;		/* Next predecessor in chain */
-    int pred;			/* Definition */
+typedef struct pi {         /* Predecessor representation */
+    struct pi *nxt;         /* Next predecessor in chain */
+    int pred;               /* Definition */
 } PredItem;
 
-typedef struct {		/* Representation of one item */
-    ItemSpec item;		/* Item */
-    int afterDot;		/* Symbol after the dot */
-    int succState;		/* Sucessor state */
-    ItemKind typ;		/* Transition type */
-    Boolean sr;			/* Shift reduce item */
-    PredItem *predList;		/* Predecessors */
-    SETPTR laPtr;		/* Look-ahead set */
+typedef struct {            /* Representation of one item */
+    ItemSpec item;          /* Item */
+    int afterDot;           /* Symbol after the dot */
+    int succState;          /* Sucessor state */
+    ItemKind typ;           /* Transition type */
+    Boolean sr;             /* Shift reduce item */
+    PredItem *predList;     /* Predecessors */
+    SETPTR laPtr;           /* Look-ahead set */
 } ItemRepr;
 
-extern ItemRepr *accItem;	/* Item Table */
+extern ItemRepr *accItem;   /* Item Table */
 
 /*-----------------------------------------------------------------------------
  * nrBytes - Returns the number of bytes a value will occupy. Note that it is
- *       assumed that there is an unsigned 8-bit data type on the target
- *       machine.
+ *           assumed that there is an unsigned 8-bit data type on the target
+ *           machine.
  *-----------------------------------------------------------------------------
  */
 #define nrBytes(val) ((val) < 256? 1: ((val) < 65536? 2: 4))

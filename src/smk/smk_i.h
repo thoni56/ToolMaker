@@ -48,7 +48,7 @@
 #define optLIST_SET     (0x01)
 #define optLIST_MAP     (0x02)
 #define optLIST_TOKEN   (0x04)
-#define optLIST_INPUT (0x08)
+#define optLIST_INPUT   (0x08)
 #define optLIST_NFA     (0x10)
 #define optLIST_DFA     (0x20)
 #define optLIST_RULE    (0x40)

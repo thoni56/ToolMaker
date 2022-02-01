@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-25
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/set.c,v 1.1 2002/06/25 20:04:51 Thomas Nilsson Exp $
@@ -44,7 +44,7 @@
  *
  * Revision 1.5  91/07/30  11:46:51  tools
  * Change the name of ISO8859-1 to ISO8859_1
- * 
+ *
  * Revision 1.4  1991/07/11  10:38:37  tools
  * Added Inherited scanners and Undefined tokens
  *
@@ -81,7 +81,7 @@ Set setPut(Name name)
 {
   Set set;
   int c;
-  
+
   set=(Set)malloc(sizeof(SetItem));
   set->name=name;
   for(c=0;c<256;c++) set->code[c]= -1;
@@ -155,9 +155,9 @@ void setPrint()
       ch1=(row<<4)+col;
       for(ch2=0;ch2<256 && ch1!=setTable[ch2];ch2++);
       if(ch2==256)
-	lmPrintf(" ..");
+  lmPrintf(" ..");
       else
-	lmPrintf(ch2<=' ' || ch2>'~' ? " %02X" : "  %c",ch2);
+  lmPrintf(ch2<=' ' || ch2>'~' ? " %02X" : "  %c",ch2);
     }
     lmPrintf("\n");
   }
@@ -170,7 +170,7 @@ void setRead(smkScContext context)
   Set set;
   int code;
   int c;
-  
+
   context->smScanner=smk_SET_MAIN_Scanner;
   if(smkScan(context,&token)!=smk_SET_IDENTIFIER_Token)
     smkLog(&token.srcp,247,sevERR,"");
@@ -180,36 +180,36 @@ void setRead(smkScContext context)
     else {
       set=setPut(token.name);
       for(code=0;code<256;code++) {
-	smkScan(context,&token);
-	switch(token.code) {
-	case smk_SET_UNKNOWN_Token:
-	case smk_SET_IDENTIFIER_Token:
-	  smkLog(&token.srcp,251,sevWAR,"");
-	  break;
-	case smk_SET_ENDOFTEXT_Token:
-	case smk_SET_EOS_Token:
-	  smkLog(&token.srcp,249,sevERR,"");
-	  goto exit;
-	case smk_SET_NUMBER_Token:
-	  c=strtol(token.name,NULL,16);
-	  if(set->code[c]<0)
-	    set->code[c]=code;
-	  else
-	    smkLog(&token.srcp,250,sevERR,"");
-	  break;
-	case smk_SET_UNDEFINED_Token:
-	  break;
-	case smk_SET_CHARACTER_Token:
-	  c=token.name[0];
-	  if(set->code[c]<0)
-	    set->code[c]=code;
-	  else
-	    smkLog(&token.srcp,250,sevERR,"");
-	  break;
-	}
+  smkScan(context,&token);
+  switch(token.code) {
+  case smk_SET_UNKNOWN_Token:
+  case smk_SET_IDENTIFIER_Token:
+    smkLog(&token.srcp,251,sevWAR,"");
+    break;
+  case smk_SET_ENDOFTEXT_Token:
+  case smk_SET_EOS_Token:
+    smkLog(&token.srcp,249,sevERR,"");
+    goto exit;
+  case smk_SET_NUMBER_Token:
+    c=strtol(token.name,NULL,16);
+    if(set->code[c]<0)
+      set->code[c]=code;
+    else
+      smkLog(&token.srcp,250,sevERR,"");
+    break;
+  case smk_SET_UNDEFINED_Token:
+    break;
+  case smk_SET_CHARACTER_Token:
+    c=token.name[0];
+    if(set->code[c]<0)
+      set->code[c]=code;
+    else
+      smkLog(&token.srcp,250,sevERR,"");
+    break;
+  }
       }
       if(smkScan(context,&token)!=smk_SET_EOS_Token)
-	  smkLog(&token.srcp,249,sevERR,"");
+    smkLog(&token.srcp,249,sevERR,"");
     }
   }
   while(token.code!=smk_SET_EOS_Token && token.code!=smk_SET_ENDOFTEXT_Token) smkScan(context,&token);
@@ -222,55 +222,55 @@ void setCheck(Name name, short *code)
   int c1;
   int c2;
   char buffer[512];
-  
+
   for(c1=0;c1<256;c1++)
     if(code[c1]<0) continue;
     else for(c2=c1+1;c2<256;c2++)
       if(code[c1]==code[c2]) {
-	if(code[c2]<' '||code[c2]>'~')
-	  sprintf(buffer,"%02X (%d)%c%s",code[c2],code[c2],smkSEPARATOR,name);
-	else
-	  sprintf(buffer,"'%c'%c%s",code[c2],smkSEPARATOR,name);
-	smkLog(NULL,252,sevERR,buffer);
+  if(code[c2]<' '||code[c2]>'~')
+    sprintf(buffer,"%02X (%d)%c%s",code[c2],code[c2],smkSEPARATOR,name);
+  else
+    sprintf(buffer,"'%c'%c%s",code[c2],smkSEPARATOR,name);
+  smkLog(NULL,252,sevERR,buffer);
       }
 }
 
 /* ======================================== */
 
 short setISO8859_1[256]={
-   0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15, 
-  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31, 
-  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47, 
-  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63, 
-  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79, 
-  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95, 
-  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 
- 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 
- 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 
- 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 
- 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 
- 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 
- 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 
- 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 
- 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 
+   0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,
+  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
+  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,
+  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,
+  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,
+  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,
+  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
+ 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+ 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143,
+ 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159,
+ 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175,
+ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191,
+ 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207,
+ 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223,
+ 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239,
  240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255};
 
 short setASCII[256]={
-   0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15, 
-  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31, 
-  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47, 
-  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63, 
-  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79, 
-  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95, 
-  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 
- 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
-  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 
+   0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12,  13,  14,  15,
+  16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
+  32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,
+  48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,
+  64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,
+  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,
+  96,  97,  98,  99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
+ 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
+  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1};
 
 short setEBCDIC[256]={
@@ -349,7 +349,7 @@ short setMAC[256]={
 void setInit()
 {
   Set set;
-  
+
   set=setPut("ISO8859_1");
   memcpy(set->code,setISO8859_1,sizeof(set->code));
 #ifdef SETCHECK

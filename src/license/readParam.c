@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1993-08-20
- * 
+ *
  * SoftLab ab (c) 1993
  */
 
@@ -34,7 +34,7 @@ char *getParameter(char *file, char *name)
       parameter=p;
     }
   }
-  
+
   for(p=parameter;p!=NULL;p=p->next)
     if(strcmp(p->name,name)==0) return p->value;
   return NULL;

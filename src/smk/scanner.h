@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/scanner.h,v 1.1 2002/06/25 20:04:49 Thomas Nilsson Exp $
@@ -16,7 +16,7 @@
  * Explicit register allocation removed.
  *
  * Revision 1.2  1993/04/23  11:12:35  tools
- * Totaly rewritten to correctly handle vocabularies and rules.
+ * Totally rewritten to correctly handle vocabularies and rules.
  *
  */
 
@@ -38,16 +38,16 @@ typedef struct Scanner *Scanner;
  */
 
 typedef struct Scanner {
-  TmkSrcp srcp;			/* The scanner source position */
-  Name name;			/* The scanner name */
-  Vocabulary vocabulary;	/* The vocabulary which the scanner is defined in */
-  Code code;			/* The global scanner number */
-  Rule rules;			/* The scanners rules */
-  NFAs nfa;			/* The NFA recognizing the scanners rules */
-  DFA dfa;			/* The DFA recognizing the scanner rules */
+  TmkSrcp srcp;           /* The scanner source position */
+  Name name;              /* The scanner name */
+  Vocabulary vocabulary;  /* The vocabulary which the scanner is defined in */
+  Code code;              /* The global scanner number */
+  Rule rules;             /* The scanners rules */
+  NFAs nfa;               /* The NFA recognizing the scanners rules */
+  DFA dfa;                /* The DFA recognizing the scanner rules */
   Scanner next;
 } ScannerItem;
-  
+
 extern Scanner currentScanner;
 extern Code scannerCodes;
 
@@ -59,4 +59,3 @@ extern void scannerCheckRedefinedPredefined(Scanner firstScanner, Scanner scanne
 extern void scannerDump(Scanner scanner);
 
 #endif
-

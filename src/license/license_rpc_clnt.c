@@ -11,14 +11,14 @@ static struct timeval TIMEOUT = { 25, 0 };
 
 int *
 license_1(argp, clnt)
-	char **argp;
-	CLIENT *clnt;
+    char **argp;
+    CLIENT *clnt;
 {
-	static int res;
+    static int res;
 
-	bzero((char *)&res, sizeof(res));
-	if (clnt_call(clnt, LICENSE, xdr_wrapstring, argp, xdr_int, &res, TIMEOUT) != RPC_SUCCESS) {
-		return (NULL);
-	}
-	return (&res);
+    bzero((char *)&res, sizeof(res));
+    if (clnt_call(clnt, LICENSE, xdr_wrapstring, argp, xdr_int, &res, TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&res);
 }

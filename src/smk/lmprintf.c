@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-29/tools@wolf
  * CREATED: 1990-06-13
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header@
@@ -26,7 +26,7 @@
  *
  * Revision 1.1  91/01/10  13:15:42  tools
  * Initial revision
- * 
+ *
  *
  */
 

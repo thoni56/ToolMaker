@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-11
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/definition.h,v 1.1 2002/06/25 20:04:42 Thomas Nilsson Exp $
@@ -23,7 +23,7 @@
  *
  * Revision 1.2  91/07/08  16:50:23  tools
  * Added named semantic actions
- * 
+ *
  * Revision 1.1  1991/01/10  12:22:57  tools
  * Initial revision
  *
@@ -46,7 +46,7 @@ typedef struct Definition {
   Action action;
   Definition next;
 } DefinitionItem;
-  
+
 extern Definition definitionGet(Name name);
 extern Definition definitionPut(Name name);
 extern void definitionFix();

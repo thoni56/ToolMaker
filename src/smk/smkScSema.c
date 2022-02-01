@@ -38,9 +38,9 @@ extern smkScContext lexContext;
  */
 
 static Action lexWriteAction(
-     smkScContext smThis,
-     ActionType type,
-     int skip)
+    smkScContext smThis,
+    ActionType type,
+    int skip)
 {
   Action action;
   unsigned char *ch;
@@ -74,14 +74,14 @@ static Action lexWriteAction(
       }
   }
   skip=0;
- Exit:
+  Exit:
   smkScSkip(smThis,at-smThis->smLength-skip);
   if(type!=actionNONE) action->stop=smThis->smNextPosition-3+skip;
   return action;
 }
 
 static Name lexName(
-     smkScContext smThis)
+    smkScContext smThis)
 {
   unsigned char rem;
   Name name;
@@ -108,7 +108,7 @@ static Name lexMapName(
 }
 
 static int lexNumber(
-     smkScContext smThis)
+    smkScContext smThis)
 {
   char rem;
   int inumber;
@@ -124,9 +124,9 @@ static int lexNumber(
 /* END %%DECLARATION */
 
 int smkScReader(
-     smkScContext smThis,
-     unsigned char *smBuffer,
-     unsigned int smLength)
+    smkScContext smThis,
+    unsigned char *smBuffer,
+    unsigned int smLength)
 {
 
 
@@ -137,9 +137,9 @@ int smkScReader(
 
 
 int smkScAction(
-     smkScContext smThis,
-     int smInternalCode,
-     SmkToken *smToken)
+    smkScContext smThis,
+    int smInternalCode,
+    SmkToken *smToken)
 {
   enum {
     smSkipToken		= -1,
@@ -253,8 +253,8 @@ int smkScAction(
 }
 
 int smkScPostHook(
-     smkScContext smThis,
-     SmkToken *smToken)
+    smkScContext smThis,
+    SmkToken *smToken)
 {
   enum {
     smSkipToken		= -1

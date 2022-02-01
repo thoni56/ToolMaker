@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1991-01-10
- * 
+ *
  * SoftLab ab (c) 1991
  *
  * $Header: /Repository/ToolMaker/src/smk/time.c,v 1.1 2002/06/25 20:05:00 Thomas Nilsson Exp $
@@ -26,7 +26,7 @@
  *
  * Revision 1.1  91/01/10  13:45:14  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -40,7 +40,7 @@
 #include "time.h"
 
 /*
- * 
+ *
  * Timer functions
  *
  */
@@ -95,4 +95,3 @@ char *tistr(int time)
   sprintf(buffer,"%2d:%02d.%02d",time/(60*TI_HZ),((int)(time/TI_HZ))%60,((int)(time*100/TI_HZ))%100);
   return buffer;
 }
-

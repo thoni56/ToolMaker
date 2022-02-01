@@ -19,39 +19,39 @@ extern jmp_buf jmpExit;
 
 #if defined(__cplusplus)
 extern "C" {
-   extern int impSetVar(
-		 char *str	/* IN variable string, format "Var(val, ...)"*/
-		 );		/* RET non-zero if syntax/memory error */
+    extern int impSetVar(
+        char *str       /* IN variable string, format "Var(val, ...)"*/
+        );              /* RET non-zero if syntax/memory error */
 }
 
 extern "C" {
-   extern int impMacro(
-		char *inName,	/* IN input file name */
-		char *outName,	/* IN output file name or empty */
-		char *msgName,	/* IN file name for imp message file */
-		long flags,	/* IN the various flag values */
-		int listType,	/* IN type of list or zero */
-		char escChar,	/* IN escape character */
-		int *exitCode	/* OUT exit code from %%EXIT(), 0 if not */
-		);		/* RET imp's severity code */
+    extern int impMacro(
+        char *inName,   /* IN input file name */
+        char *outName,  /* IN output file name or empty */
+        char *msgName,  /* IN file name for imp message file */
+        long flags,     /* IN the various flag values */
+        int listType,   /* IN type of list or zero */
+        char escChar,   /* IN escape character */
+        int *exitCode   /* OUT exit code from %%EXIT(), 0 if not */
+        );              /* RET imp's severity code */
 }
 
 #else
 #if defined(__STDC__)
 
 extern int impSetVar(
-    char *str		/* IN variable string, format "Var(val, ...)"*/
-);			/* RET non-zero if syntax/memory error */
+    char *str           /* IN variable string, format "Var(val, ...)"*/
+);                      /* RET non-zero if syntax/memory error */
 
 extern int impMacro(
-     char *inName,	/* IN input file name */
-     char *outName,	/* IN output file name or empty */
-     char *msgName,	/* IN file name for imp message file */
-     long flags,	/* IN the various flag values */
-     int listType,	/* IN type of list or zero */
-     int escChar,	/* IN escape character */
-     int *exitCode	/* OUT exit code from %%EXIT(), 0 if not */
-);			/* RET imp's severity code */
+    char *inName,       /* IN input file name */
+    char *outName,      /* IN output file name or empty */
+    char *msgName,      /* IN file name for imp message file */
+    long flags,         /* IN the various flag values */
+    int listType,       /* IN type of list or zero */
+    int escChar,        /* IN escape character */
+    int *exitCode       /* OUT exit code from %%EXIT(), 0 if not */
+);                      /* RET imp's severity code */
 
 #else
 extern int impSetVar();
@@ -86,13 +86,13 @@ extern int impFileNo;
 typedef int ImpBoolean;
 
 /* Flags */
-extern ImpBoolean impLastPass;	/* True if this pass is the last macro */
-				/* pass. Used to control output of certain */
-				/* warning messages. Partial evaluation */
-				/* is used iff impLastPass == FALSE */
-extern ImpBoolean impUseEnv;	/* True if environment variables should be */
-				/* looked up. */
-extern ImpBoolean impCodeCov;	/* True if code coverage should be reported */
+extern ImpBoolean impLastPass;  /* True if this pass is the last macro */
+                                /* pass. Used to control output of certain */
+                                /* warning messages. Partial evaluation */
+                                /* is used iff impLastPass == FALSE */
+extern ImpBoolean impUseEnv;    /* True if environment variables should be */
+                                /* looked up. */
+extern ImpBoolean impCodeCov;   /* True if code coverage should be reported */
 
 /* Code coverage file */
 extern FILE *impCcFile;

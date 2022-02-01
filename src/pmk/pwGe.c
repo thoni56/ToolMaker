@@ -1,57 +1,57 @@
 /*-----------------------------------------------------------------------------
  * pwGe - Parse table generator
- *		@(#)pwGe.c	1.3 (91/03/27 16:10:12)
+ *      @(#)pwGe.c  1.3 (91/03/27 16:10:12)
  *-----------------------------------------------------------------------------
- * Created:	89-08-11 by Tom
- *			 From VAX/VMS Pascal V1.34, dated 1988-02-18
- * Modified:	90-11-06 by Yngve
- *			Replaced divFactor with shifting and masking
- *			in actTbl entries.
+ * Created: 89-08-11 by Tom
+ *           From VAX/VMS Pascal V1.34, dated 1988-02-18
+ * Modified:    90-11-06 by Yngve
+ *          Replaced divFactor with shifting and masking
+ *          in actTbl entries.
  *-----------------------------------------------------------------------------
  * Entries:
- *	pwGenTab - The entry of the LALR(1) generator
+ *  pwGenTab - The entry of the LALR(1) generator
  *-----------------------------------------------------------------------------
  *
  * Static structure
  * ----------------
  *
- *  pwGenTab		Entry point
- *	abort           Terminates the generating process
- *	wrItemSet       Outputs the item set for a state
+ *  pwGenTab                Entry point
+ *  abort                   Terminates the generating process
+ *  wrItemSet               Outputs the item set for a state
  *
- *	compAccItemSet      Entry point of the item set computation
- *      incItemPtr		Increments the number of items
- *      incNrStates		Increments the number of states
- *      incCorePtr		Increments the core pointer
- *      addPredList		Adds an item to the predecessor list
- *      compItemSet		Computes the LR(0) item set
- *		symAfterDot     Finds the symbol after the "."
- *		closOfCore      Computes the closure set
- *          depthFirstCl	Compute closure depth-first
- *		addSuccState        Computes the successor state
- *          lookUpCore		Checks for distinct cores
- *          lr0State		Checks for LR0 states
- *      compPredecessors	Computes the PRED function
- *		append          Appends two lists
- *		max         Computes max value
- *      orderItem		Sorts the item set
+ *  compAccItemSet          Entry point of the item set computation
+ *      incItemPtr          Increments the number of items
+ *      incNrStates         Increments the number of states
+ *      incCorePtr          Increments the core pointer
+ *      addPredList         Adds an item to the predecessor list
+ *      compItemSet         Computes the LR(0) item set
+ *      symAfterDot         Finds the symbol after the "."
+ *      closOfCore          Computes the closure set
+ *          depthFirstCl    Compute closure depth-first
+ *      addSuccState        Computes the successor state
+ *          lookUpCore      Checks for distinct cores
+ *          lr0State        Checks for LR0 states
+ *      compPredecessors    Computes the PRED function
+ *      append              Appends two lists
+ *      max                 Computes max value
+ *      orderItem           Sorts the item set
  *
- *	compLaSet       Entry point of the look-ahead computation
- *      nullSym		Finds the nullable nonterminals
- *      lalr1Set		Computes the LALR(1) look_ahead (start)
- *		trans           Computes the FIRST function
- *		lalr            LALR(1) algorithm
+ *  compLaSet               Entry point of the look-ahead computation
+ *      nullSym             Finds the nullable nonterminals
+ *      lalr1Set            Computes the LALR(1) look_ahead (start)
+ *      trans               Computes the FIRST function
+ *      lalr                LALR(1) algorithm
  *
- *	compParseTable      Computes the LALR(1) parse tables
- *      isLalr1		Checks for LALR(1)-ness
- *      compContinuation	Computes the continuation function
+ *  compParseTable          Computes the LALR(1) parse tables
+ *      isLalr1             Checks for LALR(1)-ness
+ *      compContinuation    Computes the continuation function
  *
- *	compDontCare        Computes the "don't care" entries
- *      nextState		Finds the successor state
+ *  compDontCare            Computes the "don't care" entries
+ *      nextState           Finds the successor state
  *
- *	writeParseTable     Outputs the parse tables
- *	writeGeStatistics   Output a generated summary
- *      nrBytes		Compute a values byte size
+ *  writeParseTable         Outputs the parse tables
+ *  writeGeStatistics       Output a generated summary
+ *      nrBytes             Compute a values byte size
  *-----------------------------------------------------------------------------
  */
 
@@ -75,28 +75,28 @@
  */
 #include "pwGe.h"
 
-int **actTbl;			/* Action table */
-int **gtoTbl;			/* Goto table */
-SETPTR *dontCare;		/* Don't care symbols */
-int stateCnt;			/* Number of parser states */
-int actRowCnt;			/* Number of rows in the action table */
-int actColCnt;			/* Number of columns in the action table */
-int actMax;			/* Largest value in action table */
-int gtoRowCnt;			/* Number of rows in the goto table */
-int gtoColCnt;			/* Number of columns in the goto table */
-int gtoMax;			/* Largest value in goto table */
-int tableFactor;			/* Divide factor in tables */
-ContRec *contTbl;		/* Continuation function */
-StateRepr *stateList = NULL;	/* States */
-ItemRepr *accItem = NULL;	/* Item Table */
+int **actTbl;           /* Action table */
+int **gtoTbl;           /* Goto table */
+SETPTR *dontCare;       /* Don't care symbols */
+int stateCnt;           /* Number of parser states */
+int actRowCnt;          /* Number of rows in the action table */
+int actColCnt;          /* Number of columns in the action table */
+int actMax;             /* Largest value in action table */
+int gtoRowCnt;          /* Number of rows in the goto table */
+int gtoColCnt;          /* Number of columns in the goto table */
+int gtoMax;             /* Largest value in goto table */
+int tableFactor;        /* Divide factor in tables */
+ContRec *contTbl;       /* Continuation function */
+StateRepr *stateList = NULL;    /* States */
+ItemRepr *accItem = NULL;       /* Item Table */
 
 /*-----------------------------------------------------------------------------
  * Static variables
  */
-static int stateMax;		/* Current state limit */
-static int *coreLen = NULL;	/* Core length */
-static int itemPtr;		/* Pointer in table */
-static int itemMax;		/* Current item limit */
+static int stateMax;        /* Current state limit */
+static int *coreLen = NULL; /* Core length */
+static int itemPtr;         /* Pointer in table */
+static int itemMax;         /* Current item limit */
 static Boolean *gotoOnTerm = NULL;
 
 
@@ -136,8 +136,8 @@ static void incNrStates()
  *-----------------------------------------------------------------------------
  */
 static void addPredList(itemnr, state)
-     int itemnr;			/* IN item number */
-     int state;			/* IN predecessor state */
+    int itemnr;         /* IN item number */
+    int state;          /* IN predecessor state */
 {
     PredItem *pt;
 
@@ -153,9 +153,9 @@ static void addPredList(itemnr, state)
  *-----------------------------------------------------------------------------
  */
 static int symAfterDot(item)
-     ItemSpec item;			/* IN item descriptor */
-     /* RET vocabulary symbol. 0 if dot is at end */
-     /*     of production */
+    ItemSpec item;         /* IN item descriptor */
+    /* RET vocabulary symbol. 0 if dot is at end */
+    /*     of production */
 {
     if (item.dot < global_prod_tbl[item.prod]->rssz) {
         return global_pvec_tbl[global_prod_tbl[item.prod]->start +
@@ -171,14 +171,14 @@ static int symAfterDot(item)
  *-----------------------------------------------------------------------------
  */
 static void depthFirstCl(state, item, pt, legClosure, size)
-     int state;			/* IN state number */
-     int item;			/* IN item number to close */
-     PredItem *pt;			/* IN predecessor list */
-     Boolean *legClosure;		/* INOUT closure start symbols */
-     int *size;			/* INOUT number of elements */
+    int state;              /* IN state number */
+    int item;               /* IN item number to close */
+    PredItem *pt;           /* IN predecessor list */
+    Boolean *legClosure;    /* INOUT closure start symbols */
+    int *size;              /* INOUT number of elements */
 {
-    int sym;			/* Index in vocabulary */
-    int prod;			/* Loop variable for productions */
+    int sym;                /* Index in vocabulary */
+    int prod;               /* Loop variable for productions */
 
     sym = accItem[item].afterDot;
 
@@ -239,30 +239,30 @@ static void depthFirstCl(state, item, pt, legClosure, size)
  *-----------------------------------------------------------------------------
  * Compute the closure set by applying a "Depth first" strategy.
  *
- * In parallell with the closure computation the continuation
+ * In parallel with the closure computation the continuation
  * function will be evaluated (or some part of it)
  *
  * The terminating function (TSYM) is computed by inspecting the
- * the items in the order thay are computed.
+ * the items in the order they are computed.
  * An item has the form [A -> aX . b]    ;where a,b are strings
- *	   - If "b" is empty (a reduce action) an arbitrary symbol
+ *     - If "b" is empty (a reduce action) an arbitrary symbol
  *       from the look-ahead set is chosen. The selection
  *       is postponed until later as the look-ahead is not yet
  *       computed.
- *	   - If b  is a terminal symbol "b" is chosen.
- *	   - Otherwise the next item is inspected
+ *     - If b  is a terminal symbol "b" is chosen.
+ *     - Otherwise the next item is inspected
  *
  * The advancing function (SSYM) for dealing with separators are
  * computed later.
  *-----------------------------------------------------------------------------
  */
 static void closOfCore(state, size)
-     int state;			/* IN state number */
-     int *size;			/* OUT number of elements */
+    int state;              /* IN state number */
+    int *size;              /* OUT number of elements */
 {
-    Boolean *legClosure;	/* Possible closure start symbols */
-    int i;			/* Loop variable */
-    PredItem *pt;		/* Predecessor list */
+    Boolean *legClosure;    /* Possible closure start symbols */
+    int i;                  /* Loop variable */
+    PredItem *pt;           /* Predecessor list */
 
     legClosure = (Boolean *)malloc((vocCnt + 1) * sizeof(Boolean));
     for (i = 0; i <= termCnt; i++) legClosure[i] = FALSE;
@@ -285,14 +285,14 @@ static void closOfCore(state, size)
 
 /*-----------------------------------------------------------------------------
  * lookUpCore - Check whether current core is distinct to all other cores
- *		computed.
+ *              computed.
  *-----------------------------------------------------------------------------
  */
 static int lookUpCore(state, core_start, core_len)
-     int state;			/* IN current state number */
-     int core_start;			/* IN start of core */
-     int core_len;			/* IN length of core */
-     /* RET state nr with equal core. Otherw. 0 */
+    int state;          /* IN current state number */
+    int core_start;     /* IN start of core */
+    int core_len;       /* IN length of core */
+    /* RET state nr with equal core. Otherw. 0 */
 {
     int i, j, tptr, cptr;
     Boolean equal, unequal;
@@ -339,8 +339,8 @@ static int lookUpCore(state, core_start, core_len)
  *-----------------------------------------------------------------------------
  */
 static Boolean lr0State(item, core_len)
-     int item;			/* IN item  number */
-     int core_len;			/* IN core length */
+     int item;          /* IN item  number */
+     int core_len;      /* IN core length */
      /* RET TRUE if a LR0 reduce state */
 {
     return (getSetOpt(OPTIMIZE_OPT) & 1) &&
@@ -358,9 +358,9 @@ static void compItemSet();
  *-----------------------------------------------------------------------------
  */
 static void incCorePtr(corePtr, coreMax, cindex)
-     int *corePtr;			/* INOUT the current core counter */
-     int *coreMax;			/* INOUT the current size of index table */
-     int **cindex;			/* INOUT the current index table */
+    int *corePtr;       /* INOUT the current core counter */
+    int *coreMax;       /* INOUT the current size of index table */
+    int **cindex;       /* INOUT the current index table */
 {
     (*corePtr)++;
     if (*corePtr == *coreMax) {
@@ -379,14 +379,14 @@ static void incCorePtr(corePtr, coreMax, cindex)
  *-----------------------------------------------------------------------------
  */
 static void addSuccState(state)
-     int state;			/* IN current state number */
+    int state;          /* IN current state number */
 {
     int cnt, i, j;
     int strt, tmp;
     int newstate;
-    int *cindex;		/* Core item index table */
-    int corePtr;		/* Pointer in table */
-    int coreMax;		/* Current core item limit */
+    int *cindex;        /* Core item index table */
+    int corePtr;        /* Pointer in table */
+    int coreMax;        /* Current core item limit */
     Boolean *done;
     Boolean state_is_lr0;
 
@@ -515,9 +515,9 @@ static void addSuccState(state)
  *-----------------------------------------------------------------------------
  */
 static void compItemSet(state)
-     int state;			/* IN state number */
+    int state;          /* IN state number */
 {
-    int setlen;			/* Size of the item set */
+    int setlen;         /* Size of the item set */
 
     /* Compute closure of core
      */
@@ -535,9 +535,9 @@ static void compItemSet(state)
  *-----------------------------------------------------------------------------
  */
 static PredItem *append(pt1, pt2)
-     PredItem *pt1;			/* IN first list */
-     PredItem *pt2;			/* IN second list */
-     /* RET "pt1" appended to "pt2" */
+    PredItem *pt1;      /* IN first list */
+    PredItem *pt2;      /* IN second list */
+    /* RET "pt1" appended to "pt2" */
 {
     PredItem *p, *newpt, *pt;
 
@@ -647,9 +647,9 @@ static void compPredecessors()
  */
 static void orderItem()
 {
-    int i, j;			/* Loop index */
-    int cmp_ptr;		/* Pointer to completed items */
-    ItemRepr itmp;		/* Temporary item */
+    int i, j;           /* Loop index */
+    int cmp_ptr;        /* Pointer to completed items */
+    ItemRepr itmp;      /* Temporary item */
 
     /* FALSE is assumed to be = 0 (initial value by calloc)
      */
@@ -718,7 +718,7 @@ static void compAccItemSet()
  *-----------------------------------------------------------------------------
  */
 static void nullSym(nullable)
-     Boolean *nullable;		/* OUT symbol is nullable? */
+     Boolean *nullable; /* OUT symbol is nullable? */
 {
     int i;
     int cnt;
@@ -805,10 +805,10 @@ static void nullSym(nullable)
  *-----------------------------------------------------------------------------
  */
 static void trans(t, nullable, visitedState, la)
-     int t;				/* IN current state */
-     Boolean *nullable;		/* IN symbol is nullable? */
-     Boolean *visitedState;		/* INOUT state is visited? */
-     SET la;				/* OUT computed look-ahead */
+    int t;                      /* IN current state */
+    Boolean *nullable;          /* IN symbol is nullable? */
+    Boolean *visitedState;      /* INOUT state is visited? */
+    SET la;                     /* OUT computed look-ahead */
 {
     int i;
     int sym;
@@ -842,29 +842,29 @@ static void trans(t, nullable, visitedState, la)
  *  could follow A after the reduction.
  *
  *  1.  LALR1(I, T) = LALR([A --> . alfa beta], S)
- *		if GOTO(S, alfa) = T
+ *      if GOTO(S, alfa) = T
  *
  *  2.  LALR([A --> . alfa beta, S] =
  *      (FIRST(psi) | [B --> fi . A psi] is in S)
- *			Union
+ *          Union
  *      (LALR([B --> fi . A psi], S) | If psi ==>* empty string)
  *-----------------------------------------------------------------------------
  */
 static void lalr(itemnr, visitedState, nullable, visitedItem, la)
-     int itemnr;			/* IN current item nr. */
-     Boolean *visitedState;		/* IN state visited? */
-     Boolean *nullable;		/* IN symbol is nullable? */
-     Boolean *visitedItem;		/* INOUT item visited? */
-     SET la;				/* OUT computed look-ahead */
+    int itemnr;                 /* IN current item nr. */
+    Boolean *visitedState;      /* IN state visited? */
+    Boolean *nullable;          /* IN symbol is nullable? */
+    Boolean *visitedItem;       /* INOUT item visited? */
+    SET la;                     /* OUT computed look-ahead */
 {
-    PredItem *tp;		/* Predecessor list */
-    int lsym;			/* Left hand side symbol */
-    int sym;			/* Terminal */
-    int s;			/* Current state */
-    int pos;			/* Pos. in RHS */
-    int rsize;			/* Size of RHS */
-    int i;			/* Loop variable */
-    Boolean empty;		/* Nullable symbol? */
+    PredItem *tp;     /* Predecessor list */
+    int lsym;         /* Left hand side symbol */
+    int sym;          /* Terminal */
+    int s;            /* Current state */
+    int pos;          /* Pos. in RHS */
+    int rsize;        /* Size of RHS */
+    int i;            /* Loop variable */
+    Boolean empty;    /* Nullable symbol? */
 
     visitedItem[itemnr] = TRUE;
     tp = accItem[itemnr].predList;
@@ -919,9 +919,9 @@ static void lalr(itemnr, visitedState, nullable, visitedItem, la)
  *-----------------------------------------------------------------------------
  */
 static void lalr1Set(itemnr, nullable, la)
-     int itemnr;			/* IN LR(0) item */
-     Boolean *nullable;		/* IN symbol is nullable? */
-     SET la;				/* OUT computed look-ahead */
+    int itemnr;         /* IN LR(0) item */
+    Boolean *nullable;  /* IN symbol is nullable? */
+    SET la;             /* OUT computed look-ahead */
 {
     Boolean *visitedState;
     Boolean *visitedItem;
@@ -952,10 +952,10 @@ static void lalr1Set(itemnr, nullable, la)
 static void compLaSet()
 {
     Boolean *nullable;
-    int i, j;			/* Loop index */
+    int i, j;           /* Loop index */
 
     nullable = (Boolean *)malloc((vocCnt + 1) * sizeof(Boolean));
-    nullSym(nullable);		/* Result in "nullable" */
+    nullSym(nullable);      /* Result in "nullable" */
     for (i = 1; i <= stateCnt; i++) {
         for (j = stateList[i].istart;
              j < stateList[i].istart + stateList[i].setsz; j++)
@@ -993,27 +993,27 @@ static void compLaSet()
  *-----------------------------------------------------------------------------
  */
 static Boolean isLalr1(state, resByDefault, resByModify)
-     int state;			/* IN state number to check */
-     Boolean *resByDefault;		/* OUT conflicts resolved by default rules? */
-     Boolean *resByModify;		/* OUT conflicts resolved by modification? */
-     /* RET grammar status */
+    int state;                  /* IN state number to check */
+    Boolean *resByDefault;      /* OUT conflicts resolved by default rules? */
+    Boolean *resByModify;       /* OUT conflicts resolved by modification? */
+    /* RET grammar status */
 {
-    int firstItem;		/* First item in state */
-    int lastItem;		/* Last item in state */
-    int last_red_item;		/* Last reduce item */
-    int sym;			/* Vocabulary symbol */
-    int p1;			/* Production 1 */
-    int p2;			/* Production 2 */
-    Boolean p1_red;		/* Reduce modification for p1? */
-    Boolean p1_nored;		/* Shift modification for p1? */
-    Boolean p2_red;		/* Reduce modification for p2? */
-    Boolean p2_nored;		/* Shift modification for p2? */
-    int reduce_prod;		/* Default production */
-    Boolean conflicts;		/* LALR(1) status */
-    Boolean sr_confl;		/* Shift-Reduce conflict? */
-    Boolean rr_confl;		/* Reduce-Reduce conflict? */
-    SETPTR intres;		/* Result from intersect */
-    int i, j, k;		/* Loop index */
+    int firstItem;      /* First item in state */
+    int lastItem;       /* Last item in state */
+    int last_red_item;  /* Last reduce item */
+    int sym;            /* Vocabulary symbol */
+    int p1;             /* Production 1 */
+    int p2;             /* Production 2 */
+    Boolean p1_red;     /* Reduce modification for p1? */
+    Boolean p1_nored;   /* Shift modification for p1? */
+    Boolean p2_red;     /* Reduce modification for p2? */
+    Boolean p2_nored;   /* Shift modification for p2? */
+    int reduce_prod;    /* Default production */
+    Boolean conflicts;  /* LALR(1) status */
+    Boolean sr_confl;   /* Shift-Reduce conflict? */
+    Boolean rr_confl;   /* Reduce-Reduce conflict? */
+    SETPTR intres;      /* Result from intersect */
+    int i, j, k;        /* Loop index */
 
     conflicts = FALSE;
     firstItem = stateList[state].istart;
@@ -1206,12 +1206,12 @@ static Boolean isLalr1(state, resByDefault, resByModify)
  *-----------------------------------------------------------------------------
  */
 static void compContinuation(state)
-     int state;			/* IN current state */
+    int state;          /* IN current state */
 {
-    int firstItem;		/* First item number */
-    int lastItem;		/* Last item number */
-    int i, j;			/* Loop variables */
-    int tsym;			/* Saved production for reduce states */
+    int firstItem;      /* First item number */
+    int lastItem;       /* Last item number */
+    int i, j;           /* Loop variables */
+    int tsym;           /* Saved production for reduce states */
 
     firstItem = stateList[state].istart;
     lastItem = firstItem + stateList[state].setsz - 1;
@@ -1276,13 +1276,13 @@ static void compContinuation(state)
  */
 static void compParseTable()
 {
-    Boolean *done;		/* Entry gen.? */
-    Boolean lalr1;		/* Condition flag */
-    Boolean state_ok;		/* Current state is LALR(1) */
-    Boolean resByDefault;	/* Conflicts resolved by default rules? */
-    Boolean resByModify;	/* Conflicts resolved by modification? */
-    int ent;			/* Parse table entry */
-    int i, j, k;		/* Loop index */
+    Boolean *done;              /* Entry gen.? */
+    Boolean lalr1;              /* Condition flag */
+    Boolean state_ok;           /* Current state is LALR(1) */
+    Boolean resByDefault;       /* Conflicts resolved by default rules? */
+    Boolean resByModify;        /* Conflicts resolved by modification? */
+    int ent;                    /* Parse table entry */
+    int i, j, k;                /* Loop index */
 
     /* done is initialized to 0 = FALSE
      */
@@ -1322,29 +1322,29 @@ static void compParseTable()
          *
          *  Row "i" of the ACTION-table is constructed as follows
          *
-         *	u = input symbol
-         *	i = current state
-         *	A = nonterminal
-         *	a = string (may be empty)
+         *  u = input symbol
+         *  i = current state
+         *  A = nonterminal
+         *  a = string (may be empty)
          *
          *  For all terminal symbol, "u"
          *
          *  1. ACTION[i,u] = SHIFT s
-         *	if [A --> a . b] is in the LR(0) item set no "i"
-         *	and b = u. "s" is GOTO(i,u).
+         *  if [A --> a . b] is in the LR(0) item set no "i"
+         *  and b = u. "s" is GOTO(i,u).
          *
          *  2. ACTION[i,u] = REDUCE "p"
-         *	if [A --> a.] is in the i:th item set and
-         *	A --> a is the p:th rule of the grammar, and
-         *	"u" is in the look-ahead set for [A --> a.]
+         *  if [A --> a.] is in the i:th item set and
+         *  A --> a is the p:th rule of the grammar, and
+         *  "u" is in the look-ahead set for [A --> a.]
          *
          *  3. ACTION[i,u] = SHIFT-REDUCE "p"
-         *	if OPTIMIZE(LR0) is demanded and [A --> a . b] is
-         *	in the item set and b = u and s = GOTO(i,b)
-         *	is a LR(0) reduce state for production "p"
+         *  if OPTIMIZE(LR0) is demanded and [A --> a . b] is
+         *  in the item set and b = u and s = GOTO(i,b)
+         *  is a LR(0) reduce state for production "p"
          *
          *  4. ACTION[i,u] = ACCEPT
-         *	if u = $ and [SYS --> GOAL.] is in the item set.
+         *  if u = $ and [SYS --> GOAL.] is in the item set.
          *
          *  5. ACTION[i,u] = ERROR otherwise
          */
@@ -1367,7 +1367,7 @@ static void compParseTable()
                 {
                     switch (accItem[j].typ) {
 
-                    case tTrans:	/* SHIFT */
+                    case tTrans:    /* SHIFT */
                         if (!done[accItem[j].afterDot]) {
                             if (accItem[j].sr) {
                                 ent = (accItem[j].item.prod << 3) + shiftReduce;
@@ -1400,7 +1400,7 @@ static void compParseTable()
                         }/*for*/
                         break;
 
-                    case ntTrans:	/* GOTO-table, wait!!! */
+                    case ntTrans:   /* GOTO-table, wait!!! */
                         break;
 
                     }/*switch*/
@@ -1415,11 +1415,11 @@ static void compParseTable()
          *   For all nonterminal symbols B
          *
          *   1. GOTO[i, B] = GOTO(i,B), the successor state
-         *	if [A --> a . B] is in the LR(0) item set.
+         *  if [A --> a . B] is in the LR(0) item set.
          *
          *   2. GOTO[i,B] = REDUCE "p"
-         *	if s = GOTO(i,B), OPTIMIZE(LR0) is demanded and
-         *	s is a LR(0) reduce state, reducing "p"
+         *  if s = GOTO(i,B), OPTIMIZE(LR0) is demanded and
+         *  s is a LR(0) reduce state, reducing "p"
          *
          *   3. GOTO[i,B] = ERROR  otherwise
          */
@@ -1477,9 +1477,9 @@ static void compParseTable()
  *-----------------------------------------------------------------------------
  */
 static int nextState(t, sym)
-     int t;				/* IN transition state */
-     int sym;			/* IN transition symbol */
-     /* RET successor state */
+    int t;              /* IN transition state */
+    int sym;            /* IN transition symbol */
+    /* RET successor state */
 {
     int i;
 
@@ -1496,19 +1496,19 @@ static int nextState(t, sym)
  * compDontCare - Computes the don't care entries
  *-----------------------------------------------------------------------------
  * Compute the don't care entries of the parse table, i.e. the error
- * entires which are never consulted by the parser, for any input.
+ * entries which are never consulted by the parser, for any input.
  *
  * 1. All error entries in the GOTO table are don't care
  *
  * 2. An error entry in state T of the ACTION table is "essential"
  *    on input symbol "a" iff
  *
- *	-  T is the initial table
+ *  -  T is the initial table
  *
- *	-  GOTO(T',b) = T for some T' and terminal b
+ *  -  GOTO(T',b) = T for some T' and terminal b
  *
- *	-  There is a state T' with T in NEXT(T',p) and ACTION[T',a]
- *	   is "reduce p".
+ *  -  There is a state T' with T in NEXT(T',p) and ACTION[T',a]
+ *     is "reduce p".
  *
  *
  * NEXT(T,p) defines the states T', which can be on top of stack after

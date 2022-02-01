@@ -1,14 +1,14 @@
 /*-----------------------------------------------------------------------------
  * timing - Routines for timing
  *-----------------------------------------------------------------------------
- * Created:	89-10-30 by Tom.
- * Modified:	No.
+ * Created: 89-10-30 by Tom.
+ * Modified:    No.
  *-----------------------------------------------------------------------------
- * Entries:								     
- *	tiStart
- *	tiStop
- *	tiPrint
- *	tiC
+ * Entries:
+ *  tiStart
+ *  tiStop
+ *  tiPrint
+ *  tiC
  *-----------------------------------------------------------------------------
  */
 
@@ -60,17 +60,17 @@ TiMode mode;
     switch (mode) {
 
     case TiMS:
-	printf("%02d:%02d", m, s);
-	break;
+    printf("%02d:%02d", m, s);
+    break;
 
     case TiMSC:
-	printf("%02d:%02d.%02d", m, s, hs);
-	break;
+    printf("%02d:%02d.%02d", m, s, hs);
+    break;
 
     case TiSC:
     default:
-	printf("%3d.%02d", sTot, hs);
-	break;
+    printf("%3d.%02d", sTot, hs);
+    break;
 
     }/*switch*/
 }/*tiPrint()*/

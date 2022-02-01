@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/vocabulary.c,v 1.1 2002/06/25 20:05:03 Thomas Nilsson Exp $
@@ -12,7 +12,7 @@
  * Initial version of ToolMaker source import
  *
  * Revision 1.5  1997/06/26 11:53:52  hakan
- * <CR><LF> problematiken åtgärdad
+ * <CR><LF> problematiken Ã¥tgÃ¤rdad
  *
  * Revision 1.4  1997/01/22 16:28:10  gunilla
  * Adapted for WIN32
@@ -42,15 +42,15 @@
 #include "smk_i.h"
 #include "token.h"
 #include "vocabulary.h"
- 
+
 Vocabulary vocabularies=0;
 
 Vocabulary vocabularyGet(Vocabulary vocabularies, Name name)
 {
-  for(;vocabularies;vocabularies=vocabularies->next) 
+  for(;vocabularies;vocabularies=vocabularies->next)
     if(vocabularies->name==name) return vocabularies;
   return 0;
-}  
+}
 
 Vocabulary vocabularyNew(Vocabulary* vocabularies, Name name)
 {
@@ -89,10 +89,10 @@ Bool vocabularyCheckTokens(Vocabulary vocabulary)
     for(token=vocabulary->tokens;token;token=token->next) token->defined=NO;
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
       for(rule=scanner->rules;rule;rule=rule->next) rule->token->defined=YES;
-    for(token=vocabulary->tokens;token;token=token->next) 
+    for(token=vocabulary->tokens;token;token=token->next)
       if(token->defined==NO) {
-	undefined=YES;
-	smkLog(&token->srcp,236,sevERR,"");
+  undefined=YES;
+  smkLog(&token->srcp,236,sevERR,"");
       }
   }
   return undefined;
@@ -143,7 +143,7 @@ void vocabularyRead(Name file)
       smkLog(&token.srcp,226,sevINF,"");
     }
     else if(token.code!=smk_VOCABULARY_IDENTIFIER_Token &&
-	    token.code!=smk_VOCABULARY_STRING_Token) smkLog(&token.srcp,227,sevERR,"");
+      token.code!=smk_VOCABULARY_STRING_Token) smkLog(&token.srcp,227,sevERR,"");
     if(token.code==smk_VOCABULARY_NEWLINE_Token) continue;
 
     smkScan(context,&vocabulary);
@@ -154,16 +154,16 @@ void vocabularyRead(Name file)
       vocabulary.srcp.line=0;
       vocabulary.name=nameSearch("MAIN");
       if(!oldVocabulary) {
-	smkLog(&vocabulary.srcp,228,sevINF,"");
-	store(vocabulary.name, nameSearch("UNKNOWN"), 0);
-	{
-	  Vocabulary voc=vocabularyGet(vocabularies,vocabulary.name);
-	  Token tok=tokenGetByName(voc->tokens,nameSearch("UNKNOWN"));
-	  tok->srcp=vocabulary.srcp;
-	  tok->vocabulary=voc;
-	}
-	smkLog(&vocabulary.srcp,244,sevINF,"");
-	oldVocabulary=1;
+  smkLog(&vocabulary.srcp,228,sevINF,"");
+  store(vocabulary.name, nameSearch("UNKNOWN"), 0);
+  {
+    Vocabulary voc=vocabularyGet(vocabularies,vocabulary.name);
+    Token tok=tokenGetByName(voc->tokens,nameSearch("UNKNOWN"));
+    tok->srcp=vocabulary.srcp;
+    tok->vocabulary=voc;
+  }
+  smkLog(&vocabulary.srcp,244,sevINF,"");
+  oldVocabulary=1;
       }
       goto EnterToken;
     }
@@ -193,9 +193,9 @@ void vocabularyDump(Vocabulary vocabulary)
 {
   Token token;
   Scanner scanner;
-  printf("%%VOCABULARY name='%s' %s\n", 
-	 vocabulary->name,
-	 vocabulary->external ? "EXTERNAL DEFINED" : "INTERNAL DEFINED");
+  printf("%%VOCABULARY name='%s' %s\n",
+   vocabulary->name,
+   vocabulary->external ? "EXTERNAL DEFINED" : "INTERNAL DEFINED");
   for(token=vocabulary->tokens;token;token=token->next)
     tokenDump(token);
   for(scanner=vocabulary->scanners;scanner;scanner=scanner->next)
@@ -214,19 +214,19 @@ void vocabularyPrint()
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       lmPrintf("    Scanner: %2d %s\n", scanner->code, scanner->name);
       for(rule=scanner->rules;rule;rule=rule->next) {
-	if(rule->code == codeSKIP)
-	  lmPrintf("\tSKIP");
-	else
-	  lmPrintf("\t%4d",rule->code);
-	if(rule->token->code == codeSKIP)
-	  lmPrintf(" SKIP %-15s", rule->token->name);
-	else
-	  lmPrintf(" %4d %-15s", rule->token->code, rule->token->name);
-	if(rule->screening)
-	  lmPrintf(" SCREENED");
-	if(rule->screens)
-	  lmPrintf(" SCREENS A TOKEN");
-	lmPrintf("\n");
+  if(rule->code == codeSKIP)
+    lmPrintf("\tSKIP");
+  else
+    lmPrintf("\t%4d",rule->code);
+  if(rule->token->code == codeSKIP)
+    lmPrintf(" SKIP %-15s", rule->token->name);
+  else
+    lmPrintf(" %4d %-15s", rule->token->code, rule->token->name);
+  if(rule->screening)
+    lmPrintf(" SCREENED");
+  if(rule->screens)
+    lmPrintf(" SCREENS A TOKEN");
+  lmPrintf("\n");
       }
     }
   }

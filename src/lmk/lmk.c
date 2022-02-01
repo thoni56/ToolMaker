@@ -128,10 +128,10 @@ MessSectNodeP messSectRoot;
   Interface against tmk lister messages
 */
 void tmkLog(pos, ecode, sev, istrs)
-     TmkSrcp *pos;		/* IN - Source position */
-     int ecode;			/* IN - The error code */
-     lmkSev sev;	/* IN - Severity code */
-     char istrs[];		/* IN - Insert strings */
+     TmkSrcp *pos;  /* IN - Source position */
+     int ecode;     /* IN - The error code */
+     lmkSev sev;    /* IN - Severity code */
+     char istrs[];  /* IN - Insert strings */
 {
   lmkLog(pos, ecode, sev, istrs);
 }

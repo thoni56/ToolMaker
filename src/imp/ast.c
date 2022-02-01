@@ -91,10 +91,10 @@ impSev impMySeverity()
 }
 
 void impMyLog(pos, ecode, sev, istrs)
-     TmSrcp *pos;		/* IN - Source position */
-     int ecode;			/* IN - The error code */
-     impSev sev;			/* IN - Severity code */
-     char istrs[];		/* IN - Insert strings */
+     TmSrcp *pos;               /* IN - Source position */
+     int ecode;                 /* IN - The error code */
+     impSev sev;                /* IN - Severity code */
+     char istrs[];              /* IN - Insert strings */
 {
     if (ignoreErrors)
         return;
@@ -2279,30 +2279,30 @@ static BoolResult peBoolean(ast, cond)
   is returned and no list.
 */
 static ImpBoolean evalExpr(inXpr, outXpr)
-     register Ast inXpr;	/* Expression to evaluate */
-     register Ast *outXpr;	/* Partially evaluated expression */
+     register Ast inXpr;        /* Expression to evaluate */
+     register Ast *outXpr;      /* Partially evaluated expression */
 {
-    int iResult = 0,		/* Integer result of expression evaluation */
-        tmpInt;			/* Temporary holder of integer */
-    char *lTxt = NULL,		/* Text for left side in expression */
-        *rTxt = NULL,		/* Text for right side in expression */
-        *xprTxt = NULL,		/* Text for expression */
-        *errTxt = NULL,		/* Text for error message or warning */
-        *idxTxt = NULL,		/* Text for index expression */
-        *intTxt = NULL,		/* Text for integer value */
-        *idTxt = NULL;		/* Text for identifier name */
-    ImpBoolean evalIdent,		/* Did we succeed in evaluating an identifier name */
-        evalIdx,		/* Did we succeed in evaluating an index expression */
-        evalToInt,		/* Succeeded in evaluating ast into an integer value */
-        partEval,		/* Has partial evaluation been used */
-        evalHead,		/* Head of an CONCAT node evaluated OK */
-        evalTail,		/* Tail of an CONCAT node evaluated OK */
-        success = TRUE,	/* Evaluation of expression OK */
-        errType,		/* Has the expression wrong type (not integer) */
-        prevLastPass;	/* Previous value of lastPass */
+    int iResult = 0,            /* Integer result of expression evaluation */
+        tmpInt;                 /* Temporary holder of integer */
+    char *lTxt = NULL,          /* Text for left side in expression */
+        *rTxt = NULL,           /* Text for right side in expression */
+        *xprTxt = NULL,         /* Text for expression */
+        *errTxt = NULL,         /* Text for error message or warning */
+        *idxTxt = NULL,         /* Text for index expression */
+        *intTxt = NULL,         /* Text for integer value */
+        *idTxt = NULL;          /* Text for identifier name */
+    ImpBoolean evalIdent,       /* Did we succeed in evaluating an identifier name */
+        evalIdx,                /* Did we succeed in evaluating an index expression */
+        evalToInt,              /* Succeeded in evaluating ast into an integer value */
+        partEval,               /* Has partial evaluation been used */
+        evalHead,               /* Head of an CONCAT node evaluated OK */
+        evalTail,               /* Tail of an CONCAT node evaluated OK */
+        success = TRUE,         /* Evaluation of expression OK */
+        errType,                /* Has the expression wrong type (not integer) */
+        prevLastPass;           /* Previous value of lastPass */
     Ast
-        tmpAst, tmpAst2,		/* Temporary holder of ast reference */
-        valueList;		/* Values of ident-ast in an AST_GET node */
+        tmpAst, tmpAst2,        /* Temporary holder of ast reference */
+        valueList;              /* Values of ident-ast in an AST_GET node */
 
     if (inXpr)
         inXpr->evalCnt++;
@@ -3344,32 +3344,32 @@ static ImpBoolean evalExpr(inXpr, outXpr)
   If it succeeds to evaluate the whole tree it returns NULL.
 */
 ImpBoolean impInterpretAst(inAst)
-     register Ast inAst;	/* Ast to interpret */
+     register Ast inAst;        /* Ast to interpret */
 {
-    char *exprTxt,		/* Expression text */
-        *stmTxt,			/* Statement text */
-        *identTxt,		/* Identifier name */
-        *beginLabel,             /* Begin label in loop and region */
-        *endLabel,               /* End label in loop and region */
-        *param,			/* Parameter name */
-        *localVar,		/* Local variable name */
-        *cond;			/* Boolean condition */
-    int i,			/* Common integer variable */
-        loopVar;			/* Variable to hold loop value when evaluating loop statement */
-    Ast list,			/* Ast list */
-        exprAst,			/* Expression ast */
-        tmp;			/* Temporary ast reference */
+    char *exprTxt,              /* Expression text */
+        *stmTxt,                /* Statement text */
+        *identTxt,              /* Identifier name */
+        *beginLabel,            /* Begin label in loop and region */
+        *endLabel,              /* End label in loop and region */
+        *param,                 /* Parameter name */
+        *localVar,              /* Local variable name */
+        *cond;                  /* Boolean condition */
+    int i,                      /* Common integer variable */
+        loopVar;                /* Variable to hold loop value when evaluating loop statement */
+    Ast list,                   /* Ast list */
+        exprAst,                /* Expression ast */
+        tmp;                    /* Temporary ast reference */
     Region region;
     Plist regParams;
-    ImpBoolean partEval,		/* Use partial evaluation */
-        setParams,		/* Are we trying to set parameters */
-        evalFlg,		/* Has we succeded in evaluation of node */
-        badHead,		/* Begin label does not match end label */
-        evalHead,		/* Head of an CONCAT node evaluated OK */
-        evalTail,		/* Tail of an CONCAT node evaluated OK */
-        prevIgnErr;	/* Previous value of ignoreErrors */
-    TxtList paramList,		/* Parameter list */
-        localList;		/* Local variable list */
+    ImpBoolean partEval,        /* Use partial evaluation */
+        setParams,              /* Are we trying to set parameters */
+        evalFlg,                /* Has we succeded in evaluation of node */
+        badHead,                /* Begin label does not match end label */
+        evalHead,               /* Head of an CONCAT node evaluated OK */
+        evalTail,               /* Tail of an CONCAT node evaluated OK */
+        prevIgnErr;             /* Previous value of ignoreErrors */
+    TxtList paramList,          /* Parameter list */
+        localList;              /* Local variable list */
 
 
     /*  if (malloc_verify()) { */
@@ -4180,7 +4180,7 @@ ImpBoolean impInterpretAst(inAst)
   If it succeeds to evaluate the whole tree it returns NULL.
 */
 void impReportCnt(inAst)
-     register Ast inAst;	/* Ast to report */
+     register Ast inAst;        /* Ast to report */
 {
     if (inAst == NULL) {
         return;
@@ -4618,7 +4618,7 @@ char *impItoa(n)
 {
     char *s;
     int i, sign;
-    s = (char*)malloc(128);		/* Just to make sure */
+    s = (char*)malloc(128);             /* Just to make sure */
     if (!s) {
         if (!(impAstGarb() && (s = (char*)malloc(128))))
             longjmp(jmpEnv, 1);

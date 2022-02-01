@@ -5,9 +5,9 @@
 #include "pwGe.h"
 
 /*------------------------print_sym_set----------------------------*/
-/*                                         */
+/*                                                                 */
 /* print_sym_set - writes symbols in a sym_set.                    */
-/*                                         */
+/*                                                                 */
 /*-----------------------------------------------------------------*/
 
 void print_sym_set(s)
@@ -26,27 +26,27 @@ void print_sym_set(s)
 }/*print_sym_set()*/
 
 /*------------------------write_prod-------------------------------*/
-/*                                         */
+/*                                                                 */
 /* write_prod - writes original production by traversing syntax    */
 /*              tree recursively (unformatted). write_orig_prod    */
 /*              calls this function.                               */
-/*                                         */
+/*                                                                 */
 /*-----------------------------------------------------------------*/
 
 void write_prod(prodnr,lhs,rhs,top,with_modif)
-     int prodnr;
-     prod_elnode * lhs;   /* production's lhs          */
-     prod_elnode * rhs;   /* production's rhs          */
-     Boolean top;         /* write lhs (call from top) */
-     Boolean with_modif;  /* write modifiers           */
+    int prodnr;
+    prod_elnode * lhs;    /* production's lhs          */
+    prod_elnode * rhs;    /* production's rhs          */
+    Boolean top;          /* write lhs (call from top) */
+    Boolean with_modif;   /* write modifiers           */
 {
     prod_elnode *  curr_rhs = rhs;
     altr_lst * curr_altr;
 
     if (!top) {
         fprintf(pwsLog, "%u: ", prodnr);
-        if (newsym == NULL)  /* Symbol references are not updated in tree nodes */
-            /* after ordering grammar (See pwsOrd.c). */
+        if (newsym == NULL) /* Symbol references are not updated in tree nodes */
+                            /* after ordering grammar (See pwsOrd.c). */
             fprintf(pwsLog, "%s = ",
                     vocabulary[lhs->node_info.sym_node.sym_ind]->name);
         else
@@ -129,21 +129,21 @@ void write_prod(prodnr,lhs,rhs,top,with_modif)
 
 
 /*------------------------write_derived_prods----------------------*/
-/*                                         */
+/*                                                                 */
 /* wirte_derived_prods - writes productions derived from           */
 /*                       orig_prod_nr (unformatted).               */
-/*                                         */
+/*                                                                 */
 /*-----------------------------------------------------------------*/
 
 void write_derived_prods(orig_prod_nr,with_acts,with_attref,with_modif,verified_attref)
-     int orig_prod_nr;       /* Original production number  */
+     int orig_prod_nr;          /* Original production number  */
      Boolean with_acts;         /* write actions               */
      Boolean with_attref;       /* write vocabulary symbols    */
-     /* in attribute references     */
+                                /* in attribute references     */
      Boolean with_modif;        /* write modifiers             */
      Boolean verified_attref;   /* write vocabulary symbols    */
-     /* in attribute references     */
-     /* after verification          */
+                                /* in attribute references     */
+                                /* after verification          */
 {
     int i,j,k,l;
     for(i=0;i<=global_prod_cnt;i++) {
@@ -192,14 +192,14 @@ void write_derived_prods(orig_prod_nr,with_acts,with_attref,with_modif,verified_
 }
 
 /*------------------------write_orig_prod--------------------------*/
-/*                                         */
+/*                                                                 */
 /* write_orig_prod - writes original production prod_nr by calling */
 /*                   write_prod.                                   */
-/*                                         */
+/*                                                                 */
 /*-----------------------------------------------------------------*/
 
 void write_orig_prod(prod_nr,with_modif)
-     int prod_nr;      /* original production number */
+     int prod_nr;         /* original production number */
      Boolean with_modif;  /* write modifiers            */
 {
     if (prod_nr <=  orig_prod_cnt)

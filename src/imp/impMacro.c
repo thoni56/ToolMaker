@@ -1,22 +1,22 @@
 /*-----------------------------------------------------------------------------
  * impMacro - The macro processor main routine.
- * @(#)impMacro.c	1.2 (91/04/30 16:54:42)
+ * @(#)impMacro.c       1.2 (91/04/30 16:54:42)
  *-----------------------------------------------------------------------------
- * Created:	87-10-28 by Tom
- * Modified:	89-09-28 by Tom. Moved to Sun and Sws2.
- *		89-10-25 by Tom. mwsSetVar introduced.
- *		89-11-21 by Tom. Renamed to IMP.
- *		90-03-14 by Tom. Interface to impMacro changed, environment
- *				 variable support introduced.
- *		90-06-07 by Tom. impSetVar changed to handle integers also.
- *				 License check removed.
- *		90-06-27 by Tom. Bug fix: string lengths in impSetVar incr.
- *				 Bug fix: wrong file name passed to impInit.
- *		90-12-03 by Tom. impSetVar changed to allow empty values.
+ * Created:     87-10-28 by Tom
+ * Modified:    89-09-28 by Tom. Moved to Sun and Sws2.
+ *              89-10-25 by Tom. mwsSetVar introduced.
+ *              89-11-21 by Tom. Renamed to IMP.
+ *              90-03-14 by Tom. Interface to impMacro changed, environment
+ *                               variable support introduced.
+ *              90-06-07 by Tom. impSetVar changed to handle integers also.
+ *                               License check removed.
+ *              90-06-27 by Tom. Bug fix: string lengths in impSetVar incr.
+ *                               Bug fix: wrong file name passed to impInit.
+ *              90-12-03 by Tom. impSetVar changed to allow empty values.
  *-----------------------------------------------------------------------------
  * Entries:
- *	impSetVar
- *	impMacro
+ *      impSetVar
+ *      impMacro
  *-----------------------------------------------------------------------------
  */
 
@@ -65,14 +65,14 @@ FILE *impCcFile;
 /* Global data */
 int impFileNo;
 int impExitCode;
-char impEsc;		/* Escape character in macro files */
+char impEsc;            /* Escape character in macro files */
 ImpBoolean impLastPass;
 ImpBoolean impUseEnv;
 ImpBoolean impCodeCov;
 jmp_buf jmpEnv;
-jmp_buf jmpExit;		/* Where to jump on %%EXIT() */
+jmp_buf jmpExit;                /* Where to jump on %%EXIT() */
 
-static TiBuf tb;		/* Timing buffer */
+static TiBuf tb;                /* Timing buffer */
 
 impScContext impcontext;
 typedef enum TokenType {
@@ -91,9 +91,9 @@ typedef enum TokenType {
  *-----------------------------------------------------------------------------
  */
 static TokenType strScan(str, ind, chars)
-char *str;			/* IN the string to scan */
-int *ind;			/* INOUT the current index in str */
-char *chars;			/* OUT the scanned characters if pertinent */
+char *str;                      /* IN the string to scan */
+int *ind;                       /* INOUT the current index in str */
+char *chars;                    /* OUT the scanned characters if pertinent */
 {
     while (isspace(str[*ind])) (*ind)++;
     if (isdigit(str[*ind])) {
@@ -119,7 +119,7 @@ char *chars;			/* OUT the scanned characters if pertinent */
         else if (str[*ind] == '"') {
             *(chars++) = str[(*ind)++];
             if (str[*ind] != '"') {
-/*			*chars = '\0'; */
+/*                      *chars = '\0'; */
             *(chars-1) = '\0';
             return STRING;
             }/*if*/
@@ -149,7 +149,7 @@ char *chars;			/* OUT the scanned characters if pertinent */
  *-----------------------------------------------------------------------------
  */
 int impSetVar(str)
-char *str;			/* IN variable string, format "Var(val, ...)"*/
+char *str;                      /* IN variable string, format "Var(val, ...)"*/
                 /* RET non-zero if syntax error */
 {
     int ind = 0;
@@ -228,13 +228,13 @@ char *str;			/* IN variable string, format "Var(val, ...)"*/
  *-----------------------------------------------------------------------------
  */
 int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
-     char *inName;		/* IN input file name */
-     char *outName;		/* IN output file name or empty */
-     char *msgName;		/* IN file name for imp message file */
-     long flags;		/* IN the various flag values */
-     int listType;		/* IN type of list or zero */
-     int escChar;		/* IN escape character */
-     int *exitCode;		/* OUT exit code from %%EXIT(), 0 if not */
+     char *inName;              /* IN input file name */
+     char *outName;             /* IN output file name or empty */
+     char *msgName;             /* IN file name for imp message file */
+     long flags;                /* IN the various flag values */
+     int listType;              /* IN type of list or zero */
+     int escChar;               /* IN escape character */
+     int *exitCode;             /* OUT exit code from %%EXIT(), 0 if not */
 {
 
   char *listFileName, *libPath, *tail, *codeCovFile;

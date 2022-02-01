@@ -1,22 +1,22 @@
-/*------------------------------------------------------------------- */ 
-/* TITLE                                                              */ 
-/* ------                                                             */ 
+/*------------------------------------------------------------------- */
+/* TITLE                                                              */
+/* ------                                                             */
 /* lmkTab.c                                                           */
-/*                                                                    */ 
+/*                                                                    */
 /* VERSION:   1.0                                                     */
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* REVISION DATA                                                      */ 
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* REVISION DATA                                                      */
 /* -------------                                                      */
 /* CREATED:   92-07-20  Micael Dahlgren                               */
 /* BASED ON:                                                          */
-/* MODIFIED:                                                          */ 
-/* ------------------------------------------------------------------ */ 
-/*                                                                    */ 
-/* DESCRIPTION                                                        */ 
-/* -----------                                                        */ 
+/* MODIFIED:                                                          */
+/* ------------------------------------------------------------------ */
+/*                                                                    */
+/* DESCRIPTION                                                        */
+/* -----------                                                        */
 /* ListerMaker table generator                                        */
-/*                                                                    */ 
+/*                                                                    */
 /* ------------------------------------------------------------------ */
 /* IMPORT */
 #include <ctype.h>
@@ -52,25 +52,25 @@ static void impify(outstr, instr)
 
 */
 static void prOpt(outfile)
-  FILE *outfile;		/* IN output file */
+  FILE *outfile;                /* IN output file */
 {
   Boolean optPrinted = FALSE;
   int i;
 
   fprintf(outfile, "%%%%SET lmkInclude(%s)\n", boolT(INCLUDE_OPT));
   fprintf(outfile, "%%%%SET lmkMessage(%s)\n",
-	  (getNumOpt(MESSAGE_OPT) ? "Embedded" : "File"));
+          (getNumOpt(MESSAGE_OPT) ? "Embedded" : "File"));
 
   for (i = 0; i < 3; i++)
     if (getSetOpt(LISTINGS_OPT) & (1 << i)) {
-      fprintf(outfile, "%%%%SET lmkListings(%s%s)\n", 
-	    (optPrinted ? ", " : ""), listType[i]);
+      fprintf(outfile, "%%%%SET lmkListings(%s%s)\n",
+            (optPrinted ? ", " : ""), listType[i]);
       optPrinted = TRUE;
     }
 
   if (getBoolOpt(LIMIT_OPT))
     fprintf(outfile, "%%%%SET lmkMessagelimit(%i)\n",
-	    getNumOpt(LIMIT_OPT));
+            getNumOpt(LIMIT_OPT));
 
   fprintf(outfile, "%%%%SET tmkForce(%d)\n", getBoolOpt(FORCE_OPT) ? 1 : 0);
   fprintf(outfile, "%%%%SET tmkTarget(\"%s\")\n", getStrOpt(TMKTARGET_OPT));
@@ -94,8 +94,8 @@ static void prOpt(outfile)
 
 */
 static void prMess(outfile, msNode)
-  FILE *outfile;		/* IN output file */
-  MessSectNodeP msNode;		/* IN message sector node */
+  FILE *outfile;                /* IN output file */
+  MessSectNodeP msNode;         /* IN message sector node */
 {
   int i;
   char buff[255];
@@ -105,17 +105,17 @@ static void prMess(outfile, msNode)
     msNode->name[i] = toupper(msNode->name[i]);
 
   fprintf(outfile, "%%%%SET lmkMSectName(%s%%%%(lmkPrefix)_%s_Messages)\n",
-	  (messCntTot==0 ? "" : ", "), msNode->name);
+          (messCntTot==0 ? "" : ", "), msNode->name);
   fprintf(outfile, "%%%%SET lmkMSectOffs(%s%i)\n",
-	  (messCntTot==0 ? "" : ", "), messCntTot);
+          (messCntTot==0 ? "" : ", "), messCntTot);
   fprintf(outfile, "%%%%SET lmkMSectLen(%s%i)\n",
-	  (messCntTot==0 ? "" : ", "), msNode->messCnt);
+          (messCntTot==0 ? "" : ", "), msNode->messCnt);
   for (i = 0; i < msNode->messCnt; i++) {
-    fprintf(outfile, "%%%%SET lmkMsgId(%s\"%-6i\")\n", 
-	    (messCntTot==0 ? "" : ", "), msNode->messTab[i]->number);
+    fprintf(outfile, "%%%%SET lmkMsgId(%s\"%-6i\")\n",
+            (messCntTot==0 ? "" : ", "), msNode->messTab[i]->number);
     impify(buff, msNode->messTab[i]->text);
-    fprintf(outfile, "%%%%SET lmkMsg(%s\"%s\")\n", 
-	    (messCntTot==0 ? "" : ", "), buff);
+    fprintf(outfile, "%%%%SET lmkMsg(%s\"%s\")\n",
+            (messCntTot==0 ? "" : ", "), buff);
     messCntTot++;
   }
 }
@@ -128,16 +128,16 @@ static void prMess(outfile, msNode)
 
 */
 static void prImport(outfile, lmkImportSection)
-  FILE *outfile;		/* IN output file */
-  CodeNodeP lmkImportSection;	/* IN import section */
+  FILE *outfile;                /* IN output file */
+  CodeNodeP lmkImportSection;   /* IN import section */
 {
   FILE *infile;
 
-  if (lmkImportSection && 
+  if (lmkImportSection &&
       (infile = fopen(lmkImportSection->fname, "rb")) != NULL) {
     fprintf(outfile, "%%%%BEGIN(lmkImport)\n");
-    tmkCopyCode(infile, lmkImportSection->fpos, lmkImportSection->length, 
-		lmkEscape, outfile, '`');
+    tmkCopyCode(infile, lmkImportSection->fpos, lmkImportSection->length,
+                lmkEscape, outfile, '`');
     fprintf(outfile, "%%%%END(lmkImport)\n");
   }
 }
@@ -150,7 +150,7 @@ static void prImport(outfile, lmkImportSection)
 
 */
 static void prTail(outfile)
-  FILE *outfile;		/* IN output file */
+  FILE *outfile;                /* IN output file */
 {
   fprintf(outfile, "%%%%PROCESS(\"%%%%(tmkLibrary)/Common.imp\")\n");
   fprintf(outfile, "%%%%PROCESS(\"%%%%(lmkLibrary)/List.imp\")\n");
@@ -163,10 +163,10 @@ static void prTail(outfile)
     print lmk tables and options on output file
 
 */
-void lmkTab(outfile, msNode, tokenNode, srcpNode, 
-	    importSection, lmkImportSection)
-  FILE *outfile;		/* IN output file */
-  MessSectNodeP msNode;		/* IN message sector node */
+void lmkTab(outfile, msNode, tokenNode, srcpNode,
+            importSection, lmkImportSection)
+  FILE *outfile;                /* IN output file */
+  MessSectNodeP msNode;         /* IN message sector node */
   TokenNodeP tokenNode;
   SrcpNodeP srcpNode;
   CodeNodeP importSection;

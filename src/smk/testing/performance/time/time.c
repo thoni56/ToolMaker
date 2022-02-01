@@ -9,7 +9,7 @@
 #include "time.h"
 
 /*
- * 
+ *
  * Timer functions
  *
  */
@@ -47,4 +47,3 @@ char *tistr(time)
   sprintf(buffer,"%2d:%02d.%03d",time/(60*TI_HZ),(time/TI_HZ)%60,(time*1000/TI_HZ)%1000);
   return buffer;
 }
-

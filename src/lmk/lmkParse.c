@@ -50,50 +50,50 @@ typedef struct lmkGrammar {
 
 /* Parser constants *\
 \* ---------------- */
-#define ERROR_ACT 0			/* Action - Error */
-#define SHIFT_ACT 1			/* Action - Shift */
-#define SHIFTRED_ACT 2		/* Action - Shift_Reduce */
-#define REDUCE_ACT 3		/* Action - Reduce */
-#define ACCEPT_ACT 4		/* Action - Accept */
+#define ERROR_ACT 0             /* Action - Error */
+#define SHIFT_ACT 1             /* Action - Shift */
+#define SHIFTRED_ACT 2          /* Action - Shift_Reduce */
+#define REDUCE_ACT 3            /* Action - Reduce */
+#define ACCEPT_ACT 4            /* Action - Accept */
 
-#define ERR_SYM 0		/* Error token */
-#define ENDMARK 1		/* End of file token code */
+#define ERR_SYM 0               /* Error token */
+#define ENDMARK 1               /* End of file token code */
 
 /* Recovery method *\
 \* --------------- */
-#define NONE_REC 0		/* No recovery found */
-#define IN_REC 1		/* Insertion of symbol(s) */
-#define DEL_REC 2		/* Deletion of symbol(s) */
-#define REP_REC 3		/* Replacement of symbol(s) */
-#define BAK_REC 4		/* Stack backup */
-#define HALT_REC 5		/* System halted */
+#define NONE_REC 0              /* No recovery found */
+#define IN_REC 1                /* Insertion of symbol(s) */
+#define DEL_REC 2               /* Deletion of symbol(s) */
+#define REP_REC 3               /* Replacement of symbol(s) */
+#define BAK_REC 4               /* Stack backup */
+#define HALT_REC 5              /* System halted */
 
 /* Error class *\
 \* ----------- */
-#define LEX_ERR 1		/* Non valid scanner symbol found */
-#define SYN_ERR 2		/* Normal syntax error */
-#define OFLW_ERR 3		/* Parse stack overflow */
-#define TAB_ERR 4		/* Parse table error */
+#define LEX_ERR 1               /* Non valid scanner symbol found */
+#define SYN_ERR 2               /* Normal syntax error */
+#define OFLW_ERR 3              /* Parse stack overflow */
+#define TAB_ERR 4               /* Parse table error */
 
 /* Error severity *\
 \* -------------- */
-#define WAR_SEV 1		/* Warnings */
-#define ERR_SEV 2		/* Repairable error */
-#define FAT_SEV 3		/* Fatal error */
-#define SYS_SEV 4		/* System & limit error */
+#define WAR_SEV 1               /* Warnings */
+#define ERR_SEV 2               /* Repairable error */
+#define FAT_SEV 3               /* Fatal error */
+#define SYS_SEV 4               /* System & limit error */
 
 /* Parser constants *\
 \* ---------------- */
-#define SccMax 8		/* Max scanner code value */
-#define TermMin 1		/* Minimum terminal number */
-#define Terms 8		/* Number of terminals in grammar */
-#define StateMin 1		/* Minimum state number */
-#define States 9		/* Number of states */
-#define ProdMin 1		/* Minimum production number */
-#define Prods 13		/* Number of productions */
-#define PmStkMax 32		/* Parse stack size */
-#define	PmLaMax 5		/* Look-ahead length */
-#define	PmCost 5		/* Shifting cost */
+#define SccMax 8                /* Max scanner code value */
+#define TermMin 1               /* Minimum terminal number */
+#define Terms 8                 /* Number of terminals in grammar */
+#define StateMin 1              /* Minimum state number */
+#define States 9                /* Number of states */
+#define ProdMin 1               /* Minimum production number */
+#define Prods 13                /* Number of productions */
+#define PmStkMax 32             /* Parse stack size */
+#define PmLaMax 5               /* Look-ahead length */
+#define PmCost 5                /* Shifting cost */
 
 /* Types *\
 \* ----- */
@@ -104,22 +104,22 @@ typedef UByte1 ParseStack[PmStkMax]; /* Parse stack */
 \* -------------- */
 
 typedef struct {
-    UByte1 tsym;		/* Normal continuation */
-    UByte1 ssym;		/* Separator continuation */
+    UByte1 tsym;                /* Normal continuation */
+    UByte1 ssym;                /* Separator continuation */
 } ContRec;
 
 typedef struct {
-    ContRec cont[9];		/* Continuation function */
-    TermSet sepa;		/* Separator symbols */
-    TermSet fiduc;		/* Fiducial symbols */
-    TermSet skip;		/* Symbols to skip */
+    ContRec cont[9];            /* Continuation function */
+    TermSet sepa;               /* Separator symbols */
+    TermSet fiduc;              /* Fiducial symbols */
+    TermSet skip;               /* Symbols to skip */
 } RecTab;
 
 typedef struct  {
-    UByte1 act[26];		/* Action table */
-    UByte1 actCheck[26];	/* Row Displacement Check Vector*/
-    UByte1 actRix[9];		/* Action row mapping */
-    RecTab recover;		/* Error recovery info */
+    UByte1 act[26];             /* Action table */
+    UByte1 actCheck[26];        /* Row Displacement Check Vector*/
+    UByte1 actRix[9];           /* Action row mapping */
+    RecTab recover;             /* Error recovery info */
 } TermTab;
 
 static TermTab act = {
@@ -154,10 +154,10 @@ static TermTab act = {
 /* Non terminal table *\
 \* ------------------ */
 typedef  struct {
-    UByte1 gto[10];		/* Goto table */
-    UByte1 gtoRix[9];		/* Goto row mapping */
-    UByte1 lhs[13];		/* Left hand side symbols */
-    UByte1 rhsz[13];		/* Size of the RHS */
+    UByte1 gto[10];             /* Goto table */
+    UByte1 gtoRix[9];           /* Goto row mapping */
+    UByte1 lhs[13];             /* Left hand side symbols */
+    UByte1 rhsz[13];            /* Size of the RHS */
 } NonTermTab;
 
 static NonTermTab gto = {
@@ -174,11 +174,11 @@ static NonTermTab gto = {
 /* Vocabulary *\
 \* ---------- */
 typedef struct {
-    UByte1 scc;			/* Scanner code value */
-    UByte1 iCost;		/* Insertion cost */
-    UByte1 dCost;		/* Deletion cost */
-    char *name;			/* Name string */
-    char *psym;			/* Print name */
+    UByte1 scc;                 /* Scanner code value */
+    UByte1 iCost;               /* Insertion cost */
+    UByte1 dCost;               /* Deletion cost */
+    char *name;                 /* Name string */
+    char *psym;                 /* Print name */
 } VocTab[8];
 
 static VocTab voc = {{1,255,255,"EndOfText",""}
@@ -195,54 +195,54 @@ static VocTab voc = {{1,255,255,"EndOfText",""}
 
 /* Variables used in the parsing process *\
 \* ------------------------------------- */
-short lmkStkP;			/* Stack pointer */
-LmkToken lmkSySt[PmStkMax];	/* Symbol stack */
-lmkGrammar lmkSeSt[PmStkMax];	/* Semantic stack */
-static UByte1 currstat;		/* Current state number */
-static UByte1 arg;		/* Argument */
-static UByte1 action;		/* Action type */
-static PmBoolean endparse;	/* Termination flag */
-static ParseStack parsStk;	/* Parse stack */
+short lmkStkP;                  /* Stack pointer */
+LmkToken lmkSySt[PmStkMax];     /* Symbol stack */
+lmkGrammar lmkSeSt[PmStkMax];   /* Semantic stack */
+static UByte1 currstat;         /* Current state number */
+static UByte1 arg;              /* Argument */
+static UByte1 action;           /* Action type */
+static PmBoolean endparse;      /* Termination flag */
+static ParseStack parsStk;      /* Parse stack */
 static UByte1 scIndex[8 + 1]; /* Converts scanner code to internal value */
-static LmkToken tokenBuf;	/* Scanner token buffer */
-static LmkToken *token = &tokenBuf;	/* Pointer to it for readsymb */
+static LmkToken tokenBuf;       /* Scanner token buffer */
+static LmkToken *token = &tokenBuf;     /* Pointer to it for readsymb */
 
 
 /* Error recovery look-ahead buffer *\
 \* -------------------------------- */
 static LmkToken la_buff[PmLaMax + 1]; /* Buffer */
-static int la_ptr;		/* Current pointer */
-static int la_end;		/* Last item */
+static int la_ptr;              /* Current pointer */
+static int la_end;              /* Last item */
 
-static jmp_buf pmJmpB;		/* Buffer for long jump */
+static jmp_buf pmJmpB;          /* Buffer for long jump */
 
 /* Interface routines *\
 \* ------------------ */
 
-extern void lmkRPoi(	/* Error recovery - restart point  */
-LmkToken *sym			/* IN the restart symbol */
+extern void lmkRPoi(    /* Error recovery - restart point  */
+LmkToken *sym                   /* IN the restart symbol */
 );
-extern void lmkISym(	/* Error recovery - insert symbol  */
- int code,			/* IN terminal code number */
-char *sstr,			/* IN terminal string */
-char *pstr,			/* IN the terminals print symbol */
-LmkToken *sym			/* OUT the created scanner symbol */
+extern void lmkISym(    /* Error recovery - insert symbol  */
+ int code,                      /* IN terminal code number */
+char *sstr,                     /* IN terminal string */
+char *pstr,                     /* IN the terminals print symbol */
+LmkToken *sym                   /* OUT the created scanner symbol */
 );
-extern void lmkDSym(	/* Error recovery - delete symbol  */
-LmkToken *sym,			/* IN terminal code number */
-char *sstr,			/* IN terminal string */
-char *pstr			/* IN terminals print string */
+extern void lmkDSym(    /* Error recovery - delete symbol  */
+LmkToken *sym,                  /* IN terminal code number */
+char *sstr,                     /* IN terminal string */
+char *pstr                      /* IN terminals print string */
 );
-extern void lmkMess(	/* Error recovery - error message  */
-LmkToken *sym,			/* IN error token */
-int method,			/* IN recovery method */
-int code,			/* IN error classification */
-int severity			/* IN error severity code */
+extern void lmkMess(    /* Error recovery - error message  */
+LmkToken *sym,                  /* IN error token */
+int method,                     /* IN recovery method */
+int code,                       /* IN error classification */
+int severity                    /* IN error severity code */
 );
 
 /* External functions */
 extern void lmkPaSema(
-int rule			/* IN production number */
+int rule                        /* IN production number */
 );
 
 /*----------------------------------------------------------------------------
@@ -250,13 +250,13 @@ int rule			/* IN production number */
  *----------------------------------------------------------------------------
  */
 static void paAbort(
-LmkToken *token,		/* IN current token */
-short eClass,			/* IN error classification */
-short severity			/* IN error severity code */
+LmkToken *token,                /* IN current token */
+short eClass,                   /* IN error classification */
+short severity                  /* IN error severity code */
 )
 {
     lmkMess(token, HALT_REC, eClass, severity);
-    longjmp(pmJmpB, PMTRUE);	/* Jump out to top level */
+    longjmp(pmJmpB, PMTRUE);    /* Jump out to top level */
 }/*paAbort()*/
 
 
@@ -396,9 +396,9 @@ static ERR_REC errdescr;
  *----------------------------------------------------------------------------
  */
 static void ePush(
-UByte1 state,			/* IN state to push */
-UByte1 stack[],			/* INOUT parser stack */
-short *sp			/* INOUT current stack pointer */
+UByte1 state,                   /* IN state to push */
+UByte1 stack[],                 /* INOUT parser stack */
+short *sp                       /* INOUT current stack pointer */
 )
 {
     if (++(*sp) < PmStkMax) stack[*sp] = state;
@@ -411,18 +411,18 @@ short *sp			/* INOUT current stack pointer */
  *----------------------------------------------------------------------------
  */
 static PmBoolean legalAct(
-UByte1 stack[],			/* IN current stack */
-short stack_p,			/* IN current stack pointer */
-UByte1 sym			/* IN symbol code */
-)				/* RET true if "symbol" is read (shifted) */
+UByte1 stack[],                 /* IN current stack */
+short stack_p,                  /* IN current stack pointer */
+UByte1 sym                      /* IN symbol code */
+)                               /* RET true if "symbol" is read (shifted) */
                 /*     in current state */
 {
-    UByte1 state;		/* Current state */
-    UByte1 action;		/* Current parser action */
-    UByte1 arg;			/* Current parser argument */
+    UByte1 state;               /* Current state */
+    UByte1 action;              /* Current parser action */
+    UByte1 arg;                 /* Current parser argument */
 
-    ParseStack t_stk;		/* Temporary parser stack */
-    int i;			/* For loop index */
+    ParseStack t_stk;           /* Temporary parser stack */
+    int i;                      /* For loop index */
 
     /* Copy stack
      */
@@ -461,12 +461,12 @@ UByte1 sym			/* IN symbol code */
  *----------------------------------------------------------------------------
  */
 static void gLegSym(
-ParseStack stack,		/* IN current stack */
-short stack_p,			/* IN current stack pointer */
-TermSet legals			/* OUT legal symbols in current state */
+ParseStack stack,               /* IN current stack */
+short stack_p,                  /* IN current stack pointer */
+TermSet legals                  /* OUT legal symbols in current state */
 )
 {
-    short sym;			/* Loop index */
+    short sym;                  /* Loop index */
 
     SetClear(legals, Terms + 1);
     for (sym = 1; sym <= Terms; sym++) {
@@ -481,11 +481,11 @@ TermSet legals			/* OUT legal symbols in current state */
  *----------------------------------------------------------------------------
  */
 static short backup(
-ParseStack stack,		/* IN current stack */
-short stack_p,			/* IN current stack pointer */
-UByte1 sym	/* IN recovery symbol */
-)				/* RET new stack pointer, 0 if symbol is */
-                /*     not accepted */
+ParseStack stack,               /* IN current stack */
+short stack_p,                  /* IN current stack pointer */
+UByte1 sym                      /* IN recovery symbol */
+)                               /* RET new stack pointer, 0 if symbol is */
+                                /*     not accepted */
 {
     while ((stack_p > 0) && (!legalAct(stack, stack_p, sym))) stack_p--;
     return(stack_p);
@@ -497,7 +497,7 @@ UByte1 sym	/* IN recovery symbol */
  *----------------------------------------------------------------------------
  */
 static void delSym(
-LmkToken *token			/* INOUT symbol to delete, new symbol */
+LmkToken *token                 /* INOUT symbol to delete, new symbol */
 )
 {
     short  t;
@@ -532,8 +532,8 @@ LmkToken *token			/* INOUT symbol to delete, new symbol */
  *----------------------------------------------------------------------------
  */
 static void inSym(
-short isym,			/* IN symbol code to insert */
-LmkToken *gen_symb		/* OUT created symbol */
+short isym,                     /* IN symbol code to insert */
+LmkToken *gen_symb              /* OUT created symbol */
 )
 {
     lmkISym(voc[isym - TermMin].scc, voc[isym - TermMin].name,
@@ -567,9 +567,9 @@ LmkToken *gen_symb		/* OUT created symbol */
  */
 
 typedef struct {
-    UByte1 r_state;		/* Recovery state */
-    PmBoolean r_sepa;		/* Insert separator? */
-    UByte1 r_sstat;		/* Where to insert separator */
+    UByte1 r_state;             /* Recovery state */
+    PmBoolean r_sepa;           /* Insert separator? */
+    UByte1 r_sstat;             /* Where to insert separator */
 } REC_POI;
 
 
@@ -579,23 +579,23 @@ typedef struct {
  *----------------------------------------------------------------------------
  */
 static void acceptbl(
-UByte1 sym,			/* IN terminal symbol code */
-ParseStack stack,		/* IN parse stack */
-short stack_p,			/* IN stack pointer */
-LmkToken *token,			/* IN current token */
-PmBoolean *found,		/* OUT "symbol" accepted? */
-REC_POI *point			/* OUT recovery point description */
+UByte1 sym,                     /* IN terminal symbol code */
+ParseStack stack,               /* IN parse stack */
+short stack_p,                  /* IN stack pointer */
+LmkToken *token,                /* IN current token */
+PmBoolean *found,               /* OUT "symbol" accepted? */
+REC_POI *point                  /* OUT recovery point description */
 )
 {
-    PmBoolean done;		/* Terminator flag */
-    UByte1 state;		/* Current state */
-    UByte1 action;		/* Parser action */
-    UByte1 sep_act;		/* Parser action separator test */
-    UByte1 arg;			/* Parser prod/state */
-    UByte1 sep_arg;		/* Parser prod/state separator test */
-    PmBoolean sepa_acc;		/* Separator is accepted? */
-    ParseStack t_stk;		/* Temporary parser stack */
-    short i;			/* Copy loop index */
+    PmBoolean done;             /* Terminator flag */
+    UByte1 state;               /* Current state */
+    UByte1 action;              /* Parser action */
+    UByte1 sep_act;             /* Parser action separator test */
+    UByte1 arg;                 /* Parser prod/state */
+    UByte1 sep_arg;             /* Parser prod/state separator test */
+    PmBoolean sepa_acc;         /* Separator is accepted? */
+    ParseStack t_stk;           /* Temporary parser stack */
+    short i;                    /* Copy loop index */
 
     for (i = 0; i <= stack_p; i++) t_stk[i] = stack[i];
 
@@ -619,8 +619,8 @@ REC_POI *point			/* OUT recovery point description */
         /* A separator is legal. Check if current symbol is accepted
          * behind the separator
          */
-            ParseStack stk;	/* Temporary stack */
-            short sp;	/* Temporary stack pointer */
+            ParseStack stk;     /* Temporary stack */
+            short sp;           /* Temporary stack pointer */
 
         sp = stack_p;
         for (i = 0; i <= stack_p; i++) stk[i] = t_stk[i];
@@ -717,16 +717,16 @@ REC_POI *point			/* OUT recovery point description */
  *----------------------------------------------------------------------------
  */
 static void search(
-ParseStack stack,		/* IN current stack */
-short *stack_p,			/* INOUT current stack pointer */
-LmkToken *token,			/* INOUT current symbol */
-REC_POI *point			/* OUT descriptor of where to restart */
-                /*     the parser */
+ParseStack stack,               /* IN current stack */
+short *stack_p,                 /* INOUT current stack pointer */
+LmkToken *token,                /* INOUT current symbol */
+REC_POI *point                  /* OUT descriptor of where to restart */
+                                /*     the parser */
 )
 {
-    UByte1 state;		/* Current state */
-    PmBoolean rp_found;		/* Recovery point found? */
-    short new_stkp;		/* Temp stack pointer */
+    UByte1 state;               /* Current state */
+    PmBoolean rp_found;         /* Recovery point found? */
+    short new_stkp;             /* Temp stack pointer */
 
     state = stack[*stack_p];
     point->r_state = state;
@@ -761,19 +761,19 @@ REC_POI *point			/* OUT descriptor of where to restart */
  *----------------------------------------------------------------------------
  */
 static void reach(
-ParseStack stack,		/* INOUT current stack */
-short *stack_p,			/* INOUT current stack pointer */
-LmkToken *token,			/* INOUT current symbol */
-REC_POI *point			/* IN recovery point descriptor */
+ParseStack stack,               /* INOUT current stack */
+short *stack_p,                 /* INOUT current stack pointer */
+LmkToken *token,                /* INOUT current symbol */
+REC_POI *point                  /* IN recovery point descriptor */
 )
 {
-    UByte1 state;		/* Current state */
-    UByte1 cont_sym;		/* Continuation symbol */
-    LmkToken gen_symb;		/* Generated symbol */
-    UByte1 action;		/* Current parser action */
-    UByte1 arg;			/* Current prod/state */
-    PmBoolean sepaAccept;	/* Separator accepted yet? */
-    PmBoolean useSepa;		/* Use the separator now? */
+    UByte1 state;               /* Current state */
+    UByte1 cont_sym;            /* Continuation symbol */
+    LmkToken gen_symb;          /* Generated symbol */
+    UByte1 action;              /* Current parser action */
+    UByte1 arg;                 /* Current prod/state */
+    PmBoolean sepaAccept;       /* Separator accepted yet? */
+    PmBoolean useSepa;          /* Use the separator now? */
 
     state = stack[*stack_p];
     gen_symb = *token;
@@ -835,13 +835,13 @@ REC_POI *point			/* IN recovery point descriptor */
  *----------------------------------------------------------------------------
  */
 static void multiple(
-ParseStack err_stk,		/* INOUT current parse stack */
-short *err_stkp,		/* INOUT current stack pointer */
-LmkToken *err_tok,		/* INOUT current token */
-UByte1 *newstat		/* OUT state after recovery */
+ParseStack err_stk,             /* INOUT current parse stack */
+short *err_stkp,                /* INOUT current stack pointer */
+LmkToken *err_tok,              /* INOUT current token */
+UByte1 *newstat                 /* OUT state after recovery */
 )
 {
-    REC_POI  point;		/* Recovery point descriptor */
+    REC_POI  point;             /* Recovery point descriptor */
 
     search(err_stk, err_stkp, err_tok, &point);
     reach(err_stk, err_stkp, err_tok, &point);
@@ -866,7 +866,7 @@ UByte1 *newstat		/* OUT state after recovery */
  *----------------------------------------------------------------------------
  */
 
-#define ShiftCost (PmCost)	/* The cost of shifting one symbol */
+#define ShiftCost (PmCost)      /* The cost of shifting one symbol */
 #define InfCost (ShiftCost * (PmLaMax)) /* Infinity */
 #define Thresh (((PmLaMax) - 3) * ShiftCost) /* Acceptance cost */
 
@@ -876,7 +876,7 @@ UByte1 *newstat		/* OUT state after recovery */
  *----------------------------------------------------------------------------
  */
 static void readLa(
-LmkToken *curtok			/* IN current token */
+LmkToken *curtok                /* IN current token */
 )
 {
     int i;
@@ -916,8 +916,8 @@ LmkToken *curtok			/* IN current token */
  *----------------------------------------------------------------------------
  */
 static UByte1 rdLaSym(
-char index			/* IN i:th look-ahead symbol */
-)				/* RET token code */
+char index                      /* IN i:th look-ahead symbol */
+)                               /* RET token code */
 {
     if (index > la_end) return(ENDMARK);
     else return(la_buff[(int)index].code);
@@ -933,20 +933,20 @@ char index			/* IN i:th look-ahead symbol */
  *----------------------------------------------------------------------------
  */
 static void laParse(
-UByte1 sym,			/* IN current terminal symbol */
-char next_la,			/* IN index to next look-ahead symbol */
-ParseStack stack,		/* IN parse stack */
-short stack_p,			/* IN current stack pointer */
-short *cost			/* OUT adaption cost */
+UByte1 sym,                     /* IN current terminal symbol */
+char next_la,                   /* IN index to next look-ahead symbol */
+ParseStack stack,               /* IN parse stack */
+short stack_p,                  /* IN current stack pointer */
+short *cost                     /* OUT adaption cost */
 )
 {
-    PmBoolean done ;		/* Terminator flag */
-    char sh_cnt;		/* Number of shifted symbols */
-    UByte1 state;		/* Current state number */
-    UByte1 action;		/* Parser action */
-    UByte1 arg;      /* Parser argument */
-    short i;			/* Loop index */
-    ParseStack t_stk;		/* Temporary stack */
+    PmBoolean done ;            /* Terminator flag */
+    char sh_cnt;                /* Number of shifted symbols */
+    UByte1 state;               /* Current state number */
+    UByte1 action;              /* Parser action */
+    UByte1 arg;                 /* Parser argument */
+    short i;                    /* Loop index */
+    ParseStack t_stk;           /* Temporary stack */
 
     /* Copy stack
      */
@@ -1012,22 +1012,22 @@ short *cost			/* OUT adaption cost */
 
 /*----------------------------------------------------------------------------
  * tryIn - Tries to insert a symbol from the legal set in front of current
- *	   token: x t y  => x st y, where s becomes current symbol
+ *         token: x t y  => x st y, where s becomes current symbol
  *----------------------------------------------------------------------------
  */
 static void tryIn(
-TermSet legals,			/* IN set of legal symbols */
-ParseStack stack,		/* IN current parser stack */
-short stack_p,			/* IN current stack pointer */
-UByte1 *sym,			/* OUT best insertion symbol */
-short *cost,			/* OUT best cost so far */
-short *choice			/* OUT best choice so far */
+TermSet legals,                 /* IN set of legal symbols */
+ParseStack stack,               /* IN current parser stack */
+short stack_p,                  /* IN current stack pointer */
+UByte1 *sym,                    /* OUT best insertion symbol */
+short *cost,                    /* OUT best cost so far */
+short *choice                   /* OUT best choice so far */
 )
 {
     short i;
-    short mod_cost;		/* Modification cost */
-    short ad_cost;		/* Adaption cost */
-    short tot_cost;		/* Total insertion cost */
+    short mod_cost;             /* Modification cost */
+    short ad_cost;              /* Adaption cost */
+    short tot_cost;             /* Total insertion cost */
 
     for (i = 1; i <= Terms; i++) {
     /* For all legal symbols
@@ -1054,18 +1054,18 @@ short *choice			/* OUT best choice so far */
  *----------------------------------------------------------------------------
  */
 static void tryRep(
-TermSet legals,			/* IN set of legal symbols */
-ParseStack stack,		/* IN current parser stack */
-short stack_p,			/* IN current stack pointer */
-UByte1 *sym,			/* OUT best replacement symbol */
-short *cost,			/* OUT best cost so far */
-short *choice			/* OUT best choice so far */
+TermSet legals,                 /* IN set of legal symbols */
+ParseStack stack,               /* IN current parser stack */
+short stack_p,                  /* IN current stack pointer */
+UByte1 *sym,                    /* OUT best replacement symbol */
+short *cost,                    /* OUT best cost so far */
+short *choice                   /* OUT best choice so far */
 )
 {
     short i;
-    short mod_cost;		/* Modification cost */
-    short ad_cost;		/* Adaption cost */
-    short tot_cost;		/* Total replacment cost */
+    short mod_cost;             /* Modification cost */
+    short ad_cost;              /* Adaption cost */
+    short tot_cost;             /* Total replacment cost */
 
     for (i = 1; i <= Terms; i++) {
     /* For all legal symbols
@@ -1092,15 +1092,15 @@ short *choice			/* OUT best choice so far */
  *----------------------------------------------------------------------------
  */
 static void tryDel(
-ParseStack stack,		/* IN current parser stack */
-short stack_p,			/* IN current stack pointer */
-short *cost,			/* INOUT best cost so far */
-short *choice			/* INOUT best choice so far */
+ParseStack stack,               /* IN current parser stack */
+short stack_p,                  /* IN current stack pointer */
+short *cost,                    /* INOUT best cost so far */
+short *choice                   /* INOUT best choice so far */
 )
 {
-    short mod_cost;		/* Modification cost */
-    short ad_cost;          /* Adaption cost */
-    short tot_cost;		/* Total deletion cost */
+    short mod_cost;             /* Modification cost */
+    short ad_cost;              /* Adaption cost */
+    short tot_cost;             /* Total deletion cost */
 
     mod_cost = voc[rdLaSym(0) - TermMin].dCost;
     if (mod_cost < *cost) {
@@ -1119,8 +1119,8 @@ short *choice			/* INOUT best choice so far */
  *----------------------------------------------------------------------------
  */
 static void _pmInsert(
-UByte1 sym,			/* IN symbol code to insert */
-LmkToken *token			/* OUT constructed token */
+UByte1 sym,                     /* IN symbol code to insert */
+LmkToken *token                 /* OUT constructed token */
 )
 {
     inSym(sym, token);
@@ -1132,8 +1132,8 @@ LmkToken *token			/* OUT constructed token */
  *----------------------------------------------------------------------------
  */
 static void _pmReplace(
-UByte1 sym,			/* IN replacement symbol code */
-LmkToken *token			/* OUT constructed token */
+UByte1 sym,                     /* IN replacement symbol code */
+LmkToken *token                 /* OUT constructed token */
 )
 {
     delSym(token);
@@ -1147,7 +1147,7 @@ LmkToken *token			/* OUT constructed token */
  */
 
 static void _pmDelete(
-LmkToken *token			/* OUT new token */
+LmkToken *token                 /* OUT new token */
 )
 {
 {
@@ -1176,16 +1176,16 @@ LmkToken *token			/* OUT new token */
  *----------------------------------------------------------------------------
  */
 static void single(
-TermSet leg_sys,		/* IN legal symbols in current state */
-ParseStack err_stk,		/* INOUT current parser stack */
-short *err_stkp,		/* INOUT current stack pointer */
-LmkToken *token,		/* INOUT current token */
-UByte1 *newstat		/* OUT recovery state */
+TermSet leg_sys,                /* IN legal symbols in current state */
+ParseStack err_stk,             /* INOUT current parser stack */
+short *err_stkp,                /* INOUT current stack pointer */
+LmkToken *token,                /* INOUT current token */
+UByte1 *newstat                 /* OUT recovery state */
 )
 {
-    short choice;		/* Recovery action performed */
-    short cost;			/* Best cost so far */
-    UByte1 sym;			/* Insert symbol */
+    short choice;               /* Recovery action performed */
+    short cost;                 /* Best cost so far */
+    UByte1 sym;                 /* Insert symbol */
 
     choice = NONE_REC;
     cost = InfCost;
@@ -1241,13 +1241,13 @@ UByte1 *newstat		/* OUT recovery state */
  *----------------------------------------------------------------------------
  */
 static void recover(
-ParseStack err_stk,		/* INOUT updated parse stack */
-short *err_stkp,		/* INOUT updated stack pointer */
-LmkToken *err_symb,		/* INOUT current token */
-UByte1 *rec_stat		/* OUT state after recovery */
+ParseStack err_stk,             /* INOUT updated parse stack */
+short *err_stkp,                /* INOUT updated stack pointer */
+LmkToken *err_symb,             /* INOUT current token */
+UByte1 *rec_stat                /* OUT state after recovery */
 )
 {
-    TermSet legal_sy;		/* Legal symbols */
+    TermSet legal_sy;           /* Legal symbols */
 
     errdescr.err_tok = *err_symb;
     errdescr.err_tok.code = voc[errdescr.err_tok.code - TermMin].scc;

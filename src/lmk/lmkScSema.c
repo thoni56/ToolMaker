@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------*\
 
-	lmkScSema.c
+    lmkScSema.c
 
-	ScannerMaker generated semantic actions
+    ScannerMaker generated semantic actions
 
 \*----------------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ int lmkScReader(
   return read(smThis->fd,smBuffer,smLength);
 
 
-}    
+}
 
 int lmkScPreHook(
      lmkScContext smThis,
@@ -68,42 +68,40 @@ int lmkScAction(
      LmkToken *smToken)
 {
   enum {
-    smSkipToken		= -1,
-    smContinueToken	= -2
+    smSkipToken     = -1,
+    smContinueToken = -2
   };
   switch(smInternalCode) {
-  case   3:		/* IDENTIFIER*/ 
-    { smToken->sval = newStr(smThis, 0); 
+  case   3:     /* IDENTIFIER*/
+    { smToken->sval = newStr(smThis, 0);
 }
     break;
 
-  case   4:		/* NUMBER*/ 
-    { smToken->ival = atoi((const char *)smThis->smText); 
+  case   4:     /* NUMBER*/
+    { smToken->ival = atoi((const char *)smThis->smText);
 }
     break;
 
-  case   5:		/* STRING*/ 
-    { smToken->sval = newStr(smThis, 1); 
+  case   5:     /* STRING*/
+    { smToken->sval = newStr(smThis, 1);
 }
     break;
 
-  case   6:		/* SKIPHEADER*/ 
+  case   6:     /* SKIPHEADER*/
     {
         tmkSkipCode(NOSTRS_SKIP, smThis, &(smToken->fpos),
                     &(smToken->length), lmkEscape);
-      
+
 }
     break;
 
-  case   7:		/* SKIPHEADER*/ 
+  case   7:     /* SKIPHEADER*/
     {
         tmkSkipCode(STRSKP_SKIP, smThis,&(smToken->fpos),
                     &(smToken->length),  lmkEscape);
-      
+
 }
     break;
   }
   return smToken->code;
 }
-
-

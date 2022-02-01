@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-07-12
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/nfas.c,v 1.1 2002/06/25 20:04:47 Thomas Nilsson Exp $
@@ -26,7 +26,7 @@
  *
  * Revision 1.1  91/01/10  13:53:13  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -66,7 +66,7 @@ NFAs nfasInsert(NFAs nfas, NFA nfa)
     return nfas;
   }
 }
-      
+
 /*
  * Merge nfas1 and nfas2
  */
@@ -95,7 +95,7 @@ NFAs nfasMerge(NFAs nfas1, NFAs nfas2)
   }
 
   while(nfas1!=NULL && nfas2!=NULL)
-    if(nfas1->nfa->node>nfas2->nfa->node) {	/* link nfas2 before nfas1 */
+    if(nfas1->nfa->node>nfas2->nfa->node) { /* link nfas2 before nfas1 */
       nfas3->next=nfas2;
       nfas3=nfas2;
       nfas2=nfas2->next;
@@ -105,7 +105,7 @@ NFAs nfasMerge(NFAs nfas1, NFAs nfas2)
       nfas3=nfas1;
       nfas1=nfas1->next;
     }
-    else {			/* remove duplicate nfas2 nfa */
+    else {      /* remove duplicate nfas2 nfa */
       nfas4=nfas2;
       nfas2=nfas2->next;
       free((char *)nfas4);
@@ -154,7 +154,7 @@ NFAs nfasMergeCopy(NFAs nfas1, NFAs nfas2)
   }
 
   while(nfas1!=NULL && nfas2!=NULL)
-    if(nfas1->nfa->node>nfas2->nfa->node) {	/* link duplicate of nfas2 before nfas1 */
+    if(nfas1->nfa->node>nfas2->nfa->node) { /* link duplicate of nfas2 before nfas1 */
       nfas3->next=(NFAs)smalloc(sizeof(NFAsItem));
       nfas3=nfas3->next;
       nfas3->nfa=nfas2->nfa;
@@ -165,7 +165,7 @@ NFAs nfasMergeCopy(NFAs nfas1, NFAs nfas2)
       nfas3=nfas1;
       nfas1=nfas1->next;
     }
-    else {			/* advance nfas2 */
+    else {      /* advance nfas2 */
       nfas2=nfas2->next;
     }
   if(nfas1==NULL) {

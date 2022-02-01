@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1993-08-20
- * 
+ *
  * SoftLab ab (c) 1993
  */
 
@@ -37,7 +37,7 @@ static struct tm maxTime;
 static int timeCheck(time_t time, struct tm *tm)
 {
   struct tm *tmp;
-  
+
   tmp=localtime(&time);
   tmp->tm_year+=1900;
   tmp->tm_mon++;
@@ -181,8 +181,8 @@ void licenseInit(int argc, char **argv)
   if(maxUsers==0)
     fprintf(stderr,"%s: number of users must be greater than zero\n\r",server),exit(1);
 
-  /* 
-   * Check password 
+  /*
+   * Check password
    */
 
   if((value=getParameter(file,"PASSWORD"))==NULL)
@@ -210,13 +210,13 @@ void licenseDelay()
 {
   FILE *fd;
   int n;
-  
+
   if((fd=fopen("/dev/console","w"))==NULL) fd=stdout;
   if(maxTime.tm_year<9999 && maxTime.tm_mon<99 && maxTime.tm_mday<99 && maxUsers<9999)
     for(n=0;n<3;n++)
       fprintf(fd,"Starting %s %s, please wait %d seconds.\n\r",
-	      product.name,product.version.string,
-	      (DELAYTIME*(3-n))/3),sleep(DELAYTIME/3);
+        product.name,product.version.string,
+        (DELAYTIME*(3-n))/3),sleep(DELAYTIME/3);
   fprintf(fd,"%s %s started.\n\r",product.name,product.version.string);
   fclose(fd);
 }

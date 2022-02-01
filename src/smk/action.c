@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1990-06-27
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/action.c,v 1.1 2002/06/25 20:04:39 Thomas Nilsson Exp $
@@ -23,7 +23,7 @@
  *
  * Revision 1.1  91/01/10  13:50:52  tools
  * Initial revision
- * 
+ *
  *
  */
 
@@ -39,7 +39,7 @@ static Action actionEnd=NULL;
 Action actionPut(ActionType type, int start, int stop)
 {
   Action action;
-  
+
   action=(Action)smalloc(sizeof(ActionItem));
   action->code=actionSize++;
   action->type=type;
@@ -52,5 +52,3 @@ Action actionPut(ActionType type, int start, int stop)
     actionEnd=actionRoot=action;
   return action;
 }
-
-

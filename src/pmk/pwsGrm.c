@@ -1,13 +1,13 @@
 /*-----------------------------------------------------------------------------
  * pwsGrm - Grammar analysis and AST building functions
- *		@(#)pwsGrm.c	1.2 (90/11/07 14:13:58)
+ *      @(#)pwsGrm.c    1.2 (90/11/07 14:13:58)
  *-----------------------------------------------------------------------------
- * Created:	89-08-01 by Arash
- * Modified:	90-04-18 by Tom. EBNF attribute bug fixed. put_code & calls
- *				 removed (no pmLength support).
+ * Created:     89-08-01 by Arash
+ * Modified:    90-04-18 by Tom. EBNF attribute bug fixed. put_code & calls
+ *                               removed (no pmLength support).
  *-----------------------------------------------------------------------------
  * Entries:
- *	?????
+ *  ?????
  *-----------------------------------------------------------------------------
  */
 
@@ -27,61 +27,61 @@
 #include "pwsOrd.h"
 #include "pwsWrit.h"
 
-int orig_prod_max;		/* Max. number of EBNF productions */
-int prod_max;			/* Max. number of BNF productions */
-int sym_max;			/* Max. number of symbols */
+int orig_prod_max;      /* Max. number of EBNF productions */
+int prod_max;           /* Max. number of BNF productions */
+int sym_max;            /* Max. number of symbols */
 
-int pvec_sz;			/* Size of production array */
-int action_max;			/* Max. number of actions */
-int att_max;			/* Number of attribute references */
+int pvec_sz;            /* Size of production array */
+int action_max;         /* Max. number of actions */
+int att_max;            /* Number of attribute references */
 
 
 /* Vocabulary
  * ----------
  */
-sym_ref *vocabulary;		/* Vocabulary */
-int vocCnt;			/* Number of symbols in vocabulary */
-int termCnt;			/* Number of terminals */
-int nonTermCnt;			/*Number of non terminals */
-int attrCnt;			/* Number of attributes */
-int gramSymCnt;			/* Number of terminals + non terminals */
-int goal_sym;			/* Goal symbol */
-int tc_val = 0;			/* Highest terminal code value */
-SymSet on_right;		/* Set of symbols ocurring on rhs */
-int gen_nonterms_cnt;		/* Number of generated non terminals */
-Boolean term_sec_given;		/* Terminal section flag */
-int icostMax;			/* Max insertion cost */
-int dcostMax;			/* Max deletion cost */
+sym_ref *vocabulary;    /* Vocabulary */
+int vocCnt;             /* Number of symbols in vocabulary */
+int termCnt;            /* Number of terminals */
+int nonTermCnt;         /* Number of non terminals */
+int attrCnt;            /* Number of attributes */
+int gramSymCnt;         /* Number of terminals + non terminals */
+int goal_sym;           /* Goal symbol */
+int tc_val = 0;         /* Highest terminal code value */
+SymSet on_right;        /* Set of symbols occurring on rhs */
+int gen_nonterms_cnt;   /* Number of generated non terminals */
+Boolean term_sec_given; /* Terminal section flag */
+int icostMax;           /* Max insertion cost */
+int dcostMax;           /* Max deletion cost */
 
 /* Error Recovery
  * --------------
  */
-recovery_rec recovery_spec;	/* Improvments of the recovery */
+recovery_rec recovery_spec; /* Improvements of the recovery */
 
 
 /* Productions
  * -----------
  */
-pvec_arr_typ global_pvec_tbl;	/* Storage for the grammar */
-int global_pvec_ptr;		/* Grammar storage pointer */
-prod_rec **global_prod_tbl;	/* Production data */
-int global_prod_cnt;		/* Production data */
-int rsszMax;			/* Max size of right hand side */
+pvec_arr_typ global_pvec_tbl;   /* Storage for the grammar */
+int global_pvec_ptr;            /* Grammar storage pointer */
+prod_rec **global_prod_tbl;     /* Production data */
+int global_prod_cnt;            /* Production data */
+int rsszMax;                    /* Max size of right hand side */
 
-prod_elnode **orig_prod_tbl;	/* Abstract syntax trees for productions */
-int orig_prod_cnt;		/* Number of original Productions */
+prod_elnode **orig_prod_tbl;    /* Abstract syntax trees for productions */
+int orig_prod_cnt;              /* Number of original Productions */
 
 /* Actions
  * -------
  */
-SemActRepr *semAct;		/* Semantic actions */
-int semActCnt;			/* Number of semantic actions */
-attref_rec_arr attref_storage;	/* Storage for attribute references */
-                /* temporary */
-attref *global_attref_sto;	/* Final attribute reference storage */
+SemActRepr *semAct;             /* Semantic actions */
+int semActCnt;                  /* Number of semantic actions */
+attref_rec_arr attref_storage;  /* Storage for attribute references */
+                                /* temporary */
+attref *global_attref_sto;      /* Final attribute reference storage */
 int attref_cnt;
-int global_attref_cnt;		/* Number of correct attribute */
-                /* references. */
+int global_attref_cnt;          /* Number of correct attribute */
+                                /* references. */
 
 /* Allocation routines
  * -------------------
@@ -387,7 +387,7 @@ static void incOrigProdCnt()
  */
 static void put_code(code_type, sym_ind)
 action_analysis_kind code_type;
-int sym_ind;			/* Symbol pmLength to be associated with */
+int sym_ind;            /* Symbol pmLength to be associated with */
 {
     SETDEF(sym_kind_set, unknown_symb + 1);
     int actI;
@@ -458,7 +458,7 @@ int sym_ind;			/* Symbol pmLength to be associated with */
 
 
 /*-----------------------------------------------------------------------------
- * verify_insert_ref  - creates attribute referenece structure
+ * verify_insert_ref  - creates attribute reference structure
  *                      and verifies references to EBNF and OEBNF
  *                      constructs. Other references will be
  *                      verified in pwsOrd.c
@@ -468,14 +468,14 @@ int sym_ind;			/* Symbol pmLength to be associated with */
  */
 static void verify_insert_ref(lhs, rhs, actPos, inst, symstr, attrstr,
                   analysis, srcp)
-prod_elnode *lhs;		/* lhs symbol node */
-prod_elnode *rhs;		/* rhs sequence */
-int actPos;			/* IN position of reference in action */
-int inst;			/* given instance */
-char *symstr;			/* symbol's string */
-char *attrstr;			/* attribute's string */
-action_analysis_kind analysis;	/* Type of legal reference to OEBNF. */
-TmkSrcp srcp;			/* Reference source pos */
+prod_elnode *lhs;               /* lhs symbol node */
+prod_elnode *rhs;               /* rhs sequence */
+int actPos;                     /* IN position of reference in action */
+int inst;                       /* given instance */
+char *symstr;                   /* symbol's string */
+char *attrstr;                  /* attribute's string */
+action_analysis_kind analysis;  /* Type of legal reference to OEBNF. */
+TmkSrcp srcp;                   /* Reference source pos */
 {
     char *ebnf_ref_upp = "EBNF";
     char *ebnf_ref_low = "ebnf";
@@ -655,16 +655,16 @@ TmkSrcp srcp;			/* Reference source pos */
 
 /*-----------------------------------------------------------------------------
  * copy_action - processes a semantic action from the grammar file and
- *		 verifies all attribute references.
+ *               verifies all attribute references.
  *-----------------------------------------------------------------------------
  */
 static void copy_action(lhs, rhs, analysis, start, length, srcp)
 prod_elnode *lhs;               /* lhs symbol node */
 prod_elnode *rhs;               /* rhs sequence */
-action_analysis_kind analysis;	/* passed to verify_insert_ref */
-long start;			/* action's start pos in grammar file */
-long length;			/* length of action */
-TmkSrcp *srcp;			/* action's source pos */
+action_analysis_kind analysis;  /* passed to verify_insert_ref */
+long start;                     /* action's start pos in grammar file */
+long length;                    /* length of action */
+TmkSrcp *srcp;                  /* action's source pos */
 {
     char inststr[5];
     char symstr[81];
@@ -772,7 +772,7 @@ TmkSrcp *srcp;			/* action's source pos */
             srcp->col = 0;
               } else {
             srcp->col++;
-              }	/*if*/
+              } /*if*/
               break;
             } /*if*/
           } /*if*/
@@ -844,14 +844,14 @@ TmkSrcp *srcp;			/* action's source pos */
 
 /*-----------------------------------------------------------------------------
  * process_modifiers_actions - merges modifiers and actions associated with
- *                 a production (at the end), also calls
+ *                             a production (at the end), also calls
  *                             copy_action and put_code.
  *-----------------------------------------------------------------------------
  */
 static void process_modifiers_actions(action_analysis, rhs, lhs)
 action_analysis_kind action_analysis; /* passed to copy_action */
-prod_elnode *rhs;		/* rhs sequence */
-prod_elnode *lhs;		/* lhs symbol node */
+prod_elnode *rhs;       /* rhs sequence */
+prod_elnode *lhs;       /* lhs symbol node */
 {
     prod_elnode *curr_node;
     Boolean action_found = FALSE;
@@ -914,13 +914,13 @@ prod_elnode *lhs;		/* lhs symbol node */
         }/*if*/
     }/*if*/
 
-    curr_node = curr_node->nxtnode;	/* Skip symbol nodes */
+    curr_node = curr_node->nxtnode; /* Skip symbol nodes */
     } while (curr_node);
 
     if (action_found && semAct) {
     /* Code for incrementing pmLength
      */
-/*	put_code(action_analysis, lhs->node_info.sym_node.sym_ind); */
+/*  put_code(action_analysis, lhs->node_info.sym_node.sym_ind); */
     }/*if*/
 }/*process_modifiers_actions()*/
 
@@ -930,13 +930,13 @@ prod_elnode *lhs;		/* lhs symbol node */
  *                    also enqueues symbol nodes which are
  *                    replaced for an EBNF construct for further
  *                    processing. Note that a pointer
- *                    to replaced sequence is avaiable in the
+ *                    to replaced sequence is available in the
  *                    symbol node.
  *-----------------------------------------------------------------------------
  */
 static void insert_pvec_prod(lhs, rhs)
-prod_elnode *rhs;		/* rhs of production */
-prod_elnode *lhs;		/* lhs of production */
+prod_elnode *rhs;       /* rhs of production */
+prod_elnode *lhs;       /* lhs of production */
 {
     int curr_rssz;
     int prev;
@@ -969,7 +969,7 @@ prod_elnode *lhs;		/* lhs of production */
         rhs->node_kind == null_node_kind)
     {
         /* End of production. Note that in this stage
-         * there are no actions in the node sequeuce,
+         * there are no actions in the node sequence,
          * but in the replaced sequences.
          */
         break;
@@ -1004,12 +1004,12 @@ prod_elnode *lhs;		/* lhs of production */
 
 /*-----------------------------------------------------------------------------
  * sem_act_cut - Removes semantic actions and modifiers embedded in rules by
- *		 creating new empty rules and associating the actions and
- *		 modifiers with the new rules.
+ *               creating new empty rules and associating the actions and
+ *               modifiers with the new rules.
  *-----------------------------------------------------------------------------
  */
 static void sem_act_cut(rhs_p)
-prod_elnode **rhs_p;		/* INOUT rhs to be analyzed */
+prod_elnode **rhs_p;        /* INOUT rhs to be analyzed */
 {
     prod_elnode *curr_node;
     prod_elnode *temp;
@@ -1072,9 +1072,9 @@ prod_elnode **rhs_p;		/* INOUT rhs to be analyzed */
  *-----------------------------------------------------------------------------
  */
 static void queue_analyze(lhs, analysis)
-prod_elnode *lhs;		/* symbol node replaced for a normal */
-                /* sequeuce of symbol nodes (because */
-                /* of semantic action) or EBNF constructs. */
+prod_elnode *lhs;       /* symbol node replaced for a normal */
+                        /* sequence of symbol nodes (because */
+                        /* of semantic action) or EBNF constructs. */
 analysis_kind analysis;
 {
     altr_lst *curr_node;
@@ -1172,7 +1172,7 @@ analysis_kind analysis;
 
 /*-----------------------------------------------------------------------------
  * top_analysis - analyzes an original production and inserts it
- *		  in orig_prod_tbl.
+ *                in orig_prod_tbl.
  *-----------------------------------------------------------------------------
  */
 static void top_analysis(lhs, rhs_p)
@@ -1199,8 +1199,8 @@ prod_elnode *lhs;
  *-----------------------------------------------------------------------------
  */
 void analyze_rhss(lhs, rhss)
-rhs_node *rhss;			/* list of righthand sides */
-prod_elnode *lhs;		/* lhs symbol node         */
+rhs_node *rhss;         /* list of righthand sides */
+prod_elnode *lhs;       /* lhs symbol node         */
 {
     prod_elnode *q_lhs;
     analysis_kind q_analysis;

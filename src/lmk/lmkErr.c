@@ -2,7 +2,7 @@
 
   lmkErr.c
 
-  Parser error handler 
+  Parser error handler
 
 \*----------------------------------------------------------------------*/
 
@@ -25,10 +25,10 @@ extern lmkScContext lmkCtxt;
 #define MaxTokens 5
 
 
-static char insStr[101] = "";	/* Inserted symbol strings */
+static char insStr[101] = "";   /* Inserted symbol strings */
 static int insToks = 0;
 
-static char delStr[201] = "";	/* Deleted symbol strings */
+static char delStr[201] = "";   /* Deleted symbol strings */
 static int delToks = 0;
 
 /*-----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ static int delToks = 0;
  *-----------------------------------------------------------------------------
  */
 void lmkRPoi(
-    LmkToken *token		/* IN the restart symbol */
+    LmkToken *token             /* IN the restart symbol */
 )
 {
     if (delToks > MaxTokens) {
@@ -56,24 +56,24 @@ void lmkRPoi(
 
 /*-----------------------------------------------------------------------------
  * lmkISym - A symbol is to be inserted, collect it for later output, and
- *	    construct the requested token for use by the parser.
+ *           construct the requested token for use by the parser.
  *-----------------------------------------------------------------------------
  */
 void lmkISym(
-     int code,	/* IN terminal code number */
-    char *symString,			/* IN terminal string */
-    char *printString,			/* IN the terminals print symbol */
-    LmkToken *token		/* OUT the created scanner symbol */
+     int code,                  /* IN terminal code number */
+    char *symString,            /* IN terminal string */
+    char *printString,          /* IN the terminals print symbol */
+    LmkToken *token             /* OUT the created scanner symbol */
 )
 {
     char *selectedString;
 
     if (insToks < MaxTokens) {
-	/* Concatenate the token string
-	 */
-	if (insToks > 0) strcat(insStr, " ");
-	if (code == 0) strcat(insStr, "<unknown token>");
-	else if (code == 1) strcat(insStr, "<end of file>");
+        /* Concatenate the token string
+         */
+        if (insToks > 0) strcat(insStr, " ");
+        if (code == 0) strcat(insStr, "<unknown token>");
+        else if (code == 1) strcat(insStr, "<end of file>");
         else {
             if (*printString != '\0') selectedString = printString;
             else selectedString = symString;
@@ -84,7 +84,7 @@ void lmkISym(
                 strcat(insStr, selectedString);
         }
     } else if (insToks == MaxTokens) {
-	strcat(insStr, " ...");
+        strcat(insStr, " ...");
     }/*if*/
     insToks++;
     /* Make the requested token */
@@ -94,23 +94,23 @@ void lmkISym(
 
 /*-----------------------------------------------------------------------------
  * lmkDSym - The indicated symbol is deleted by the parser, collect its string
- *	    for later output.
+ *           for later output.
  *-----------------------------------------------------------------------------
  */
 void lmkDSym(
-    LmkToken *token,		/* IN terminal */
-    char *symString,			/* IN terminal string */
-    char *printString			/* IN terminals print string */
+    LmkToken *token,            /* IN terminal */
+    char *symString,            /* IN terminal string */
+    char *printString           /* IN terminals print string */
 )
 {
     char *selectedString;
 
     if (delToks < MaxTokens) {
-	/* Concatenate the symbol strings */
-	if (delToks > 0) strcat(delStr, " ");
-	if (token->code == 0) strcat(delStr, "<unknown token>");
-	else if (token->code == 1) strcat(delStr, "<end of file>");
-	else {
+        /* Concatenate the symbol strings */
+        if (delToks > 0) strcat(delStr, " ");
+        if (token->code == 0) strcat(delStr, "<unknown token>");
+        else if (token->code == 1) strcat(delStr, "<end of file>");
+        else {
 #ifdef DELETEIDENTIFIERASINPUTTED
             if (token->code == 2) selectedString = token->chars;
             else
@@ -124,7 +124,7 @@ void lmkDSym(
                 strcat(delStr, selectedString);
         }
     } else if (delToks == MaxTokens) {
-	strcat(delStr, " ...");
+        strcat(delStr, " ...");
     }/*if*/
     delToks++;
 }/*lmkDSym()*/
@@ -133,28 +133,28 @@ void lmkDSym(
 /*-----------------------------------------------------------------------------
  * lmkMess - An error message should be output, symbol indicates point of error.
  *-----------------------------------------------------------------------------
- * Method:	1 = Symbol(s) insertion	       Message:	% inserted
- *		2 = Symbol(s) deletion			% deleted
- *		3 = Symbol(s) replacement		% replaced by %
- *	        4 = Stack backup			Malformed phrase
- *		5 = Halted				%. System halted
+ * Method:      1 = Symbol(s) insertion        Message: % inserted
+ *              2 = Symbol(s) deletion                  % deleted
+ *              3 = Symbol(s) replacement               % replaced by %
+ *              4 = Stack backup                        Malformed phrase
+ *              5 = Halted                              %. System halted
  *
- * Code:	1 = Unknown token (error token from scanner)
- *		2 = Syntax error
- *		3 = Parse stack overflow
- *		4 = Table error
+ * Code:        1 = Unknown token (error token from scanner)
+ *              2 = Syntax error
+ *              3 = Parse stack overflow
+ *              4 = Table error
  *
- * Severity:	1 = Warning
- *		2 = Error (repairable)
- *		3 = Fatal error
- *		4 = System error & Limit error
+ * Severity:    1 = Warning
+ *              2 = Error (repairable)
+ *              3 = Fatal error
+ *              4 = System error & Limit error
  *-----------------------------------------------------------------------------
  */
 void lmkMess(
-    LmkToken *sym,		/* IN error token */
-    int method,			/* IN recovery method */
-    int code,			/* IN error classification */
-    int severity		/* IN error severity code */
+    LmkToken *sym,              /* IN error token */
+    int method,                 /* IN recovery method */
+    int code,                   /* IN error classification */
+    int severity                /* IN error severity code */
 )
 {
     lmkSev sev;
@@ -170,57 +170,57 @@ void lmkMess(
     switch (code) {
 
     case 1:
-	/* Unknown symbol, deleted */
-	lmkLog(&(sym->srcp), 102, sev, "Unknown Token");
-	break;
+        /* Unknown symbol, deleted */
+        lmkLog(&(sym->srcp), 102, sev, "Unknown Token");
+        break;
 
     case 2:
-	/* Syntax Error */
-	switch (method) {
+        /* Syntax Error */
+        switch (method) {
 
-	case 1:
-	    /* Insert */
-	    lmkLog(&(sym->srcp), 101, sev, insStr);
-	    break;
+        case 1:
+            /* Insert */
+            lmkLog(&(sym->srcp), 101, sev, insStr);
+            break;
 
-	case 2:
-	    /* Delete */
-	    lmkLog(&(sym->srcp), 102, sev, delStr);
-	    break;
+        case 2:
+            /* Delete */
+            lmkLog(&(sym->srcp), 102, sev, delStr);
+            break;
 
-	case 3:
-	    /* Replace */
-	    delStr[strlen(delStr)+1] = '\0';
-	    delStr[strlen(delStr)] = lmkSEPARATOR; /* Separator */
-	    strcat(delStr, insStr);
-	    lmkLog(&(sym->srcp), 103, sev, delStr);
-	    break;
+        case 3:
+            /* Replace */
+            delStr[strlen(delStr)+1] = '\0';
+            delStr[strlen(delStr)] = lmkSEPARATOR; /* Separator */
+            strcat(delStr, insStr);
+            lmkLog(&(sym->srcp), 103, sev, delStr);
+            break;
 
-	case 4:
-	    /* Stack backed up */
-	    lmkLog(&(sym->srcp), 104, sev, "");
-	    break;
+        case 4:
+            /* Stack backed up */
+            lmkLog(&(sym->srcp), 104, sev, "");
+            break;
 
-	case 5:
-	    /* Syntax error, system halted */
-	    lmkLog(&(sym->srcp), 105, sev, "");
-	    break;
-	}
-	break;
+        case 5:
+            /* Syntax error, system halted */
+            lmkLog(&(sym->srcp), 105, sev, "");
+            break;
+        }
+        break;
 
     case 3:
-	/* Parse stack overflow */
-	lmkLog(&(sym->srcp), 106, sev, "");
-	break;
+        /* Parse stack overflow */
+        lmkLog(&(sym->srcp), 106, sev, "");
+        break;
 
     case 4:
-	/* Parse table error */
-	lmkLog(&(sym->srcp), 107, sev, "");
-	break;
+        /* Parse table error */
+        lmkLog(&(sym->srcp), 107, sev, "");
+        break;
     }
 
     if (method == 5) {
-	/* System halted, output informational message */
-	lmkLog(&(sym->srcp), 108, sevINF, "");
+        /* System halted, output informational message */
+        lmkLog(&(sym->srcp), 108, sevINF, "");
     }
 }/*lmkMess()*/

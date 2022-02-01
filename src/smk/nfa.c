@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1991-01-10
- * 
+ *
  * SoftLab ab (c) 1991
  *
  * $Header: /Repository/ToolMaker/src/smk/nfa.c,v 1.1 2002/06/25 20:04:46 Thomas Nilsson Exp $
@@ -27,7 +27,7 @@
  *
  * Revision 1.3  91/08/22  07:21:07  tools
  * Changed handling of EOT and UNKNOWN tokens.
- * 
+ *
  * Revision 1.2  1991/07/11  10:38:37  tools
  * Added Inherited scanners and Undefined tokens
  *
@@ -236,13 +236,13 @@ void nfaCreate()
     for(scanner=vocabulary->scanners;scanner;scanner=scanner->next) {
       scanner->nfa=0;
       for(rule=scanner->rules;rule;rule=rule->next)
-	if((rule->type==ruleMATCH || rule->type==ruleSKIP) && 
-	   rule->ast &&
-	   rule->ast!=astEOT && 
-	   rule->ast!=astUNKNOWN)
-	  scanner->nfa=nfasMerge(scanner->nfa,nfaConstruct(rule,rule->ast));
+  if((rule->type==ruleMATCH || rule->type==ruleSKIP) &&
+     rule->ast &&
+     rule->ast!=astEOT &&
+     rule->ast!=astUNKNOWN)
+    scanner->nfa=nfasMerge(scanner->nfa,nfaConstruct(rule,rule->ast));
     }
-  
+
   for(lookahead=lookaheadRoot;lookahead;lookahead=lookahead->next)
     if(lookahead->lengthPrefix<0 || lookahead->lengthSuffix<0) {
       lookahead->nfaPrefix=nfaConstruct(lookahead->rule,lookahead->astPrefix);
@@ -257,7 +257,7 @@ void nfaCreate()
     if(nfa->type==nfaCUT) {
       for(nfas=nfa->follow;nfas && nfas->nfa->type!=nfaFINAL;nfas=nfas->next);
       if(nfas==NULL || nfas->nfa->rule!=nfa->rule)
-	smkLog(&nfa->rule->srcp,241,sevERR,"");
+  smkLog(&nfa->rule->srcp,241,sevERR,"");
       nfasDelete(nfa->follow);
       nfa->follow=NULL;
     }
@@ -280,21 +280,21 @@ void nfaOptimize()
     if(charTable[c1]<=maxChr) {
       charMinTable[maxChr]=c1;
       for(c2=c1+1;c2<charSize;c2++)
-	if(charTable[c2]<=maxChr) {
-	  for(nfa=nfaRoot;nfa;nfa=nfa->next) {
-	    min=nfa->charMin;
-	    max=nfa->charMax;
-	    if((c1<min || c1>max) != (c2<min || c2>max)) break;
-	  }
-	  if(nfa)
-	    break;
-	  else
-	    charTable[c2]=maxChr;
-	}
+  if(charTable[c2]<=maxChr) {
+    for(nfa=nfaRoot;nfa;nfa=nfa->next) {
+      min=nfa->charMin;
+      max=nfa->charMax;
+      if((c1<min || c1>max) != (c2<min || c2>max)) break;
+    }
+    if(nfa)
+      break;
+    else
+      charTable[c2]=maxChr;
+  }
       charMaxTable[maxChr]=c2-1;
       charTable[c1]=maxChr++;
       c1=c2-1;
-    }	      
+    }
 
  /* Remap the character ranges used by the NFA to the newly */
  /* constructed character classes */
@@ -311,7 +311,7 @@ void nfaDump()
   NFA nfa;
   short min;
   short max;
-  
+
   printf("NFA\n");
   for(nfa=nfaRoot;nfa;nfa=nfa->next) {
     printf("%3d / %3d: ",nfa->node,nfa->rule->code);
@@ -321,9 +321,9 @@ void nfaDump()
       max=charSize<256?charMaxTable[nfa->charMax]:nfa->charMax;
       printf(min<' '||min>'~'?"x%02X":"'%c'",min);
       if(min<max)
-	printf(max<' '||max>'~'?"-x%02X ":"-'%c' ",max);
+  printf(max<' '||max>'~'?"-x%02X ":"-'%c' ",max);
       else
-	printf("     ");
+  printf("     ");
       break;
     case nfaFINAL:
       printf("#       ");
@@ -342,7 +342,7 @@ void nfaPrint()
   NFA nfa;
   short min;
   short max;
-  
+
   smkSkipLines(getNumOpt(HEIGHT_OPT)-6);
   lmPrintf("NFA\n");
   for(nfa=nfaRoot;nfa;nfa=nfa->next) {
@@ -353,9 +353,9 @@ void nfaPrint()
       max=charSize<256?charMaxTable[nfa->charMax]:nfa->charMax;
       lmPrintf(min<' '||min>'~'?"x%02X":"'%c'",min);
       if(min<max)
-	lmPrintf(max<' '||max>'~'?"-x%02X ":"-'%c' ",max);
+  lmPrintf(max<' '||max>'~'?"-x%02X ":"-'%c' ",max);
       else
-	lmPrintf("     ");
+  lmPrintf("     ");
       nfasPrint(nfa->follow);
       break;
     case nfaFINAL:

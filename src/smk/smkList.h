@@ -49,8 +49,8 @@ typedef enum smkMessages {
 /* UNINITIALISED: */
 /* Initialise the smkLister System */
 extern void smkLiInit(char header[],
-                 char src[],
-                 smkMessages msect);
+                char src[],
+                smkMessages msect);
 
 /* COLLECTING: */
 /* Log a message at a source position */
@@ -74,7 +74,7 @@ extern void smkLiOn(TmkSrcp *pos);
 
 /* (Un)conditionally skip to a new page at a source position */
 extern void smkLiPage(TmkSrcp *pos,
-                 int lins);
+                int lins);
 
 /* Read worst severity logged so far */
 extern smkSev smkSeverity(void);
@@ -106,4 +106,3 @@ extern void smkLiTerminate(void);
 
 
 #endif
-

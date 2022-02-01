@@ -41,7 +41,7 @@
 #endif
 #endif
 
-#define MAXNOPH 3		/* max mumber of placeholders */
+#define MAXNOPH 3   /* max number of placeholders */
 
 typedef struct StrList {
   char *str;

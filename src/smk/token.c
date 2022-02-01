@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-04-30/tools@wolf
  * CREATED: 1993-04-16
- * 
+ *
  * SoftLab ab (c) 1993
  *
  * $Header: /Repository/ToolMaker/src/smk/token.c,v 1.1 2002/06/25 20:05:02 Thomas Nilsson Exp $
@@ -72,7 +72,7 @@ Token tokenNew(Token* tokens, Name name, Code code)
 
 void tokenDump(Token token)
 {
-  printf("  %%TOKEN code=%3d   name='%s'\n", 
-	 token->code,
-	 token->name);
+  printf("  %%TOKEN code=%3d   name='%s'\n",
+   token->code,
+   token->name);
 }

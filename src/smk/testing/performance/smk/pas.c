@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-06-09/tony@eeyore
  * CREATED: 1990-07-02
- * 
+ *
  * SoftLab ab (c) 1990
  */
 
@@ -13,8 +13,8 @@
 pasScContext aContext;
 
 main(argc,argv)
-     register int argc;
-     register char **argv;
+    register int argc;
+    register char **argv;
 {
   TimeItem tb;
   register int time;
@@ -26,7 +26,7 @@ main(argc,argv)
   if(argc!=2) fprintf(stderr,"usage: %s file\n",*argv),exit(1);
   aContext=pasScNew(pas_PASCAL_MAIN_Scanner);
   if((aContext->fd=open(argv[1],0))<0) perror(argv[1]),exit(1);
-  
+
   tistart(&tb);
   res=0;
   item=0;

@@ -15,9 +15,9 @@ static qEl *qRear = NULL;
 void init_queue()
 {
     while (qFront) {
-	qRear = qFront;
-	qFront = qFront->next;
-	free((char *)qFront);
+    qRear = qFront;
+    qFront = qFront->next;
+    free((char *)qFront);
     }/*while*/
     qFront = NULL;
     qRear = NULL;
@@ -36,7 +36,7 @@ Boolean empty_queue()
 
 /*-----------------------------------------------------------------------------
  * front - returns contents of front element in its arguments and dequeues
- *	   front element
+ *         front element
  *-----------------------------------------------------------------------------
  */
 void front(nont, analysis)
@@ -45,9 +45,9 @@ analysis_kind *analysis;
 {
     if (empty_queue()) pmkLog(NULL, 215, sevSYS, "");
     else {
-	*nont = qFront->nontNode;
-	*analysis = qFront->analysisInfo;
-	qFront = qFront->next;
+    *nont = qFront->nontNode;
+    *analysis = qFront->analysisInfo;
+    qFront = qFront->next;
     }/*if*/
 }/*front()*/
 
@@ -67,10 +67,10 @@ analysis_kind analysis;
     temp->analysisInfo = analysis;
     temp->next = NULL;
     if (qFront) {
-	qRear->next = temp;
-	qRear = temp;
+    qRear->next = temp;
+    qRear = temp;
     } else {
-	qFront = temp;
-	qRear = temp;
+    qFront = temp;
+    qRear = temp;
     }/*if*/
 }/*enqueue()*/

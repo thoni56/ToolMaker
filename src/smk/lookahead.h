@@ -2,7 +2,7 @@
  * AUTHOR : Tony Olsson
  * DATE   : 1993-08-20/tony@wolf
  * CREATED: 1990-06-21
- * 
+ *
  * SoftLab ab (c) 1990
  *
  * $Header: /Repository/ToolMaker/src/smk/lookahead.h,v 1.1 2002/06/25 20:04:44 Thomas Nilsson Exp $
@@ -26,7 +26,7 @@
  *
  * Revision 1.1  91/01/10  12:23:02  tools
  * Initial revision
- * 
+ *
  *
  */
 

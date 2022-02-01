@@ -593,7 +593,7 @@ TmkToken *token			/* INOUT symbol to delete, new symbol */
     *token = la_buff[la_ptr];
     } else {
     do {
-        
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -978,7 +978,7 @@ TmkToken *curtok			/* IN current token */
     while ((la_buff[la_end].code != ENDMARK) && (la_end < PmLaMax)) {
     la_end++;
     do {
-            
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1240,7 +1240,7 @@ TmkToken *token			/* OUT new token */
     *token = la_buff[la_ptr];
     } else {
     do {
-        
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1303,7 +1303,7 @@ UByte1 *newstat		/* OUT recovery state */
     *token = la_buff[la_ptr];
     } else {
     do {
-        
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1368,7 +1368,7 @@ void tmkParse(void)
     *token = la_buff[la_ptr];
     } else {
     do {
-        
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1402,7 +1402,7 @@ tmkScan(tmkCext, token);
     *token = la_buff[la_ptr];
     } else {
     do {
-        
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1424,7 +1424,7 @@ tmkScan(tmkCext, token);
     *token = la_buff[la_ptr];
     } else {
     do {
-        
+
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {

@@ -83,7 +83,7 @@ static MessSectNodeP newMessSect(msNode)
  *----------------------------------------------------------------------------
  */
 void lmkPaSema(
-int rule			/* IN production number */
+int rule                        /* IN production number */
 )
 {
     switch (rule) {
@@ -91,22 +91,22 @@ int rule			/* IN production number */
 {
           MessSectNodeP p = (MessSectNodeP) malloc(sizeof(MessSectNode));
           p->name = lmkSeSt[lmkStkP+1].sval;
-	  p->messCnt = messCnt;
+          p->messCnt = messCnt;
           p->messages = lmkSeSt[lmkStkP+2].mline;
           p->next = NULL;
           if (!newMessSect(p))
-	    lmkLog(&lmkSeSt[lmkStkP+1].srcp, 200, sevERR, p->name);
-        }	break;}
+            lmkLog(&lmkSeSt[lmkStkP+1].srcp, 200, sevERR, p->name);
+        }       break;}
     case 8: { /* messages_header = '%%MESSAGES' IDENTIFIER; */
 {
-	  messCnt = 0;
-	  lmkSeSt[lmkStkP+1].sval = lmkSySt[lmkStkP+2].sval;
-	  lmkSeSt[lmkStkP+1].srcp = lmkSySt[lmkStkP+2].srcp;
-	}	break;}
+          messCnt = 0;
+          lmkSeSt[lmkStkP+1].sval = lmkSySt[lmkStkP+2].sval;
+          lmkSeSt[lmkStkP+1].srcp = lmkSySt[lmkStkP+2].srcp;
+        }       break;}
     case 9: { /* message_lines =; */
 {
           lmkSeSt[lmkStkP+1].mline = NULL;
-        }	break;}
+        }       break;}
     case 10: { /* message_lines = message_lines message_line; */
 {
           MessNodeP p;
@@ -118,8 +118,8 @@ int rule			/* IN production number */
             p->next = lmkSeSt[lmkStkP+2].mline;
             lmkSeSt[lmkStkP+1].mline= lmkSeSt[lmkStkP+1].mline;
           }
-	  messCnt++;
-        }	break;}
+          messCnt++;
+        }       break;}
     case 11: { /* message_line = NUMBER STRING ';'; */
 {
           MessNodeP p = (MessNodeP) malloc(sizeof(MessNode));
@@ -127,7 +127,7 @@ int rule			/* IN production number */
           p->text = lmkSySt[lmkStkP+2].sval;
           p->next = NULL;
           lmkSeSt[lmkStkP+1].mline = p;
-        }	break;}
+        }       break;}
     default: break; }
 }/*lmkPaSema()*/
 
