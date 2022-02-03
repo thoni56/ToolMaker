@@ -3,7 +3,7 @@
 
 #include "pws.h"
 
-struct {
+extern struct {
   long udata_start;
   long udata_cnt;
   int udata_line;

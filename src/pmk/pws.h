@@ -20,7 +20,7 @@
 ((n) < 100000? 5: 6)))))
 
 extern int pwsGrm;
-char *inFiles[3];
+extern char *inFiles[3];
 extern FILE *pwsLog;
 extern FILE *pmTbl;
 extern char *vocFileName;
