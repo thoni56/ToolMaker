@@ -158,8 +158,7 @@ char *charClass(char *string)
   if(*string=='^') {
     set=0;
     string++;
-  }
-  else
+  } else
     set=1;
   memset(class,1-set,256);
   for(min=0;*string!=']';string+=charQuoteLength(string)) {
@@ -168,17 +167,17 @@ char *charClass(char *string)
       max=*string==']'?255:charDequote((unsigned char *)string);
       if(max<0) return NULL;
       if(min>max)
-  for(;max<=min;max++)
-    if(max==optExclude || (mapUsed && mapTable[max]!=max) || (setUsed && setTable[max]<0))
-      continue;
-    else
-      class[max]=set;
+	for(;max<=min;max++)
+	  if(max==optExclude || (mapUsed && mapTable[max]!=max) || (setUsed && setTable[max]<0))
+	    continue;
+	  else
+	    class[max]=set;
       else
-  for(;min<=max;min++)
-    if(min==optExclude || (mapUsed && mapTable[min]!=min) || (setUsed && setTable[min]<0))
-      continue;
-    else
-      class[min]=set;
+	for(;min<=max;min++)
+	  if(min==optExclude || (mapUsed && mapTable[min]!=min) || (setUsed && setTable[min]<0))
+	    continue;
+	  else
+	    class[min]=set;
       if(*string==']') break;
     }
     min=charDequote((unsigned char *)string);
