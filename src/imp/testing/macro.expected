@@ -41,19 +41,19 @@ typedef int MaBoolean;
 
 /* Flags.
  */
-extern MaBoolean CopyFlag;	/* Used to control the scanner (scancopy). */
-extern MaBoolean OutFlag;	/* Controls the output, set by SetOutFlag. */
-extern MaBoolean OutFileFlag;	/* True if there is an output file. */
-extern MaBoolean KeepFlag;	/* True if we are within a KEEP statement. */
-extern MaBoolean IfFlag;	/* Used to control output during IFs. */
-extern MaBoolean CommFlag;	/* True within a comment. */
-extern MaBoolean ProcFlag;	/* True if a PROCESS statement is active. */
-extern MaBoolean IncFlag;	/* True if processing an INCLUDE(label). */
-extern MaBoolean MaEof;		/* Set at end of a processed file, used to */
-				/* control the switching of output files. */
-extern MaBoolean LastPass;	/* True if this pass is the last macro */
-				/* pass. Used to control output of certain */
-				/* warning messages. */
+extern MaBoolean CopyFlag;      /* Used to control the scanner (scancopy). */
+extern MaBoolean OutFlag;       /* Controls the output, set by SetOutFlag. */
+extern MaBoolean OutFileFlag;   /* True if there is an output file. */
+extern MaBoolean KeepFlag;      /* True if we are within a KEEP statement. */
+extern MaBoolean IfFlag;        /* Used to control output during IFs. */
+extern MaBoolean CommFlag;      /* True within a comment. */
+extern MaBoolean ProcFlag;      /* True if a PROCESS statement is active. */
+extern MaBoolean IncFlag;       /* True if processing an INCLUDE(label). */
+extern MaBoolean MaEof;         /* Set at end of a processed file, used to */
+                                /* control the switching of output files. */
+extern MaBoolean LastPass;      /* True if this pass is the last macro */
+                                /* pass. Used to control output of certain */
+                                /* warning messages. */
 
 /* SETOUTFLAG
  *

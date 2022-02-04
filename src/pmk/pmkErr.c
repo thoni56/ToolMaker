@@ -34,10 +34,10 @@ extern pmkScContext pmkCtxt;
 #define MaxTokens 5
 
 
-static char insStr[101] = "";   /* Inserted symbol strings */
+static char insStr[101] = "";	/* Inserted symbol strings */
 static int insToks = 0;
 
-static char delStr[201] = "";   /* Deleted symbol strings */
+static char delStr[201] = "";	/* Deleted symbol strings */
 static int delToks = 0;
 
 /*-----------------------------------------------------------------------------
@@ -45,7 +45,7 @@ static int delToks = 0;
  *-----------------------------------------------------------------------------
  */
 void pmkRPoi(
-    PmkToken *token     /* IN the restart symbol */
+    PmkToken *token		/* IN the restart symbol */
 )
 {
     if (delToks > MaxTokens) {
@@ -69,10 +69,10 @@ void pmkRPoi(
  *-----------------------------------------------------------------------------
  */
 void pmkISym(
-    int code,           /* IN terminal code number */
-    char *symString,    /* IN terminal string */
-    char *printString,  /* IN the terminals print symbol */
-    PmkToken *token     /* OUT the created scanner symbol */
+     int code,	/* IN terminal code number */
+    char *symString,			/* IN terminal string */
+    char *printString,			/* IN the terminals print symbol */
+    PmkToken *token		/* OUT the created scanner symbol */
 )
 {
     char *selectedString;
@@ -107,9 +107,9 @@ void pmkISym(
 
     switch (code) {
 
-    case 2:         /* IDENTIFIER */
-    case 3:         /* QUOTED_STRING */
-    case 4:         /* ANGLE_BRACKETED_STRING */
+    case 2:			/* IDENTIFIER */
+    case 3:			/* QUOTED_STRING */
+    case 4:			/* ANGLE_BRACKETED_STRING */
     if (*pstr != '\0') {
         sym->sval = (char *)malloc(strlen(pstr) + 1);
         strcpy(sym->sval, pstr);
@@ -120,7 +120,7 @@ void pmkISym(
     sym->ival = 0;
     break;
 
-    case 5:         /* INTEGER */
+    case 5:			/* INTEGER */
     sym->ival = 0;
     break;
     }/*switch*/
@@ -133,13 +133,13 @@ void pmkISym(
 
 /*-----------------------------------------------------------------------------
  * pmkDSym - The indicated symbol is deleted by the parser, collect its string
- *           for later output.
+ *      for later output.
  *-----------------------------------------------------------------------------
  */
 void pmkDSym(
-    PmkToken *token,    /* IN terminal */
-    char *symString,    /* IN terminal string */
-    char *printString   /* IN terminals print string */
+    PmkToken *token,		/* IN terminal */
+    char *symString,			/* IN terminal string */
+    char *printString			/* IN terminals print string */
 )
 {
     char *selectedString;
@@ -172,28 +172,28 @@ void pmkDSym(
 /*-----------------------------------------------------------------------------
  * pmkMess - An error message should be output, symbol indicates point of error.
  *-----------------------------------------------------------------------------
- * Method:  1 = Symbol(s) insertion         Message: % inserted
- *          2 = Symbol(s) deletion                   % deleted
- *          3 = Symbol(s) replacement                % replaced by %
- *          4 = Stack backup                Malformed phrase
- *          5 = Halted                               %. System halted
+ * Method:	1 = Symbol(s) insertion        Message:	% inserted
+ *		2 = Symbol(s) deletion			% deleted
+ *		3 = Symbol(s) replacement		% replaced by %
+ *          4 = Stack backup			Malformed phrase
+ *		5 = Halted				%. System halted
  *
- * Code:    1 = Unknown token (error token from scanner)
- *          2 = Syntax error
- *          3 = Parse stack overflow
- *          4 = Table error
+ * Code:	1 = Unknown token (error token from scanner)
+ *		2 = Syntax error
+ *		3 = Parse stack overflow
+ *		4 = Table error
  *
- * Severity:    1 = Warning
- *              2 = Error (repairable)
- *              3 = Fatal error
- *              4 = System error & Limit error
+ * Severity:	1 = Warning
+ *		2 = Error (repairable)
+ *		3 = Fatal error
+ *		4 = System error & Limit error
  *-----------------------------------------------------------------------------
  */
 void pmkMess(
-    PmkToken *sym,      /* IN error token */
-    int method,         /* IN recovery method */
-    int code,           /* IN error classification */
-    int severity        /* IN error severity code */
+    PmkToken *sym,		/* IN error token */
+    int method,			/* IN recovery method */
+    int code,			/* IN error classification */
+    int severity		/* IN error severity code */
 )
 {
     pmkSev sev;
