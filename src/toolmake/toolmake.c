@@ -29,8 +29,6 @@
 #include "spa.h"
 #include "ask.h"
 
-#include "license.h"
-
 
 PRIVATE char
     *tmDir = NULL,              /* $TMHOME for the session */
@@ -343,11 +341,11 @@ The file to be generated (%s) exists, please decide action:\n\n\
 #ifndef IMPSYS
 #include "impMacro.h"
 
-PRIVATE assertVar(int i, char* n) {
+PRIVATE void assertVar(int i, char* n) {
     if (i!=0) spaAlert('S', "IMP failed to set %s (error code %d)", n, i);
 }
 
-PRIVATE setStrVar(char *var, char *val) {
+PRIVATE void setStrVar(char *var, char *val) {
     char buf[1024];
 
     sprintf(buf, "%s(\"%s\")", var, val);
@@ -543,10 +541,7 @@ SPA_END
     MAIN
 */
 
-main(argc, argv)
-    int argc;
-    char *argv[];
-{
+int main(int argc, char **argv) {
     int lic;
 
     SpaAlertName = product.abbreviation;
@@ -555,6 +550,7 @@ main(argc, argv)
 #endif
     printf("%s\n\n", product.longHeader);
 
+#ifdef LICENSE
     switch (lic = license()) {
     case LICENSE_OK:
         break;
@@ -580,6 +576,7 @@ main(argc, argv)
         spaAlert('E', "license server: unknown error (%d)", lic);
         break;
     }
+#endif
 
     spaProcess(argc, argv, arguments, options, spaPerr);
 #ifdef DBG
@@ -589,7 +586,10 @@ main(argc, argv)
 #endif
 
     tmDir = (char *)getenv("TMHOME");
-    if (!tmDir) tmDir = TMHOME;
+    if (!tmDir) {
+        perr('F', "TMHOME environment variable not set, cannot find ToolMaker installation root", NULL);
+    }
+
 #ifdef DBG
     libDir = (char *)getenv("TMLIB");
     if (!libDir)

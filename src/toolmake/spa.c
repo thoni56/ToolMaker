@@ -183,8 +183,8 @@ PRIVATE struct {
     char *iomode;
     char *errmsg;
 } fileDefault[2] = {            /* We assume _SPA_OutFile-_SPA_InFile == 1 */
-    { stdin, "r", NULL },       /* Set errmsg before use! */
-    { stdout, "w", NULL }
+    { NULL, "r", NULL },       /* Set errmsg before use! */
+    { NULL, "w", NULL }
 };
 #define mode(T) (fileDefault[(T)-_SPA_InFile].iomode)
 #define file(T) (fileDefault[(T)-_SPA_InFile].deffile)
@@ -673,7 +673,7 @@ PRIVATE SPA_FUN(biUsage) {
         printf(" [");
         for (i=0; pOptions[i].name; i++)
             if (pOptions[i].type && *pOptions[i].name) {
-                printf(pOName(&pOptions[i]));
+                printf("%s", pOName(&pOptions[i]));
                 if (pOptions[i+1].name && *pOptions[i+1].name) printf("|");
             }
         printf("]...");
@@ -807,6 +807,10 @@ PUBLIC int FUNCTION(_spaProcess, (argc, argv, arguments, options, errfun))
     IN(SpaErrFun, *errfun)
 IS {
     register int a, n;
+
+    /* Set input and output channels */
+    fileDefault[0].deffile = stdin;
+    fileDefault[1].deffile = stdout;
 
     fileDefault[0].errmsg = SpaStrFRE;
     fileDefault[1].errmsg = SpaStrFWE;
