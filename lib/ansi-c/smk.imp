@@ -16,7 +16,7 @@
 ----------------------------------------------------------------------------
 %%IF(_Lvl(MINIMAL))
 
-%%  IF(_tL("C++"))
+%%IF(_tL("ANSI-C") OR _tL("C++"))
 `%%IMPORT
 
 #include <fcntl.h>
@@ -41,7 +41,7 @@
     Blank = [^A-Z]+;
 %%ELSIF(_Lvl(NORMAL))
 
-%%  IF(_tL("C++"))
+%%  IF(_tL("ANSI-C") OR _tL("C++"))
 `%%IMPORT
 
 #include <fcntl.h>
@@ -93,13 +93,9 @@ extern %%(_sN)ScContext lexContext;
 
 #include <stdio.h>
 #include <string.h>
-%%IF(_tL("C++"))
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <fcntl.h>
-
-%%ENDIF
 
 %%IF(_i(lm))
 #include "%%(_sN)List.h"

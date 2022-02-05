@@ -1,5 +1,5 @@
 %%COMMENT
-   makefile.imp				     Date: 1993-10-28/reibert@roo
+   makefile.imp					 Date: 1993-10-28/reibert@roo
 
    C/ANSI-C/C++ makefile imp script for ToolMaker
 
@@ -47,22 +47,7 @@ LMK	= lmk $(LMQ)
 
 LDFLAGS	= $(LQ)
 
-%%IF(_tOS(SunOS))
-%%SET PLUS (" + ")
-%%  IF(_tL("C"))
-CFLAGS = $(DEBUG) $(CQ)
-%%  ELSIF(_tL("ANSI-C"))
-CC = acc -Xc
-CFLAGS = $(DEBUG) $(CQ)
-%%  ELSIF(_tL("C++"))
-
-CC = CC
-CFLAGS	= $(DEBUG) $(CQ)
-CCFLAGS	= $(DEBUG) $(CCQ)
-%%  ENDIF
-%%ELSE
 %%SET PLUS (" ")
-%%ENDIF
 
 %%IF(_i(sm) OR _i(lm) OR _i(pm) OR _mm(YES))
 OBJECTS = \
@@ -94,32 +79,16 @@ OBJECTS = \
 %%  IF(_i(lm))
 	%%(_sN)Scan.o %%(_sN)ScSema.o \
 %%  ELSE
-	%%(_sN)Scan.o %%(_sN)ScSema.o 
+	%%(_sN)Scan.o %%(_sN)ScSema.o
 %%  ENDIF
 %%  SET cleanFiles("%%(cleanFiles) *.sml")
 %%ENDIF
 %%IF(_i(lm))
 	%%(_sN)List.o
 %%ENDIF
-%%IF(_tOS(SunOS))
-
-.KEEP_STATE:
-%%ENDIF
 
 #--
-%%IF(_tOS(SunOS))
-all debug: %%IF(_i(tm))ToolMaker %%ENDIF%%(_sN)
-
-debug:=	DEBUG= -g
-
-%%  IF(_tL("C"))
-all:=	DEBUG= -O4
-%%  ELSE
-all:=	DEBUG= -O
-%%  ENDIF
-%%ELSE
 all: %%IF(_i(tm))ToolMaker %%ENDIF%%(_sN)
-%%ENDIF
 
 #--
 %%(_sN): $(OBJECTS)
@@ -223,4 +192,3 @@ clean:
 %%ENDCOMMENT
 
 #-- EoF --
-

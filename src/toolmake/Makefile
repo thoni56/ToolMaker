@@ -27,11 +27,15 @@ all		:= DEBUG=-O
 .KEEP_STATE:
 
 #--
-all debug:	toolmake
+all debug:	toolmake skeletons
 
 toolmake: $(OBJECTS) $(LIBS)
 	$(LINK.c) -o $@ $(OBJECTS) $(LIBS)
+
+#--
+skeletons: makefile.imp main.imp tmk.imp smk.imp pmk.imp lmk.imp voc.imp
 	cp *.imp $(TMLIB)
+
 
 #--
 # version.o should depend on $(VERSIONOBJECT) and create a new timestamp

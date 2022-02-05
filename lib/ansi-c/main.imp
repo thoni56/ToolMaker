@@ -13,8 +13,9 @@
 */
 
 #include <stdio.h>
-%%IF(_tL("C++"))
 #include <stdlib.h>
+#include <string.h>
+%%IF(_tL("C++"))
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -39,10 +40,10 @@
 %%IF(_Lvl(MINIMAL))
 
 %%  IF (_tL("ANSI-C") OR _tL("C++"))
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 %%  ELSE
-main(argc, argv)
+int main(argc, argv)
     int argc;
     char *argv[];
 {
@@ -203,12 +204,12 @@ PRIVATE void processArgs(argc,argv)
 /* -- MAIN -- */
 
 %%  IF (_tL("ANSI-C") OR _tL("C++"))
-PUBLIC main(
+PUBLIC int main(
     int argc,
     char *argv[]
 )
 %%  ELSE
-PUBLIC main(argc, argv)
+PUBLIC int main(argc, argv)
     int argc;
     char *argv[];
 %%  ENDIF

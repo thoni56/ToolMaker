@@ -77,11 +77,11 @@ items = { ITEM
 
 `%%IMPORT
 #include <stdio.h>
+#include <stdlib.h>
 %%IF(_tL("ANSI-C") OR _tL("C++"))
 #include <string.h>
 %%ENDIF
 %%IF(_tL("C++"))
-#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
 %%ENDIF
