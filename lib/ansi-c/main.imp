@@ -1,0 +1,296 @@
+%%COMMENT
+   main.imp				     Date: 1993-05-24/reibert@roo
+
+   C/ANSI-C/C++ main imp-script for ToolMaker
+
+   Written by Reibert Arbring, SoftLab ab. 
+%%ENDCOMMENT
+/* %%(_sN).%%(_tX)			Date: %%(_D)/%%(_P)
+
+   %%(_sN) -- main program
+
+   1.0 - %%(_D)/
+*/
+
+#include <stdio.h>
+%%IF(_tL("C++"))
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+%%ENDIF
+%%IF(NOT _Lvl(MINIMAL))
+
+#define PRIVATE static
+#define PUBLIC
+
+%%ENDIF
+
+%%IF(_i(pm))
+#include "%%(_sN)Parse.h"
+%%ENDIF
+%%IF(_i(lm))
+#include "%%(_sN)List.h"
+%%ENDIF
+%%IF(_i(sm))
+#include "%%(_sN)Scan.h"
+%%ENDIF
+
+%%IF(_Lvl(MINIMAL))
+
+%%  IF (_tL("ANSI-C") OR _tL("C++"))
+main(int argc, char *argv[])
+{
+%%  ELSE
+main(argc, argv)
+    int argc;
+    char *argv[];
+{
+%%  ENDIF
+  if (argc > 1)
+%%  IF(_i(lm))
+    xLiInit("%%(_sN)", argv[1],  x_ENGLISH_Messages);
+%%  ELSE
+    /* Initialise  ... */
+%%  ENDIF
+  else {
+    printf("Usage: %s <in> [<list>]\n", argv[0]);
+    exit(1);
+  }
+
+%%  IF(_i(sm))
+  lexContext = %%(_sN)ScNew(%%(_sN)_MAIN_MAIN_Scanner);
+  if ((lexContext->fd = open(argv[1], 0)) < 0) {
+%%  ELSE
+  /* Initialise scanning ... */
+  if (0) {			/* Failed! */
+%%  ENDIF
+%%  IF(_i(lm))
+        %%(_sN)Log(NULL, 199, sevFAT, argv[1]);
+	%%(_sN)List("", 0, 78, liTINY, sevALL);
+	exit(1);
+    } else {
+%%  ELSE
+	printf("%s: file open error: %s\n", argv[0], argv[1]);
+	exit(1);
+    } else {
+%%  ENDIF
+%%  IF(_i(sm))
+	lexContext->fileName = argv[1];
+%%  ENDIF
+%%  IF(_i(pm))
+	%%(_sN)Parse();
+%%  ELSE
+    	/* ... Parsing should be performed here ... */
+%%  ENDIF
+%%  IF(_i(sm))
+	close(lexContext->fd);
+%%  ENDIF
+%%  IF(_i(lm))
+        /* Show errors on the screen */
+	%%(_sN)List("", 0, 78, liTINY, sevALL);
+        if (argv[2])
+	  %%(_sN)List(argv[2], 0, 78, liFULL, sevALL);
+%%  ELSE
+        /* Handle error messages ... */
+%%  ENDIF
+    }
+%%  IF(_i(%%(_sN)))
+    %%(_sN)LiTerminate();
+%%  ENDIF
+}
+%%ELSE
+
+char *VERSION= "1.0";
+%%  IF(_Lvl(EXAMPLE))
+char *NAME   = "PL/0 Analysis Tool";
+%%  ELSE
+char *NAME   = "%%(_sN)";
+%%  ENDIF
+%%  IF(_i(lm))
+char *USAGE= "Usage: %%(_sN) [-h] [-l <name>] <in> [<out>]";
+%%  ELSE
+char *USAGE= "Usage: %%(_sN) [-h] <in> [<out>]";
+%%  ENDIF
+
+%%  IF(_Lvl(EXAMPLE))
+void summary();			/* Imported from parser */
+%%  ENDIF
+
+
+/* -- DATA -- */
+
+PRIVATE char 
+%%  IF(_i(lm))
+    *listFileName= NULL,
+%%  ENDIF
+    *inFileName= NULL,
+    *outFileName= NULL;
+
+
+/* -- SUBROUTINES -- */
+
+/*----------------------------------------------------------------------
+	perr()
+
+	A simple writer of error messages (onto stderr),
+	If 'addendum' is NULL it will not be written.
+*/
+%%  IF (_tL("ANSI-C") OR _tL("C++"))
+PUBLIC void perr(
+    char sev,
+    char *desc,
+    char *add
+)
+%%  ELSE
+PUBLIC void perr(sev, desc, add)
+    char sev;
+    char *desc;
+    char *add;
+%%  ENDIF
+{
+    if (add==NULL)
+	fprintf(stderr, "%s: %c! %s\n", NAME, sev, desc);
+    else
+	fprintf(stderr, "%s: %c! %s: %s\n", NAME, sev, desc, add);
+
+    if (sev=='F' || sev=='S') exit(1);
+}
+
+
+/* -- Argument processing -- */
+
+%%  IF (_tL("ANSI-C") OR _tL("C++"))
+PRIVATE void processArgs(
+    int argc,
+    char *argv[]
+)
+%%  ELSE
+PRIVATE void processArgs(argc,argv)
+    int argc;
+    char *argv[];
+%%  ENDIF
+{				/* Go thru arguments, try to act on options */
+    int i; 
+ 
+    for (i=1; i<argc; ++i) {
+        if (argv[i][0]=='-' && argv[i][1]) {
+            switch (argv[i][1]) {
+%%  IF(_i(lm))
+	    case 'l':
+		listFileName= argv[++i];
+		break;
+%%  ENDIF
+	    case 'h':
+		printf("%s\n\n", USAGE);
+		printf("Options:\n");
+%%  IF(_i(lm))
+		printf("  -l <name>  Set list file name\n");
+%%  ENDIF
+		exit(0);
+	    default:
+		perr('W', "unknown switch", argv[i]);
+		break;
+	    }
+	}
+    	else if (inFileName==NULL) inFileName= argv[i];
+    	else if (outFileName==NULL) outFileName= argv[i];
+    	else perr('W', "unknown argument", argv[i]);
+    }
+}
+
+
+/* -- MAIN -- */
+
+%%  IF (_tL("ANSI-C") OR _tL("C++"))
+PUBLIC main(
+    int argc,
+    char *argv[]
+)
+%%  ELSE
+PUBLIC main(argc, argv)
+    int argc;
+    char *argv[];
+%%  ENDIF
+{
+    int stdIn;    
+
+    processArgs(argc, argv);
+    printf("%s - %s\n\n", NAME, VERSION);
+
+    if (inFileName == NULL)
+        perr('F', "No input file", NULL);
+
+    stdIn= strcmp(inFileName,"-")==0;
+%%  IF(_i(lm))
+    if (stdIn)
+	%%(_sN)LiInit(VERSION, "standard input",  %%(_sN)_ENGLISH_Messages);
+    else
+	%%(_sN)LiInit(VERSION, inFileName,  %%(_sN)_ENGLISH_Messages);
+%%  ENDIF
+%%  IF(_Lvl(EXAMPLE))
+    if (!%%(_sN)ScanEnter(inFileName)) {
+%%  ELSE
+%%    IF(_i(sm))
+    lexContext = %%(_sN)ScNew(%%(_sN)_MAIN_MAIN_Scanner);
+    if ((lexContext->fd = open(inFileName, 0)) < 0) {
+%%    ELSE
+    /* .. try to open input file ... */
+    if () {			/* Failed! */
+%%    ENDIF
+%%  ENDIF
+%%  IF(_i(lm))
+        %%(_sN)Log(NULL, 199, sevFAT, inFileName);
+	%%(_sN)List("", 0, 78, liTINY, sevALL);
+%%  ELSE
+	perr('F', "Input file not found", inFileName);
+%%  ENDIF
+    } else {
+%%  IF(NOT _Lvl(EXAMPLE))
+	lexContext->fileName = inFileName;
+%%  ENDIF
+%%  IF(_i(pm))
+	%%(_sN)Parse();
+%%    IF(_Lvl(EXAMPLE))
+	%%(_sN)ScanTerminate();
+%%    ELSE
+	close(lexContext->fd);
+%%    ENDIF
+%%  ELSE
+    	/* ... Parsing should be performed here ... */
+%%  ENDIF
+%%  IF(_i(lm))
+        if (stdIn) {		/* This gives an idea of own processing of
+				   error messages */
+	    int i;
+	    char err[1024];
+	    TmSrcp srcp;
+
+	    /* Print a list on the terminal if errors detected. */
+	    for (i=1; %%(_sN)Msg(i, &srcp, err); i++)
+		printf("\"-\", line %d: %s (column %d)\n",
+		       srcp.line, err, srcp.col);
+	} else {
+	    /* Print a TINY list on the terminal */
+	    %%(_sN)List("", 0, 78, liTINY, sevALL);
+%%    IF(_Lvl(EXAMPLE))
+            summary();
+%%    ENDIF
+	    /* And a list file if asked to. */
+	    if (!stdIn && listFileName != NULL) {
+		%%(_sN)List(listFileName, 60, 132, liFULL, sevALL);
+%%    IF(_Lvl(EXAMPLE))
+                summary();
+%%    ENDIF
+            }
+	}
+    }
+    %%(_sN)LiTerminate();
+%%  ELSE
+%%    IF(_Lvl(EXAMPLE))
+        summary();
+%%    ENDIF
+    }
+%%  ENDIF
+}
+%%ENDIF

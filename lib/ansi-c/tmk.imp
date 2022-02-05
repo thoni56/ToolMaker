@@ -1,0 +1,81 @@
+%%COMMENT
+   tmk.imp				     Date: 1993-05-17/reibert@roo
+
+   ToolMaker 2.0 common script skeleton
+
+   Written by Reibert Arbring, SoftLab ab (tools@softlab.se). 
+%%ENDCOMMENT
+----------------------------------------------------------------------------
+-- %%(_sN).tmk 			Date: %%(_D)/%%(_P)
+-- 
+-- Common %%(_tL) definitions for all ToolMaker tools.
+--
+----------------------------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: %%(_D) %%(_T)/%%(_P) %%(_V)
+----------------------------------------------------------------------------
+
+`%%OPTIONS
+    Prefix '%%(_sN)';
+%%IF(NOT _tL("ANSI-C"))
+    Target '%%(_tD)';
+%%ENDIF
+
+%%IF(_Lvl(MINIMAL))
+
+`%%IMPORT
+typedef int TmNatural;
+typedef int TmCode;
+`%%END
+
+`%%SRCP Name TmSrcp;
+    Row line `%% TmNatural `%1 `%%;
+    Column col `%% TmNatural `%1 `%%;
+    File file `%% TmNatural `%1 `%%;
+
+`%%TOKEN Name TmToken;
+    Code code `%% TmCode `%1 `%%;
+    Srcp srcp `%% TmSrcp `%1 `%%;
+%%ELSIF(_Lvl(NORMAL))
+
+`%%IMPORT
+typedef int TmNatural;
+typedef int TmCode;
+`%%END
+
+`%%SRCP Name TmSrcp;
+    Row line `%% TmNatural `%1 `%%;
+    Column col `%% TmNatural `%1 `%%;
+    File file `%% TmNatural `%1 `%%;
+
+`%%TOKEN Name TmToken;
+    Code code `%% TmCode `%1 `%%;
+    Srcp srcp `%% TmSrcp `%1 `%%;
+    Attributes
+	floatValue `%% double `%1 `%%,
+    	stringValue `%% char* `%1 `%%;
+
+%%ELSIF(_Lvl(EXAMPLE))
+
+`%%IMPORT
+typedef int TmNatural;     /* A natural number of "reasonable" length. */
+typedef int TmCode;        /* The type of a token code. */
+`%%END
+
+`%%SRCP Name TmSrcp;
+    Row line `%% TmNatural `%1 `%%;
+    Column col `%% TmNatural `%1 `%%;
+    File file `%% TmNatural `%1 `%%;
+`%%END
+
+`%%TOKEN Name TmToken;
+    Code code `%% TmCode `%1 `%%;
+    Srcp srcp `%% TmSrcp `%1 `%%;
+    Attributes
+        stringValue `%% char `%1[256] `%%,
+        integerValue `%% int `%1 `%%;
+`%%END
+
+%%ENDIF
+%%-- Generating empty source code --
+%%--PROCESS(,"%%(_sN)Common.h")
