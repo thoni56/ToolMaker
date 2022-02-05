@@ -46,8 +46,6 @@ typedef int boolean;
 #define TRUE 1
 #endif
 
-#ifdef PROTOTYPES
-
 int askString(
     IN char *prompt,
     IN_OUT char *value,
@@ -80,16 +78,5 @@ int askGet(
     IN AskCommand command,
     OUT long value
 );
-
-#else
-
-int askCom();
-int askBool();
-int askString();
-
-int askSet();
-int askGet();
-
-#endif
 
 #endif

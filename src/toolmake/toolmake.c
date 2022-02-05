@@ -462,7 +462,7 @@ PRIVATE void impFile(dir, from, to)
 
 PRIVATE void doGenerate()
 {
-    char tmp[32];
+    char tmp[500];
 
     if (verbose && !go) printSelection();
 
@@ -513,7 +513,6 @@ PRIVATE void doGenerate()
     Defines processing of the user supplied argument line.
 */
 
-PRIVATE SPA_FUN(xit) { exit(BAD); }
 PRIVATE SPA_FUN(args) { perr('W', "Argument not used", rawName); }
 PRIVATE SPA_FUN(setName) { strcpy(sysName, rawName); }
 
@@ -542,7 +541,6 @@ SPA_END
 */
 
 int main(int argc, char **argv) {
-    int lic;
 
     SpaAlertName = product.abbreviation;
 #ifdef DBG
@@ -551,6 +549,7 @@ int main(int argc, char **argv) {
     printf("%s\n\n", product.longHeader);
 
 #ifdef LICENSE
+    int lic;
     switch (lic = license()) {
     case LICENSE_OK:
         break;

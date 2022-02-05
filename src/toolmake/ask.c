@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "system.h"
 #include "ask.h"
 
 PRIVATE char *VERSION= "2.0";
@@ -114,7 +115,7 @@ extern int getMenue();
 
 /* -- Internal functions --------------------------------------------- */
 
-PRIVATE putPrompt()
+PRIVATE void putPrompt()
 /* Writes prompt to user: <qpr>[<default>]<prp> */
 {
   printf("%s",qpr);
@@ -157,20 +158,6 @@ char *p;
 }
 
 
-PRIVATE char *strip(p)
-/* Strips blanks (char<=' ') at tail of string */
-char *p;
-{
-  char *pi, *pl;
-
-  if (p!=NULL) {
-    for(pi= pl= p; *pi; pi++) if(*pi>' ') pl=pi;
-    *(pl+1)= '\0';
-  }
-  return(p);
-}
-
-
 PRIVATE void flush()
 /* Will flush input buffer */
 { bufp= buf; *bufp= '\0'; }
@@ -179,8 +166,6 @@ PRIVATE void flush()
 PRIVATE char *getLine(s)
 char *s;
 {
-  int i,c;
-
   if(acw&A_NE) {                        /* no echo == NYI */
     return(fgets(s, LINESZ, stdin));
   } else                                /* echo */
@@ -188,7 +173,7 @@ char *s;
 }
 
 
-PRIVATE getAnswer(spaceStop,retHelp,upAnswer)
+PRIVATE int getAnswer(spaceStop,retHelp,upAnswer)
 boolean
   spaceStop, /* Break answer when space found */
   retHelp,   /* Return if help string found */
@@ -223,7 +208,7 @@ boolean
         bufp++;
         bufp= (eol? stpblk(bufp): frontstrip(bufp) );
       }
-      xit= !helpFound || retHelp&&helpFound;
+      xit= !helpFound || (retHelp&&helpFound);
     }
   } /* while(!xit) */
   if (upAnswer && answer != defp) strupr(answer);
@@ -231,7 +216,7 @@ boolean
 }
 
 
-PRIVATE getNum(pr, ip, h, e, cw) /* Reads integer */
+PRIVATE int getNum(pr, ip, h, e, cw) /* Reads integer */
     char *pr, *h, *e;
     int *ip;
     int cw;
@@ -254,7 +239,7 @@ PRIVATE getNum(pr, ip, h, e, cw) /* Reads integer */
 }
 
 
-PRIVATE getCom(pr,no,ctbl,h,e1,e2,cw) /* Get Command */
+PRIVATE int getCom(pr,no,ctbl,h,e1,e2,cw) /* Get Command */
     char *pr, *ctbl[], *h, *e1, *e2;
     int *no, cw;
 {
@@ -384,7 +369,7 @@ PUBLIC int askBool(pr,b,h,e,cw)
     int cw;
 {
     int errc, no;
-    char *bp, *hp, *ep;
+    char *hp, *ep;
 
     no= (*b? 0: 1);
     prp= boolPrChars;

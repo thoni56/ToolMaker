@@ -34,6 +34,11 @@ toolmake: $(OBJECTS) $(LIBS)
 	cp *.imp $(TMLIB)
 
 #--
+# version.o should depend on $(VERSIONOBJECT) and create a new timestamp
+# Previously done using shell script and an old version of venum
+# For now there is no equivalent function
+
+#--
 clean:
 	-rm *.o *~ core
 

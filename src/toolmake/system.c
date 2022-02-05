@@ -14,106 +14,27 @@
 #endif
 #include <time.h>
 #include <stdlib.h>
-#ifdef vms
-#include descrip
-#include rmsdef
-#else
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <unistd.h>
 #ifdef __STDC__
 #include <stdarg.h>
 #else
 #include <varargs.h>
 #endif
-#endif
 
 #include "system.h"
 
 PUBLIC char *targetOS =
-#ifdef sun
-    "SunOS"
-#else
-#ifdef apollo
-    "Apollo"
-#else
-#ifdef VMS
-    "VMS"
-#else
 #ifdef WIN32
     "WIN32"
+#elif linux
+    "Linux"
 #else
     "UNKNOWN"
 #endif
-#endif
-#endif
-#endif
 ;
-
-/* -- SUBROUINES -- */
-
-PRIVATE long get_time(name)
-    char *name;
-{
-    struct stat buf;
-
-    stat(name, &buf);
-    return buf.st_mtime;
-}
-
-
-PRIVATE char *get_line(fp)
-    FILE *fp;
-{
-    char tmp[512];
-    int len;
-
-    if (fgets(tmp, 512, fp)==NULL) return newString(NULL);
-    len= strlen(tmp);
-    if (len>0 && tmp[len-1]<' ') tmp[len-1]= 0;
-    return newString(strip(tmp));
-}
-
-
-PRIVATE char* getFileName(name)
-    char *name;
-{
-    char newName[256], *fileName;
-
-    strcpy(newName, name);
-#ifdef vms
-    if ( (fileName= strrchr(newName, ']')) != NULL ) fileName++;
-    else if ( (fileName= strrchr(newName, '>')) != NULL ) fileName++;
-#else
-    if ( (fileName= strrchr(newName, '/')) != NULL ) fileName++;
-#endif
-    else fileName= newName;
-#ifdef vms
-    { char *x;
-      if ( (x= strrchr(name, ';')) != NULL ) *x= 0; /* Strip VAX-nr */
-    }
-#endif
-    return newString(fileName);
-}
-
-
-PRIVATE char* getPathName(name)
-    char *name;
-{
-    char newName[256], *fileName;
-
-    strcpy(newName, name);
-#ifdef vms
-    if ( (fileName= strrchr(newName, ']')) != NULL ) fileName++;
-    else if ( (fileName= strrchr(newName, '>')) != NULL ) fileName++;
-#else
-    if ( (fileName= strrchr(newName, '/')) != NULL ) {}
-#endif
-    else fileName= newName;
-    *fileName = 0;
-
-    return newString(newName);
-}
 
 
 /* -- Memory allocation -- */
@@ -147,7 +68,7 @@ PUBLIC char *newString(s)
 
 PUBLIC char *strip(s)
     char *s;
-/* Remove trailing blank chars [NUL..' '] (will of course waste memory) */
+/* Remove trailing blank chars [NUL..' '] */
 {
     int i;
 
