@@ -2,8 +2,7 @@
 #ifndef _timing
 #define _timing
 
-#ifdef unix
-#include <malloc.h>
+#if defined(unix) || defined(__APPLE_CC__)
 #include <sys/types.h>
 #include <sys/times.h>
 typedef struct tms TimesBuffer;
@@ -22,8 +21,7 @@ typedef struct { clock_t ctime; clock_t dummy; } TimesBuffer;
 #endif
 
 
-/* Data types for timing
- */
+/* Data types for timing */
 typedef struct {
     TimesBuffer timeBuf;
     int uStart;
