@@ -21,14 +21,6 @@ typedef struct { clock_t ctime; clock_t dummy; } TimesBuffer;
 #define times(T) ((T)->ctime = clock(), (T)->dummy = 0)
 #endif
 
-#ifdef vaxc
-#include <time.h>
-typedef tbuffer_t TimesBuffer;
-#define uNow timeBuf.proc_user_time
-#define sNow timeBuf.proc_system_time
-#define divFactor 100
-#endif
-
 
 /* Data types for timing
  */
