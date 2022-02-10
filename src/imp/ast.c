@@ -7,7 +7,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <malloc.h>
 #include "impMacro.h"
 #include "name.h"
 #include "ast.h"
@@ -185,19 +184,9 @@ static ImpBoolean getInteger(ast, result)
  * Date       : 1991-09-20
  *
  ******************************************************************************/
-Ast impAstNode(srcp,endSrcp,elseSrcp,type,ival,ast0,ast1,ast2,ast3,ast4)
-     TmSrcp srcp;
-     TmSrcp endSrcp;
-     TmSrcp elseSrcp;
-     register AstType type;
-     int ival;
-     register Ast ast0;
-     register Ast ast1;
-     register Ast ast2;
-     register Ast ast3;
-     register Ast ast4;
+Ast impAstNode(TmSrcp srcp, TmSrcp endSrcp, TmSrcp elseSrcp, AstType type, int ival, Ast ast0, Ast ast1, Ast ast2, Ast ast3, Ast ast4)
 {
-    register Ast ast;
+    Ast ast;
 
     ast = (Ast)malloc(sizeof(AstItem));
     if (!ast) {
