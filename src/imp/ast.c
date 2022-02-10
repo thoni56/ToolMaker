@@ -996,7 +996,7 @@ static void subtractSetFromAst(set, ast, lDef)
             break;
         default:
             *lDef = FALSE;
-            impMyLog(ast->srcp, 302, sevERR, "subtractSetFromAst()");
+            impMyLog(&ast->srcp, 302, sevERR, "subtractSetFromAst()");
             break;
         }
         ast = ast->next;
@@ -1409,7 +1409,7 @@ static BoolResult astBoolean(ast)
                             tmpLeft = tmpLeft->next;
                         }
                         lTxt = impItoa(i);
-                        leftList = impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                        leftList = impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                               NULL, NULL, NULL, NULL);
                     } else {
                         tmp = leftList;
@@ -1486,7 +1486,7 @@ static BoolResult astBoolean(ast)
         }
         if ((r1 == IMP_TRUE) && (r2 == IMP_TRUE)) {
             outputOn();
-            return FALSE;
+            return IMP_FALSE;
         }
         outputOn();
         return IMP_UNKNOWN;
@@ -1695,14 +1695,14 @@ static BoolResult astBoolean(ast)
         }
         if (len+i == 0) {
             result[0] = '\0';
-            impNamePut(idTxt, impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_TEXT, 0, result,
+            impNamePut(idTxt, impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_TEXT, 0, (Ast)result,
                                          NULL, NULL, NULL, NULL));
         } else {
             if (result[len+i-1] == '\n')
                 result[len+i-1] = '\0';
             else
                 result[len+i] = '\0';
-            impNamePut(idTxt, impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_TEXT, len+i-1, result,
+            impNamePut(idTxt, impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_TEXT, len+i-1, (Ast)result,
                                          NULL, NULL, NULL, NULL));
         }
         outputOn();
@@ -1755,7 +1755,7 @@ static BoolResult astBoolean(ast)
             result = impItoa(resstr - pattxt + 1);
 
         impNamePut(postxt, impAstNode(ast->srcp, nulSrcp, nulSrcp, AST_INTEGER,
-                                      sizeof(result), result, NULL, NULL, NULL, NULL));
+                                      sizeof(result), (Ast)result, NULL, NULL, NULL, NULL));
 
         outputOn();
         free(extxt);
@@ -1958,7 +1958,7 @@ static BoolResult peBoolean(ast, cond)
         if ((r1 == IMP_TRUE) && (r2 == IMP_TRUE)) {
             free(c1);
             free(c2);
-            return FALSE;
+            return IMP_FALSE;
         }
         if (r1 == IMP_UNKNOWN)
             if (r2 == IMP_UNKNOWN) {
@@ -2369,7 +2369,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2443,7 +2443,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2516,7 +2516,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2589,7 +2589,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2714,7 +2714,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2819,7 +2819,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2924,7 +2924,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -2963,7 +2963,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -3008,7 +3008,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
             lTxt = impItoa(-iResult);
             if (outXpr) {
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_INTEGER, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
             }
             print(lTxt, strlen(lTxt));
@@ -3094,7 +3094,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
                                     longjmp(jmpEnv, 1);
                             *outXpr = impAstNode(tmpSrcp, nulSrcp,
                                                  nulSrcp, AST_INTEGER, strlen(tmpTxt),
-                                                 tmpTxt, NULL, NULL, NULL, NULL);
+                                                 (Ast)tmpTxt, NULL, NULL, NULL, NULL);
                         }
                         print(idTxt, strlen(idTxt));
                     } else {
@@ -3165,7 +3165,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
                         if (outXpr) {
                             impFreeAst(*outXpr);
                             *outXpr = impAstNode(inXpr->srcp, nulSrcp,
-                                                 nulSrcp, AST_INTEGER, strlen(intTxt), intTxt, NULL, NULL, NULL, NULL);
+                                                 nulSrcp, AST_INTEGER, strlen(intTxt), (Ast)intTxt, NULL, NULL, NULL, NULL);
                         } else
                             free(intTxt);
                     } else {
@@ -3304,7 +3304,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
                 tmpAst = (*outXpr)->next;
                 (*outXpr)->next = NULL;
                 impFreeAst(*outXpr);
-                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_STRING, strlen(lTxt), lTxt,
+                *outXpr = impAstNode(inXpr->srcp, nulSrcp, nulSrcp, AST_STRING, strlen(lTxt), (Ast)lTxt,
                                      NULL, NULL, NULL, NULL);
                 (*outXpr)->next = tmpAst;
             }
@@ -3674,7 +3674,7 @@ ImpBoolean impInterpretAst(inAst)
                                 longjmp(jmpEnv, 1);
                         impNamePut(beginLabel, impAstNode(inAst->srcp, nulSrcp, nulSrcp,
                                                           AST_STRING, strlen(tmpTxt),
-                                                          tmpTxt, NULL, NULL, NULL, NULL));
+                                                          (Ast)tmpTxt, NULL, NULL, NULL, NULL));
                         impInterpretAst(inAst->item.ast_loop.statement);
                     }
                     free(exprTxt);
@@ -3683,7 +3683,7 @@ ImpBoolean impInterpretAst(inAst)
                         if (!(impAstGarb() && (tmpTxt = strdup(exprTxt))))
                             longjmp(jmpEnv, 1);
                     impNamePut(beginLabel, impAstNode(inAst->srcp, nulSrcp, nulSrcp,
-                                                      AST_STRING, strlen(exprTxt), tmpTxt,
+                                                      AST_STRING, strlen(exprTxt), (Ast)tmpTxt,
                                                       NULL, NULL, NULL, NULL));
                     free(exprTxt);
                     impFreeAst(exprAst);
