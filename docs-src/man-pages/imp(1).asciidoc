@@ -1,0 +1,335 @@
+= imp(1) -- man page
+include::shared/attributes-header.adoc[]
+
+include::shared/attributes-custom.adoc[]
+
+
+////
+** NOTE ** Styles and formatting were adjusted according to need, especially
+the BNF definitions which underwent alignment and styling optimizations, to
+improve readability, but the original contents were left unaltered with the
+exception of a couple of typos fixes.
+////
+
+// Preamble
+// ========
+
+include::shared/warning-softlab.adoc[]
+
+
+== NAME
+
+imp -- Incremental Macro Processor
+
+
+== SYNOPSIS
+
+*imp* [options] _inputFile_ [_outputFile_] +
+*imp* -h
+
+
+== DESCRIPTION
+
+*imp* is a macro processor intended mainly for use with SoftLab's ToolMaker kit.
+It is however a general tool for processing text files in an incremental way, and may thus be useful for other purposes.
+
+The first form of invocation will call the macro processor with _inputFile_ as the "`root`" file to process.
+If _inputfile_ has no extension *imp* adds the extension '`.imp`'.
+If _outputFile_ is given, any output resulting from the processing of _inputFile_ will be written to the _outputFile_.
+The default _outputFile_ is standard output.
+
+The second form of invocation will give a brief description of the parameters and options available.
+
+
+== OPTIONS
+
+-ec::
+  Set the escape character to `c`.
+--e::
+  Set the default escape character `{backtick}`.
+-h::
+  Print a brief description of the parameters and the options.
+-[-]i::
+  Enable[disable] intermediate mode.
+  In intermediate mode any undefined entities (variables, labels, ...) in a macro statement will result in the statement being propagated to the output file without any warnings.
+  By default intermediate mode is disabled.
+-[-]l::
+  Enable[disable] listing to file.
+  If enabled, a full list will be produced containing all source text and all error messages.
+  The name of the list file will be the root of the infile name with the
+  extension '`.iml`'.
+  By default lisitng is disabled.
+-sVar(Val{,Val})::
+  Set the macro variable _Var_ to the value list within parentheses prior to processing any input file.
+  The syntax of the variable name and the values are described under the `%%SET`-statement.
+-[-]u::
+  Enable[disable] use of environment variables.
+  If this option is enabled, IMP will try to find any undefined variables in the environment before considering them as undefined.
+  By default use of environment variables is disabled.
+-[-]v::
+  Enable[disable] verbose mode.
+  In verbose mode a banner and timing figures will be printed on standard output.
+  By default verbose mode is disabled.
+
+
+== MACRO STATEMENTS
+
+////
+NOTE: The following Description List was very hard to format,
+      due to the fact that many entries start with a verbatim block.
+      It required lots of hacks and workarounds, and even a minor edit
+      could break the whole section. Therefore (*please*):
+      DON'T EDIT IT! ... unless you really know what you're doing.
+////
+
+%%PROCESS([inputFile][, outputFile])::
+  Equivalent to the command line invocation of the macro processor except that it is given in a file.
+  No options can be specified with this method, they can only be given "`globally`" when the Macro Processor is initially called.
+  +
+  If only an _inputFile_ is given, _inputFile_ becomes the new input stream and any output is inhibited.
+  This means that the _inputFile_ will be "`processed`", i.e. any definitions are evaluated, but no output is produced.
+  When the end of _inputFile_ is reached, the old input file is resumed, and any previously active output is resumed.
+  +
+  If only an _outputFile_ is given, the current output file is closed and any further output is directed to _outputFile_.
+  +
+  If both an _inputFile_ and an _outputFile_ is given, the _inputFile_ is processed and any output is directed to the _outputFile_.
+  When the end of _inputFile_ is reached, the old input and output files are resumed.
+
+%%IF(condition):: {blank}
++
+[subs="quotes"]
+................
+**%%IF(**_condition_**)**
+_text_
+[**%%ELSIF(**_condition_**)**
+_text_]
+[*%%ELSE*
+_text_]
+*%%ENDIF*
+................
++
+_condition_ has the following syntax:
++
+[subs="quotes,attributes"]
+................
+condition ::= _variable_ *(* _values_ *)*
+           |  *NOT* _condition_
+           |  _condition_ *AND* _condition_
+           |  _condition_ *OR* _condition_
+           |  _expression_ relop _expression_
+           |  _system call_
+           |  *(* _condition_ *)*
+
+values ::= **{asterisk}** | **?** | _value_[**,** _value_]{asterisk}
+
+variable ::= _identifier_
+
+value ::= _integer_ | _identifier_ | _string_
+
+relop ::= **=** | **#** | **>** | **<** | **>{wj}=** | **<{wj}=**
+
+system call ::= **IMP$SYSTEM(** _command_ *,* _identifier_ *)*
+
+command ::= _quoted string_
+         |  _identifier_
+................
++
+The syntax for expression is described under the _expression syntax_ header below.
++
+The _condition_ is (partially) evaluated, any non-defined variables have an undefined value and are not evaluated.
++
+If the truth value is decidable, the text-parts are conditionally processed according to the truth value.
++
+If the truth value is not decidable, the entire macrostatement will be copied including all the text parts.
+Any nested statements within the copied text will of course still be processed, e.g. a nested `%%IF`-statment with defined truth values.
+The original _condition_ will be replaced by the undecidable part of the _condition_.
+If the undecidable _condition_ belongs to an `%%ELSIF`, the `%%ELSIF` will be converted to an `%%IF`.
+All subsequent conditions in all branches of an undecidable `%%IF`-statement will be evaluated as far as possible and short-circuited if appropriate.
+This mechanism is intended to be used when the processor is run in multiple passes with some filtering done in each pass.
++
+The `%%IF`-statement can of course be nested.
++
+The rule for evaluating a _variable_(_values_) condition is set membership for single values and set subset for lists of values.
++
+When a _system call_ is evaluated first _command_ is evaluted.
+The resulting string is sent to the operating system for execution.
+If the execution of the _command_ was successful the _system call_ returns the value TRUE, otherwise FALSE.
+As a side effect the output from the _command_ is assigned as a text string to the variable named identifier.
+Output from the _command_ to stderr is directed to stderr and is not assigned to identifier.
++
+The value ``?`` is used to test if a variable is defined or not.
+If the variable is defined, the value ``?`` will yield TRUE, otherwise FALSE.
+This implies that such an condition is never undefined.
+
+%%COMMENT:: {blank}
++
+[subs="quotes"]
+................
+*%%COMMENT*
+_text_
+*%%ENDCOMMENT*
+................
++
+The macrolines and all text in between (including any `%%`-directives) are unconditionally removed.
+The comment blocks can be nested.
+
+%%-- text newline::
+  A one line comment.
+  If the comment starts in the leftmost column of a line the entire line (including the _newline_) will be removed.
+  If ``%%--`` is directly followed by a _newline_ the newline will be unconditionally removed regardless where on the line the ``%%--`` is located.
+
+%%KEEP:: {blank}
++
+[subs="quotes"]
+................
+*%%KEEP*
+_text_
+*%%ENDKEEP*
+................
++
+The macrolines are unconditionally removed, but all text in between is unconditionally copied to the output, including any `%%`-directives (even comments).
+Can be nested, i.e. any "`inner`" `%%KEEP`-`%%ENDKEEP` pairs are copied correctly.
+
+%%SET variable(value[, value]{asterisk}) (Format 1):: {blank}
+%%SET variable(, value[, value]{asterisk}) (Format 2)::
+  The _variable_ is defined and set to _value_ or the list of values.
+  In format 1, any old values are discarded, in format 2 the new values are appended to the old values.
+  A defined variable is logically treated as a set (see the `%%IF`-statement).
+
+%%ESET variable(expression[, expression]{asterisk}) (Format 1):: {blank}
+%%ESET variable(, expression[, expression]{asterisk}) (Format 2)
+  All __expression__s are evaluated and the _variable_ is defined and set to the value or the list of values.
+  In format 1, any old values are discarded, in format 2 the new values are appended to the old values.
+  A defined variable is logically treated as a set (see the `%%IF`-statement).
+
+%%BEGIN(label[(formalParameters)][localVariables]):: {blank}
++
+[subs="quotes,attributes"]
+................
+**%%BEGIN(**_label_[(__formalParameters__)]{startsb}__localVariables__{endsb}**)**
+_text_
+**%%END(**__label__**)**
+
+formalParameters ::= _identifier_ [**,** _identifier_]{asterisk}
+
+localVariables ::= [, _identifier_]{asterisk}
+................
++
+The _label_ is entered in the symbol table.
+The macrolines are removed and the _text_ is regarded as a comment (not processed or copied in any way).
+The end-label must be the same label as the begin-label.
+
+%%INCLUDE(label[(actualParameter[, actualParameter])]):: {blank}
++
+[subs="quotes"]
+.......................
+actualParameter = value
+.......................
++
+Process the region labeled _label_.
+If one or more __actualParameter__s are given, these are passed as parameters to the region, and can be accessed through a variable with the name _label_.
+If formal parameters were given when the region was defined they are inserted in the local symbol table and initialized to the values of the actual parameters (there must be exactly the same number of actual parameters as formal parameters).
+All local variables defined when the region was defined are also inserted into the local symbol table and initialized to NULL.
+The _text_ part in the region is processed regarding any commands.
+If the region contains any "`inner`" regions, these are processed as described for regions.
+
+%%EINCLUDE(label[(expression[, expression])])::
+  Works exactly the same as *%%INCLUDE* but the actual parameters are the values we get when the __expression__s has been evaluated.
+
+%%INCLUDE("filename"):: {blank}
++
+[subs="quotes"]
+.......................
+**%%INCLUDE("**__filename__**")**
+**%%EINCLUDE("**__filename__**")**
+.......................
++
+Process an entire file.
+This statement differs from `%%PROCESS` in that any processed text will be propagated to the output file.
+
+%%(expression)::
+  This is the "`insert`" statement.
+  The macro command is replaced by the value (without parentheses) or the list of values (without parentheses and separated by commas) of the evaluated _expression_.
+
+%%LOOP(loopVariable <{wj}= expression):: {blank}
++
+[subs="quotes,attributes"]
+......................................................
+**%%LOOP(**__loopVariable__ **<{wj}=** __expression__**)**
+_text_
+**%%ENDLOOP(**__loopVariable__**)**
+......................................................
++
+The _text_ in the loop is processed the value of _expression_ number of times.
+_loopVariable_ takes on the values 1 upto and including _expression_ for each successive iteration.
+The name of the _loopVariable_ must be the same at the beginning and at the end of the loop.
+The _expression_ must evaluate to an integer.
+
+%%LOOP(loopVariable, variable):: {blank}
++
+[subs="quotes,attributes"]
+................................................
+**%%LOOP(**__loopVariable__**,** _variable_**)**
+_text_
+**%%ENDLOOP(**__loopVariable__**)**
+................................................
++
+The _text_ in the loop is processed once for each element of the _variable_ which preferably should contain a list of values.
+The _loopVariable_ will take on the first element of the _variable_ in the first iteration of the loop, the second element in the second iteration and so on until all the elements have been processed.
+
+%%MESSAGE(expression)::
+  _expression_ is evaluated and the result will be printed on the standard error stream.
+
+%%EXIT( expression , expression )::
+  IMP will exit with the value of the first _expression_ as exit status.
+  The second _expression_ is evaluated and the result will be printed on the standard error stream.
+
+EXPRESSION:: {blank}
++
+[subs="quotes,attributes"]
+................................................
+expression ::= _expression_ **+** _term_
+            |  _expression_ **-** _term_
+            |  _term_
+
+term ::= _term_ **{asterisk}** _factor_
+      |  _term_ **/** _factor_
+      |  _factor_
+
+factor ::= _operand_
+        |  **-** _factor_
+
+operand ::= _string_
+         |  _variable_
+         |  **(**__expression__**)**
+
+variable ::= _identifier_
+          |  _identifier_ '**[**' _index_ '**]**'
+
+index ::= expression
+................................................
++
+If a _variable_ is used it is replaced by the value (without parentheses) or the list of values (without parentheses and seperated by commas) of the _variable_.
+If an _index_ is given the _index_ must evaluate to an integer and only the value with the corresponding index in the list is retrieved.
+The first value has index 1, index 0 gives the number of values the variable currently has.
++
+If the intermediate flag is not set at invocation, any undefined variables will generate a warning.
++
+Note that parts of, or all of, an _identifier_ or _string_ may be an insert statement!
+
+
+== SEE ALSO
+
+{toolmake1}, {pmk1}, {smk1}, {lmk1}
+
+
+== AUTHOR
+
+include::shared/email-contact.adoc[]
+
+
+== NOTES
+
+These manual pages corresponds to *imp* version {revnumber}.
+
+Copyright (C) 1989–1995, SoftLab ab.

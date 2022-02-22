@@ -30,6 +30,30 @@ block_comment = *
 block_comment_end = */
 
 
+## Ruby
+#######
+[{*.rb,*.gemspec,*.rake,Rakefile,rakefile}]
+indent_size = 2
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+
+## AsciiDoc
+###########
+[*.{adoc,asc,asciidoc}]
+indent_size = unset
+indent_style = space
+end_of_line = unset
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[docs-src/man-pages/shared/attributes-header.adoc]
+insert_final_newline = false
+
 ## Shell Scripts
 ################
 [*.sh]

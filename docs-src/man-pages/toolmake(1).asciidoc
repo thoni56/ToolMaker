@@ -1,0 +1,147 @@
+= Toolmake(1) -- man page
+include::shared/attributes-header.adoc[]
+:author: Reibert Arbring
+
+include::shared/attributes-custom.adoc[]
+
+// Preamble
+// ========
+
+include::shared/warning-softlab.adoc[]
+
+
+== NAME
+
+toolmake -- create a ToolMaker subsystem
+
+
+== SYNOPSIS
+
+*toolmake* [-help] [<option> ...] <name>
+
+
+== DESCRIPTION
+
+*Toolmake* is a facility to help you to create a SoftLab ToolMaker subsystem, i.e. *toolmake* will create the appropriate files for you in order to let you concentrate on the essential tasks when writing a ToolMaker subsystem.
+
+*Toolmake* currently supports _ParserMaker_, _ScannerMaker_ and _ListerMaker_. You can choose any combination of these to include into
+your subsystem.
+Furthermore *toolmake* will offer you an example main
+module and a Makefile, all in order to make life easier for you as an
+application (or compiler) implementor.
+
+Essentially what *toolmake* will do is to generate a set of files, all under your supervision.
+*Toolmake* will not overwrite anything unless you explicitly tells it to do so.
+
+Normally *toolmake* will ask you about the name of your subsystem, and then enter a "`command loop`".
+In this command phase you can change the default settings for the coming generation phase, or just enter it.
+You can always give a single question mark (followed by carriage return) to *toolmake* in order to get some brief help.
+In some cases you can get further help with a HELP command.
+
+If you are familiar with the ToolMaker system *toolmake* ought to be self explanatory.
+
+
+== ARGUMENTS
+
+name::
+  The subsystem name, this is used as prefix for the generated files and all externally visible symbols in generated code.
+
+
+== OPTIONS
+
+-[-]go::
+  [Do not] Enter the generation phase immediatly (default: off).
+-[-]verbose::
+  Enable [disable] verbose output mode (default: off). +
+  Verbose mode will give some information regarding the actions choosen by *toolmake*.
+-help::
+  Gives you a brief but fresh help on the arguments and options to the *toolmake* program.
+
+
+== FILES
+
+The files generated differs naturally depending on target language, wanted components and generation level.
+For the default case and a subsystem called *x*, the following ToolMaker description files will be generated:
+
+////
+The ordered list below is a bit tricky because we expect the following
+numbering: x. y. z. a.
+The only way to achieve this is to start a new list, although it
+introduces a gap between the last element and its previous element.
+So our best option is to treat each entry as a new list, so that
+all elements are equally spaced.
+////
+
+[loweralpha, start=24]
+. The common ToolMaker description file.
+
+[loweralpha, start=25]
+. The ScannerMaker description file.
+
+[loweralpha, start=26]
+. The ParserMaker description file.
+
+[loweralpha, start=1]
+. The ListerMaker description file.
+
+And for your convience:
+
+[loweralpha, start=24]
+. An example main program.
+
+// separator to forcefully end the list
+
+Makefile::
+  A suitable file for make(1).
+
+For the default case the following source code files will be generated empty by toolmake:
+
+xCommon.h::
+  Subsystem common definitions, e.g. token definition.
+xScSema.c, xScan.c, xScan.h::
+  The scanner.
+xPaSema.c, xParse.c, xParse.h::
+  The parser.
+xList.c, xList.h::
+  The lister.
+xErr.c, xErr.h::
+  Error handler, interface between parser and lister.
+
+Of course will they be filled when the proper makers are invoked.
+
+To be able to use ToolMaker programs the environmental variable `TMHOME` should be set, probably to `/usr/local/ToolMaker`.
+The origin for the generated files will be found in a language subdirectory to `$TMHOME/lib`, like `$TMHOME/lib/ansi-c`.
+
+
+== DIAGNOSTICS
+
+A number of diagnostic messages can appear when running *toolmake*.
+See your _Toolmake Reference Manual_ for a detailed listing.
+
+
+== SEE ALSO
+
+{make1}, {pmk1}, {smk1}, {lmk1}, {imp1} +
+_ToolMaker documentation_
+
+// @NOTE: Unlike the other man-pages, this one referenced them as (1),
+//        instead of (L1) in the original. For consistency and simplicity
+//        I used (L1) here too.
+
+
+== BUGS
+
+Please contact SoftLab about bugs and wishes.
+
+
+== AUTHOR
+
+Reibert Arbring, SoftLab ab. +
+include::shared/email-contact.adoc[]
+
+
+== NOTES
+
+These manual pages corresponds to ToolMaker version {revnumber}.
+
+Copyright (C) 1989–1995, SoftLab ab.

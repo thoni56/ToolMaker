@@ -1,0 +1,82 @@
+= lmk(1) -- man page
+include::shared/attributes-header.adoc[]
+
+include::shared/attributes-custom.adoc[]
+
+
+// Preamble
+// ========
+
+include::shared/warning-softlab.adoc[]
+
+
+== NAME
+
+lmk -- ListerMaker, generate message and list handlers
+
+
+== SYNOPSIS
+
+*lmk* [-help] [<option> ...] <file>
+
+
+== DESCRIPTION
+
+*lmk* is a tool to generate Listers, program modules to handle error messages and to produce listings of input in an easy and elegant fashion.
+Input is a description file containing message templates and output is generated source file ready for compilation.
+
+ListerMaker is well integrated with the other components of the ToolMaker package.
+
+
+== ARGUMENTS
+
+file::
+  The name of the ListerMaker description file.
+  Default extension is _.lmk_.
+
+
+== OPTIONS
+
+-help::
+  Gives a brief help on the arguments and options to the *lmk* program.
+  For detailed information about options refer to the _ListerMaker Reference Manual_.
+
+
+== FILES
+
+<file>.tmk::
+  The ToolMaker Common Description file.
+  Contains common definitions for all the Makers in the ToolMaker package.
+  <file> is the name of the description file with any _.lmk_ extension removed.
+<file>.lml::
+  The list file produced by *lmk*.
+  <file> is the name of the description file with any _.lmk_ extension removed.
+<file>.lmt::
+  The intermediate tables produced used by *lmk*.
+  <file> is the name of the description file with any _.lmk_ extension removed.
+
+
+== SEE ALSO
+
+{pmk1}, {smk1}, {toolmake1}, {imp1} +
+_ListerMaker Reference Manual_ (part of the _ToolMaker Reference Manual_)
+
+// @NOTE: The original man-page also contained a reference to itself
+//        -- i.e. to "lmk(1L)" -- which I omitted here!
+
+
+== BUGS
+
+Please contact SoftLab about bugs and enhancements.
+
+
+== AUTHOR
+
+include::shared/email-contact.adoc[]
+
+
+== NOTES
+
+These manual pages corresponds to ToolMaker version {revnumber}.
+
+Copyright (C) 1989–1995, SoftLab ab.

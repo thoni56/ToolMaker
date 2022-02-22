@@ -1,0 +1,20 @@
+:author: SoftLab ab
+:revdate: 1995
+:revnumber: 2.1
+:revremark: AsciiDoc Port
+:version-label: ToolMaker
+:lang: en
+:doctype: article
+// TOC Settings:
+:toc: left
+// Sections Numbering:
+:sectnums!:
+// Cross References:
+:idprefix:
+:xrefstyle: full
+// Misc Settings:
+:experimental: true
+:icons: font
+:linkattrs: true
+:reproducible: true
+:sectanchors: true
