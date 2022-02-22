@@ -1,0 +1,9 @@
+[WARNING]
+=================================================
+The company SoftLab AB (Sweden) mentioned in this document no longer exists, it was sold in the late 90s.
+
+Any reference to the softlab.se web domain found in this document is unrelated to the SoftLab Rising company which is using the softlab.se domain today.
+
+If you have any questions regarding this software, please
+https://github.com/thoni56/ToolMaker/issues/new/[open an Issue on the upstream repository^].
+=================================================

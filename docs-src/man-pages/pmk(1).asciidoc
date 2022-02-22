@@ -1,0 +1,76 @@
+= pmk(1) -- man page
+include::shared/attributes-header.adoc[]
+
+include::shared/attributes-custom.adoc[]
+
+// Preamble
+// ========
+
+include::shared/warning-softlab.adoc[]
+
+
+== NAME
+
+pmk -- ParserMaker, generate syntactical analysers
+
+
+== SYNOPSIS
+
+*pmk* [-help] [<option> ...] <file>
+
+
+== DESCRIPTION
+
+*pmk* is the ParserMaker component in SoftLab's ToolMaker kit.
+ParserMaker is a general and advanced tool for the construction and maintainance of language processors -- parsers.
+The ParserMaker system contains many facilities which makes it easy to use for various applications, facilities that are not common in similar systems.
+
+Input is a file describing the grammar to be recognized, semantic actions etc. and output is generated source files ready for compilation.
+
+ParserMaker is well integrated with the other components of the ToolMaker package.
+
+
+== ARGUMENTS
+
+file::
+  The name of the ParserMaker description file.
+  Default extension is _.pmk_.
+
+
+== OPTIONS
+
+-help::
+  Print a brief description of the parameters and the options.
+  For further information about options refer to the _ParserMaker Reference Manual_.
+
+
+== FILES
+
+<file>.tmk::
+  The ToolMaker Common Description file.
+  Contains common definitions for all the Makers in the ToolMaker package.
+  <file> is the name of the description file with any _.pmk_ extension removed.
+<file>.pml::
+  The list file produced by *pmk*.
+  <file> is the name of the description file with any _.pmk_ extension removed.
+<file>.pmt::
+  The intermediate tables produced used by *pmk*.
+  <file> is the name of the description file with any _.pmk_ extension removed.
+
+
+== SEE ALSO
+
+{smk1}, {lmk1}, {toolmake1}, {imp1} +
+_ParserMaker Reference Manual_ (part of the _ToolMaker Reference Manual_)
+
+
+== AUTHOR
+
+include::shared/email-contact.adoc[]
+
+
+== NOTES
+
+These manual pages corresponds to ToolMaker version {revnumber}.
+
+Copyright (C) 1989–1995, SoftLab ab.

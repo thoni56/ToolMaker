@@ -1,0 +1,9 @@
+
+// Man-page cross-links:
+:imp1: link:./imp(1){outfilesuffix}[imp(1L)]
+:lmk1: link:./lmk(1){outfilesuffix}[lmk(1L)]
+:pmk1: link:./pmk(1){outfilesuffix}[pmk(1L)]
+:smk1: link:./smk(1){outfilesuffix}[smk(1L)]
+:toolmake1: link:./toolmake(1){outfilesuffix}[toolmake(1L)]
+
+:make1: https://man7.org/linux/man-pages/man1/make.1.html[man(1)^, title="Online make(1) man page"]

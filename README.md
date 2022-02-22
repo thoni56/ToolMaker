@@ -57,3 +57,5 @@ some way. Special thanks to
 To build you need `gcc` with `binutils` for 32-bit. ToolMaker cannot
 currently be built for 64-bit architectures. If you want to run tests
 you need [Jregr](https://github.com/thoni56/Jregr).
+
+For building the documentation, see [`docs-src/README.md`](./docs-src/README.md).

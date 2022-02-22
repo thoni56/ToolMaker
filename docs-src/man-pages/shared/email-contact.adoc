@@ -1,0 +1,1 @@
+Email to: [.line-through]#https://github.com/thoni56/ToolMaker[{lt}tools@softlab.se{gt}^,title="Email contact no longer valid!&#10;For questions about ToolMaker, open an Issue on the repoistory."]#
