@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <math.h>
 #include "char.h"
@@ -55,7 +56,7 @@ static DFA dfaPut(NFAs nfas)
 
   hashKey=0;
   for(nfas1=nfas;nfas1!=NULL;nfas1=nfas1->next)
-    hashKey=(hashKey<<1)^(int)(nfas1->nfa);
+    hashKey=(hashKey<<1)^(intptr_t)(nfas1->nfa);
   hashKey%=dfaHashSize;
 
 

@@ -184,7 +184,8 @@ static ImpBoolean getInteger(ast, result)
  * Date       : 1991-09-20
  *
  ******************************************************************************/
-Ast impAstNode(TmSrcp srcp, TmSrcp endSrcp, TmSrcp elseSrcp, AstType type, int ival, Ast ast0, Ast ast1, Ast ast2, Ast ast3, Ast ast4)
+Ast impAstNode(TmSrcp srcp, TmSrcp endSrcp, TmSrcp elseSrcp, AstType type, int ival,
+               Ast ast0, Ast ast1, Ast ast2, Ast ast3, Ast ast4)
 {
     Ast ast;
 
@@ -327,7 +328,7 @@ Ast impAstNode(TmSrcp srcp, TmSrcp endSrcp, TmSrcp elseSrcp, AstType type, int i
     case AST_PROCESS:
         ast->item.ast_process.infile = ast0;
         ast->item.ast_process.outfile = ast1;
-        ast->item.ast_process.silent = (ImpBoolean)ast2;
+        ast->item.ast_process.silent = (ast2!=0); /* ast2 is an ImpBoolean */
         if (!ast3) {
             if (!(ast->item.ast_process.trailingBlanks = strdup("")))
                 if (!(impAstGarb() && (ast->item.ast_process.trailingBlanks = strdup(""))))
@@ -409,7 +410,7 @@ Ast impCopyAst(old, copyTail)
      Ast old;
      ImpBoolean copyTail;
 {
-    register Ast new;
+    Ast new;
 
     if (!old)
         return NULL;
@@ -1264,7 +1265,7 @@ typedef enum BoolResult {
 } BoolResult;
 
 static BoolResult astBoolean(ast)
-     register Ast ast;
+     Ast ast;
 {
     char *result, *resstr;
     FILE *resFile;
@@ -1780,7 +1781,7 @@ static BoolResult astBoolean(ast)
 }
 
 static BoolResult peBoolean(ast, cond)
-     register Ast *ast;
+     Ast *ast;
      char **cond;
 {
     Ast tmpAst;
@@ -2268,8 +2269,8 @@ static BoolResult peBoolean(ast, cond)
   is returned and no list.
 */
 static ImpBoolean evalExpr(inXpr, outXpr)
-     register Ast inXpr;        /* Expression to evaluate */
-     register Ast *outXpr;      /* Partially evaluated expression */
+     Ast inXpr;        /* Expression to evaluate */
+     Ast *outXpr;      /* Partially evaluated expression */
 {
     int iResult = 0,            /* Integer result of expression evaluation */
         tmpInt;                 /* Temporary holder of integer */
@@ -3332,9 +3333,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
   where in a subtree it returns an ast with as much as possible evaluated.
   If it succeeds to evaluate the whole tree it returns NULL.
 */
-ImpBoolean impInterpretAst(inAst)
-     register Ast inAst;        /* Ast to interpret */
-{
+ImpBoolean impInterpretAst(Ast inAst) {
     char *exprTxt,              /* Expression text */
         *stmTxt,                /* Statement text */
         *identTxt,              /* Identifier name */
@@ -4168,8 +4167,7 @@ ImpBoolean impInterpretAst(inAst)
   where in a subtree it returns an ast with as much as possible evaluated.
   If it succeeds to evaluate the whole tree it returns NULL.
 */
-void impReportCnt(inAst)
-     register Ast inAst;        /* Ast to report */
+void impReportCnt(Ast inAst)
 {
     if (inAst == NULL) {
         return;

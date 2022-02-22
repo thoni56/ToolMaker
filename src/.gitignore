@@ -1,2 +1,5 @@
 .arch
 *.exe
+*.gcda
+*.gcno
+*.gcov
