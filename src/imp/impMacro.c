@@ -347,13 +347,13 @@ int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
 
     if (!setjmp(jmpEnv)) {
       if (!setjmp(jmpExit))
-    impInterpretAst(topAst);
+        impInterpretAst(topAst);
       else
-    *exitCode = impExitCode;
+        *exitCode = impExitCode;
       if (impCodeCov) {
-    impReportFile = inFileName;
-    impReportCnt(topAst);
-    impReportFiles();
+        impReportFile = inFileName;
+        impReportCnt(topAst);
+        impReportFiles();
       }
     } else {
       impMyLog(&nulSrcp, 304, sevSYS, "");
@@ -366,7 +366,7 @@ int impMacro(inName, outName, msgName, flags, listType, escChar, exitCode)
       printf("\nImping %s \nExecution time:  ", inFileName);
       tiPrint(&tb, TiMSC);
       printf("\n");
-    }/*if*/
+    } /*if*/
     if (impSeverity() != sevOK || flags & verbBit)
       impList("", 0, 78, liTINY, sevALL);
     /*      nameDump(stdout);*/
