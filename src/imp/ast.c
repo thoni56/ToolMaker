@@ -11,6 +11,12 @@
 #include "name.h"
 #include "ast.h"
 
+#ifdef DEBUG
+static const char *astTypeEnumName[] = {
+    ALL_ASTTYPE_ENUMS(GENERATE_ENUM_STRING)
+};
+#endif
+
 #define STRINGIFY(token) #token
 
 #define NOCLOSE_FILE 0
@@ -1275,6 +1281,13 @@ static BoolResult astBoolean(ast)
     char *txt, *lTxt, *rTxt, *idTxt, *idxTxt, *extxt, *pattxt, *postxt;
 
     int iLeft, iRight, i, j, len;
+
+#ifdef DEBUG
+    for (int i=levelsOfEvaluation; i>0; i--)
+        fprintf(stderr, "-");
+    fprintf(stderr, "AstBoolean: type = %s\n", astTypeEnumName[ast->type]);
+#endif
+
     leftDef = rightDef = TRUE;
     outputOff();
     ast->evalCnt++;
@@ -3370,6 +3383,11 @@ ImpBoolean impInterpretAst(Ast inAst) {
         /* Empty ast, successfully evaluated to nothing */
         return TRUE;
     }
+#ifdef DEBUG
+    for (int i=levelsOfEvaluation; i>0; i--)
+        fprintf(stderr, "-");
+    fprintf(stderr, "InterpretAst: type = %s\n", astTypeEnumName[inAst->type]);
+#endif
 
     if (!contextStack)
         /* Initialize context to text */

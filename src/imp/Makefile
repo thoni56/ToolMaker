@@ -14,6 +14,7 @@ VERSIONOBJECTS= impParse.o impPaSema.o impErr.o impList.o impScan.o impScSema.o 
 
 OBJECTS	= $(VERSIONOBJECTS) version.o
 
+debug: CFLAGS += -DDEBUG
 all debug trace : impobj
 
 install:

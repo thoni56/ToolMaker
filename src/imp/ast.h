@@ -26,59 +26,67 @@ typedef enum Boolean {
   TRUE = 1
   } Boolean;
 
+/* Some CPP magic to be able to print enums as strings */
+/* Usage example in e.g. storage.h/storage.c */
+#define GENERATE_ENUM_VALUE(ENUM) ENUM,
+#define GENERATE_ENUM_STRING(STRING) #STRING,
+
+/* IMP Statement node types */
+#define ALL_ASTTYPE_ENUMS(ENUM) \
+        ENUM(AST_SEQ)                           \
+        ENUM(AST_TEXT)                          \
+        ENUM(AST_KEEP)                          \
+        ENUM(AST_ASSIGN)                        \
+        ENUM(AST_APPEND)                        \
+        ENUM(AST_EVAL)                          \
+        ENUM(AST_REGION)                        \
+        ENUM(AST_IF)                            \
+        ENUM(AST_ELSIF)                         \
+        ENUM(AST_LOOP1)                         \
+        ENUM(AST_LOOP2)                         \
+        ENUM(AST_MESSAGE)                       \
+        /* Condition nodes */                   \
+        ENUM(AST__OR)                           \
+        ENUM(AST__AND)                          \
+        ENUM(AST__NOT)                          \
+        ENUM(AST__EQ)                           \
+        ENUM(AST__NEQ)                          \
+        ENUM(AST__GT)                           \
+        ENUM(AST__LT)                           \
+        ENUM(AST__GE)                           \
+        ENUM(AST__LE)                           \
+        ENUM(AST__DEFINED)                      \
+        ENUM(AST__RDEFINED)                     \
+        ENUM(AST__NONEMPTY)                     \
+        ENUM(AST__IN)                           \
+        ENUM(AST__SYSTEM)                       \
+        ENUM(AST__STRINGMATCH)                  \
+        /* Expression nodes */                  \
+        ENUM(AST__PLUS)                         \
+        ENUM(AST__MINUS)                        \
+        ENUM(AST__BITAND)                       \
+        ENUM(AST__BITOR)                        \
+        ENUM(AST__TIMES)                        \
+        ENUM(AST__DIVID)                        \
+        ENUM(AST__MOD)                          \
+        ENUM(AST__STRLEN)                       \
+        /* Not yet updated nodes */             \
+        ENUM(AST_INCLUDE)                       \
+        ENUM(AST_PROCESS)                       \
+        ENUM(AST_EXIT)                          \
+        ENUM(AST_GET)                           \
+        ENUM(AST__NEG)                          \
+        ENUM(AST__CONCAT)                       \
+        ENUM(AST_INTEGER)                       \
+        ENUM(AST_IDENT)                         \
+        ENUM(AST_STRING)                        \
+        ENUM(AST_UNQUOTED_STRING)               \
+        ENUM(AST_VALUE_LIST)                    \
+        /* Miscellaneous nodes */               \
+        ENUM(AST_PARAMS)                        \
+
 typedef enum {
-  /* Statement nodes */
-  AST_SEQ,
-  AST_TEXT,
-  AST_KEEP,
-  AST_ASSIGN,
-  AST_APPEND,
-  AST_EVAL,
-  AST_REGION,
-  AST_IF,
-  AST_ELSIF,
-  AST_LOOP1,
-  AST_LOOP2,
-  AST_MESSAGE,
-  /* Condition nodes */
-  AST__OR,
-  AST__AND,
-  AST__NOT,
-  AST__EQ,
-  AST__NEQ,
-  AST__GT,
-  AST__LT,
-  AST__GE,
-  AST__LE,
-  AST__DEFINED,
-  AST__RDEFINED,
-  AST__NONEMPTY,
-  AST__IN,
-  AST__SYSTEM,
-  AST__STRINGMATCH,
-  /* Expression nodes */
-  AST__PLUS,
-  AST__MINUS,
-  AST__BITAND,
-  AST__BITOR,
-  AST__TIMES,
-  AST__DIVID,
-  AST__MOD,
-  AST__STRLEN,
-  /* Not yet updated nodes */
-  AST_INCLUDE,
-  AST_PROCESS,
-  AST_EXIT,
-  AST_GET,
-  AST__NEG,
-  AST__CONCAT,
-  AST_INTEGER,
-  AST_IDENT,
-  AST_STRING,
-  AST_UNQUOTED_STRING,
-  AST_VALUE_LIST,
-  /* Miscellaneous nodes */
-  AST_PARAMS
+              ALL_ASTTYPE_ENUMS(GENERATE_ENUM_VALUE)
 } AstType;
 
 typedef struct InputFileListItem *InputFileList;
