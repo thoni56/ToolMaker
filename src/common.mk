@@ -5,10 +5,15 @@
 	mkdir -p ../../bin
 
 clean:
-	rm -f *~ *.o *.d core *.pml *.sml *.smt *.pmt *.lmt
+	rm -f *~ *.o *.d core *.pml *.sml *.smt *.pmt *.lmt *.gcov *.gcda
 
 veryclean: clean
 	rm -f *.voc *Parse.* *Scan.* *ScSema.* *PaSema.* *Common.h *List.* *Err.*
+
+coverage: CFLAGS += --coverage
+coverage: all
+	$(MAKE) test
+	-for f in *.o ; do gcov $$f 2>&1 >/dev/null | grep -v "assuming not executed" | grep -v "no functions found" ; done
 
 .PHONY: installdirs
 installdirs:
