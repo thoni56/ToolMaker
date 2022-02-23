@@ -3,3 +3,5 @@
 *.gcda
 *.gcno
 *.gcov
+coverage
+tm.info
