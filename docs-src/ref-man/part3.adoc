@@ -1,0 +1,31 @@
+// @PAGE 129 -- Part III
+
+= ScannerMaker Reference Manual
+
+// @STATUS: All text OK (no xrefs).
+
+// INTRODUCTION (p.133)
+
+ScannerMaker is a tool which provides a simple and yet powerful way of creating fast and robust scanners.
+
+The main features of ScannerMaker are:
+
+* Multiple vocabularies.
+* Multiple scanners.
+* Dynamic token size.
+* Creates very fast scanners.
+* User defined semantic actions associated with tokens.
+* Generate scanners for different character sets.
+* Generated scanners are able to handle nested levels of input, e.g. include files in programming languages.
+* Integrated with other parts of ToolMaker.
+* Various packing schemes to optimize for speed or space.
+
+The reader must have a fairly well grounded knowledge in the area of scanners to take full advantage of this document.
+The concept of regular expressions, semantic actions, and tokens should be well understood before reading this manual.
+
+
+:leveloffset: +1
+
+include::part3-1_concepts.adoc[]
+
+:leveloffset: 0

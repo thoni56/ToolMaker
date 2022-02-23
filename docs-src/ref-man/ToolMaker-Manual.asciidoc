@@ -1,0 +1,44 @@
+= ToolMaker Reference Manual
+:author: SoftLab ab
+:revdate: April 12, 1994
+:revnumber: 2.0
+:revremark: AsciiDoc Port
+:version-label: ToolMaker
+:lang: en
+:doctype: book
+// TOC Settings:
+:toclevels: 5
+:toc: left
+// Sections Numbering:
+:partnums:
+:!part-signifier:
+:sectnums:
+:sectnumlevels: 2
+// Cross References:
+:idprefix:
+:xrefstyle: full
+:chapter-refsig: Ch.
+:section-refsig: Sec.
+:appendix-refsig: App.
+// Misc Settings:
+:experimental: true
+:icons: font
+:linkattrs: true
+:reproducible: true
+:sectanchors:
+// Paths:
+:imagesdir: images
+
+// Preamble
+// ========
+
+WARNING: This document is still work-in-progress.
+Many chapters still need to be ported; but those which are included are fairly polished.
+
+include::colophon.adoc[]
+
+include::part1.adoc[]
+include::part2.adoc[]
+include::part3.adoc[]
+include::part4.adoc[]
+include::part5.adoc[]

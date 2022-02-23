@@ -1,0 +1,27 @@
+// @PAGE 17 -- Part I
+
+= ToolMaker System Description
+
+// @STATUS: 1 XRef needs fixing (when Ch.4 is ready).
+
+// INTRODUCTION (p.21)
+
+ToolMaker is a complete software package for creating software tools.
+ToolMaker is specially intended for creating analysing tools like compiler frontends, pretty-printers or translators but is equally well suited for simplifying the creation of text or data conversion tools.
+
+ToolMaker is built on sound and well-tried software technology, such as parsing techniques, various data compression algorithms and modularisation, all to make ToolMaker a fast, flexible and reliable software product.
+
+Although the utmost has been made to simplify the usage of ToolMaker it still requires some knowledge about parsing theory, the notion of grammars and regular expressions.
+Understanding the method of software generation techniques is also most helpful, as this is the basis for the complete ToolMaker package.
+
+A novice user should carefully study the introductory chapters in all the parts of the ToolMaker documentation for the various tools and the example in this part before attempting to build his own tool using ToolMaker.
+
+// @XREF: Ch.4
+The more experienced user, familiar with similar products (notably YACC and LEX), should at least read chapter 4, A TOOLMAKER BASED SYSTEM on page 27 in this part of the document and then refer to the reference chapters for each individual Maker in the ToolMaker kit.
+
+
+:leveloffset: +1
+
+include::part1-1_concepts.adoc[]
+
+:leveloffset: 0

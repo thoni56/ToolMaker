@@ -1,0 +1,139 @@
+Contents (p. 7)
+
+Part I
+ToolMaker
+System Description
+1   INTRODUCTION    21
+2   CONCEPTS AND ASSUMPTIONS    22
+3   SYSTEM DESCRIPTION  23
+3.1 The ToolMaker Components    23
+3.2 Structure of a ToolMaker Component  25
+4   A TOOLMAKER BASED SYSTEM    27
+4.1 The ToolMaker Description File  27
+4.2 ParserMaker     27
+4.3 ScannerMaker    28
+4.4 ListerMaker     28
+4.5 Putting It All Together     28
+5   THE TOOLMAKER DESCRIPTION FILE  30
+    5.1 The Options Section     30
+    5.2 The Import Section  34
+    5.3 The Srcp Section    34
+    5.4 The Token Section   36
+6   USING A TOOLMAKER BASED SYSTEM  38
+    6.1 Import  38
+    6.2 Export  38
+    6.3 Compiling and Linking   38
+6.4 Run-time    39
+7   COMMON DEFINITIONS  40
+    7.1 Description File Option Format  40
+    7.2 Command Line Option Format  40
+    7.3 Option Precedence   42
+    7.4 Prefix Management   42
+    7.5 Description File Sections   43
+    7.6 Escape Character    43
+    7.7 Strings     44
+A   Appendix: THE PL/0 EXAMPLE  45
+B   Appendix: ERROR MESSAGES    49
+C   Appendix: SYNTAX NOTATION   52
+D   Appendix: REFERENCES    53
+
+Part II
+ParserMaker
+Reference Manual
+1   INTRODUCTION    59
+2   CONCEPTS AND ASSUMPTIONS    60
+    2.1 Backus-Naur Form (BNF)  60
+    2.2 Extended Backus-Naur Form (EBNF)    60
+    2.3 Productions     62
+    2.4 Semantic Actions    63
+    2.5 Grammar Attributes  64
+    2.6 Grammar Ambiguity and LALR-conflicts    68
+    2.7 Error Recovery Principles   72
+3   PARSER PRODUCTION   76
+    3.1 Creating a Running Parser   76
+    3.2 The ParserMaker Description File    79
+    3.3 The ToolMaker Common Description File   100
+    3.4 The List File   100
+    3.5 The Vocabulary File     102
+4   THE PARSERMAKER COMMAND     104
+    4.1 Parameters  104
+    4.2 Options     104
+    4.3 Example     105
+5   PARSER RUN-TIME USAGE   106
+5.1 Principles of Operation     106
+5.2 Run-Time Interface  107
+A   Appendix: THE PL/O EXAMPLE  ill
+B   Appendix: ERROR MESSAGES    117
+C   Appendix: DESCRIPTION LANGUAGE  123
+D   Appendix: TARGET LANGUAGE DETAILS .. 128
+
+Part III
+ScannerMaker
+Reference Manual
+1   INTRODUCTION    133
+2   CONCEPTS AND ASSUMPTIONS    134
+    2.1 ScannerMaker and Scanner    134
+    2.2 Vocabulary  134
+    2.3 Token   134
+    2.4 Scanner     134
+    2.5 Scanner and Inheritance     134
+    2.6 Screening   134
+    2.7 Token and Source Position Definitions   135
+3   SCANNER PRODUCTION  136
+    3.1 Creating a Running Scanner  136
+    3.2 The ScannerMaker Description File   138
+    3.3 The ToolMaker Common Description file   160
+    3.4 The Vocabulary file     160
+4   THE SCANNERMAKER COMMAND    162
+    4.1 Parameters  162
+    4.2 Options     162
+5   SCANNER RUN-TIME USAGE  164
+5.1 Principles of Operation     164
+5.2 Run Time Interface  167
+5.3 Recursive Calls and Continued Scanning  170
+A   Appendix: THE PL/O EXAMPLE  172
+B   Appendix: ERROR MESSAGES    176
+C   Appendix: DESCRIPTION LANGUAGE  182
+D   Appendix: TARGET LANGUAGE DETAILS .. 188
+
+Part IV
+ListerMaker
+Reference Manual
+1   INTRODUCTION    197
+2   CONCEPTS AND ASSUMPTIONS    198
+    2.1 ListerMaker and Lister  198
+    2.2 Source Positions    198
+    2.3 Messages    198
+    2.4 Error Message Templates and Insert Strings  199
+    2.5 Severities  199
+    2.6 Listing Types   200
+3   LISTER PRODUCTION   201
+3.1 The ListerMaker Description File    201
+3.2 The ToolMaker Common Description File   204
+4   THE LISTERMAKER COMMAND     206
+4.1 Parameters  206
+4.2 Options     206
+5   LISTER RUN-TIME USAGE   208
+5.1 Principles of Operation     208
+5.2 Run Time Interface  211
+5.3 Messages Templates  218
+A   Appendix: THE PL/0 EXAMPLE  220
+B   Appendix: ERROR MESSAGES    221
+C   Appendix: TARGET LANGUAGE DETAILS ..222
+
+Part V
+Toolmake
+Reference Manual
+1   INTRODUCTION    231
+2   PRINCIPLES OF OPERATION     232
+3   THE TOOLMAKE COMMAND    233
+    3.1 Parameters  233
+    3.2 Options     233
+4   TOOLMAKE RUN-TIME USAGE     234
+    4.1 Subsystem Name  234
+    4.2 ToolMake Commands   234
+A   Appendix: ERROR MESSAGES    237
+B   Appendix: FILE GENERATION DETAILS  240
+
+Part VI
+Index

@@ -1,0 +1,28 @@
+// @PAGE 227 -- Part V
+
+= Toolmake Reference Manual
+
+// @STATUS: All text OK (no xrefs).
+
+// INTRODUCTION (p.231)
+
+_**Toolmake**_ is a facility to help you set up a ToolMaker subsystem, i.e.
+to create all the necessary files for you in a new directory.
+This makes it very easy to start a new project based on ToolMaker and you can concentrate on the more essential tasks such as filling the files with your specifications.
+
+_**Toolmake**_ can generate initial versions of all files needed by ParserMaker, ScannerMaker and ListerMaker.
+You can choose any combination of these to include in your subsystem.
+Furthermore _**toolmake**_ will offer you an example main module, and if you are using UNIX a *makefile* to build your system.
+
+_**toolmake**_ is an interactive tool run from the command line.
+When you use _**toolmake**_, it will ask you about the name of your subsystem, and then enter a _command loop_.
+In this command loop phase you can change the default settings for the coming _generation phase_, or just enter it.
+You can always give a single question mark (followed by carriage return) in order to get some help.
+Often you can get further help with a `HELP` command.
+
+
+:leveloffset: +1
+
+include::part5-1_principles.adoc[]
+
+:leveloffset: 0

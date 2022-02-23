@@ -1,0 +1,29 @@
+[colophon]
+== Colophon
+
+ToolMaker is a software product from SoftLab.
+The ToolMaker product contains proprietary information not to be disclosed to third party.
+This applies to this manual, the library files and any software delivered from SoftLab as a part of the ToolMaker package.
+Refer to your license agreement for details.
+
+Licenses for ToolMaker may be obtained from:
+
+................................
+    SoftLab
+    Datalinjen 1
+    S-583 30 LINKÖPING
+    SWEDEN
+
+    Phone:  Nat. 013 —  21 24 70
+            Int. +46 13 21 24 70
+................................
+
+Suggestions and error reports should also be forwarded by your local ToolMaker contact person to the above address.
+
+Electronic mail contacts (limited service only unless otherwise explicitly stated) may be sent to:
+
+....................
+    tools@softlab.se
+....................
+
+This version of the manual was printed on April 12, 1994.

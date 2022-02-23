@@ -19,7 +19,8 @@ AsciiDoc port of the original documentation, converted by [Tristano Ajmone].
 
 # Directory Contents
 
-- [`/man-pages/`][man-pages/] — man pages source.
+- [`/man-pages/`][man-pages/] — man pages sources.
+- [`/ref-man/`][ref-man/] — _ToolManker Reference Manual_ sources (WIP).
 
 
 # Building
@@ -54,6 +55,7 @@ In order to build the documentation from source you'll need:
 
 <!-- project files and folders -->
 
-[man-pages/]: ./man-pages/ "Navigate to man pages folder"
+[man-pages/]: ./man-pages/ "Navigate to man pages source folder"
+[ref-man/]: ./ref-man/ "Navigate to Reference Manual source folder"
 
 <!-- EOF -->

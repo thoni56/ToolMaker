@@ -1,0 +1,25 @@
+// @PAGE 193 -- Part IV
+
+= ListerMaker Reference Manual
+
+// @STATUS: All text OK (no xrefs).
+
+// INTRODUCTION (p.197)
+
+The ListerMaker is a component in ToolMaker, SoftLab's tool kit for software tool construction.
+ListerMaker is the error message handler and listing writing tool in that kit.
+ListerMaker gives a software tool writer facilities to
+
+* collect all messages produced both during lexical, syntactical and semantic analysis of the input
+* produce listings of the input and the messages in various formats
+* run-time selectable message template sets, allowing e.g. multiple language support
+* tuned to work with the other components in ToolMaker, giving easy implementation of a complete frontend of a compiler or other analysis tool.
+
+Familiarity with compiler construction, and the principles of operation of the other tools in ToolMaker is somewhat assumed, although not strictly necessary.
+
+
+:leveloffset: +1
+
+include::part4-1_concepts.adoc[]
+
+:leveloffset: 0
