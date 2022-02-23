@@ -26,8 +26,6 @@ endif
 DESTROOT=/usr/local
 DESTLIB=$(DESTROOT)/lib/ToolMaker
 
-BITNESS=-m32
-
 ifeq ($(TMARCH),cygwin64)
 $(info INFO: Cross-compiling to Cygwin32)
 $(info INFO: You need the packages 'cygwin32-gcc-core' (for cross-compiler) and 'cygwin32-w32api-runtime' (for runtime))

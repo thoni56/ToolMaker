@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <memory.h>
@@ -77,9 +78,9 @@ AST astString(char *string)
 
     string=strdup(string);
     if((length=charString((unsigned char *)string))<0) { free(string); return NULL; }
-    ast=astNode('c',(AST)((int)string[0]),(AST)((int)string[0]));
+    ast=astNode('c',(AST)((intptr_t)string[0]),(AST)((intptr_t)string[0]));
     for(n=1;n<length;n++)
-        ast=astConcat(ast,astNode('c',(AST)((int)string[n]),(AST)((int)string[n])));
+        ast=astConcat(ast,astNode('c',(AST)((intptr_t)string[n]),(AST)((intptr_t)string[n])));
     free(string);
     return ast;
 }
@@ -100,9 +101,9 @@ static AST astGenClass(char *class)
         if(min>max)
             break;
         else if(ast)
-            ast=astSelect(ast,astNode('c',(AST)((int)min),(AST)((int)max)));
+            ast=astSelect(ast,astNode('c',(AST)((intptr_t)min),(AST)((intptr_t)max)));
         else
-            ast=astNode('c',(AST)((int)min),(AST)((int)max));
+            ast=astNode('c',(AST)((intptr_t)min),(AST)((intptr_t)max));
     }
     return ast;
 }
@@ -160,7 +161,7 @@ static void astSetClass(char *class, AST ast, char set)
             astSetClass(class,ast->cdr,set);
             break;
         case 'c':
-            for(n=(int)(ast->car);n<=(int)(ast->cdr);n++) class[n]=set;
+            for(n=(intptr_t)(ast->car);n<=(intptr_t)(ast->cdr);n++) class[n]=set;
             break;
         }
 }
@@ -282,10 +283,10 @@ void astPrint(AST ast)
             break;
         case 'c':
             lmPrintf("[");
-            lmPrintf((int)(ast->car)<' '||(int)(ast->car)>'~' ? "\\x%02X" : "%c", ast->car);
+            lmPrintf((intptr_t)(ast->car)<' '||(intptr_t)(ast->car)>'~' ? "\\x%02X" : "%c", ast->car);
             if(ast->car!=ast->cdr) {
                 lmPrintf("-");
-                lmPrintf((int)(ast->cdr)<' '||(int)(ast->cdr)>'~' ? "\\x%02X" : "%c", ast->cdr);
+                lmPrintf((intptr_t)(ast->cdr)<' '||(intptr_t)(ast->cdr)>'~' ? "\\x%02X" : "%c", ast->cdr);
             }
             lmPrintf("]");
             break;
@@ -321,8 +322,8 @@ static int astToSequence(char *buffer, AST ast)
     if(ast)
         switch(ast->type) {
         case 'c':
-            *buffer=(char)((int)ast->car);
-            return ast->car==ast->cdr && (int)ast->car>=0 && (int)ast->car<=255 ? 1 : 0;
+            *buffer=(char)((intptr_t)ast->car);
+            return ast->car==ast->cdr && (intptr_t)ast->car>=0 && (intptr_t)ast->car<=255 ? 1 : 0;
         case '.':
             s1=astToSequence(buffer,ast->car);
             if(s1==0) return 0;

@@ -37,6 +37,7 @@
  *
  */
 
+#include <stdint.h>
 #include <stdio.h>
 #include "ast.h"
 #include "char.h"
@@ -152,8 +153,8 @@ static Follow followCreate(Rule rule, AST ast)
     else
       nfaEnd=(nfaEnd->next=(NFA)smalloc(sizeof(NFAItem)));
     nfaEnd->node=nfaSize++;
-    nfaEnd->charMin=(int)(ast->car);
-    nfaEnd->charMax=(int)(ast->cdr);
+    nfaEnd->charMin=(intptr_t)(ast->car);
+    nfaEnd->charMax=(intptr_t)(ast->cdr);
     nfaEnd->type=nfaNONE;
     nfaEnd->follow=NULL;
     nfaEnd->rule=rule;
