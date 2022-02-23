@@ -67,7 +67,7 @@ typedef struct OptTabRec {
   TmoKind dirKind;                 /* Option type */
   char *optName;                   /* Option name */
   char *cliName;                   /* Cli option name */
-  intptr_t defval;                 /* Default value */
+  intptr_t defval;                 /* Default value of any type */
   char *optHelp;                   /* Option help string */
 
   /* Values used for semantic checks */

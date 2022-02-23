@@ -19,6 +19,7 @@
 /*                                                                    */
 /* ------------------------------------------------------------------ */
 /* IMPORT */
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,15 +40,17 @@ typedef enum MatchKind {
 
 /* UNIT TYPES */
 typedef struct OptDbRec {
-  TmoKind dirKind;		/* Kind of option */
-  Boolean assigned;		/* Has an assignment been made */
-  Boolean cliass;		/* Has an assignment been made on cli */
+  TmoKind dirKind;  /* Kind of option */
+  Boolean assigned; /* Has an assignment been made */
+  Boolean cliass;   /* Has an assignment been made on cli */
   union {
-    int ival;           /* Value of number option */
-    char *sval;			/* Value of string option */
-    Boolean bval;		/* Value of boolean option */
-    unsigned setval;		/* Value of set option */
-    unsigned eval;		/* Value of enum option */
+    intptr_t any_type; /* Only to make the union the correct size to match
+                          optTabRec.defval in tmk.h (which is API) */
+    int ival;          /* Value of number option */
+    char *sval;        /* Value of string option */
+    Boolean bval;      /* Value of boolean option */
+    unsigned setval;   /* Value of set option */
+    unsigned eval;     /* Value of enum option */
   } oval;
 } OptDbRec;
 
@@ -265,7 +268,7 @@ void initOpts(optTabLast, optTab)
       /* initialize option value with default value
          the integer structure variant can be used because all variants
          have the same size */
-      optDb[optTab[i].optTabKind].oval.ival = optTab[i].defval;
+      optDb[optTab[i].optTabKind].oval.any_type = optTab[i].defval;
     }
   }
 }
