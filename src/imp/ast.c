@@ -1265,9 +1265,9 @@ static ImpBoolean expandSet(ast, resultList)
  ******************************************************************************/
 
 typedef enum BoolResult {
-                         IMP_TRUE,
-                         IMP_FALSE,
-                         IMP_UNKNOWN
+                         RESULT_TRUE,
+                         RESULT_FALSE,
+                         RESULT_UNKNOWN
 } BoolResult;
 
 static BoolResult astBoolean(ast)
@@ -1297,18 +1297,18 @@ static BoolResult astBoolean(ast)
             !(impInterpretAst(ast->item.ast_defined.ident->item.ast_get.ident->item.ast_ident.ident))) {
             /* Variable is an identifier that cannot be evaluated */
             outputOn();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         prevIgnErr = ignoreErrors;
         ignoreErrors = TRUE;;
         if (evalExpr(ast->item.ast_defined.ident, NULL)) {
             ignoreErrors = prevIgnErr;
             outputOn();
-            return IMP_TRUE;
+            return RESULT_TRUE;
         } else {
             ignoreErrors = prevIgnErr;
             outputOn();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
         break;
 
@@ -1321,11 +1321,11 @@ static BoolResult astBoolean(ast)
             impGetRegion(tmpAst->item.ast_string.text)) {
             ignoreErrors = prevIgnErr;
             outputOn();
-            return IMP_TRUE;
+            return RESULT_TRUE;
         } else {
             ignoreErrors = prevIgnErr;
             outputOn();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
         break;
 
@@ -1337,20 +1337,20 @@ static BoolResult astBoolean(ast)
                     /* Value is a value list with no elements, treated as no value */
                     impFreeAst(tmpAst);
                     outputOn();
-                    return IMP_FALSE;
+                    return RESULT_FALSE;
                 } else {
                     impFreeAst(tmpAst);
                     outputOn();
-                    return IMP_TRUE;
+                    return RESULT_TRUE;
                 }
             } else {
                 outputOn();
-                return IMP_FALSE;
+                return RESULT_FALSE;
             }
         } else {
             impFreeAst(tmpAst);
             outputOn();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         break;
 
@@ -1363,7 +1363,7 @@ static BoolResult astBoolean(ast)
             idTxt = popOutBuf();
             if (!evalIdent) {
                 outputOn();
-                return IMP_UNKNOWN;
+                return RESULT_UNKNOWN;
             }
             if (ast->item.ast_in.ident->item.ast_get.index) {
                 pushOutBuf();
@@ -1385,7 +1385,7 @@ static BoolResult astBoolean(ast)
                     impFreeAst(leftList);
                     free(idTxt);
                     free(idxTxt);
-                    return IMP_UNKNOWN;
+                    return RESULT_UNKNOWN;
                 }
                 free(idxTxt);
                 impFreeAst(exprAst);
@@ -1396,7 +1396,7 @@ static BoolResult astBoolean(ast)
                         impMyLog(&(ast->item.ast_in.ident->item.ast_get.ident->srcp), 204, sevWAR, idTxt);
                     outputOn();
                     free(idTxt);
-                    return IMP_UNKNOWN;
+                    return RESULT_UNKNOWN;
                 }
                 leftList = impCopyAst(tmpLeft, TRUE);
             }
@@ -1413,7 +1413,7 @@ static BoolResult astBoolean(ast)
                         impMyLog(&(ast->item.ast_in.ident->item.ast_get.ident->srcp), 208, sevWAR, idxTxt);
                     impFreeAst(exprAst);
                     outputOn();
-                    return IMP_UNKNOWN;
+                    return RESULT_UNKNOWN;
                 } else {
                     if (i == 0) {
                         Ast tmpLeft;
@@ -1437,7 +1437,7 @@ static BoolResult astBoolean(ast)
                             impMyLog(&(ast->item.ast_in.ident->item.ast_get.index->srcp), 209 ,sevERR, lTxt);
                             free(lTxt);
                             outputOn();
-                            return IMP_UNKNOWN;
+                            return RESULT_UNKNOWN;
                         } else {
                             tmp = leftList;
                             while (i != j) {
@@ -1458,66 +1458,66 @@ static BoolResult astBoolean(ast)
         impFreeAst(leftList);
         outputOn();
         if (!rightSet) {
-            return IMP_TRUE;
+            return RESULT_TRUE;
         }
         if (leftDef && !totUndefinedSet(rightSet)) {
             freeValueList(rightSet);
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
         freeValueList(rightSet);
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
     case AST__OR: {
         BoolResult r1, r2;
-        if ((r1 = astBoolean(ast->item.ast_or.condition1)) == IMP_TRUE) {
+        if ((r1 = astBoolean(ast->item.ast_or.condition1)) == RESULT_TRUE) {
             outputOn();
-            return IMP_TRUE;
+            return RESULT_TRUE;
         }
-        if ((r2 = astBoolean(ast->item.ast_or.condition2)) == IMP_TRUE) {
+        if ((r2 = astBoolean(ast->item.ast_or.condition2)) == RESULT_TRUE) {
             outputOn();
-            return IMP_TRUE;
+            return RESULT_TRUE;
         }
-        if ((r1 == IMP_FALSE) && (r2 == IMP_FALSE)) {
+        if ((r1 == RESULT_FALSE) && (r2 == RESULT_FALSE)) {
             outputOn();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
         outputOn();
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
     case AST__AND: {
         BoolResult r1, r2;
-        if ((r1 = astBoolean(ast->item.ast_and.condition1)) == IMP_FALSE) {
+        if ((r1 = astBoolean(ast->item.ast_and.condition1)) == RESULT_FALSE) {
             outputOn();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
-        if ((r2 = astBoolean(ast->item.ast_and.condition2)) == IMP_FALSE) {
+        if ((r2 = astBoolean(ast->item.ast_and.condition2)) == RESULT_FALSE) {
             outputOn();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
-        if ((r1 == IMP_TRUE) && (r2 == IMP_TRUE)) {
+        if ((r1 == RESULT_TRUE) && (r2 == RESULT_TRUE)) {
             outputOn();
-            return IMP_FALSE;
+            return RESULT_TRUE;
         }
         outputOn();
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
     case AST__NOT:
         switch (astBoolean(ast->item.ast_not.condition)) {
-        case IMP_TRUE:
+        case RESULT_TRUE:
             outputOn();
-            return IMP_FALSE;
-        case IMP_FALSE:
+            return RESULT_FALSE;
+        case RESULT_FALSE:
             outputOn();
-            return IMP_TRUE;
-        case IMP_UNKNOWN:
+            return RESULT_TRUE;
+        case RESULT_UNKNOWN:
             outputOn();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         break;
 
@@ -1534,16 +1534,16 @@ static BoolResult astBoolean(ast)
             if (strcmp(condL, condR) == 0) {
                 free(condL);free(condR);
                 outputOn();
-                return IMP_TRUE;
+                return RESULT_TRUE;
             } else  {
                 free(condL);free(condR);
                 outputOn();
-                return IMP_FALSE;
+                return RESULT_FALSE;
             }
         } else {
             free(condL);free(condR);
             outputOn();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
     }
 
@@ -1560,16 +1560,16 @@ static BoolResult astBoolean(ast)
             if (strcmp(condL, condR) != 0) {
                 free(condL);free(condR);
                 outputOn();
-                return IMP_TRUE;
+                return RESULT_TRUE;
             } else  {
                 free(condL);free(condR);
                 outputOn();
-                return IMP_FALSE;
+                return RESULT_FALSE;
             }
         } else {
             free(condL);free(condR);
             outputOn();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
     }
 
@@ -1606,69 +1606,69 @@ static BoolResult astBoolean(ast)
                 if (rightInt && leftInt) {
                     free(rTxt); free(lTxt);
                     if (iLeft > iRight)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 } else {
                     i = strcmp(lTxt, rTxt);
                     free(rTxt); free(lTxt);
                     if (i > 0)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 }
             case AST__LT:
                 if (rightInt && leftInt) {
                     free(rTxt); free(lTxt);
                     if (iLeft < iRight)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 } else {
                     i = strcmp(lTxt, rTxt);
                     free(rTxt); free(lTxt);
                     if (i < 0)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 }
             case AST__GE:
                 if (rightInt && leftInt) {
                     free(rTxt); free(lTxt);
                     if (iLeft >= iRight)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 } else {
                     i = strcmp(lTxt, rTxt);
                     free(rTxt); free(lTxt);
                     if (i >= 0)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 }
             case AST__LE:
                 if (rightInt && leftInt) {
                     free(rTxt); free(lTxt);
                     if (iLeft <= iRight)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 } else {
                     i = strcmp(lTxt, rTxt);
                     free(rTxt); free(lTxt);
                     if (i <= 0)
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     else
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                 }
             default:
                 SYSERR("Unexpected value in case()");
-                return IMP_UNKNOWN;
+                return RESULT_UNKNOWN;
             }
         } else {
             free(rTxt); free(lTxt);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         break;
 
@@ -1679,7 +1679,7 @@ static BoolResult astBoolean(ast)
         if (!evalCmd) {
             outputOn();
             free(txt);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         pushOutBuf();
         evalIdent = impInterpretAst(ast->item.ast_system.ident);
@@ -1688,7 +1688,7 @@ static BoolResult astBoolean(ast)
             outputOn();
             free(txt);
             free(idTxt);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         if ((resFile = popen(txt, "r")) == NULL) {
             longjmp(jmpEnv, 1);
@@ -1723,11 +1723,11 @@ static BoolResult astBoolean(ast)
         free(txt);
         free(idTxt);
         if (pclose(resFile) == 0) {
-            ast->item.ast_system.evaluatedOK = IMP_TRUE;
-            return IMP_TRUE;
+            ast->item.ast_system.evaluatedOK = RESULT_TRUE;
+            return RESULT_TRUE;
         } else {
-            ast->item.ast_system.evaluatedOK = IMP_FALSE;
-            return IMP_FALSE;
+            ast->item.ast_system.evaluatedOK = RESULT_FALSE;
+            return RESULT_FALSE;
         }
         break;
 
@@ -1738,7 +1738,7 @@ static BoolResult astBoolean(ast)
         if(!evalEx) {
             outputOn();
             free(extxt);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
 
         pushOutBuf();
@@ -1748,7 +1748,7 @@ static BoolResult astBoolean(ast)
             outputOn();
             free(extxt);
             free(pattxt);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
 
         pushOutBuf();
@@ -1759,7 +1759,7 @@ static BoolResult astBoolean(ast)
             free(extxt);
             free(pattxt);
             free(postxt);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
 
         resstr = strstr(pattxt, extxt);
@@ -1777,20 +1777,20 @@ static BoolResult astBoolean(ast)
         free(postxt);
 
         if (resstr == NULL)
-            return IMP_FALSE;
+            return RESULT_FALSE;
         else
-            return IMP_TRUE;
+            return RESULT_TRUE;
         break;
 
 
     default:
         outputOn();
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
     SYSERR("Reached end of non-void function");
-    return IMP_UNKNOWN;
+    return RESULT_UNKNOWN;
 }
 
 static BoolResult peBoolean(ast, cond)
@@ -1811,18 +1811,18 @@ static BoolResult peBoolean(ast, cond)
             /* Variable is an identifier that cannot be evaluated */
             print("(?)",3);
             *cond = popOutBuf();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         prevLastPass = impLastPass;
         impLastPass = FALSE;
         if (evalExpr((*ast)->item.ast_defined.ident, NULL)) {
             impLastPass = prevLastPass;
             *cond = popOutBuf();
-            return IMP_TRUE;
+            return RESULT_TRUE;
         } else {
             impLastPass = prevLastPass;
             *cond = popOutBuf();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
         break;
 
@@ -1832,10 +1832,10 @@ static BoolResult peBoolean(ast, cond)
             evalExpr((*ast)->item.ast_defined.ident->item.ast_get.ident->item.ast_ident.ident, &tmpAst) &&
             impGetRegion(tmpAst->item.ast_string.text)) {
             outputOn();
-            return IMP_TRUE;
+            return RESULT_TRUE;
         } else {
             outputOn();
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
         break;
 
@@ -1848,18 +1848,18 @@ static BoolResult peBoolean(ast, cond)
                     !tmpAst->item.ast_valueList.valueList) {
                     /* Value is a value list with no elements, treated as no value */
                     impFreeAst(tmpAst);
-                    return IMP_FALSE;
+                    return RESULT_FALSE;
                 } else {
                     impFreeAst(tmpAst);
-                    return IMP_TRUE;
+                    return RESULT_TRUE;
                 }
             } else
-                return IMP_FALSE;
+                return RESULT_FALSE;
         } else {
             print("(*)", 3);
             *cond = popOutBuf();
             impFreeAst(tmpAst);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         break;
 
@@ -1878,12 +1878,12 @@ static BoolResult peBoolean(ast, cond)
             subtractSet(&rightSet, leftSet);
             if (!rightSet) {
                 freeValueList(leftSet);
-                return IMP_TRUE;
+                return RESULT_TRUE;
             }
             if (definedSet(leftSet) && !totUndefinedSet(rightSet)) {
                 freeValueList(rightSet);
                 freeValueList(leftSet);
-                return IMP_FALSE;
+                return RESULT_FALSE;
             }
             free(*cond);
             pushOutBuf();
@@ -1897,7 +1897,7 @@ static BoolResult peBoolean(ast, cond)
             *cond = popOutBuf();
             freeValueList(rightSet);
             freeValueList(leftSet);
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         } else {
             print("(", 1);
             pushContext(LIST_CONTEXT);
@@ -1905,7 +1905,7 @@ static BoolResult peBoolean(ast, cond)
             popContext();
             print(")", 2);
             *cond = popOutBuf();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         break;
 
@@ -1917,22 +1917,22 @@ static BoolResult peBoolean(ast, cond)
            safe on them. This is becaues c1 and c2 are not always assigned
            values by peBoolean().
         */
-        if ((r1 = peBoolean(&((*ast)->item.ast_or.condition1), &c1)) == IMP_TRUE) {
+        if ((r1 = peBoolean(&((*ast)->item.ast_or.condition1), &c1)) == RESULT_TRUE) {
             free(c1);
-            return IMP_TRUE;
+            return RESULT_TRUE;
         }
-        if ((r2 = peBoolean(&((*ast)->item.ast_or.condition2), &c2)) == IMP_TRUE) {
-            free(c1);
-            free(c2);
-            return IMP_TRUE;
-        }
-        if ((r1 == IMP_FALSE) && (r2 == IMP_FALSE)) {
+        if ((r2 = peBoolean(&((*ast)->item.ast_or.condition2), &c2)) == RESULT_TRUE) {
             free(c1);
             free(c2);
-            return IMP_FALSE;
+            return RESULT_TRUE;
         }
-        if (r1 == IMP_UNKNOWN)
-            if (r2 == IMP_UNKNOWN) {
+        if ((r1 == RESULT_FALSE) && (r2 == RESULT_FALSE)) {
+            free(c1);
+            free(c2);
+            return RESULT_FALSE;
+        }
+        if (r1 == RESULT_UNKNOWN)
+            if (r2 == RESULT_UNKNOWN) {
                 pushOutBuf();
                 print(c1, strlen(c1));
                 print(" OR ", 4);
@@ -1948,7 +1948,7 @@ static BoolResult peBoolean(ast, cond)
             free(c1);
             *cond = c2;
         }
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
@@ -1960,22 +1960,22 @@ static BoolResult peBoolean(ast, cond)
            safe on them. This is becaues c1 and c2 are not always assigned
            values by peBoolean().
         */
-        if ((r1 = peBoolean(&((*ast)->item.ast_and.condition1), &c1)) == IMP_FALSE) {
+        if ((r1 = peBoolean(&((*ast)->item.ast_and.condition1), &c1)) == RESULT_FALSE) {
             free(c1);
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
-        if ((r2 = peBoolean(&((*ast)->item.ast_and.condition2), &c2)) == IMP_FALSE) {
-            free(c1);
-            free(c2);
-            return IMP_FALSE;
-        }
-        if ((r1 == IMP_TRUE) && (r2 == IMP_TRUE)) {
+        if ((r2 = peBoolean(&((*ast)->item.ast_and.condition2), &c2)) == RESULT_FALSE) {
             free(c1);
             free(c2);
-            return IMP_FALSE;
+            return RESULT_FALSE;
         }
-        if (r1 == IMP_UNKNOWN)
-            if (r2 == IMP_UNKNOWN) {
+        if ((r1 == RESULT_TRUE) && (r2 == RESULT_TRUE)) {
+            free(c1);
+            free(c2);
+            return RESULT_FALSE;
+        }
+        if (r1 == RESULT_UNKNOWN)
+            if (r2 == RESULT_UNKNOWN) {
                 pushOutBuf();
                 print(c1, strlen(c1));
                 print(" AND ", 5);
@@ -1990,27 +1990,27 @@ static BoolResult peBoolean(ast, cond)
             free(c1);
             *cond = c2;
         }
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
     case AST__NOT:
         pushOutBuf();
         switch (peBoolean(&((*ast)->item.ast_not.condition), cond)) {
-        case IMP_TRUE:
+        case RESULT_TRUE:
             free(popOutBuf());
-            return IMP_FALSE;
-        case IMP_FALSE:
+            return RESULT_FALSE;
+        case RESULT_FALSE:
             free(popOutBuf());
-            return IMP_TRUE;
-        case IMP_UNKNOWN:
+            return RESULT_TRUE;
+        case RESULT_UNKNOWN:
             txt = popOutBuf();
             pushOutBuf();
             print("NOT", 3);
             print(txt, strlen(txt));
             free(txt);
             *cond = popOutBuf();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
         break;
 
@@ -2027,11 +2027,11 @@ static BoolResult peBoolean(ast, cond)
             if (strcmp(condL, condR) == 0) {
                 free(condL);
                 free(condR);
-                return IMP_TRUE;
+                return RESULT_TRUE;
             } else {
                 free(condL);
                 free(condR);
-                return IMP_FALSE;
+                return RESULT_FALSE;
             }
         } else {
             pushOutBuf();
@@ -2041,7 +2041,7 @@ static BoolResult peBoolean(ast, cond)
             free(condL);
             free(condR);
             *cond = popOutBuf();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
     }
 
@@ -2058,11 +2058,11 @@ static BoolResult peBoolean(ast, cond)
             if (strcmp(condL, condR) != 0) {
                 free(condL);
                 free(condR);
-                return IMP_TRUE;
+                return RESULT_TRUE;
             } else {
                 free(condL);
                 free(condR);
-                return IMP_FALSE;
+                return RESULT_FALSE;
             }
         } else {
             pushOutBuf();
@@ -2072,7 +2072,7 @@ static BoolResult peBoolean(ast, cond)
             free(condL);
             free(condR);
             *cond = popOutBuf();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
     }
 
@@ -2108,76 +2108,76 @@ static BoolResult peBoolean(ast, cond)
                 if (rightInt && leftInt) {
                     if (iLeft > iRight) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 } else {
                     i = strcmp(lTxt, rTxt);
                     if (i > 0)  {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 }
             case AST__LT:
                 if (rightInt && leftInt) {
                     if (iLeft < iRight) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 } else {
                     i = strcmp(lTxt, rTxt);
                     if (i < 0) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 }
             case AST__GE:
                 if (rightInt && leftInt) {
                     if (iLeft >= iRight) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 } else {
                     i = strcmp(lTxt, rTxt);
                     if (i >= 0) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 }
             case AST__LE:
                 if (rightInt && leftInt) {
                     if (iLeft <= iRight) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 } else {
                     i = strcmp(lTxt, rTxt);
                     if (i <= 0) {
                         free(rTxt); free(lTxt);
-                        return IMP_TRUE;
+                        return RESULT_TRUE;
                     } else {
                         free(rTxt); free(lTxt);
-                        return IMP_FALSE;
+                        return RESULT_FALSE;
                     }
                 }
             default:
@@ -2207,7 +2207,7 @@ static BoolResult peBoolean(ast, cond)
             print(rTxt, strlen(rTxt));
             free(rTxt); free(lTxt);
             *cond = popOutBuf();
-            return IMP_UNKNOWN;
+            return RESULT_UNKNOWN;
         }
 
     case AST__SYSTEM:
@@ -2226,11 +2226,11 @@ static BoolResult peBoolean(ast, cond)
         free(txt); free(idTxt);
         *cond = popOutBuf();
         if (!(evalIdent && evalCmd))
-            return IMP_UNKNOWN;
-        if ((*ast)->item.ast_system.evaluatedOK == IMP_TRUE)
-            return IMP_TRUE;
+            return RESULT_UNKNOWN;
+        if ((*ast)->item.ast_system.evaluatedOK == RESULT_TRUE)
+            return RESULT_TRUE;
         else
-            return IMP_FALSE;
+            return RESULT_FALSE;
         break;
 
     case AST__STRINGMATCH:
@@ -2254,20 +2254,20 @@ static BoolResult peBoolean(ast, cond)
         free(extxt); free(pattxt); free(postxt);
         *cond = popOutBuf();
         if (!(evalEx && evalPat && evalPos))
-            return IMP_UNKNOWN;
-        if ((*ast)->item.ast_stringmatch.evaluatedOK == IMP_TRUE)
-            return IMP_TRUE;
+            return RESULT_UNKNOWN;
+        if ((*ast)->item.ast_stringmatch.evaluatedOK == RESULT_TRUE)
+            return RESULT_TRUE;
         else
-            return IMP_FALSE;
+            return RESULT_FALSE;
         break;
 
     default:
-        return IMP_UNKNOWN;
+        return RESULT_UNKNOWN;
         break;
     }
 
     SYSERR("Reached end of non-void function");
-    return IMP_UNKNOWN;
+    return RESULT_UNKNOWN;
 }
 
 /*======================================================================
@@ -3344,7 +3344,7 @@ static ImpBoolean evalExpr(inXpr, outXpr)
   impInterpretAst() takes an abstract syntax tree produced by impParse() and
   tries to evaluate all nodes in it. If partial evaluation are used some-
   where in a subtree it returns an ast with as much as possible evaluated.
-  If it succeeds to evaluate the whole tree it returns NULL.
+  If it succeeds to evaluate the whole tree it returns NULL(?) WTF!?!? TRUE?
 */
 ImpBoolean impInterpretAst(Ast inAst) {
     char *exprTxt,              /* Expression text */
@@ -3580,19 +3580,19 @@ ImpBoolean impInterpretAst(Ast inAst) {
 
     case AST_IF:
         switch (astBoolean(inAst->item.ast_if.condition)) {
-        case IMP_TRUE:
+        case RESULT_TRUE:
             /* Condition evaluates to TRUE ==> interpret then-clause */
             impInterpretAst(inAst->item.ast_if.then_clause);
             return TRUE;
             break;
-        case IMP_FALSE:
+        case RESULT_FALSE:
             if ((inAst->item.ast_if.else_clause) &&
                 (inAst->item.ast_if.else_clause->type == AST_ELSIF))
                 inAst->item.ast_if.else_clause->type = AST_IF;
             impInterpretAst(inAst->item.ast_if.else_clause);
             return TRUE;
             break;
-        case IMP_UNKNOWN:
+        case RESULT_UNKNOWN:
             prevIgnErr = ignoreErrors;
             ignoreErrors = TRUE;
             peBoolean(&(inAst->item.ast_if.condition), &cond);
@@ -3614,17 +3614,17 @@ ImpBoolean impInterpretAst(Ast inAst) {
 
     case AST_ELSIF:
         switch (astBoolean(inAst->item.ast_elsif.condition)) {
-        case IMP_TRUE:
+        case RESULT_TRUE:
             /* Condition evaluates to TRUE ==> interpret then-clause */
             print("%%ELSE\n", 7);
             impInterpretAst(inAst->item.ast_elsif.then_clause);
             return TRUE;
             break;
-        case IMP_FALSE:
+        case RESULT_FALSE:
             impInterpretAst(inAst->item.ast_elsif.else_clause);
             return TRUE;
             break;
-        case IMP_UNKNOWN:
+        case RESULT_UNKNOWN:
             prevIgnErr = ignoreErrors;
             ignoreErrors = TRUE;
             peBoolean(&(inAst->item.ast_elsif.condition), &cond);
@@ -4174,7 +4174,7 @@ ImpBoolean impInterpretAst(Ast inAst) {
     }
 
     SYSERR("Reached end of non-void function");
-    return IMP_UNKNOWN;
+    return RESULT_UNKNOWN;
 }
 
 /*======================================================================
