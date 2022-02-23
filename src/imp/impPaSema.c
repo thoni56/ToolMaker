@@ -450,7 +450,7 @@ int rule                        /* IN production number */
     case 63: { /* boolean_expression = variable '(' '?R' ')'; */
 
   if (impSeSt[impStkP+1].ast->type == AST_INTEGER) {
-    char errStr[19];
+      char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&impSeSt[impStkP+1].ast->srcp, 103, sevERR, errStr);
@@ -463,7 +463,7 @@ int rule                        /* IN production number */
     case 64: { /* boolean_expression = variable '(' '?V' ')'; */
 
   if (impSeSt[impStkP+1].ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&impSeSt[impStkP+1].ast->srcp, 103, sevERR, errStr);
@@ -476,7 +476,7 @@ int rule                        /* IN production number */
     case 65: { /* boolean_expression = variable '(' '?' ')'; */
 
   if (impSeSt[impStkP+1].ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&impSeSt[impStkP+1].ast->srcp, 103, sevERR, errStr);
@@ -489,7 +489,7 @@ int rule                        /* IN production number */
     case 66: { /* boolean_expression = variable '(' '*' ')'; */
 
   if (impSeSt[impStkP+1].ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER*IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&impSeSt[impStkP+1].ast->srcp, 103, sevERR, errStr);
@@ -502,7 +502,7 @@ int rule                        /* IN production number */
     case 62: { /* boolean_expression = variable '(' values_opt ')'; */
 
   if (impSeSt[impStkP+1].ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&impSeSt[impStkP+1].ast->srcp, 103, sevERR, errStr);

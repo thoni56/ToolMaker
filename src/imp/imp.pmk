@@ -509,7 +509,7 @@ boolean_expression
   ! variable '(' '?R' ')'		
 %% 
   if (%variable.ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&%variable.ast->srcp, 103, sevERR, errStr);
@@ -522,7 +522,7 @@ boolean_expression
   ! variable '(' '?V' ')'		
 %% 
   if (%variable.ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&%variable.ast->srcp, 103, sevERR, errStr);
@@ -535,7 +535,7 @@ boolean_expression
   ! variable '(' '?' ')'		
 %% 
   if (%variable.ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&%variable.ast->srcp, 103, sevERR, errStr);
@@ -548,7 +548,7 @@ boolean_expression
   ! variable '(' '*' ')'		
 %% 
   if (%variable.ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER*IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&%variable.ast->srcp, 103, sevERR, errStr);
@@ -561,7 +561,7 @@ boolean_expression
   ! variable '(' values_opt ')'	
 %% 
   if (%variable.ast->type == AST_INTEGER) {
-    char errStr[19];
+    char errStr[20] = "";
     strcat(errStr, "INTEGER**IDENTIFIER");
     errStr[7] = (char)0xff;
     impLog(&%variable.ast->srcp, 103, sevERR, errStr);
