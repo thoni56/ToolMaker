@@ -330,10 +330,11 @@ int main(argc, argv)
     /* Target assignment */
     mergeOptions(LMKTARGET_OPT, TMKTARGET_OPT, tmkExists);
 
-    if ((strcmp(getStrOpt(TMKTARGET_OPT), "c") != 0) &&
-    (strcmp(getStrOpt(TMKTARGET_OPT), "ansi-c") != 0) &&
-    (strcmp(getStrOpt(TMKTARGET_OPT), "c++") != 0)) {
-      lmkLog(NULL, 405, sevWAR, getStrOpt(TMKTARGET_OPT));
+    char *target_opt = getStrOpt(TMKTARGET_OPT);
+    if ((strcmp(target_opt, "c") != 0) &&
+    (strcmp(target_opt, "ansi-c") != 0) &&
+    (strcmp(target_opt, "c++") != 0)) {
+      lmkLog(NULL, 405, sevWAR, target_opt);
     }
 
     if ((strcmp(getStrOpt(LMKTARGET_OPT), getStrOpt(TMKTARGET_OPT)) != 0) &&
