@@ -28,7 +28,6 @@
 %%SET lmkMessage(Embedded)
 %%SET lmkListings(Multiple)
 %%SET lmkMessagelimit(200)
-%%SET tmkForce(0)
 %%SET tmkTarget("ansi-c")
 %%SET lmkTarget("ansi-c")
 %%SET tmkLibrary("../../tmk")

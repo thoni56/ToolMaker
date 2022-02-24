@@ -1,1 +1,1 @@
-head -n-0 $* | grep -v tmkOs | grep -v lmkOs
+head -n-0 $* | grep -v tmkOs | grep -v lmkOs | grep -v tmkForce
