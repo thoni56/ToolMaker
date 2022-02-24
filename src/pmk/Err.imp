@@ -411,7 +411,7 @@ void %%(parserPrefix)Mess(sym, method, code, severity)
 %%ENDIF
     }
 }/*%%(parserPrefix)Mess()*/
-%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "Linux"} (%%(currentOs)))
+%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "cygwin64", "Linux"} (%%(currentOs)))
 %%PROCESS(, "/dev/null")
 %%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%PROCESS(, "NUL")
