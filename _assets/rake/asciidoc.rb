@@ -21,7 +21,7 @@ def AsciidoctorConvert(source_file, adoc_opts = "")
   TaskHeader("Converting to HTML: #{source_file}")
   src_dir = source_file.pathmap("%d")
   src_file = source_file.pathmap("%f")
-  adoc_opts = adoc_opts.chomp + " #{src_file}"
+  adoc_opts = adoc_opts.chomp + " \"#{src_file}\""
   cd "#{$repo_root}/#{src_dir}"
   begin
     stdout, stderr, status = Open3.capture3("asciidoctor #{adoc_opts}")
