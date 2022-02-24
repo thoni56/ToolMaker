@@ -1,2 +1,2 @@
-.pmk : ../pmk -force $1
+.pmk : pmk -force $1
 .pmk : sh .filter $1.tmk $1.pml $1.pmt
