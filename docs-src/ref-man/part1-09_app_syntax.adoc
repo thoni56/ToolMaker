@@ -1,0 +1,93 @@
+// PAGE 52 -- ToolMaker System Description
+
+// @STATUS: XRefs; EBNF blocks
+
+[appendix]
+= SYNTAX NOTATION
+
+// @XREF: The Rules Section
+// @XREF: ParserMaker Reference Manual
+
+The syntactic structure of the description files throughout this documentation are described using a modified EBNF.
+This appendix briefly describes that notation.
+This syntax is used to describe the structure of the description files in a ToolMaker-based system, it is not the syntax you should use for your context free grammar productions in the ParserMaker description file (see _The Rules Section_ in the _ParserMaker Reference Manual_, page 99 for a description of that syntax).
+
+Words enclosed by angle brackets denote syntactic categories (nonterminals).
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+<terminal definition>
+------------------------------
+
+Upper case words denote pseudo terminals.
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+IDENTIFIER
+------------------------------
+
+Quoted strings denote keywords and other terminal symbols.
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+';' 'RECOVERY' '%%OPTIONS'
+------------------------------
+
+The symbol `::=` should be read as "`is defined as`".
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+<right hand side> ::= <components> <opt modify>
+------------------------------
+
+Curly braces denotes repetition.
+The items within braces are repeated zero or more times.
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+<number> ::= <digit> {<digit>}
+
+<terminal list> ::= TERMINAL {',' TERMINAL}
+------------------------------
+
+Square brackets enclose optional items.
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+<verbose directive> ::= ['NO'] 'VERBOSE' ';'
+
+<terminal definition> ::=
+    TERMINAL '=' <token code> [<error recovery data>]
+------------------------------
+
+A vertical bar separates alternative items.
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+<option> ::= <recovery option>
+          |  <optimize option>
+------------------------------
+
+Parentheses are used to hierarchically group concepts together.
+Example:
+
+// SYNTAX: EBNF
+
+------------------------------
+<opt modify> ::=
+    {('%+' | '%-') '(' TERMINAL {',' TERMINAL} ')'}
+------------------------------

@@ -1,0 +1,30 @@
+// PAGE 53 -- ToolMaker System Description
+// @STATUS: Bibliography fixing!
+
+[appendix]
+= REFERENCES
+
+////
+* [ ] Convert to [bibliography] section:
+  https://docs.asciidoctor.org/asciidoc/latest/sections/bibliography/
+* [ ] Find bibliography entries in the book and format them: <<Bib Entry>>
+* [ ] Double Check biblio info and find links.
+* [ ] Consider reformatting using current bibliography standards and styles.
+////
+
+[horizontal]
+[Aho] ::: Aho A.V., Sethi R., Ullman J.D. -- "`Compilers Principles, Techniques and Tools`", Addison-Wesley 1986.
+
+[Backus] ::: Backus et al -- "`Revised Report on the Algorithmic Language ALGOL 60"`, International Federation for Information Processing 1962.
+
+[Dastranj] ::: Dastranj-Sedghi A. -- "`A Transformational Approach for Handling Extended BNF Grammars in PWS`", Linköping University, LiTH-IDA-Ex-8932, 1989.
+
+[Gries] ::: Gries D. -- "`Error Recovery and Correction -- An introduction to the literature`", In Bauer F.L. (ed) "`Compiler Construction`", Lecture Notes in Computer Science 21, Springer Verlag, 1976, pp 627-638.
+
+[KR] ::: Kernighan BM, Ritchie D.M. -- "`The C programming language`", Prentice-Hall Inc. 1983.
+
+[Sencker] ::: Sencker P., Durre K., Heuft J. -- "`Optimization of Parser Tables for Portable Compilers`", acm Transactions on Programming Languages and Systems, Oct. 1984, Vol.6 No. 4, pp. 546-572.
+
+[Sippu] ::: Sippu S. -- "`Syntax error handling in compilers`", PhD Thesis, Department of Computer Science, University of Helsinki, 1981.
+
+[Wirth] ::: Wirth, Niclaus -- "`Algorithms + Data Structures = Programs`", Prentice-Hall, 1976.

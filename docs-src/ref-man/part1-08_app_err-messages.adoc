@@ -1,0 +1,146 @@
+// PAGE 49 -- ToolMaker System Description
+
+[appendix]
+= ERROR MESSAGES
+
+== Message Format
+
+Error messages generated from the Makers has the form:
+
+// @CHECK: Carefully compare to original scans!
+// SYNTAX: EBNF
+
+------------------------------
+['*' <sequence number> '*'] <error number> <severity>
+                            ':' <error text>
+
+<sequence number> ::= <number>
+
+<error number> ::= <number>
+
+<severity> ::= 'I' | 'W' | 'E' | 'F' | 'S'
+
+<error text> ::= {<character>}
+------------------------------
+
+If an error appears during the analysis of the input, the message is preceded by the numbered source line containing the error.
+The erroneous symbol is clearly marked by the `sequence number` in the same position as the offending symbol on the line below the source line.
+
+The `error number` is used to uniquely identify the error message.
+
+The error `severity` indicates the seriousness of the message.
+The severity codes have the following meaning:
+
+
+`I` = _Informational message_. :::
+Used to inform the user that ParserMaker has taken some action.
+The only reason to correct the "error" is to get rid of the message since the Maker will always produce a correct result.
+These messages can also be inhibited by excluding the option `Info` from the `List` directive.
+
+`W` = _Warning_. :::
+A warning is not an error as such, but merely an information to the user that something may have gone wrong.
+The Maker always creates a valid result, but it may not always be what the user intended.
+
+`E` _= Error_. :::
+Normally a syntactic error.
+The Maker tries to recover from the error and continue the current phase of the processing.
+The process will be terminated after the current phase.
+No valid result is constructed.
+
+`F` = _Fatal error_. :::
+An error that it impossible to recover from.
+The processing is immediately terminated, and no valid result is produced.
+
+`S` = _System error_. :::
+An internal Maker error.
+The processing is immediately terminated, and no valid result is produced.
+Please save the input files that caused the error and contact your ToolMaker contact person.
+
+
+The `error text` is a verbal description of the error that has occurred.
+In the description below, the text may contain the character sequence `%n` where `n` is a number.
+This is a placeholder for a variable string that will be inserted when the message is actually output.
+
+
+// PAGE 50
+
+== Messages Explanations
+
+A number of error messages are common for all Makers.
+These are numbered between 50 and 100 and concerns analysis of the option, token and srcp sections.
+These are described below.
+
+[horizontal]
+50  ::: `Incorrect option.` +
+The option specified is not defined in the Maker.
+
+51  ::: `Incorrect section`. +
+The section is not defined to be used in the Maker.
+
+52  ::: `%1 section not allowed in this file when .tmk file exists` +
+This section may only be used in `.tmk` when there exist such a file.
+
+60  ::: `Section defined twice, new section skipped.` +
+This section can only be specified once.
+
+61  ::: `Directive defined twice, new directive skipped.` +
+A directive can only be specified once.
+
+62  ::: `Token section must have a %1 member.` +
+The token must have the specified structure member field.
+
+63  ::: `Srcp section must have a %1 member.` +
+The source position must have the specified structure member field.
+
+64  ::: `%1 section not found.` +
+The required section is missing.
+
+65  ::: `If declaration is given in one %1 member it must be given in all.` +
+When declaring a token or source position all structure member fields must have a declaration or else none must have a declaration.
+A structure member field may not have a declaration if there are others that do not.
+
+66  ::: `Srcp section must have at least one member.` +
+Source position must at least have one of its structure member fields specified.
+ScannerMaker and ListerMaker also require that if a column field is specified, a row field must also be specified.
+
+70  ::: `Could not open input file "%1".` +
+The input file could not be found or was read protected.
+
+71  ::: `Could not open output file "%1".` +
+The output file could not be opened, the directory or a previous file with the same name was probably write protected.
+
+
+// PAGE 51
+
+== License Errors
+
+The following errors are due to license limitations or problems and are only output to the terminal.
+The processing is terminated immediately.
+
+[horizontal]
+500{nbsp}F ::: `License server: date expired` +
+Your ToolMaker license has expired.
+Contact your ToolMaker contact person.
+
+501{nbsp}F ::: `License server: no license available` +
+You were not able to get a ToolMaker license as there were too many other simultaneous users.
+Try again later.
+
+502{nbsp}F ::: `License server: format error` +
+The license file did not have the correct format.
+Contact your ToolMaker contact person.
+
+503{nbsp}F ::: `License server: no contact` +
+ToolMaker was not properly installed or your license server process has died.
+Contact your system administrator or ToolMaker contact person.
+
+504{nbsp}F ::: `License server: license file missing` +
+No license file was found in the `TMHOME` directory.
+Contact your ToolMaker contact person.
+
+505{nbsp}F ::: `License server: illegal license key` +
+The password in the license file was illegal.
+Contact your ToolMaker contact person.
+
+506{nbsp}F ::: `License server: unknown error` +
+Contact your local ToolMaker contact person.
