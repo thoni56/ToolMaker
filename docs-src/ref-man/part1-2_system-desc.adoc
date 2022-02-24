@@ -1,0 +1,136 @@
+// PAGE 23 -- ToolMaker System Description
+
+// @STATUS: 3 XRefs needs fixing; Fig 1 in SVG.
+
+
+= SYSTEM DESCRIPTION
+
+== The ToolMaker Components
+
+The ToolMaker kit consists of the following highly integrated components:
+
+* _ParserMaker_ -- an efficient LALR parser generator with automatic error recovery and much more.
+* _ScannerMaker_ -- a scanner generator for very fast table driven lexical analysis.
+* _ListerMaker_ -- a message handling system with high flexibility.
+* _Incremental Macro Processor_ -- a source code processor with many powerful features (described in separate documentation).
+* _Toolmake_ -- a support facility simplifying setting up a new ToolMaker based system.
+
+In addition ToolMaker also comes with a suggestion for a main program showing how the various run-time modules may be connected creating a functioning tool, and a skeleton for an intelligent *makefile* (where this is available) to maintain and automatically produce up-to-date versions of your tool.
+
+The functionality of the components are briefly described below, but for details refer to the reference document for the individual component.
+
+
+=== ParserMaker
+
+The major component in ToolMaker is the LALR-parser generator ParserMaker.
+This component generates parsers from grammars, i.e. from a formal textual description of a language it creates programs that checks its input according to that grammar.
+
+The generated parser not only accepts or refuses its input but also contains various error recovery routines.
+This means that when an incorrect input is encountered it automatically tries to correct it so that the rest of the input also may be analysed.
+This automatically generated error recovery is possible to further fine-tune by giving ParserMaker additional information.
+
+In addition to the actual grammar it is also possible to specify semantic actions for each production (or rule).
+A semantic action is target language code provided by the implementor that will be executed each time the parser reduces the input according to the corresponding rule, i.e. when that input is encountered.
+The code in the semantic actions may refer to data synthesised in other terminals or non-terminals, so called attributes.
+Using these attributes a representation of the input may be built for example.
+
+// PAGE 24
+
+=== ScannerMaker
+
+The ScannerMaker tool produces lexical analysers from a description of regular expressions to recognise.
+The emphasis when designing this tool has been speed as a major part of the execution time of a software tool often is to read the input and compose it into tokens.
+
+ScannerMaker supports multiple vocabularies (sets of tokens to recognize) and scanners making it easy to implement context sensitive scanning.
+
+The connection between ParserMaker and ScannerMaker is almost completely seamless as ScannerMaker takes as input not only a file describing the regular expressions but also a file produced by ParserMaker containing the tokens found in the grammar.
+
+
+=== ListerMaker
+
+A _Lister_ is a subroutine package to handle error messages and to produce listing files.
+ListerMaker is a tool to create and customize such modules also included in the ToolMaker kit.
+This makes it very easy to produce and handle listings and error messages.
+
+
+=== Incremental Macro Processor
+
+To be able to efficiently produce the source code to compile from the various generated files a specially optimized text processor is also included in ToolMaker.
+The Incremental Macro Processor allows text to be conditionally included, sections defined and inserted at other places, variables to be expanded and so on.
+
+ParserMaker, ScannerMaker and ListerMaker all uses the facilities of the Incremental Macro Processor to automatically generate compilable source code in an efficient manner.
+
+// @XREF: IMP Reference Manual [ a separate book? ]
+
+The Incremental Macro Processor is delivered as a separate tool with the ToolMaker package and is documented in a separate manual (the _IMP Reference Manual_).
+
+
+=== Toolmake
+
+_**Toolmake**_ makes it very simple to set up a new subsystem based on ToolMaker.
+Using a dialogue you specify what parts you want to generate using ToolMaker, _**toolmake**_ creates the appropriate files in the current directory.
+
+// @XREF: THE PL/0 EXAMPLE
+
+You may also select the level of information already in the various files (description files, main module suggestion etc.), minimal, normal contents or a complete example (see _THE PL/0 EXAMPLE_ on page 45, page 111, page 172 and page 220).
+
+// PAGE 25
+
+== Structure of a ToolMaker Component
+
+This section describes the general structure of a ToolMaker component, its inputs, the processing it performs and the resulting outputs.
+The description is in generic terms and applies to ParserMaker, ScannerMaker and ListerMaker.
+Any major discrepancies between the three are mentioned where appropriate.
+
+
+=== Description Files
+
+A description file is the input to a component.
+This file contains information for the actual generation process.
+
+The description file for ParserMaker contains the description of the grammar, and for ScannerMaker the regular expressions to be assembled to tokens.
+The ListerMaker description file contains primarily the message templates.
+
+A description file contains sections containing different information, such as options and the rules.
+Both ScannerMaker and ParserMaker have rules sections where the grammar and regular expressions respectively are described in a meta-language.
+
+
+=== The Maker
+
+Each actual Maker reads and analyses its description file, producing any error messages on the screen and a listing file if requested.
+
+
+// @FIG 1: Convert to SVG.
+
+[[fig1]]
+.File flow in a Maker.
+image::Fig-1-1_temp.gif[width=40%,align="center"]
+
+// PAGE 26
+
+// @XREF: THE TOOLMAKER DESCRIPTION FILE
+
+After having analysed the Makers own description file and the optional ToolMaker Common Description file (containing definitions common for all Makers, refer to _THE TOOLMAKER DESCRIPTION FILE_ on page 30) the Maker produces output in the form of table files.
+The table files contain data and code definitions to complement skeleton files which are provided and may be modified.
+As a last step the table file is processed together with the skeleton files (using the Macro processor IMP) to produce the actual source files.
+
+NOTE: This is a major difference with respect to version 1 of ToolMaker where the generation of source files from the tables was not performed automatically by the Makers.
+
+Also a source file is never generated unless necessary, i.e. unless the contents of the file has changed.
+This can make enormous differences in compile times for large systems (when using automatic build tools such as *make*) as files that are dependent on ToolMaker generated source files need not be recompiled unless a real change has been made.
+For small systems the gain may be small in comparison with times needed to compare the new files so the possibility to force generation (thus avoiding the comparison) is available.
+
+
+=== Skeleton Files
+
+The skeleton files are files in IMP format which when processed by the Incremental Macro Processor together with the table files generated by the Maker will produce the actual data and code which constitutes the compilable source for the parser, scanner or lister.
+
+The skeleton files resides in a special directory delivered with ToolMaker.
+There is one separate subdirectory for each target language available.
+
+Under particular circumstances it may be necessary to modify the skeleton files.
+The modified files should be kept separate from the standard skeleton files and pointed to by using the `library` option of the Makers.
+
+// @ADMONITION: Use WARNING instead of NOTE?
+
+NOTE: To modify the skeletons thorough understanding of the mechanisms of the Maker and the Incremental Macro Processor is required.

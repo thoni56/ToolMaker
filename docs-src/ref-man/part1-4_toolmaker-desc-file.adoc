@@ -1,0 +1,476 @@
+// @PAGE 30 -- ToolMaker System Description
+
+// @STATUS: XRefs
+
+= THE TOOLMAKER DESCRIPTION FILE
+
+The ToolMaker description file is a file which describes options and data structures common to all the Makers in the ToolMaker package.
+The file is necessary whenever more than one Maker is utilized.
+However when one single Maker is used the information normally kept in the ToolMaker description file may be specified in the description file of that Maker.
+This makes it possible to use all tools in the ToolMaker package without duplicating information while still making it easy to use a single tool without distributing information across many input files.
+
+The preferred file extension for the ToolMaker description file is `.tmk`, and the syntax of the ToolMaker description file is:
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<description file> ::=
+    [ <options section> ]
+    { <import section> | <token section> | <srcp section> }
+-------------------------------------
+
+// @XREF: App. C
+
+For a brief description of the notation used to describe the syntax of the description files refer to appendix C, _SYNTAX NOTATION_, on page 52.
+
+
+== The Options Section
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<options section> ::=
+    '%%OPTIONS' <directive> {<directive>} ['%%END']
+
+<directive> ::=
+      <verbose directive>
+    | <target directive>
+    | <os directive>
+    | <prefix directive>
+    | <library directive>
+    | <escape directive>
+    | <width directive>
+    | <height directive>
+    | <generate directive>
+    | <force directive>
+-------------------------------------
+
+The _options section_ of the ToolMaker description file can be used to set options common to more than one tool.
+Corresponding options and options special for each Maker can be given as command line switches to each tool at its invocation.
+Options given in other description files override those given in the ToolMaker description file.
+
+NOTE: Directives given in the ToolMaker description file always apply when generating the common declarations for the ToolMaker based components (in '`c`' the `tmCommon.h`) even if that option is set to another value locally for a particular Maker (for example if the target directive is set in the description file for a Maker the common declarations will still be generated in the target language defined in the ToolMaker description file).
+
+// @PAGE 31
+
+The directives can be given in any order.
+If a directive is repeated, only the last one given is used.
+
+// @ADMONITION: Convert to IMPORTANT?
+
+NOTE: If a directive is explicitly stated in the _options section_, all its default option values are turned off.
+This is especially important for set valued directives and means that all desired options must be included when a directive is stated, not just the desired extra ones.
+
+
+=== The Verbose Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<verbose directive> ::=
+    ['NO'] 'VERBOSE' ';'
+-------------------------------------
+
+The verbose directive controls the amount of information that is output on the terminal during the generation processes.
+
+If `NO VERBOSE` is specified, the generation process will be _silent_, and only error messages will be output to the terminal.
+
+If `VERBOSE` is specified, the _progress_ of the generation process will be logged to the terminal, and _timing figures_ for the various phases will be supplied.
+
+The default is:
+
+    No Verbose;
+
+
+=== The Target Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<target directive> ::=
+    'TARGET' <quoted string> ';'
+-------------------------------------
+
+This option specifies for which language the files should be generated.
+The following values of the target option are supported:
+
+[horizontal]
+`c`      :: generate files in '`c`' (K&R)
+`ansi-c` :: generate files in '`c`' (ANSI)
+`c++`    :: generate files in '`c++`'
+
+// @ADMONITION: Use IMPORTANT instead?
+
+NOTE: The option values are case sensitive and refer to subdirectory names in the standard installation.
+To use the default library files the target language must be given in lower case letters.
+
+The default setting is:
+
+    Target 'ansi-c';
+
+NOTE: Additional target languages may be supported.
+Refer to the Release Notes for the latest version.
+
+
+// @PAGE 32
+
+=== The OS Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<os directive> ::=
+    'OS' <quoted string> ';'
+-------------------------------------
+
+This option specifies for which operating system the files should be generated.
+The following options are supported:
+
+[horizontal]
+`SunOS` :: generate files for Sun OS
+
+The default setting is:
+
+    Os 'SunOS';
+
+NOTE: Additional operating systems may be supported.
+Refer to the Release Notes for the latest version.
+
+
+=== The Prefix Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<prefix directive> ::=
+    'PREFIX' <quoted string> ';'
+-------------------------------------
+
+The prefix is used as a prefix for all _externally visible functions and types_.
+This prefix set (implicitly or explicitly) in the ToolMaker Common Description file is known as the system prefix and may be overridden locally for each Maker.
+System wide types and functions will still use the system prefix.
+
+The default value is:
+
+    Prefix 'tm';
+
+
+=== The Library Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<library directive> ::=
+    'LIBRARY' <quoted string> ';'
+-------------------------------------
+
+The library directive instructs the ToolMaker tools to look for template files in a directory other than the default, which is `$TMHOME/lib/target/`, for example:
+
+    Library '/usr/local/lib/ToolMaker/lib/ansi-c';
+
+
+=== The Escape Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<escape directive> ::=
+      'ESCAPE' <escape character>
+    | 'NO' 'ESCAPE' ';'
+
+<escape character> ::= <quoted string>
+-------------------------------------
+
+// @PAGE 32/33
+
+The escape directive allows the implementor to change the escape character in target language sections.
+The quoted string used to describe the escape character must contain exactly one character which is directly interpreted as the escape character.
+
+If `NO ESCAPE` is specified no character will be used as escape character in semantic target language sections.
+
+Default:
+
+    Escape '`';
+
+
+=== The Width Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<width directive> ::=
+      'NO' 'WIDTH' ';'
+    | 'WIDTH' <number> ';'
+-------------------------------------
+
+This option specifies the maximum number of characters on a line in the list file (if requested) before a line is broken into two.
+If `NO WIDTH` is specified, lines will be printed in full length.
+
+The default value is:
+
+    Width 78;
+
+
+=== The Height Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<height directive> ::=
+      'NO' 'HEIGHT' ';'
+    | 'HEIGHT' <number> ';'
+-------------------------------------
+
+This option specifies the number of lines that fit on a page in the list file.
+If `NO HEIGHT` is specified, the list file will not be divided into pages.
+
+The default value is:
+
+    Height 60;
+
+
+=== The Generate Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<generate directive> ::=
+    'GENERATE' <generate> { ',' <generate> } ';'
+
+<generate> ::=
+    'TABLES' | 'SOURCE'
+-------------------------------------
+
+The generate directive instructs the Makers on which output to generate.
+The intermediate table files are normally not kept after successfully generating the target language source, but by using this option any combination of tables and/or source files may be generated.
+
+The default for all Makers is to generate only source files.
+To generate tables this option must be used.
+
+// @PAGE 34
+
+NOTE: Setting `Generate tables;` will _only_ generate the table file.
+To get both tables and source use `Generate tables, source;`.
+
+
+=== The Force Directive
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<force directive> ::=
+    [ 'NO' ] 'FORCE' ';'
+-------------------------------------
+
+The force directive instructs the Makers to force the generation of source files, even though it might not be necessary, thus overriding the built-in functionality to not overwrite any source files that would contain identical information.
+
+The default value is naturally:
+
+    No Force;
+
+
+== The Import Section
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<Import section> ::=
+    '%%IMPORT' <target language code> ['%%END']
+-------------------------------------
+
+Any definition needed throughout the generated subsystem should be imported by placing appropriate declarations or includes in the _import section_ in the ToolMaker Common Description file.
+An example are types referenced within the token and srcp sections.
+The section should contain _declarations in the target language_.
+The text representing the target language code, is copied unformatted to the output file.
+
+
+== The Srcp Section
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<srcp section> ::=
+    '%%SRCP'
+    [<srcp name>]
+    [{<srcp member>}]
+    ['%%END']
+
+<srcp name> ::=
+    'NAME' <identifier> ';'
+
+<srcp member> ::=
+    <srcp kind> <identifier> <opt declaration> ';'
+
+<srcp kind> ::=
+    'LINE' | 'COLUMN' | 'POSITION' | 'FILE'
+
+<opt declaration> ::=
+    [ '%%' <target language code> '%%' ]
+-------------------------------------
+
+The srcp section defines the system source position type.
+This definition is for example used by the generated parser in its scanner and error handling interfaces.
+It includes name for the srcp (source position) type and the srcp members.
+
+// @PAGE 35
+
+// @XREF: add XREf to `%%TOKEN` section (useful)
+
+Language dependent declarations, i.e. descriptions of the implementation, are defined in the optional declaration part of srcp members.
+These declarations must either be used throughout the section or skipped entirely.
+If the language dependent declarations are used, ToolMaker will generate a type declaration.
+If they are not used, an external type definition must be imported (in the import section).
+Refer also to the section below on the `%%TOKEN` section.
+
+The four kinds of srcp members are _file_, _line_, _column_ and _position_.
+If a member is stated in the srcp section, code will be generated by ToolMaker to handle it.
+A ScannerMaker generated scanner automatically deduces which type of source position information to calculate from the fields present in the _srcp section_.
+
+To be able to access the line component of a source position variable, the `LINE` member should be used.
+The specified identifier will be used as field name of the line component of a source position variable.
+This information indicates on which line this token started (assuming a normal text file as input).
+
+To be able to access the column component of a source position variable, the `COLUMN` member should be used.
+The specified identifier will be used as the field name of that component.
+The identifier is the field name of the column component of a source position variable.
+This field will indicate at which column on the line the token started, the first position on a line being column 1 (one).
+
+// @XREF: Principles of Operation // ListerMaker Reference Manual
+
+To be able to access the file component of a source position variable, the `FILE` member should be used.
+The specified identifier will be used as field name of the file component of a source position variable.
+This numbering of input sources is _not_ automatically performed by a ScannerMaker generated scanner since this information must be coordinated between user defined code in the scanner that opens a new stream of input and other parts of the user code (refer to _Principles of Operation_ in the _ListerMaker Reference Manual_, page 208 for hints on how to use and initialise the file component).
+
+Using a ListerMaker generated lister module requires the use of the _line_ and _column_ fields.
+If the `Include;` or `Listings multiple;` options of ListerMaker are used the _file_ component must also exist.
+
+To be able to access the position component of a source position variable, the `POSITION` member should be used.
+The specified identifier will be used as the field name of that component.
+
+Example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%SRCP
+    NAME pmSrcp
+
+    LINE   lin %% int lin %%;
+    COLUMN col %% int col %%;
+------------------------------
+
+// @CHECK: Is it `%l` or `%1`?
+
+Instead of repeating the name of the identifier in the target language declaration, it is possible to use a `%1` as a placeholder for the name.
+The placeholder will automatically be substituted with the name in the produced code.
+
+// @PAGE 36
+
+Example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%SRCP
+    NAME pmSrcp;
+
+    LINE   lin %% int %1 %%;
+    COLUMN col %% int %1 %%;
+------------------------------
+
+NOTE: The opening `%%` must be followed by a space.
+
+
+== The Token Section
+
+// SYNTAX: EBNF
+
+-------------------------------------
+<token section> ::=
+    '%%TOKEN'
+    [<token name>]
+    [<token code>]
+    [<token srcp>]
+    [<token attributes>]
+    ['%%END']
+
+<token name> ::=
+    'NAME' <identifier> ';'
+
+<token code> ::=
+    'CODE' <identifier> <opt declaration> ';'
+
+<token srcp> ::=
+    'SRCP' <identifier> <opt declaration> ';'
+
+<token attributes> ::=
+    'ATTRIBUTES'
+        <token attribute> {',' <token attribute>} ';'
+
+<token attribute> ::=
+    <identifier> <opt declaration>
+
+<opt declaration> ::=
+    [ '%%' <target language code> '%%' ]
+-------------------------------------
+
+The token section defines the system token type.
+This definition is used by the generated parser in its error handling interfaces, and is also the type returned by the generated scanner.
+The definition includes the name for the token type, the token code member, the token source position (`srcp`) member and the token attribute members.
+
+Language dependent declarations, i.e. a description of the implementation, are defined in the optional declaration part of code, srcp and attributes.
+These declarations must either be used throughout the section or skipped entirely.
+If the language dependent declarations are used, ToolMaker will generate a type declaration in the target language.
+If they are not used, an external type definition must be imported (in the import section) and the token section only defines the names of the fields.
+Any target language dependent terminators (`;` for example) should not be included in the target language code representing the declaration (within the ``%%``s).
+These will be provided by the generation process.
+Any special tokens inside the declaration, such as `:` in Pascal declarations should be included.
+
+// @PAGE 37
+
+Example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%TOKEN
+    CODE code %% int code %%;
+    ATTRIBUTES
+        ival %% int ival %%,
+        sval %% String sval %%;
+------------------------------
+
+Instead of repeating the name of the identifier in the target language declaration, it is possible to use `%1` as a placeholder for the name.
+The placeholder will automatically be substituted with the name in the produced code.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%TOKEN
+    CODE code %% int %1 %%;
+    ATTRIBUTES
+        ival %% int %1 %%,
+        sval %% String %1 %%;
+------------------------------
+
+// @ADMONITION: Use IMPORTANT/WARNING instead?
+
+NOTE: The opening `%%` must be followed by a space.
+
+An example of the use of an external imported token type which will not generate a type declaration but use an imported one (the names of the fields must be made known to the Makers anyway):
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%IMPORT
+#include "Token.h"
+
+%%TOKEN
+    NAME Token;
+    CODE code;
+    SRCP sourcePos;
+    ATTRIBUTES
+        ival;
+        sval;
+------------------------------

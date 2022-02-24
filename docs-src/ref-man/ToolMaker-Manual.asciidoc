@@ -13,7 +13,7 @@
 :partnums:
 :!part-signifier:
 :sectnums:
-:sectnumlevels: 2
+:sectnumlevels: 3
 // Cross References:
 :idprefix:
 :xrefstyle: full
