@@ -51,7 +51,10 @@ REFMAN_SRC = 'docs-src/ref-man/ToolMaker-Manual.asciidoc'
 REFMAN_OUT_DIR = HTML_DOCS_OUT_DIR
 REFMAN_OUT_DIR_ABSPATH = File.expand_path(REFMAN_OUT_DIR)
 REFMAN_HTML = REFMAN_OUT_DIR + '/ToolMaker-Manual.html'
-REFMAN_ADOC_DEPS = FileList['docs-src/ref-man/*.adoc']
+REFMAN_ADOC_DEPS = FileList[
+  'docs-src/ref-man/*.adoc',
+  'docs-src/ref-man/images/*.gif'
+]
 
 REFMAN_ADOC_OPTS = <<~HEREDOC
   --failure-level WARN \

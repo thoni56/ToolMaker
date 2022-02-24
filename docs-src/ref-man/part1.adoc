@@ -23,5 +23,8 @@ The more experienced user, familiar with similar products (notably YACC and LEX)
 :leveloffset: +1
 
 include::part1-1_concepts.adoc[]
+include::part1-2_system-desc.adoc[]
+include::part1-3_toolmaker-system.adoc[]
+include::part1-4_toolmaker-desc-file.adoc[]
 
 :leveloffset: 0

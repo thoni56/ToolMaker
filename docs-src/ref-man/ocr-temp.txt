@@ -6,441 +6,7 @@ Part I
 ToolMaker
 System Description
 
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-@PAGE 23 -- ToolMaker System Description
-
-3   SYSTEM DESCRIPTION
-
-3.1 The ToolMaker Components
-
-The ToolMaker kit consists of the following highly integrated components:
-
-* ParserMaker -- an efficient LALR parser generator with automatic error recovery and much more.
-* ScannerMaker -- a scanner generator for very fast table driven lexical analysis.
-* ListerMaker -- a message handling system with high flexibility.
-* Incremental Macro Processor -- a source code processor with many powerful features (described in separate documentation).
-* Toolmake -- a support facility simplifying setting up a new ToolMaker based system.
-
-In addition ToolMaker also comes with a suggestion for a main program showing how the various run-time modules may be connected creating a functioning tool, and a skeleton for an intelligent makefile (where this is available) to maintain and automatically produce up-to-date versions of your tool.
-
-The functionality of the components are briefly described below, but for details refer to the reference document for the individual component.
-
-3.1.1   ParserMaker
-
-The major component in ToolMaker is the LALR-parser generator ParserMaker. This component generates parsers from grammars, i.e. from a formal textual description of a language it creates programs that checks its input according to that grammar.
-
-The generated parser not only accepts or refuses its input but also contains various error recovery routines. This means that when an incorrect input is encountered it automatically tries to correct it so that the rest of the input also may be analysed. This automatically generated error recovery is possible to further fine-tune by giving ParserMaker additional information.
-
-In addition to the actual grammar it is also possible to specify semantic actions for each production (or rule). A semantic action is target language code provided by the implementor that will be executed each time the parser reduces the input according to the corresponding rule, i.e. when that input is encountered. The code in the semantic actions may refer to data synthesised in other terminals or non-terminals, so called attributes. Using these attributes a representation of the input may be built for example.
-
-@PAGE 24 -- ToolMaker System Description
-
-3.1.2   ScannerMaker
-
-The ScannerMaker tool produces lexical analysers from a description of regular expressions to recognise. The emphasis when designing this tool has been speed as a major part of the execution time of a software tool often is to read the input and compose it into tokens.
-
-ScannerMaker supports multiple vocabularies (sets of tokens to recognize) and scanners making it easy to implement context sensitive scanning.
-
-The connection between ParserMaker and ScannerMaker is almost completely seamless as ScannerMaker takes as input not only a file describing the regular expressions but also a file produced by ParserMaker containing the tokens found in the grammar.
-
-3.1.3   ListerMaker
-
-A Lister is a subroutine package to handle error messages and to produce listing files. ListerMaker is a tool to create and customize such modules also included in the ToolMaker kit. This makes it very easy to produce and handle listings and error messages.
-
-3.1.4   Incremental Macro Processor
-
-To be able to efficiently produce the source code to compile from the various generated files a specially optimized text processor is also included in ToolMaker. The Incremental Macro Processor allows text to be conditionally included, sections defined and inserted at other places, variables to be expanded and so on.
-
-ParserMaker, ScannerMaker and ListerMaker all uses the facilities of the Incremental Macro Processor to automatically generate compilable source code in an efficient manner.
-
-The Incremental Macro Processor is delivered as a separate tool with the ToolMaker package and is documented in a separate manual (the IMP Reference Manual).
-
-3.1.5   Toolmake
-
-Toolmake makes it very simple to set up a new subsystem based on ToolMaker. Using a dialogue you specify what parts you want to generate using ToolMaker, toolmake creates the appropriate files in the current directory.
-
-You may also select the level of information already in the various files (description files, main module suggestion etc.), minimal, normal contents or a complete example (see THE PL/0 EXAMPLE on page 45, page 111, page 172 and page 220).
-
-@PAGE 25 -- ToolMaker System Description
-
-3.2 Structure of a ToolMaker Component
-
-This section describes the general structure of a ToolMaker component, its inputs, the processing it performs and the resulting outputs. The description is in generic terms and applies to ParserMaker, ScannerMaker and ListerMaker. Any major discrepancies between the three are mentioned where appropriate.
-
-3.2.1   Description Files
-
-A description file is the input to a component. This file contains information for the actual generation process.
-
-The description file for ParserMaker contains the description of the grammar, and for ScannerMaker the regular expressions to be assembled to tokens. The ListerMaker description file contains primarily the message templates.
-
-A description file contains sections containing different information, such as options and the rules. Both ScannerMaker and ParserMaker have rules sections where the grammar and regular expressions respectively are described in a meta-language.
-
-3.2.2   The Maker
-
-Each actual Maker reads and analyses its description file, producing any error messages on the screen and a listing file if requested.
-Maker Descrip
-
-tion File
-Common Tool
-
-Maker Descrip
-
-tion File
-Maker
-Target Source Code Files
-Fig. 1  File flow in a Maker.
-Optional Info
-
-Files
-
-@PAGE 26 -- ToolMaker System Description
-
-After having analysed the Makers own description file and the optional ToolMaker Common Description file (containing definitions common for all Makers, refer to THE TOOLMAKER DESCRIPTION FILE on page 30) the Maker produces output in the form of table files. The table files contain data and code definitions to complement skeleton files which are provided and may be modified. As a last step the table file is processed together with the skeleton files (using the Macro processor IMP) to produce the actual source files.
-
-Note: This is a major difference with respect to version 1 of ToolMaker where the generation of source files from the tables was not performed automatically by the Makers.
-
-Also a source file is never generated unless necessary, i.e. unless the contents of the file has changed. This can make enormous differences in compile times for large systems (when using automatic build tools such as make) as files that are dependent on ToolMaker generated source files need not be recompiled unless a real change has been made. For small systems the gain may be small in comparison with times needed to compare the new files so the possibility to force generation (thus avoiding the comparison) is available.
-
-3.2.3   Skeleton Files
-
-The skeleton files are files in IMP format which when processed by the Incremental Macro Processor together with the table files generated by the Maker will produce the actual data and code which constitutes the compilable source for the parser, scanner or lister.
-
-The skeleton files resides in a special directory delivered with ToolMaker. There is one separate subdirectory for each target language available.
-
-Under particular circumstances it may be necessary to modify the skeleton files. The modified files should be kept separate from the standard skeleton files and pointed to by using the library option of the Makers.
-
-Note: To modify the skeletons thorough understanding of the mechanisms of the Maker and the Incremental Macro Processor is required.
-
-@PAGE 27 -- ToolMaker System Description
-
-4   A TOOLMAKER BASED SYSTEM
-
-In this section we will go through a simple but complete example using ToolMaker. The example will briefly describe all the files needed, their relationships and the running of each maker.
-
-This chapter shows an example with the system name p10. The example is also available with the ToolMaker distribution and some of the files are shown in appendix A, THE PUO EXAMPLE, on page 45. The example uses the 'ansi-c' language as its target language.
-
-Note that the figures below only show the files present in your directory, and thus the skeleton files are not shown, but of course they are also needed for the generation.
-
-4.1 The ToolMaker Description File
-
-ToolMaker requires one common description file containing information about common data declarations, such as source position and token representations, options common to all the Makers and various other definitions.
-
-The ToolMaker description file is called plO.tmk. See appendix section A.2, plO. tmk -- the ToolMaker Description File on page 45 for an example of the contents of a ToolMaker description file.
-
-The processing of the ToolMaker description file is performed automatically by each of the Makers as a part of their normal processing.
-
-
-4.2 ParserMaker
-
-The next file needed is the ParserMaker description file. This file should contain the grammar of the input to your tool. In addition optional sections may be included to inform ParserMaker of your selected options (like packing strategies, target language etc.), error recovery information a.s.o. For more details refer to the ParserMaker Reference Manual.
-
-This file we call plO.pmk and is input to ParserMaker with the command pmk p10
-
-This will produce the following output files (assuming no errors were detected):
-
-@PAGE 28 -- ToolMaker System Description
-
-* plO.voc -- generated vocabulary file containing all tokens found in the grammar and their corresponding token codes.
-* p10.pml -- optionally generated listing file containing the input, error messages and other information.
-* plOParse.h, plOParse.c, plOPaSema.c 'ansi-c' source for the parser proper and semantic actions from the description file.
-* plOErr.h, plOErr.c 'ansi-c' source for error message interfacing (optional).
-* plO.pmt -- generated tables and source code sections in IMP format (normally removed after successful source file generation).
-
-4.3 ScannerMaker
-
-Using ScannerMaker is much like using ParserMaker. It needs a description file, plO.smk, describing the regular expressions the generated scanner should recognise. As with the ParserMaker description file this file also may have additional sections defining options and target source code for various code hooks, but for details refer to the ScannerMaker Reference Manual.
-
-In addition ScannerMaker also accepts the vocabulary file produced by ParserMaker, in this example plO.voc, making the transfer of vocabulary information from the grammar to the scanner generating process fully automatic.
-
-From this input ScannerMaker generates the target language source files, plOScan.h, plOScan.c and plOPcSema.c, a table file, plO.smt, which is normally removed, and, optionally, a listing file, plO.sml.
-
-4.4 ListerMaker
-
-The major part of the ListerMaker description file (plO.lmk) describes the error message templates used when producing the actual messages in the listing. The messages may be divided into sections each having the same messages in different languages for example.
-
-ListerMaker produces the source files for the lister, plOList.c and p1OList.h. The error message templates to be used during run-time may either be compiled into the source files as data or be placed in a separate file, in this example named plO.msg, which is generated by ListerMaker from the description file.
-
-The message templates may contain markers where to insert additional text which will be supplied during run-time.
-
-4.5 Putting It All Together
-
-For a complete system we also need a main program and any additional modules needed to analyse the input, handling symbol tables, code generation or what ever is needed to complete your tool.
-
-To make the ToolMaker generated parts function the main program, plO.c, must initialise the lister and the scanner and then call the parser. As a last action a call to the lister to produce a listing file or show the error messages on
-
-@PAGE 29 -- ToolMaker System Description
-
-the screen is advisable. In appendix section A.3, plO.c -- the Main Program on page 46 an example of a main program can be found.
-
-The files in this example are all automatically produced using the toolmake utility (see Toolmake Reference Manual) if the contents level example is used. To study their contents, create a new directory and set up a ToolMaker environment with level example as described in the Toolmake Reference Manual. Using toolmake creates all necessary files, including a main program suggestion and a makefile (or command file depending on your environment) to keep track of dependencies between description files, table files, source code, object code and executable. The makefile must be updated to include any additional modules that are to be included in the complete tool.
-
-@PAGE 30
-
-5   THE TOOLMAKER DESCRIPTION FILE
-
-The ToolMaker description file is a file which describes options and data structures common to all the Makers in the ToolMaker package. The file is necessary whenever more than one Maker is utilized. However when one single Maker is used the information normally kept in the ToolMaker description file may be specified in the description file of that Maker. This makes it possible to use all tools in the ToolMaker package without duplicating information while still making it easy to use a single tool without distributing information across many input files.
-
-The preferred file extension for the ToolMaker description file is .tmk, and the syntax of the ToolMaker description file is:
-
-<description file> :._
-[ <options section> ]
-{ <import section> I <token section>
-I <srcp section> }
-
-For a brief description of the notation used to describe the syntax of the description files refer to appendix C, SYNTAX NOTATION, on page 52.
-
-5.1 The Options Section
-
-<options section>   _
-'%%OPTIONS' <directive> {<directive>} ['%%END']
-<directive> :._
-<verbose directive> <target directive>
-<os directive>
-<prefix directive> <library directive> <escape directive> <width directive>
-<height directive> <generate directive> <force directive>
-
-The options section of the ToolMaker description file can be used to set options common to more than one tool. Corresponding options and options special for each Maker can be given as command line switches to each tool at its invocation. Options given in other description files override those given in the ToolMaker description file.
-
-Note: Directives given in the ToolMaker description file always apply when generating the common declarations for the ToolMaker based components (in 'c' the tmCommon.h) even if that option is set to another value locally for a particular Maker (for example if the target directive is set in the description file for a Maker the common declarations will still be generated in the target language defined in the ToolMaker description file).
-
-@PAGE 31 -- ToolMaker System Description
-
-The directives can be given in any order. If a directive is repeated, only the last one given is used.
-
-Note: If a directive is explicitly stated in the options section, all its default option values are turned off. This is especially important for set valued directives and means that all desired options must be included when a directive is stated, not just the desired extra ones.
-
-5.1.1   The Verbose Directive
-
-<verbose directive> :._ ['NO'] 'VERBOSE' ',
-
-The verbose directive controls the amount of information that is output on the terminal during the generation processes.
-
-If NO VERBOSE is specified, the generation process will be silent, and only error messages will be output to the terminal.
-
-If VERBOSE is specified, the progress of the generation process will be logged to the terminal, and timing figures for the various phases will be supplied.
-
-The default is:
-
-No Verbose;
-
-5.1.2   The Target Directive
-
-<target directive> :._
-'TARGET' <quoted string> ',
-
-This option specifies for which language the files should be generated. The following values of the target option are supported:
-
-C ' generate files in 'c' (K&R) ansi-c' generate files in 'c' (ANSI) ' c++' generate files in 'c++'
-
-Note: The option values are case sensitive and refer to subdirectory names in the standard installation. To use the default library files the target language must be given in lower case letters.
-
-The default setting is:
-
-Target 'ansi-c';
-
-Note: Additional target languages may be supported. Refer to the Release Notes for the latest version.
-
-@PAGE 32 -- ToolMaker System Description
-
-5.1.3   The OS Directive
-
-<os directive> :._
-'OS' <quoted string> ',
-
-This option specifies for which operating system the files should be generated. The following options are supported:
-
-'SunOS' generate files for Sun OS The default setting is:
-
-Os 'SunOS';
-
-Note: Additional operating systems may be supported. Refer to the Release Notes for the latest version.
-
-5.1.4   The Prefix Directive
-
-<prefix directive> ::
-'PREFIX' <quoted string> ',
-
-The prefix is used as a prefix for all externally visible functions and types. This prefix set (implicitly or explicitly) in the ToolMaker Common Description file is known as the system prefix and may be overridden locally for each Maker. System wide types and functions will still use the system prefix.
-
-The default value is:
-
-Prefix 'tm';
-
-5.1.5   The Library Directive
-
-<library directive> :-
-'LIBRARY' <quoted string> ',
-
-The library directive instructs the ToolMaker tools to look for template files in a directory other than the default, which is $TMHOME/lib/target/, for example:
-
-Library '/usr/local/lib/ToolMaker/lib/ansi-c';
-
-5.1.6   The Escape Directive
-
-<escape directive> ::
-:ESCAPE' <escape character> 'NO' 'ESCAPE' ',
-<escape character>  <quoted string>
-
-The escape directive allows the implementor to change the escape character in target language sections. The quoted string used to describe the escape
-
-@PAGE 33 -- ToolMaker System Description
-
-character must contain exactly one character which is directly interpreted as the escape character.
-If NO ESCAPE is specified no character will be used as escape character in semantic target language sections.
-Default:
-
-Escape '' ,
-
-5.1.7   The Width Directive
-
-<width directive> :._
-NO' 'WIDTH' ' 'WIDTH' <number> ',
-
-This option specifies the maximum number of characters on a line in the list file (if requested) before a line is broken into two. If NO WIDTH is specified, lines will be printed in full length.
-The default value is:
-
-Width 78;
-
-5.1.8   The Height Directive
-
-<height directive> :._
-'NO' 'HEIGHT' ', 'HEIGHT' <number> ',
-
-This option specifies the number of lines that fit on a page in the list file. If NO HEIGHT is specified, the list file will not be divided into pages.
-The default value is:
-
-Height 60;
-
-5.1.9   The Generate Directive
-
-<generate directive> ::
-'GENERATE' <generate> { ',' <generate>
-<generate> --
-'TABLES' I 'SOURCE'
-
-The generate directive instructs the Makers on which output to generate. The intermediate table files are normally not kept after successfully generating the target language source, but by using this option any combination of tables and/or source files may be generated.
-The default for all Makers is to generate only source files. To generate tables this option must be used.
-
-@PAGE 34 -- ToolMaker System Description
-
-Note: Setting Generate tables; will only generate the table file. To get both tables and source use Generate tables, source;.
-
-5.1.10  The Force Directive
-
-<force directive> :.=
-[ 'NO' ] 'FORCE' ',
-
-The force directive instructs the Makers to force the generation of source files, even though it might not be necessary, thus overriding the built-in functionality to not overwrite any source files that would contain identical information.
-
-The default value is naturally:
-
-No Force;
-
-5.2 The Import Section
-
-<Import section> :._
-'%%IMPORT' <target language code> ['%%END']
-
-Any definition needed throughout the generated subsystem should be imported by placing appropriate declarations or includes in the import section in the ToolMaker Common Description file. An example are types referenced within the token and srcp sections. The section should contain declarations in the target language. The text representing the target language code, is copied unformatted to the output file.
-
-5.3 The Srcp Section
-
-<srcp section> :._ '%%SRCP' [<srcp name>)
-[(<srcp member>}] ['%%END']
-<srcp name> ::=
-'NAME' <identifier> ',
-<srcp member> :._
-<srcp kind> <identifier> <opt declaration>
-<srcp kind> :._
-'LINE' I 'COLUMN' ( 'POSITION' I 'FILE'
-<opt declaration> :._
-[ '%%' <target language code> '%%' )
-
-The srcp section defines the system source position type. This definition is for example used by the generated parser in its scanner and error handling interfaces. It includes name for the srcp (source position) type and the srcp members.
-
-@PAGE 35 -- ToolMaker System Description
-
-Language dependent declarations, i.e. descriptions of the implementation, are defined in the optional declaration part of srcp members. These declarations must either be used throughout the section or skipped entirely. If the language dependent declarations are used, ToolMaker will generate a type declaration. If they are not used, an external type definition must be imported (in the import section). Refer also to the section below on the %%TOKEN section.
-
-The four kinds of srcp members are file, line, column and position. If a member is stated in the srcp section, code will be generated by ToolMaker to handle it. A ScannerMaker generated scanner automatically deduces which type of source position information to calculate from the fields present in the srcp section.
-
-To be able to access the line component of a source position variable, the LINE member should be used. The specified identifier will be used as field name of the line component of a source position variable. This information indicates on which line this token started (assuming a normal text file as input).
-
-To be able to access the column component of a source position variable, the COLUMN member should be used. The specified identifier will be used as the field name of that component. The identifier is the field name of the column component of a source position variable. This field will indicate at which column on the line the token started, the first position on a line being column 1 (one).
-
-To be able to access the file component of a source position variable, the FILE member should be used. The specified identifier will be used as field name of the file component of a source position variable. This numbering of input sources is not automatically performed by a ScannerMaker generated scanner since this information must be coordinated between user defined code in the scanner that opens a new stream of input and other parts of the user code (refer to Principles of Operation in the ListerMaker Reference Manual, page 208 for hints on how to use and initialise the file component).
-
-Using a ListerMaker generated lister module requires the use of the line and column fields. If the Include; or Listings multiple; options of ListerMaker are used the file component must also exist.
-
-To be able to access the position component of a source position variable, the POSITION member should be used. The specified identifier will be used as the field name of that component.
-
-Example:
-
-%SRCP
-NAME pmSrcp
-LINE    lin %% int lin %%; COLUMN col %% int col %%;
-
-Instead of repeating the name of the identifier in the target language declaration, it is possible to use a'% I' as a placeholder for the name. The placeholder will automatically be substituted with the name in the produced code.
-
-@PAGE 36 -- ToolMaker System Description
-
-Example:
-a%SRCP
-NAME pmSrcp;
-LINE    lin %% int %l %%; COLUMN col %% int %1 %%;
-Note: The opening %% must be followed by a space.
-
-5.4 The Token Section
-
-<token section>
-'%%TOKEN' [<token name>] [<token code>] [<token srcp>] [<token attributes>] ['%%END']
-
-<token name> ._
-'NAME' <identifier> ',
-
-<token code> ._
-'CODE' <identifier> <opt declaration> ',
-
-<token srcp> :._
-'SRCP' <identifier> <opt declaration> ',
-
-<token attributes> :._
-'ATTRIBUTES'
-<token attribute> {',' <token attribute>) ',
-
-<token attribute> :.=
-<identifier> <opt declaration>
-
-<opt declaration> :._
-[ '%%' <target language code> '%%' ]
-The token section defines the system token type. This definition is used by the generated parser in its error handling interfaces, and is also the type returned by the generated scanner. The definition includes the name for the token type, the token code member, the token source position (srcp) member and the token attribute members.
-Language dependent declarations, i.e. a description of the implementation, are defined in the optional declaration part of code, srcp and attributes. These declarations must either be used throughout the section or skipped entirely. If the language dependent declarations are used, ToolMaker will generate a type declaration in the target language. If they are not used, an external type definition must be imported (in the import section) and the token section only defines the names of the fields. Any target language dependent terminators (';' for example) should not be included in the target language code representing the declaration (within the %%'s). These will be provided by the generation process. Any special tokens inside the declaration, such as ':' in Pascal declarations should be included.
-
-@PAGE 37
-
-Example:
-%%TOKEN
-CODE code %% int code %%;
-ATTRIBUTES
-ival    int ival %%,
-sval %% String sval %%;
-Instead of repeating the name of the identifier in the target language declaration, it is possible to use ' % 1' as a placeholder for the name. The placeholder will automatically be substituted with the name in the produced code. For example:
-%%TOKEN
-CODE code %% int %1 %%; ATTRIBUTES
-ival %% int %1 %%
-sval %% String %1 %%;
-Note: The opening %% must be followed by a space.
-An example of the use of an external imported token type which will not generate a type declaration but use an imported one (the names of the fields must be made known to the Makers anyway):
-%%IMPORT
-#include "Token.h"
-
-%TOKEN
-NAME Token; CODE code;
-SRCP sourcePos; ATTRIBUTES
-ival;
-sval;
 
 @PAGE 38 -- ToolMaker System Description
 
@@ -486,6 +52,8 @@ To adapt this in a complete environment add any additional object files to the l
 6.4 Run-time
 
 To call the ToolMaker generated functions at run-time the appropriate import declarations should be made (e.g. in 'c' the #include statements inserted). The main program should import the Parse, Scan and List declarations to be able to initialise the scanner, listing system and then call the parser. Refer to ParserMaker Reference Manual, ScannerMaker Reference Manual and ListerMaker Reference Manual for details on how this is performed. The Common header file may also be included in various modules of the application (e.g. to include the source position structure in external type declarations such as an abstract syntax tree).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 40 -- ToolMaker System Description
 
@@ -1363,6 +931,8 @@ Even if panic mode is a crude way of recovery, it might be the only reasonable c
 
 The error recovery system is generated almost entirely from the grammar, and very little extra information must be supplied by the parser implementor. There are however, several ways of enhancing the generated error recovery system. Parser implementor supplied information can be added in the terminals section (see The Terminals Section on page 94), by the cost functions and print symbol, and in the recovery section (see The Recovery Section on page 97). The recovery section contains facilities for defining the set of fiducial symbols and some other tuning information. Also, the shifting cost and the amount of look-ahead applied can be defined using options to ParserMaker (see The Options Section on page 86)
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 76 -- ParserMaker Reference Manual
 
 3   PARSER PRODUCTION
@@ -2117,6 +1687,8 @@ Note: Only normal identifiers can be used in the vocabulary file, i.e. as identi
 Last on each line is an identifier indicating to which vocabulary this token belongs. This is to comply with the ScannerMaker ability to handle multiple vocabularies (see Vocabulary on page 134 and The Vocabulary file in the ScannerMaker Reference Manual, page 160).
 Note: ParserMaker assumes that all tokens should belong to the main vocabulary, but by editing this file (e.g. automatically through a stream editor) tokens may be placed in different vocabularies.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 104 -- ParserMaker Reference Manual
 
 4   THE PARSERMAKER COMMAND
@@ -2186,6 +1758,8 @@ The command line:
 pmk --pack -generate tables -list items p10
 
 tells ParserMaker to take the file pl0.pmk as the input grammar description, not to use any table packing, to list the generated item sets in the list file and to just generate the table file (no source files).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 106 -- ParserMaker Reference Manual
 
@@ -2288,6 +1862,8 @@ Severity:
 1 = Warning
 2 = Error (recoverable) 3 = Fatal error
 4 = System error & Limit error
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 111 -- ParserMaker Reference Manual
 
@@ -2529,6 +2105,8 @@ IDENTIFIER
 
 <addop> = '+' ! <mulop> =
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 117 -- ParserMaker Reference Manual
 
 B   ERROR MESSAGES
@@ -2671,9 +2249,12 @@ The indicated description file could not be found. Some possible causes:
 404 F Could not open vocabulary file "%1".
 The indicated output file could not be opened. The most probable cause is that you do not have write permission on the directory or that the file already existed and is write protected.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 123 -- ParserMaker Reference Manual
 
 C   DESCRIPTION LANGUAGE
+
 This appendix contains a syntax summary of the ParserMaker description language. For a full discussion of the language, see The ParserMaker Description File on page 79.
 For a brief discussion of the notation used in this description see appendix C in the ToolMaker System Description, SYNTAX NOTATION, page 52.
 Language Syntax
@@ -2870,6 +2451,8 @@ I <angle bracketed string> ATTRIBUTE :._
 &,  ,{, ,}'
 F' 'f'
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 128 -- ParserMaker Reference Manual
 
 D   TARGET LANGUAGE DETAILS
@@ -2940,6 +2523,8 @@ TnoIM,ker version 2.0
 2.7 Token and Source Position Definitions
 
 The generated scanner supports automatic source position calculation. The row, column and position source position members are automatically updated by the generated scanner if they are defined in the source position section is the ToolMaker Common Description file (.tmk). See The Token Section on page 36 and The Srcp Section in the ToolMaker System Description, page 34.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 136 -- ScannerMaker Reference Manual
 
@@ -3771,6 +3356,8 @@ Each token should appear only once for each vocabulary and two token may not hav
 
 For compatibility an older format is also supported. The format of the older vocabulary file is not described. However, if this format is used the end-oftext marker, '$', is replaced with the EndOfText token and all tokens are defined to belong to a scanner called main.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 162 -- ScannerMaker Reference Manual
 
 4   THE SCANNERMAKER COMMAND
@@ -3814,6 +3401,8 @@ The specified file is used as list file. By default the name of the list file is
 -smt <file>
 
 The specified file is used as the table file. By default the name of the table file is the same as the description file but with extension smt. Note that this option does not imply that the table file should be saved after source code generation, it simply indicates its name (see also The Maker in the ToolMaker System Description, page 25 for a description of the intelligent generation strategy and File Descriptions on page 138).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 164 -- ScannerMaker Reference Manual
 
@@ -4055,6 +3644,8 @@ STRING = ' ' [-I ' ' / , ,
 %% ... %%;
 Continued scanning can only be used in the action section and inside semantic actions.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 172 -- ScannerMaker Reference Manual
 
 A   THE PL/O EXAMPLE
@@ -4186,6 +3777,8 @@ Unknown = Unknown; EndOfText = EndOfText;
 %%SKIP
 Blank = White+; -- Skip any white space Comment = -- [-\n]*[\n];-- and Ada style comments
 %%END
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 176 -- ScannerMaker Reference Manual
 
@@ -4350,6 +3943,8 @@ The scanner description file could not be found.
 It was not possible to generate any target language code. The problem may be that generated files could not be written due to protection problem, older protected files or protected current directory, or an error in the skeleton file.
 405 Target language "%1" not officially supported.
 This warning is issued if the target language is set to a language not officially supported. Note that the option value is case sensitive and the message may be caused by a typing error.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 182 -- ScannerMaker Reference Manual
 
@@ -4607,6 +4202,8 @@ any characters in the target language except the escape character, see The Scann
 <string> .._
 ''I (<letter> I <digit> I <special character>} ...
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 188 -- ScannerMaker Reference Manual
 
 D   TARGET LANGUAGE DETAILS
@@ -4816,6 +4413,8 @@ liERR   Print source lines with messages associated to them in the list
 1 i0K   Print source lines without any messages in the list 1 i INCL List and show (as appropriate) included files 1 iHEAD Print a header on top of all pages
 Lister also has a shorthand notation for two common combinations of these, 1 iTINY, which is a tiny listing including a header and source for just those lines that have messages associated to them and a summary, and 11 FULL, which also shows the source lines without messages. Normally a tiny list is useful to present on the screen, and a full list if listing to a file.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 201 -- ListerMaker Reference Manual
 
 3   LISTER PRODUCTION
@@ -4946,9 +4545,12 @@ Unless ListerMaker is the only Maker used, common declarations of the source pos
 
 Common Description file which is described in THE TOOLMAKER DESCRIPTION FILE in the ToolMaker System Description, page 30. Otherwise these two sections may be specified in the ListerMaker Description file, removing any need for the ToolMaker Common Description file.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 206 -- ListerMaker Reference Manual
 
 4   THE LISTERMAKER COMMAND
+
 The invocation of ListerMaker is performed by a command of the form
 lmk [-help] [<options> ...] <file>
 
@@ -4974,6 +4576,8 @@ produce a verbose listing of the usage format of the command. Each argument and 
 
 In addition the following special option is available from the command line: -lmt <file>
 This options may be used to direct ListerMaker to write the intermediate tables on a file other than the default.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 208 -- ListerMaker Reference Manual
 
@@ -5291,9 +4895,12 @@ The following message numbers are reserved and should always be available if the
 By altering the templates in the description file these system messages may be customized for different languages or other formats.
 Note: The reserved message templates must be available in all message sections.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 220 -- ListerMaker Reference Manual
 
 A   THE PL/O EXAMPLE
+
 This example is a part of the overall example used throughout the ToolMaker documentation. In ToolMaker System Description there is a detailed walkthrough of the main parts of the example. This appendix contains the files relevant for ListerMaker.
 A.1 plO.lmk -- The ListerMaker Description File -------------------------------------------- ---------
 pl0.lmk Date: 1993-06-10/toolmake p10 -- ListerMaker description file
@@ -5323,6 +4930,7 @@ pl0.lmk Date: 1993-06-10/toolmake p10 -- ListerMaker description file
 
 ListerMaker Reference Manual
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 221
 
@@ -5336,6 +4944,8 @@ The following list gives a brief summary of the error messages and in some cases
 The indicated name was already used for another section of error messages.
 300 At least one messages section is required.
 At least one section with error messages must be defined.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 222 -- ListerMaker Reference Manual
 
@@ -5507,6 +5117,8 @@ Finally the suggestion for a main program and a makefile (or command file) may b
 
 In the generation phase toolmake produces necessary (explicitly or implicitly requested) description and other files in the current directory by calling the Macro Processor IMP to prepare them from skeleton files in the target language libraries.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 233 -- Toolmake Reference Manual
 
 3   THE TOOLMAKE COMMAND
@@ -5530,6 +5142,8 @@ Enable [disable] verbose output mode (default: off). Verbose mode will give some
 -help
 
 Gives you a brief but informative help on the arguments and options to the toolmake program.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 234 -- Toolmake Reference Manual
 
@@ -5612,9 +5226,12 @@ The command help will list the available commands together with a short descript
 
 The information command lists the current setting of the various options, such as selected components, target language and contents level.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 @PAGE 237 -- Toolmake Reference Manual
 
 A   ERROR MESSAGES
+
 The following diagnostic messages may appear when running toolmake. In this list they appear sorted in severity order, with the most severe messages first. Emphasized words in the error messages below are substituted with the actual error information.
 A.1 System Errors
 
@@ -5676,6 +5293,8 @@ Information! Backup file: file
 If you decide to generate a file although it already exists the old file will be saved with another name.
 Information! Execution stopped
 The previous error was so severe that toolmake is aborted.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @PAGE 240 -- Toolmake Reference Manual
 
