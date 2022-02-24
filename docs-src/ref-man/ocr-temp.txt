@@ -2908,13 +2908,51 @@ Reference Manual
 @PAGE 131 -- Part III Contents
 @PAGE 133 -- ScannerMaker Reference Manual
 
-@MISSING PAGE 134 (see new scanned PDF)
+@PAGE 134 -- ScannerMaker Reference Manual
+
+2   CONCEPTS AND ASSUMPTIONS
+2.1 ScannerMaker and Scanner
+
+ScannerMaker is a program which takes a formal description of a set of vocabularies and scanners and then produces a fully usable scanner.
+
+2.2 Vocabulary
+
+ToolMaker introduces the concept of vocabulary. A vocabulary is a set of tokens with a defined external code. In ToolMaker a vocabulary is described in a vocabulary file. ScannerMaker uses this concept to partition a scanner description file into vocabularies. These are further partitioned in scanners and those into rules or skip tokens.
+2.3 Token
+
+A vocabulary is a set of tokens. A token is identified by a name or a string and each token has an associated unique number, an external token code. This code is used to report which token was found.
+2.4 Scanner
+
+The collection of rules which is used to identify one or more tokens in a stream of characters, strings, files, etc., is called a scanner. A scanner also defines semantic actions to be taken when a rule which matches a part of the character stream is found, this may include manipulating or copying the characters that constitutes the token.
+
+
+2.5 Scanner and Inheritance
+
+Scanners can use rules which is defined in another scanner by inheriting them, thus creating extensions of scanners without explicitly copying definitions.
+2.6 Screening
+
+Screening is a concept which is used to minimize the tables used to implement the scanners. This optimization of space has, as usual, the drawback of generating slower code. Another aspect of screening is the possibility to turn on and off recognition of screened tokens. A token which is used to find a screened token is said to screen the token. A scanner which includes rules which screens a token is said to screen tokens. Tokens and scanners which screens a token may also be turned on or off at run-time.
+TnoIM,ker version 2.0
+
 
 @PAGE 135 -- ScannerMaker Reference Manual
 
 2.7 Token and Source Position Definitions
 
 The generated scanner supports automatic source position calculation. The row, column and position source position members are automatically updated by the generated scanner if they are defined in the source position section is the ToolMaker Common Description file (.tmk). See The Token Section on page 36 and The Srcp Section in the ToolMaker System Description, page 34.
+
+@PAGE 136 -- ScannerMaker Reference Manual
+
+3   SCANNER PRODUCTION
+
+ScannerMaker requires a number of files to describe the scanner that should be generated. In this chapter descriptions of these files are given.
+3.1 Creating a Running Scanner
+
+The figure below gives an overview over the relation between the files required and produced by ScannerMaker. The system prefix sm is chosen by the scanner implementor, and the file names for any produced target source code module is target language dependent.
+
+[IMAGE]
+
+Fig. 2  Files used and produced by ScannerMaker.
 
 @PAGE 137 -- ScannerMaker Reference Manual
 
@@ -2938,6 +2976,37 @@ The following walk-through should give you a feeling how to create an operationa
 
 Points 1 and 2 can be simplified by invoking toolmake to set up a development environment for you (see the Toolmake Reference Manual). The files created by toolmake must be modified to suit your requirements.
 Note: In rare cases the description files are not sufficient to capture all the target dependencies or special requirements for a project, and you have to modify the scanner skeletons. If this is the case copy the file Scan.imp to the development directory from the appropriate library and modify them. TO DO THIS IT IS ABSOLUTELY NECESSARY THAT YOU HAVE A THOROUGH UNDERSTANDING OF THE SYSTEM. Change the library option in the ScannerMaker description file to point to the directory where the modified skeletons resides. When ScannerMaker is executed, it will use these skeletons instead of the standard ones.
+
+@PAGE 138 -- ScannerMaker Reference Manual
+
+3.1.1   File Descriptions
+
+3.1.1.1 Input Files
+
+ScannerMaker description file (.smk). This file describes the scanners which should be generated using the ScannerMaker program, smk. This file is described in The ScannerMaker Description File on page 138.
+ToolMaker description file (.tmk). This file describe common definition for all tools in ToolMaker. ScannerMaker uses the token and source position, options, etc., as described in this file.
+Vocabulary file, (.voc). This file describes the vocabularies to be used by the scanner. The vocabulary file is normally produced by ParserMaker. This file is described in The Vocabulary file on page 160.
+
+3.1.1.2 Output Files
+
+ScannerMaker source module, (sniScan). This module describes the interface to and implements the scanner.
+ScannerMaker semantic action module, (smScSema). This module implements the actions specified in the description file.
+ScannerMaker table file, (.smt). This intermediate file is normally not kept after successful source generation. It controls the generation of the files above from skeleton files.
+
+3.2 The ScannerMaker Description File
+
+This section describes the ScannerMaker description file. In this description a modified BNF notation is used to describe the syntax. This notation is briefly described in appendix C in the ToolMaker System Description, SYNTAX NOTATION, page 52.
+
+3.2.1   Lexical items
+
+Symbols in the ScannerMaker description language are constructed from using upper case letters from the ISO-8859-1 character set, lower case letters (ISO-8859-1) and digits.
+<letter> :._
+<upper case letter> I <lower case letter>
+<digit> ..
+'2' '3' '4'
+I   '5' '6' '7' '8' '9'
+<special character> :._
+
 
 @PAGE 139 -- ScannerMaker Reference Manual
 
@@ -2972,6 +3041,37 @@ The general definition sections are one of the following subsections:
 <general definition section> :._ <map definition section> <definition section>
 The vocabulary sections have the following structure:
 
+@PAGE 140 -- ScannerMaker Reference Manual
+
+<vocabulary section> :._
+'%%VOCABULARY' <vocabulary name>
+{ <token name> '=' <external token code> { <scanner section> }
+The scanner sections have the following structure:
+<scanner section> ::=
+'%%SCANNER' <scanner name>  <scanner name>] [ <screened token section> ] [ <undefine token section> ] { <rule definition section> }
+
+The rule section includes the following subsections:
+
+<rule definition section> :._ <rules section> <skip section>
+
+Each section maybe optionally ended by the ' % %END' keyword. The case of the letters in keywords are not significant and all keywords starting with ' %%' may be specified in plural as well as in singular. For example the following keywords are equivalent
+
+%%OPTION
+%%Option
+%%Options
+
+Between sections, that is, after an ' %%END' token up to the next '%% ' characters, is treated as comments. The special ' %%COMMENT' keyword also starts a comment up to ' %%' . The ' %%' may be quoted by the escape character to be part of the comment. Inside a section comments may appear anywhere as long as they do not break a lexical unit such as an identifier or a string. Comments begin with two hyphens and end with a new line.
+
+3.2.3 The Options Section
+
+-- This is a comment
+'%%OPTIONS' {<directive>} ['%%END']
+
+<directive> ::=
+<common directive> <optimize directive> <trace direvtive> <set directive> <pack directive> <screening directive> <list directive> <token size directive> <token limit directive> <exclude character directive>
+In this section options can be specified to control some actions taken by the scanner generator. These options can be overridden by options given on the command line when the scanner generator is invoked (see THE SCANNER
+
+
 @PAGE 141 -- ScannerMaker Reference Manual
 
 MAKER COMMAND on page 162). If an option is not specified its default value is used. The default options are:
@@ -2996,6 +3096,53 @@ The prefix directive does not inherit its default value, instead it defaults to
 3.2.3.2 The Optimize Directive
 
 <optimize directive> :._ ['NO'] 'OPTIMIZE' ',
+
+@PAGE 142 -- ScannerMaker Reference Manual
+
+This option specifies if the state table should be minimized or not. The generated unoptimized state table is very small as it is, although not always minimal. The default setting is
+
+Optimize;
+
+3.2.3.3 The Trace Directive
+
+<trace directive> :._ ['NO'] 'TRACE'
+
+This option turns on [off] generation of tracing of tokens found by the generated scanner. The default for the trace directive is
+
+No Trace;
+
+3.2.3.4 The Set Directive
+
+<set directive> :._ 'SET' <set name> ',
+
+This option specifies which character set to be used. Predefined sets are
+
+'iso8859_I'Defines a full 8bit characters set to be used.
+'ascii' Defines only a 7bit character set.
+'ebcdic'    Defines the EBCDIC character set as defined by the UNIX dd
+command with ebcdic conversion.
+'ibm'   Defines the EBCDIC characters set as defined by the UNIX dd
+command with ibm conversion.
+
+Other character sets can be defined by one or more set sections. The default set directive is
+
+Set 'IS08859_1';
+
+3.2.3.5 The Pack Directive
+
+<pack directive> :_
+'NO' 'PACK'
+'PACK' <pack> {',   <pack>} ,
+
+This option specifies which packing schemes should be used to reduce the size of the state table. The following <pack> schemes are supported:
+
+ROW merge equivalent rows (states) COLUMN merge equivalent columns (characters)
+RDS optimized row displacement scheme
+LES line elimination scheme
+GCS graphic coloring scheme
+ERROR   pack error state table generated by LES or GCS by merging equivalent rows and columns
+
+The default packing is
 
 @PAGE 143 -- ScannerMaker Reference Manual
 
@@ -3026,6 +3173,47 @@ I 'SCREENING' <minimum token size> ',
 Screening is used to reduce the size of the generated scanners. Screening removes the need for all special states for rules which is defined as a sequence of characters, a stream of characters, with a specified minimum length and for which there is another rule which accepts the same token. The rule which is removed defines a screened token and the more general rule which accepts the same token is said to screen a screened token.
 
 When a token which screens another token is found a look-up is performed to check if there is a screened token which is equal to the token found. For example:
+
+@PAGE 144 -- ScannerMaker Reference Manual
+
+%%RULE
+'BEGIN' = 'BEGIN'; Keyword = [A-Za-z]+;
+
+In the example above the token 'BEGIN' has a same accept state that hides the Keyword definition. When screening is used the ' BEGIN' token is removed from the resulting DFA and when Keyword is found by the generated scanner it is compared against the string ' BEGIN' and if it matches this token is selected instead of Keyword.
+
+Screening can be enabled for single tokens individually in the screening section. By default all tokens may be screened. To actually use screening the screening option must be specified. The default is to not use screening
+
+No Screening;
+
+3.2.3.7 The List Directive
+
+<list directive>
+'NO' 'LIST' '
+'LIST' <list> f',   <list>)
+
+This option specifies what should be written into the list file. The following < 1 i s t> options are supported:
+
+INPUT   description file
+SET character set
+MAP character map used by the generated scanner TOKEN   defined tokens
+DFA the state table
+NFA the NFA
+RULE    the rules defined for each scanner
+
+The list file has the same name as the description file but with any extension replaced by sml. The default is
+
+No List;
+
+3.2.3.8 The Token Size Directive
+
+<token directive>   _
+'TOKENSIZE' <minimal token size> ',
+
+The normal or minimal size of the buffer used when scanning. The default setting is
+
+Tokensize 1024;
+
+It should be set so that most tokens will fit inside this limit, however if exceeded the token buffer will be automatically extended gradually to a maximal limit (see the TokenLimi t directive below).
 
 @PAGE 145 -- ScannerMaker Reference Manual
 
@@ -3069,6 +3257,42 @@ In this section variables used within a scanner context should be defined, see S
 
 User defined functions and variables that should be visible outside the generated scanner should be defined in this section, this section is included in the interface description of the generated scanner (in 'c' the smScan.h file).
 
+@PAGE 146 -- ScannerMaker Reference Manual
+
+3.2.7   The Reader Section
+
+<reader section> :._
+'%%READER' <target language code> ['%%END']
+
+The code specified in the reader section is executed when reading characters into the input stream, see Semantic Actions on page 158 for more information on the contents of this section. The reader section may be viewed as the body of a function with the following definition.
+length = smScReader(smThis,smBuffer,smLength)
+smThis  : IN smContext
+smBuffer    OUT STRING
+smLength    IN INTEGER
+
+The function must return the number of characters read. If no more characters can be read, zero should be returned. In case of an error, a negative value should be returned. This will cause the scanner to abort and return the value as an error code instead of an external token code. For example
+
+%%CONTEXT
+int fd;
+%%READER
+return read(smThis->fd,smBuffer,smLength); %%END
+
+This reader reads from the file fd into the buffer smBuf fer a maximal of smLength characters. It returns the number of characters read or -1 if an error occurs (which will abort the scanner as described above). The default reader is
+
+%%READER
+return read(O,smBuffer,smLength); %%END
+
+That is, characters are read from standard input.
+
+3.2.8   The Action Section
+
+<action section> :._
+'%%ACTION' <target language code> ['%%END']
+
+The code specified in the action section is executed just before entering any token specific action and is therefore common to all token specific actions, see Semantic Actions on page 158 for a complete definition of semantic actions. This code is copied in-line into the body of the smScAction function and then followed by the semantic actions for the tokens.
+code = smScAction(smThis, smInternalCode, smToken)
+smThis  : IN smScContext smToken : IN OUT %%(tokenType) returns INTEGER
+
 @PAGE 147 -- ScannerMaker Reference Manual
 
 3.2.9   The Prehook Section
@@ -3102,6 +3326,44 @@ The found token's external code is determined by the value of the field smCode i
 The external token code for the token found can be changed in two ways, either by setting smToken->smCode to the new external code or by returning the new external code by executing a return statement. The external token code should be one of the enumeration values defined for tokens in the vocabulary to which the current token belongs, or the predefined enumeration smSkipToken.
 
 When smSkipToken is returned the current token is skipped, as if it was given in the skip section.
+
+@PAGE 148 -- ScannerMaker Reference Manual
+
+Note: It is not possible to specify that the scanning of tokens should be continued within the posthook section.
+
+3.2.11  The Set Section
+
+<set section> ..
+'%%SET' <set name> (<set>} ['%%END']
+
+This section defines a character set. The use of a character set is primarily to generate a scanner that should execute on a machine with a different character representation than the machine on which is was generated. A character set may be viewed as the mapping from the native set (the set on the machine which the scanner is running) to the internal for which the tables are generated. This makes it very easy to generate scanners that can be compiled and run on various machines even with different character sets.
+The name of the set is specified followed by 256 character specifications. Allowed representation of characters are all non-white printable ISO-8859-1 characters, two digit hexadecimal numbers and the special character combination two dots. The two dots specifies an undefined character. Comments are the same as for the rest of the scanner, double hyphens.
+The mapping determines which character is used in the rules description for the n-th character in the character set. For example,
+a b .. OF
+specifies that the first four characters in the set is a, b, undefined and O F. That is, if the character a is used in the description of the scanner, the generated scanner uses a as the first character in the set (value 97). For example:
+
+%%SET IBMSET
+__0 1   2   3   4   5   6   7   8   9   A   B   C   D   E   F ---------------------------------------------------------------------
+00  01  02  03      09  ..  7F      OB  OC  OD  OE  OF  0
+10  11  12  13      ..  08  ..  18  19              ..  1
+        iC  ..      OA  17  1B              05  06  07  2
+                        ..  04          14  15      16  3
+20                                      <   (           4
+&                                   $       l           5
+                                        %               6
+                                        @               7
+..  a   b   c   d   e   f   g   h                       8
+        k   1   m   n   o   p   q   r                   9
+        S   t   u   V   w   x   y   z                   A
+                                                        B
+    A   B   C   D   E   F   G   H   I                   C
+}   J   K   L   M   N   0   P   Q   R                   D
+\       S   T   U   V   W   X   Y   Z                   E
+0   1   2   3   4   5   6   7   8   9                   --F
+
+defines a set of a possible IBM character set.
+
+Undefined characters always result in error states in the generated DFA. That is, if such a character is encountered in the input string when the generated
 
 @PAGE 149 -- ScannerMaker Reference Manual
 
@@ -3140,6 +3402,40 @@ maps all digits to the ASCII values A to J respectively.
 
 If the character class begins with a character that is greater than the last character in the specified set of characters, the characters are processed in reversed order. For example:
 
+@PAGE 150 -- ScannerMaker Reference Manual
+
+[a-z] = [Z-A];
+[9-01 = [\000-\011];
+
+maps the character a to z to the ASCII values z down to A and the digits 0 to 9 to the values 9 (11 octal) down to 0.
+
+The mapping of the empty character set defines undefined values in the character set. It is recommended that the first mapping is to make all characters undefined.
+This will disallow the use of any non mapped character. By default all characters are mapped to themselves. That is, the character A is mapped to the character A, etc.
+
+The mapping of characters are given in the same manner as for the mapping of a character set. The only difference is that if characters are mapped to the empty set, those characters are skipped by the scanner. However the characters remain in the token string. This is especially significant when defining a scanner for languages such as FORTRAN where all blank characters are discarded in the input stream.
+
+3.2.13  The Definition Section
+
+<definition section> ::=
+'%%DEFINITION' (<definition>) ['%%END']
+<definition> ._
+<definition name>   [<selection rule>] [<action>]
+
+This section defines identifiers which can be used within regular expressions and/or a semantic action. These definitions can have the same name as a token defined in the rule definition sections. The name of a definition can not be given as a string (i.e. surrounded by quotes).
+
+The definition is defined by using a regular expression in the same way as in the rule definition sections, except that no lookahead definition is allowed. A definition can also be specified without a regular expression. For example:
+
+Digit   = [0-9];
+Integer = digit+ %% gotlnteger(smThis); %%
+Copy    = %% smScCopy(aBuffer, 0, smThis->smLength); %%
+
+In the example above digit defines a rule as being a number 0 to 9. Integer is defined to be both a rule, a number of digits, and a semantic action. Copy on the other hand only defines a semantic action.
+
+Semantic actions defined in this way can be used later in the rule and skip sections in place of an ordinary semantic action by using the %%DO keyword. For example:
+
+Integer = Digit+ %%DO Integer;
+
+
 @PAGE 151 -- ScannerMaker Reference Manual
 
 This is further described in the description of semantic actions below. 3.2.14  The Vocabulary Section
@@ -3172,6 +3468,41 @@ defines a scanner which inherits definitions from another scanner. The new scann
 
 %%SCANNER newScanner : oldScanner %%RULE
 
+@PAGE 152 -- ScannerMaker Reference Manual
+
+defines newScanner to be a copy of oldScanner. The new scanner can then be expanded with new definitions but also restricted by removing a definition or altered by first removing a definition and then redefining them. For example:
+
+%%SCANNER newScanner : oldScanner %%UNDEFINE Integer;
+%%RULE
+Integer = (0-9A-Fa-f]+;
+
+if the old scanner have a definition of integer it is replaced by the new definition.
+
+ScannerMaker will complain about tokens which has been defined in another scanner than the first and is only predefined in the first scanner. However, if the token is explicitly undefined in the first scanner, ScannerMaker will not complain since the token has been explicitly said to be undefined until it is later defined in a rule or skip section.
+
+3.2.16  The Screened Token Subsection
+
+<screened token section> .. '%%SCREENING' (<token name>
+
+This section specifies which tokens in the scanner can be screened. By default all tokens can be screened.
+
+3.2.17  The Undefine Token Subsection
+
+<undefined token section> :._ '%%UNDEFINE' {<token name> ,'}
+
+This section undefines a predefined or inherited token. All rules associated to the token are marked as undefined.
+
+3.2.18  The Rules Subsection
+
+<rules section> .._
+'%%RULE' [<token rule>} ('%%END']
+<token rule> .._
+<token name> '=' <lookahead rule> [<action>] <string> '_' <lookahead rule> [<action>]
+
+In the rules section the tokens which the scanner should recognize are defined. The token could be both a token name and a string and the definition is a regular expression which can be followed by a lookahead regular expression. For example
+
+integer = integer; integer = integer /
+
 @PAGE 153 -- ScannerMaker Reference Manual
 
 defines that the externally visible token integer is to be an integer, as defined in the definition section above, and it is also an integer followed by a lookahead string ' .. '. This is a rather perplexing definition because of the use of the token integer defined in the definition section in the regular expression and the definition of an external visible token which may be defined in the vocabulary file. However this example shows that it is possible to use the same name for a token defined in the definition section and a token defined in the rules section without name clash. The example also shows the possibility to give multiple internal definitions for the same externally visible token. That is, both definitions return the same external token code.
@@ -3193,6 +3524,39 @@ will find the same token as above but is more efficient because the lookahead ha
 <token name> '_' <lookahead rule> [<aetion>] <string>   <lookahead rule> [<action>]
 This section defines the tokens that should be skipped by the scanner, that is, not be passed to the caller of the scanner function. For example
 blank = [ \t\n];
+
+@PAGE 154 -- ScannerMaker Reference Manual
+
+skips all blank spaces ("space", tabs and newline) in the input stream between tokens. Skip tokens are defined exactly in the same manner as for ordinary tokens defined in the rules section including lookahead. The rules for semantic actions are the same as for semantic rules in the rules section.
+
+3.2.20  Regular Expressions
+
+<regular expression> :._ <selection> <concatenation> <closure> <Cut> <grouping> <character class> <character string> <identifier> <end of text> <unknown>
+
+Selection
+<selection> .._
+<regular expression> '!' <regular expression>
+
+The meaning of selection of two regular expression is that either the left or the right regular expression matches.
+For example:
+
+'ab' ! 'cd'
+
+matches either the token 'ab' or 'cd'. Concatenation
+<concatenation> :.=
+<regular expression> <regular expression>
+
+The meaning of concatenating two regular expressions is to match the left regular expression followed by the right regular expression. The token thus matched are both regular expressions in the concatenation. For example:
+
+'A' 'B'
+
+is the concatenation of the 'A' character (regular expression) and the 'B' character. This matches the input 'AB'.
+
+
+Closure
+<closure> .._
+<regular expression> <regular expression> '+' <regular expression> '?' <regular expression> <regular expression> 't'
+<m> <n>
 
 @PAGE 155 -- ScannerMaker Reference Manual
 
@@ -3230,6 +3594,42 @@ Grouping are used to alter the priority of operations. For example:
 ('ab' ! 'cd')+
 
 matches tokens with one or more occurrence of the 'ab' or 'cd' patterns.
+
+@PAGE 156 -- ScannerMaker Reference Manual
+
+For example:
+
+ababcdcdab
+Character Class
+<character class> :._
+'[' (<character>) '[' '^' {<character>}
+
+A character class represents one of the characters given between the square brackets. For example:
+
+[abcd]
+
+represents one of the characters a, b, c, or d. Non-printable characters can be represented by giving their octal or hexadecimal value
+
+\nnn    there nnn is the octal value
+\xnn    there nn is the hexadecimal value \n    newline
+\t  horizontal tab
+\v  vertical tab
+\b  backspace
+\r  carriage return
+\f  form feed
+
+If the backslash character, '\', is followed by a character not mentioned above it is used as it is. That is, if the backslash, hyphen, or right square bracket should be used as a character in the character class they should be preceded by a backslash.
+
+\ \ backslash
+\-  hyphen
+\ ] right square bracket
+
+Further more the hyphenation character, '-', is used to indicate a range of characters. For example a character class representing any digit can be specified as
+
+[0-9]
+
+If the character ' ^' is given directly after the initial square bracket all characters in the character class definition are not a members of the character class. For example
+represents all characters which are not a newline. The '^' character can be quoted by a backslash, '\'.
 
 @PAGE 157 -- ScannerMaker Reference Manual
 
