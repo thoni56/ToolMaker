@@ -1,0 +1,244 @@
+// @PAGE 40 -- ToolMaker System Description
+
+= COMMON DEFINITIONS
+
+== Description File Option Format
+
+Each option is described in detail in the corresponding sections of this manual but the following types of options exist:
+
+* boolean
+* value (string or numeric)
+* set
+
+In the description files options occur in the Options section.
+Boolean options are specified simply by stating the name of the option, or to disable that option precede it with the word `No`.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Errorhandler;
+No Trace;
+------------------------------
+
+A value option should be followed by the value that the option should have, for example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Stacklimit 64;
+Library '/usr/local/lib/ToolMaker';
+------------------------------
+
+Some value options also accepts a leading `No` indicating that this option should have no value, as opposed to the default value.
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+No Prefix;
+------------------------------
+
+indicates that no prefix is to be used instead of the default value '`tm`'.
+
+Set options take a number of values from a predefined set.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Pack GCS, Error;
+------------------------------
+
+will select the two packings from the set of available packing schemes.
+Again some set options accept the `No` prefix, like
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+No Pack;
+------------------------------
+
+
+== Command Line Option Format
+
+All Makers in the ToolMaker kit uses the same format for command line options.
+Every option available in a Maker description file is also available on the command line.
+The exact set of command line options (and arguments) available may be listed using the special command line option `help`, for example:
+
+// PAGE 41
+
+// SYNTAX: Shell
+
+------------------------------
+pmk -help
+------------------------------
+
+will give the following printout:
+
+// @NOTE: The actual 'pmk -help' output from the latest binary was pasted
+//        below, replacing the OCR text: PMK 2.1(17)
+
+// SYNTAX: Shell
+
+------------------------------
+Usage: pmk [-help] [options] <input file>
+Options:
+  -[-]verbose       enable[disable] verbose mode
+  -target <lang>    generate file for target language <lang>
+  -os <os>          generate source files for target operating system <os>
+  -[-]prefix [<prefix>] set [no] parser prefix
+  -library <lib>    use directory <lib> for library files
+  -[-]escape [<c>]  set [no] escape character
+  -[-]width [<n>]   set [no] listing width
+  -[-]height [<n>]  set [no] listing height
+  -[-]generate      select [no] generated output {tables | source}
+  -[-]force         do [not] force generating of source code
+  -[-]listerprefix [<prefix>] set [no] lister prefix
+  -[-]errorhandler  enable [disable] generation of error handler
+  -[-]trace         enable [disable] trace mode
+  -[-]line          do [not] generate line information in the semantic actions
+  -lookaheadmax <n> set max lookahead to <n>
+  -shiftcost <n>    set shift cost for terminals to <n>
+  -stacklimit <n>   set parse stack limit to <n> entries
+  -[-]pack          set [no] table packing { row | column | rds | gcs | les }
+  -[-]actionpack    set [no] packing of action tables
+  -[-]gotopack      set [no] packing of goto tables
+  -[-]list          set [no] listings { input | grammar | items | tables | statistics | info }
+  -[-]optimize      set [no] optimize mode
+  -[-]recovery      set [no] recovery mode { single | multiple | panic }
+  -[-]resolve       set [no] resolve mode { sr | rr }
+  -voc <file>       write vocabulary to <file>
+  -pml <file>       write lists to <file> (if any)
+  -pmt <file>       write tables to <file> (if any)
+  -tmk <file>       read common options from <file>
+  -help             this help information
+------------------------------
+
+This quick help is always available for all ToolMaker commands.
+
+A boolean option may be set to true from the command line by giving its name preceded by a dash, or to false by preceding it with double dashes.
+
+// SYNTAX: Shell
+
+------------------------------
+pmk --force -verbose ...
+------------------------------
+
+means set the '`force`' flag to false and the '`verbose`' flag to true.
+
+A value option is given its value after the option name separated by a space.
+For example
+
+// SYNTAX: Shell
+
+------------------------------
+pmk -stacklimit 64 ...
+pmk -library ../lib ...
+------------------------------
+
+// PAGE 42
+
+A set valued option may be given a set of values by repeating the option with different values, it will only accept one value for each occurrence.
+The option is initialised to the empty set when it first occurs thus completely overriding any default setting.
+A set valued option may be given the value of the empty set by giving the option name preceded by double dashes without any value.
+
+// SYNTAX: Shell
+
+------------------------------
+pmk -generate tables -generate source --recovery ...
+------------------------------
+
+The command above will generate both tables and source and set the recovery option to the empty set (equivalent to `No Recovery;`)
+
+All option names may be abbreviated on the command line as long as they are unambiguous.
+If the name of an option directive completely matches while at the same time being a prefix of another directive this will _not_ be considered an ambiguity, the complete match will be accepted.
+
+
+== Option Precedence
+
+Values of the various options in the Makers may be specified on four levels:
+
+* on the command line
+* in the description file of the Maker
+* in the ToolMaker common description file
+* default setting
+
+The above order is also the precedence of the occurrences.
+If an option is specified on the command line that specification overrides the values given in the description files.
+A value specified in the description file of the particular Maker overrides a specification in the common description file.
+And finally a value given in the common description file overrides built-in default values.
+
+This scheme makes it easy to set values for a complete ToolMaker based subsystem (in the ToolMaker common description file), for a particular Maker (in the description file for that Maker) or for a single invocation of the Maker (on the command line).
+
+
+== Prefix Management
+
+The prefix concept allows control over the naming of functions and type and enables adaption to various local customs and naming rules.
+All Makers have an option to set the prefix and it is also possible to set in the `.tmk` file.
+
+The _system prefix_ is used as a prefix for all system wide types and functions, i.e. functions and types that are defined by the ToolMaker subsystem as a whole and not particular to a specific Maker (e.g. the token type).
+A _Maker prefix_ is the prefix used for functions and types defined by a particular Maker.
+
+// PAGE 43
+
+The relationships between these options and their values are the following:
+
+* the default system prefix is `tm`
+* if the prefix option is used in the ToolMaker Common Description file its value is used as the system prefix
+* if no prefix is specified in the ToolMaker Common Description file, the default for the Makers are their local default (`pm`, `sm` and `lm`)
+* if a system prefix is specified this is also the default for the Makers
+
+This strategy makes it possible to use the prefix concept in a flexible and consistent manner.
+
+
+== Description File Sections
+
+A section is a portion of a description file which may contain various kinds of information.
+There are two kinds of sections:
+
+* named sections
+* anonymous sections
+
+Both kinds are opened by a pair of percentage signs (`%%`).
+Named sections also have their name attached to the percentage signs.
+An example of a named section is the Option section.
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%OPTIONS
+
+    Target 'ansi-c';
+
+%%END
+------------------------------
+
+Named sections are optionally closed explicitly by `%%END` or implicitly by the start of a new section.
+Text between sections are completely ignored.
+
+Anonymous sections are for example the semantic sections in the grammar rules in a ParserMaker description file.
+There is no need to identify these sections explicitly.
+
+
+== Escape Character
+
+// @XREF: The Escape Directive
+
+As the percentage sign have special significance to the Makers a means to indicate that a percentage sign is not to be treated by the Makers is provided.
+The way to escape the special meaning of the `%` is to place a special character before the percent character.
+This special character is called the escape character.
+It is possible to set using an option in the description files and on the command line.
+See section _The Escape Directive_ on page 32.
+
+// PAGE 44
+
+// @XREF: turn "see below" into a link via anchor ID?
+
+NOTE: The escape character is not used within strings, see below.
+
+
+== Strings
+
+A string is a number of characters surrounded by single quotes (``{apos}``), a quoted string.
+To place a single quote inside a string, use the backslash (`\`) to quote it.
+Strings are for example used as values for string valued options in the Option section and as message templates in the ListerMaker description file.

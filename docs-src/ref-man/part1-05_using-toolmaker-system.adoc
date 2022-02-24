@@ -1,0 +1,93 @@
+// PAGE 38 -- ToolMaker System Description
+
+= USING A TOOLMAKER BASED SYSTEM
+
+== Import
+
+A ToolMaker based system may be viewed as having the ToolMaker generated parts as an autonomous subsystem of the complete application.
+Any types and functions needed within the user specified code of any of the generated components can be imported to the complete subsystem by placing relevant import-statements in the `%%IMPORT`-section of the `.tmk` file.
+These imports will be valid through out the ToolMaker-based subsystem.
+In addition the `%%IMPORT` sections in the various description files may be utilized to import specifications to that part of the subsystem only.
+
+
+== Export
+
+User-defined functions that should be exported from the various parts in the ToolMaker based subsystem to the rest of the system (application) may be defined by placing appropriate export statements in the `%%EXPORT`-section of the description file.
+The export declarations will then be included in the generated header or definition files for that module (e.g. `Parse.h` if the declaration was placed in the `.pmk` file).
+
+
+== Compiling and Linking
+
+To compile a complete ToolMaker based system all utilized Makers must be run and the generated source files compiled before linking the application.
+On UNIX and UNIX-like environments a **make**-like utility is normally available to make this process automatic.
+The following lines outlines the use of such a utility:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+all: tm ttParse.o ttPaSema.o ttList.o ttScan.o ttScSema.o ttErr.o
+
+tm: .smkstamp .pmkstamp .lmkstamp
+
+.lmkstamp : tt.lmk tt.tmk
+    lmk tt
+    touch .lmkstamp
+
+.pmkstamp : tt.pmk tt.lmk
+    pmk tt
+    touch .pmkstamp
+
+.smkstamp : tt.smk tt.tmk tt.voc
+    smk tt
+    touch .smkstamp
+
+ttParse.h ttParse.c ttPaSema.c ttErr.c tt.voc:
+    touch tt.pmk
+    make .pmkstamp
+
+ttScan.h ttScan.c ttScSema.c:
+    touch tt.smk
+    make .smkstamp
+
+ttList.h ttList.c:
+    touch tt.lmk
+    make .lmkstamp
+
+#-- Dependencies between generated files
+ttErr.o: ttErr.c ttCommon.h ttList.h ttScan.h
+ttParse.o: ttParse.c ttCommon.h ttParse.h ttScan.h
+ttPaSema.o: ttPaSema.c ttCommon.h ttScan.h
+ttScan.o: ttScan.c ttCommon.h ttScan.h
+ttScSema.o: ttScSema.c ttCommon.h ttScan.h
+ttList.o: ttList.c ttCommon.h ttList.h
+------------------------------
+
+// PAGE 39
+
+// @CHECK: "updates the MARKER files" (sic in original) maybe "MAKER files"?
+//         Could be a type due to editor spelling correction? Check the XRef
+//         "The Maker" section to see if the terms occurs there, and how.
+
+// @XREF: The Maker
+
+The `all` target indicates that the application is dependent on `tm` (which is a subtarget to create the generated sources) and on the object files acquired by compiling them.
+Inserting the `tm` target first will force a generation of the source files before compiling anything.
+The `tm` target is dependent on the hidden stamp files (`.smkstamp`, `.pmkstamp` and `.lmkstamp`) which always carry the date of the last run by the corresponding Maker.
+This is necessary as the Makers have the intelligent source generation method mentioned in _The Maker_ on page 25, otherwise the Makers would be run again and again in an attempt to update the output files.
+The `touch` commands updates the marker files as soon as a Maker have been run.
+
+The targets for the various generated source files ensures that if the files should not exist the appropriate makers are run and finally the dependencies between the generated `.c` and `.h` files are listed.
+
+To adapt this in a complete environment add any additional object files to the list and add the appropriate dependencies.
+
+
+== Run-time
+
+// @XREF: ParserMaker Reference Manual
+// @XREF: ScannerMaker Reference Manual
+// @XREF: ListerMaker Reference Manual
+
+To call the ToolMaker generated functions at run-time the appropriate import declarations should be made (e.g. in '`c`' the `#include` statements inserted).
+The main program should import the *Parse*, *Scan* and *List* declarations to be able to initialise the scanner, listing system and then call the parser.
+Refer to _ParserMaker Reference Manual_, _ScannerMaker Reference Manual_ and _ListerMaker Reference Manual_ for details on how this is performed.
+The *Common* header file may also be included in various modules of the application (e.g. to include the source position structure in external type declarations such as an abstract syntax tree).
