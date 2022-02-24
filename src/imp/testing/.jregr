@@ -1,1 +1,1 @@
-.tst : ../imp $2
+.tst : imp $2

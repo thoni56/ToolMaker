@@ -1,4 +1,4 @@
-.tst : ../../imp $2
+.tst : imp $2
 .tst : cat ArrayAttributeType.cc
 .tst : cat ArrayAttributeType.dbLoad
 .tst : cat ArrayAttributeType.hh

@@ -1,1 +1,1 @@
-.smk : ../smk $1
+.smk : smk $1

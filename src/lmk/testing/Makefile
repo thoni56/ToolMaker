@@ -1,2 +1,2 @@
 all:
-	jregr
+	jregr -bin ..

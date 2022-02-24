@@ -3,8 +3,7 @@
 #
 
 all:
-	jregr
-	cd gen-test; jregr
+	jregr -bin ..
 
 performance:
 	cd performance

@@ -1,3 +1,2 @@
 test:
-	jregr
-	cd DOL; jregr
+	jregr -bin ..
