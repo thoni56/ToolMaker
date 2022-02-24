@@ -334,9 +334,13 @@ void setOpts(optTab, dirNode)
 
     switch (optTab[i].dirKind) {
     case BOOL_TMO:
-    case STR_TMO:
       optDb[optTab[i].optTabKind].assigned = TRUE;
       optDb[optTab[i].optTabKind].oval.bval = dirNode->oval.bval;
+      break;
+
+    case STR_TMO:
+      optDb[optTab[i].optTabKind].assigned = TRUE;
+      optDb[optTab[i].optTabKind].oval.sval = dirNode->oval.sval;
       break;
 
     case NUM_TMO:
