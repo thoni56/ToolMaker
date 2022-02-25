@@ -1,7 +1,859 @@
-// @PAGE 60 -- ParserMaker Reference Manual
+// PAGE 60 -- ParserMaker Reference Manual
 
-// @STATUS: TBD!
+// @STATUS: Biblio-Entries.
 
 = CONCEPTS AND ASSUMPTIONS
 
-WARNING: The rest of this book part still needs to be ported!
+
+== Backus-Naur Form (BNF)
+
+// @BIBLIO_ENTRY: [Backus]
+
+A commonly used technique for describing the grammar of a language is the _Backus-Naur form_ (BNF for short), so called after its inventors (see reference [Backus]).
+A grammar described in BNF consists of a number of "`metalinguistic variables`" represented by characters enclosed in angle brackets ``<{nbsp}>``, the symbol `::=` which is interpreted as "`is defined as`", the symbol `|` which is interpreted as "`or`" and all other symbols which stand for themselves.
+For example, the IF-statement in Pascal may be defined as:
+
+// SYNTAX: BNF (*not* EBNF)
+
+------------------------------
+<if statement> ::=
+      IF <expression> THEN <statement>
+    | IF <expression> THEN <statement> ELSE <statement>
+------------------------------
+
+The ParserMaker input description language is closely related to BNF, but differs in some details.
+The IF-statement in the ParserMaker description language could look like:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+if_statement =
+      'IF' expression 'THEN' statement
+    ! 'IF' expression 'THEN' statement ELSE' statement
+    ;
+------------------------------
+
+There are a number of variations possible.
+The differences can be summarized as follows:
+
+* `=` is used instead of `::=`
+* `!` is used instead of `|`.
+* `;` is used to indicate the end of a rule.
+* Metalinguistic variables (non-terminals) may be written as identifiers or as characters enclosed in angle brackets.
+* All other symbols (terminals) may be written as identifiers, as characters enclosed in angle brackets or as single-quoted strings.
+
+
+== Extended Backus-Naur Form (EBNF)
+
+Although the BNF form is fairly expressive, it suffers from a number of shortcomings, for example it generates a lot of rules.
+To remedy these shortcomings a number of extensions to the BNF notation has been proposed which has resulted in the _Extended Backus-Naur Form_ (EBNF for short).
+These extensions are:
+
+// PAGE 61
+
+1. _Repetition_ of symbols within a rule.
+2. _Nested alternation_ within a rule.
+3. _Optional symbols_.
+
+Repetition of symbols is indicated by the symbols being enclosed in _curly braces_, `{{nbsp}}`, which indicates that the enclosed symbols may be repeated zero or more times.
+For example, in BNF a non-empty statement list would be described by the two rules:
+
+// SYNTAX: BNF (*not* EBNF)
+
+------------------------------
+<statement list> ::= <statement list> <statement>
+                  |  <statement>
+------------------------------
+
+In EBNF a single rule is sufficient:
+
+// SYNTAX: EBNF
+
+------------------------------
+<statement list> ::= <statement> {<statement>}
+------------------------------
+
+_Nested alternation_ is expressed by enclosing related symbols within _parentheses_, and separating the alternatives with a vertical bar, `|`.
+For example, an expression grammar in BNF could be described by the rules:
+
+// SYNTAX: BNF (*not* EBNF)
+
+------------------------------
+<expression> ::= <expression> <addop> <term>
+              |  <term>
+
+<term> ::= <term> <mulop> <factor>
+        |  <factor>
+
+<addop> ::= + | -
+
+<mulop> ::= * | /
+------------------------------
+
+In EBNF we would write:
+
+// SYNTAX: EBNF
+
+------------------------------
+<expression> ::= <expression> (+ | -) <term>
+              |  <term>
+
+<term> ::= <term> (* | /) <factor>
+        |  <factor>
+------------------------------
+
+Or even simpler:
+
+// SYNTAX: EBNF
+
+------------------------------
+<expression> ::= {<term> (+ | -)} <term>
+
+<term> ::= {<factor> (* | /)} <factor>
+------------------------------
+
+_Optional symbols_ are enclosed in _square brackets_, `[{nbsp}]`, which indicates that the enclosed symbols may occur once or not at all.
+For example, the Pascal IF-statement may be described by:
+
+// SYNTAX: EBNF
+
+------------------------------
+<if statement> ::= IF <expression> THEN <statement>
+                   [ELSE <statement>]
+------------------------------
+
+// PAGE 62
+
+In the ParserMaker input description language, repetition and nested alternation are supported.
+The EBNF symbols used in the ParserMaker input description language are:
+
+1. _Curly braces_ `{{nbsp}}` are used to denote _repetition_.
+2. _Parentheses_ `({nbsp})` and the vertical bar `|` are used to express _nested alternation_.
+3. _Square brackets_ `[{nbsp}]` are used to delimit _optional symbols_.
+
+
+== Productions
+
+A pure ParserMaker grammar production has the form:
+
+// SYNTAX: ToolMaker description file (pseudo) ???
+
+------------------------------
+<left> = <rhs>;
+------------------------------
+
+where `<left>` is a nonterminal and `<rhs>` is the right hand side.
+The right hand side consists of a sequence of zero or more elements where each element is a terminal or nonterminal symbol.
+If a symbol has more than one right hand side the symbol `!` can be used to separate the rules.
+
+Example: Writing:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+list = list ',' element
+     ! element
+     ;
+------------------------------
+
+is equivalent to writing:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+list = list ',' element;
+
+list = element;
+------------------------------
+
+A production or rule with no right hand side is called an _empty_ or _null production_.
+Thus, one might write:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+left = ;
+------------------------------
+
+It is also possible to include the EBNF constructs in the productions in which case an element can be, apart from a terminal and a nonterminal, an alternation construct or a repetition construct.
+An alternation construct consists of one or more alternatives enclosed in parentheses, where each alternative is a sequence of elements, and the alternatives are separated by vertical bars.
+A repetition construct consists of a sequence of elements enclosed in curly braces.
+For example, a list may be written as:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+list = element {',' element};
+------------------------------
+
+// PAGE 63
+
+using the repetition construct.
+If we allow a semicolon, as well as a comma, to act as a separator in our example list, this could be written as:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+list = element {(',' | ';') element};
+------------------------------
+
+simply and elegantly in a single rule.
+
+One of the nonterminal symbols is especially important, namely the _goal symbol_.
+The entire language is derived from that particular symbol.
+The ParserMaker system determines the goal symbol using the following rules:
+
+* If there is one nonterminal that never appears in any right hand side of the grammar that particular symbol is chosen.
+If more than one symbol fulfils this rule the grammar is erroneous.
+* If no symbol can be found satisfying the above rule, the left hand side of the first production is chosen as the goal symbol.
+
+ParserMaker requires a grammar with a unique goal symbol, and creates an augmented grammar by adding the production:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+ParserMaker = goal_symbol $;
+------------------------------
+
+where `ParserMaker` is the unique system generated symbol, `goal_symbol` is the found goal symbol and `$` is the end marker.
+
+
+== Semantic Actions
+
+_Semantic actions_ or _semantic rules_ are code written in the target language which is evaluated when a particular production is reduced by the parser.
+The semantic action mechanism is the easiest way to attach executable code (written by the parser implementor) to the parser.
+The semantic actions are written in the target language.
+In ParserMaker no checks of the target dependent code are made, this is deferred until the generated parser source files are compiled using the appropriate target language compiler.
+
+A semantic action is normally inserted after the grammar rule.
+This is due to the fact that the parser can only invoke the semantic action when an entire production has been recognized.
+An action consists of arbitrary code between a pair of `%%`-symbols.
+Example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+left = rhs
+        %%
+            printf("rhs is identified");
+        %%
+     ;
+------------------------------
+
+// PAGE 64
+
+// @XREF: The Import, Export and Declarations Sections
+
+When _rhs_ has been identified, the output action is executed and the desired text is written.
+Variables and functions referenced within a semantic action must be defined in the _declaration section_ or imported using target language code in the _import section_ (see _The Import, Export and Declarations Sections_ on page 93) in order for the generated parser to compile correctly.
+
+ParserMaker also supports actions within the right hand side and not necessarily at the very end.
+In order to get hold of the action during parsing, a new empty production is created to control the execution.
+
+Example: The production with attached actions:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+list = element
+        %% nr_elements = nr_elements + 1; %%
+     ',' list
+      ;
+------------------------------
+
+is converted to:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+list = element <genSym> ',' list;
+
+<genSym> = %% nr_elements = nr elements + 1; %%;
+------------------------------
+
+When `element` has been recognized, the dummy production `<genSym>`, which is a system generated name, is immediately reduced (on `,`), and the appropriate action is called.
+
+WARNING: This way of inserting a semantic action within the right hand side may violate the LALR(1) conditions.
+However, a semantic action at the end will never interfere with the generation process.
+
+
+== Grammar Attributes
+
+ParserMaker supports a technique often denoted by the term _attributed translation grammar_ or _attribute grammar_.
+This means that a semantic action may propagate values which may be retrieved by semantic actions in other productions.
+
+Within a semantic action one can write:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%symbol.attribute
+------------------------------
+
+which means that the value denoted by `attribute` belonging to the current instance of `symbol` is referenced.
+`Symbol` is a grammar symbol, either a terminal or a nonterminal, appearing in the production to which the semantic action is attached.
+
+Example: The rule:
+
+// PAGE 65
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+left = rhs
+        %%
+            %left.VAL = 10;
+        %%
+     ;
+------------------------------
+
+means that the result from the action is 10, and this value is connected to the symbol `left` and denoted by the attribute value `VAL`.
+
+Example: To retrieve values from descendants:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+left = x y z
+        %%
+            %left.RES = %x.VAL + %y.VAL + %z.VAL;
+        %%
+     ;
+------------------------------
+
+The `VAL` values of `x`, `y`, and `z` are added, and the result is attached to `left` and bound to the attribute `RES`.
+The values of `VAL` have presumably been defined in the definition rules of `x`, `y` and `z` respectively.
+
+If a production contains more than one symbol with the same name, the symbol must be qualified.
+_Qualification_ is performed by numbering the symbols.
+
+Writing:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%<n>symbol
+------------------------------
+
+means the `nth` occurrence of the `symbol.%1` symbol is equivalent to `%symbol`.
+
+Example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+expr = expr + term
+        %%
+            %expr.VAL = %2expr.VAL + %1term.VAL
+        %%
+     ;
+------------------------------
+
+The resulting value which is assigned to the left hand side `expression` is achieved by adding the second `expression` to the `term`.
+
+When using semantic actions in EBNF rules, there exist two meta-symbols which allow groups of symbols (corresponding to an EBNF construct) to have attributes.
+These symbols are `EBNF` which refers to an EBNF construct preceding the attribute reference, and `OEBNF` (short for Outer EBNF) which refers to the closest enclosing EBNF construct.
+If there are several EBNF constructs preceding a semantic action containing attribute references using the `EBNF` symbol, it is possible to access all of them using _qualification_ as usual.
+If the closest enclosing EBNF construct is a repetition, it is possible to use the symbol `1OEBNF` to refer to the attributes of the current instance of the repetition, and the symbol `2OEBNF` to refer to previous instances of the repetition.
+When using repetition, a semantic action immediately following the left curly brace is used as an _initializing action_, whereas a semantic action immediately preceding the right curly brace is used as a _repetitive action_.
+Consider the example:
+
+// PAGE 66
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+a = b {        %% /* Initializing action */
+                %OEBNF.val = 0;
+               %%
+        c
+         (d    %% %OEBNF.val = %d.val; %% --OEBNF='(d|e)'
+           |e  %% %OEBNF.val = %e.val; %%
+         )     %% /* Repetitive action */
+                    %1OEBNF.val = %2OEBNF.val +
+                        %c.val + %EBNF.val;
+               %%   -- 1OEBNF=this instance of '{..}'
+                    -- 2OEBNF=previous instance of '{..}'
+                    -- EBNF='(d|e)'
+      } f      %% %a.val =
+                    %b.val + %EBNF.val + %f.val;
+               %% -- EBNF='{..}'
+    ;
+------------------------------
+
+This complex rule is transformed to the following sequence of productions:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+a = b <genSym1> f
+        %% %a.val =
+            %b.val + %<genSym1>.val + %f.val;
+        %%
+    ;
+
+<genSym1> = -- Empty
+            %% /* Initializing action */
+                %<genSym1>.val = 0;
+            %%
+        ! <genSym1> c <genSym2>
+            %% /* Repetitive action */
+                %1<genSym1>.val = %2<genSym1>.val +
+                    %c.val + %<genSym2>.val;
+            %%
+        ;
+
+<genSym2> = d
+            %% %<genSym2>.val = %d.val; %%
+        ! e
+            %% %<genSym2>.val = %e.val; %%
+        ;
+------------------------------
+
+In the derived rules, `<genSym1>` corresponds to the repetition construct, and `<genSym2>` corresponds to the alternation construct.
+Note the correspondence of the `EBNF` and `OEBNF` symbols to the generated symbols.
+Note also where the initializing action and the repetitive action are placed.
+
+ParserMaker supports only _synthesized attributes_.
+This means that computations within an action are only dependent of the right hand side symbols and not on the left hand side symbol.
+Attributes are propagated from the leaves (terminals) towards the goal symbol.
+However using an explicit stack and embedding push and pop semantic actions within the rules a limited form of inherited '`attributes`' may be implemented.
+
+// PAGE 67
+
+Semantic actions embedded in a production (i.e. not located at the end) are only permitted if the actions are not referencing any attributes.
+Exceptions are EBNF rules where embedded semantic actions may contain attribute references to the symbols in the current EBNF context.
+
+// @XREF: The Attributes Section
+
+Lexical attributes, attributes connected to terminal symbols, must not necessarily be the same as the nonterminal attributes.
+The two types are declared separately in the _attributes section_, see _The Attributes Section_ on page 95.
+
+NOTE: To simplify the propagation of attributes, the left hand side symbol shares its attributes with the first symbol on the right hand side if this is a nonterminal.
+This means that by default, all the attributes of the first symbol on the right hand side will be propagated automatically to the left hand side symbol.
+Specifically it means that no explicit propagation has to be done for unit productions (e.g. `expression = term`).
+However, with this mechanism care must be taken not to modify an attribute value of the left hand side symbol before the corresponding attribute value of the first symbol on the right hand side symbol is used.
+Again, this mechanism applies only if the first symbol on the right hand side is a nonterminal.
+
+Example: The complete specification below defines a small grammar for additive expressions.
+The lexical symbol `NUMBER` defines an attribute named `SCAN_VALUE`.
+The grammar defines the `expression`, computes its value in the '`c`' language, and outputs it.
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%TOKEN
+    NAME TokenType;
+    CODE code %% int code %%;
+    SRCP srcp %% int srcp %%;
+    ATTRIBUTES
+        SCAN VALUE %% int SCAN VALUE %%;
+
+%%ATTRIBUTES
+    VAL %% int VAL %%;
+
+
+%%RULES
+
+expression
+    = expr
+        %% printf("VALUE: &%i\n", %expr.VAL); %%
+    ;
+
+expr
+    = expr '+' term
+        %% %1expr.VAL = %2expr.VAL + %term.VAL; %%
+    ! term
+        %% %expr.VAL = %term.VAL; %%
+    ;
+
+term
+    = '(' expr ')'
+        %% %term.VAL = %expr.VAL; %%
+    ! NUMBER
+        %% %term.VAL = %NUMBER.SCAN_VALUE; %%
+    ;
+------------------------------
+
+// PAGE 68
+
+// @XREF: The Attributes Section
+
+The target language type of an attribute is application dependent, and it is up to the parser implementor to define the attribute type (see also _The Attributes Section_ on page 95).
+
+
+== Grammar Ambiguity and LALR-conflicts
+
+For some input grammars ParserMaker is not able to create a consistent parser.
+This is dependent on the fact that the input grammar is either ambiguous or is a non-LALR(1) grammar.
+An _ambiguous grammar_ can derive an input string in at least two different ways.
+A grammar can be unambiguous but still not LALR(1) because a lookahead longer than one (1) symbol is required.
+
+An LALR(1) grammar can also be characterised as a grammar for which an LALR(1) parser can be constructed with a unique action for each terminal symbol and state.
+If this is not possible the parser contains at least one _LALR(1) conflict_.
+The conflicts can be either of two kinds -- shift-reduce or reduce-reduce conflicts.
+
+In a _shift-reduce conflict_ the parser can not determine whether to shift a symbol on the parse stack or replacing some portion of the stack with a nonterminal (reduce).
+
+In a _reduce-reduce conflict_, at least two equivalent right hand sides can be applied in a reduce action.
+The parser can not determine which one to apply.
+
+A conflict is an indication of that something is wrong in the input grammar.
+In most cases the conflicts are resolved by rewriting the grammar slightly.
+However, there are situations when this approach is very troublesome.
+For such occasions ParserMaker contains mechanisms called _disambiguating rules_ which makes it possible to create a parser even for certain ambiguous grammars.
+
+ParserMaker contains two such mechanisms:
+
+* A _default technique_ which requires no assistance from the parser implementor.
+* A technique called _modification_ which directly modifies the parse tables.
+
+// PAGE 69
+
+Before describing the disambiguating rules used in ParserMaker, two well-known problems will be discussed -- the dangling else and the ambiguous expression.
+
+// @DISCRETE HEADING?
+
+=== Ambiguous grammar 1: The dangling else
+
+Consider the productions for the well-known IF-statement:
+
+// SYNTAX: EBNF (or BNF?)
+
+------------------------------
+<if statement>
+    = 'IF' <condition> 'THEN' <statement>
+    ! 'IF' <condition> 'THEN' <statement>
+      'ELSE' <statement>
+    ;
+
+<statement>
+    = <if statement>
+    ! ...
+    ! ...
+    ;
+------------------------------
+
+It can easily be seen that the above grammar is ambiguous by the statement:
+
+
+    IF c1 THEN IF c2 THEN s1 ELSE s2
+
+where `c` and `s` stands for condition and statement respectively.
+The ambiguity occurs because there is no way of determining to which IF the ELSE-clause belongs.
+It can be bound to the innermost THEN representing the structure:
+
+
+    IF c1 THEN
+        IF c2 THEN s1
+        ELSE s2
+
+or to the outermost THEN giving:
+
+
+    IF c1 THEN
+        IF c2 THEN s1
+    ELSE s2
+
+The ParserMaker system will recognize the conflict in a state having the LALR(1) items:
+
+// SYNTAX: EBNF (or BNF?)
+
+------------------------------
+<if statement> -->
+    IF <condition> THEN <statement> .
+        { ... 'ELSE'  ... }
+
+<if statement> -->
+    IF <condition> THEN <statement> . ELSE <statement>
+------------------------------
+
+The grammar contains one shift-reduce conflict.
+ParserMaker does not know whether to shift the symbol ELSE, binding the ELSE-clause to the innermost THEN, or to reduce and bind the ELSE to an outer THEN-clause.
+
+// PAGE 70
+
+The normal interpretation of an IF statement is to bind the ELSE to the innermost THEN-clause.
+
+Thus, shifting the symbol ELSE will do the job.
+
+// @DISCRETE HEADING?
+
+=== Ambiguous grammar 2: The ambiguous expression
+
+// SYNTAX: EBNF (or BNF?)
+
+------------------------------
+<expr> = <expr> '+' <expr>
+       ! <expr> '*' <expr>
+       ! I
+       ;
+------------------------------
+
+The above grammar contains a number of LALR(1) conflicts.
+The conflicts in this grammar are associated with operator associativity and precedence.
+
+The expression:
+
+    I + I + I
+
+can be interpreted either being left or right associative, yielding the structures:
+
+    (I + I) + I
+
+or
+
+    I + (I + I)
+
+respectively.
+
+The system gets a shift-reduce conflict when recognizing the input `I + I`, representing `<expr> + <expr>`, and the next token is `+`.
+ParserMaker can then not determine whether to shift, interpreting `+` to have right associativity, or reduce, getting left associativity.
+
+The most common interpretation of additive expressions is to let `+` and `{asterisk}` be left associative.
+The conflict is solved by reducing `<expr> + <expr>` when `+` is the look-ahead symbol.
+The second type of conflict arises when:
+
+    I + I * I
+
+or
+
+    I * I + I
+
+appears as input.
+If we consider the first one it could be structured into:
+
+    I + (I * I)
+
+or
+
+// PAGE 71
+
+    (I + I) * I
+
+The first interpretation defines `{asterisk}` to have higher precedence than `+` and vice versa for the second one.
+This situation is quite analogous to the associativity problem above.
+If the input is `I * I` and the next token is `+`, the action must be to reduce `<expr> * <expr>`.
+But, if the input is `I + I` and the next token is `{asterisk}`, the action must be shift.
+
+As already mentioned, ParserMaker contains two different mechanisms to help producing a consistent parser. Again, the safest way to avoid problems is to rewrite the grammar, or, if possible, to modify the language.
+
+
+=== Default Disambiguating Rules
+
+If a grammar is not LALR(1), and no modifications resolve the conflict, a default disambiguating mechanism will be used.
+A conflict is by default resolved by the rules:
+
+* In a _shift-reduce_ situation, use shift in favour of reduce.
+* A _reduce-reduce_ conflict is resolved by reducing the production that comes first in the input grammar.
+
+The dangling else problem is solved adequately by applying the first rule.
+That is, the ELSE will always be shifted and bound to the innermost THEN.
+
+The ambiguous expression however, will not be solved correctly since different look-ahead symbols are treated differently, and it is impossible to predict the logic of every such situation.
+
+
+=== Modification Rules
+
+The modification rules directly affects the parse tables.
+The mechanism requires great attention and should be used with care.
+
+A conflict is resolved by preventing or forcing a reduce action on specified look-ahead symbols.
+The modification rules are written:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%+ (<terminals>)
+------------------------------
+
+or
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%- (<terminals>)
+------------------------------
+
+`%+` means _reduce-for_ the indicated symbols, while `%-` means _reduce-not-for_ the indicated symbols.
+
+The modification rules can appear at two different places in a right hand side:
+
+// PAGE 72
+
+* At the end of a grammar rule.
+* Immediately before and/or after an embedded semantic action.
+The modifications are then bound to the generated dummy production.
+
+When an input grammar contains LALR(1) conflicts, the affected states are written to a list file.
+The conflicting look-ahead symbols can then be inspected and appropriate actions can be decided.
+
+As examples of the modification mechanism, consider the solutions to the dangling else and the expression problems.
+The dangling ELSE problem is solved by avoiding a reduce for the look-ahead symbol ELSE.
+This is written:
+
+
+// SYNTAX: EBNF (or BNF?)
+
+------------------------------
+<if statement>
+    = 'IF' <condition> 'THEN' <statement> %-('ELSE')
+    ! 'IF' <condition> 'THEN' <statement>
+      'ELSE' <statement>
+    ;
+------------------------------
+
+An unambiguous grammar for the expression is specified below.
+The interpretation is that `{asterisk}` has higher precedence than `+`, and both operators are left associative.
+
+// SYNTAX: EBNF (or BNF?)
+
+------------------------------
+<expr> = <expr> '+' <expr> %+('+') %-('*')
+       ! <expr> '*' <expr> %+('+', '*')
+       ! I
+       ;
+------------------------------
+
+A modification is considered by ParserMaker only when a conflict is resolved.
+
+When a conflict occurs, the following actions should be taken:
+
+* In a _shift-reduce_ situation, the conflict is resolved by specifying an action for the conflicting look-ahead symbol of the reduced production.
+* In a _reduce-reduce_ conflict, modifications must be specified for the conflicting symbol in both productions.
+
+
+== Error Recovery Principles
+
+A _syntax error_ is detected when the parser does not accept the next token.
+The task of the generated error recovery system is to recover from the error.
+_Error recovery_ means that the parser configuration, i.e. state and input, is changed in such a way that parsing can be resumed.
+Whenever possible ParserMaker will use the approach _recovery by repair_.
+It tries not only to restart the parser, but also to correct the error.
+The term _error correction_ is adopted for this process.
+The general approach is to find as many syntax errors as possible in a single run.
+
+// PAGE 73
+
+The generated error recovery system in ParserMaker is advanced and efficient.
+It requires very little extra information besides the grammar itself.
+The extra information needed is grammar dependent, and is aimed for tuning purposes only.
+The error recovery system uses a three level approach.
+These levels are:
+
+1. _Single_ symbol correction.
+2. _Multiple_ symbol correction by a string synthesizing technique.
+3. _Panic_ mode.
+
+// @XREF: The Options Section
+
+In the normal case these levels or phases are applied in this particular order.
+Starting with the single symbol corrector and continuing with the string synthesizing corrector if the first level fails.
+Finally, if the second level fails the last one, panic mode, is applied.
+However, by options (see _The Options Section_ on page 86) any level can be turned on or off.
+Each one of the error recovery phases is described below.
+
+
+=== Level 1: Single Symbol Correction
+
+The first level is a _restricted local corrector_.
+Restricted because it is not able to recover from all types of syntax errors.
+Local correction means that it will change only the remaining input and not the already parsed text.
+The first level tries to find a least cost correction of single symbol errors.
+One symbol of insertion, deletion or replacement will be considered.
+
+In the error configuration of the parse stack and input, each possible single symbol repair is considered, and the correction with the least cost is applied.
+The cost is based on the costs assigned to each terminal in the _terminals section_, and how well the correction fits in the context in which the error occurred.
+
+The cost of the best repair is compared with a predefined threshold value.
+If the computed cost is below this threshold value, the correction is applied.
+If not, the first level fails.
+By default the threshold value is equal to the cost of accepting two symbols after the error symbol.
+
+// @XREF: The Options Section
+// @XREF: The Terminals Section
+
+The acceptance cost and the amount of look-ahead are defined using options (see _The Options Section_ on page 86).
+Together with the facility of defining costs for each terminal symbol (see _The Terminals Section_ on page 94) a parser implementor has an opportunity to tune the first level of recovery to a specific environment.
+
+// PAGE 74
+
+The _acceptance_ (_shift_) cost has a default value of 5.
+This cost should be regarded as an upper bound for the insert and delete costs for the terminal symbols.
+It is only necessary to change the acceptance cost if you want the terminal costs to have a greater range.
+
+The _amount of look-ahead_ has a default value of 5.
+This value is a reasonable trade-off between functionality and performance.
+Since the threshold value is defined as _(look-ahead-amount - 3) {asterisk} shift-cost_, you are not allowed to reduce the amount of look-ahead below 4.
+The threshold value would in that case get a value of less than or equal to zero which means that the single symbol correction will always fail.
+Due to performance reasons, it is not recommended to increase the look-ahead above 6.
+
+Defining appropriate cost functions is not easy and should be based on some statistical observations on how the language is used.
+The general idea behind the cost functions is that they should be selected such that the lower the probability of a specific error occurring, the higher the cost should be for the symbol correcting the error.
+For instance, omission of a semicolon is a very frequent error in Pascal, thus the insertion cost for `;` should be low.
+Similarly long reserved words should be assigned high deletion costs.
+
+It can sometimes be useful to deliberately violate the rule that the acceptance cost should be regarded as an upper limit of the terminal costs.
+If you want to make sure that a specific terminal symbol is never inserted or deleted during error correction, you should give it an insertion or deletion cost which is larger than the threshold value.
+
+
+=== Level 2: String Synthesizing Technique
+
+// @XREF: The Terminals Section
+
+If the first level of recovery fails, the parser will enter the second phase.
+The string synthesizer will, from the error point, generate a least-cost string which yields a legal continuation of the already parsed text.
+The least cost string is generated from the grammar and based on the insertion costs (defined in _The Terminals Section_ on page 94).
+
+The generated string is then matched against the remaining input.
+In this process, a prefix of the generated string will be inserted, and some symbols from the remaining input might be deleted.
+The idea is to preserve as much as possible of the remaining input and base the recovery on insertion rather than deletion.
+
+// @XREF: The Fiducial Part
+
+The string synthesising technique is a _true local corrector_ as it never gives up.
+It can return a legal configuration for each possible input string.
+However, the parser will terminate the second level when it tries to delete a _fiducial symbol_ (however see the modified panic mode algorithm below).
+A fiducial symbol is a syntactically important symbol, and it is defined as fiducial by the parser implementor (see _The Fiducial Part_ on page 98).
+Symbols that start main phrases of the input language, e.g. some of the reserved words like `VAR`, `BEGIN` and `PROCEDURE` in Pascal, should be defined as fiducial symbols.
+
+
+// PAGE 75
+
+=== Level 3: Panic Mode
+
+// @XREF: The Fiducial Part
+
+Panic mode is a very crude way of recovering from syntax errors.
+The general idea behind panic mode is to scan ahead into the input string until something solid, like a reserved word, is found.
+The parse stack is then reconfigured, popped, such that the new token is accepted.
+The term _fiducial_ will be used for such important symbols.
+See _The Fiducial Part_ on page 98 for how to specify these symbols.
+
+In the original panic mode large portions of the remaining input might be deleted, and ParserMaker therefore uses a modified variant.
+
+The technique used by ParserMaker can be summarized by:
+
+1. Scan input until a fiducial symbol is found.
+If panic mode is entered from level 2, a fiducial symbol is already the current token.
+2. Pop the parse stack until a state is found that will accept the fiducial symbol.
+3. If in step 2 no such state is found then
+** restore stack
+** if entered from level 2 then
+*** resume level 2 where it was terminated
+* else continue with step 1 above
+
+Even if panic mode is a crude way of recovery, it might be the only reasonable choice when dealing with gross structural syntax errors.
+
+
+=== Improvements of the Error Recovery System
+
+// @XREF: The Terminals Section
+// @XREF: The Recovery Section
+// @XREF: The Options Section
+
+The error recovery system is generated almost entirely from the grammar, and very little extra information must be supplied by the parser implementor.
+There are however, several ways of enhancing the generated error recovery system.
+Parser implementor supplied information can be added in the _terminals section_ (see _The Terminals Section_ on page 94), by the cost functions and print symbol, and in the _recovery section_ (see _The Recovery Section_ on page 97).
+The _recovery section_ contains facilities for defining the set of fiducial symbols and some other tuning information.
+Also, the shifting cost and the amount of look-ahead applied can be defined using options to ParserMaker (see _The Options Section_ on page 86)
