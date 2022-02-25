@@ -1325,7 +1325,7 @@ int %%(smkPrefix)Scan(smThis,smToken)
   } while(code<0);
   return smToken->%%(tmkTokenCode)=code;
 }
-%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "cygwin64", "Linux"} (%%(currentOs)))
+%%IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "cygwin64", "msys2", "Linux"} (%%(currentOs)))
 %%  PROCESS(, "/dev/null")
 %%ELSIF({"MSDOS", "WIN32", "mingw"} (%%(currentOs)))
 %%  PROCESS(, "NUL")
@@ -1340,7 +1340,7 @@ int %%(smkPrefix)Scan(smThis,smToken)
 %%--
 %%  ESET files ("%%(smkPrefix)Scan.h", "%%(smkPrefix)Scan.%%(targetLanguageExtension)", "%%(smkPrefix)ScSema.%%(targetLanguageExtension)")
 %%  LOOP(file, files)
-%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "cygwin64", "Linux"} (%%(currentOs)))
+%%      IF({"SunOS", "HP", "Apollo", "VMS", "UNIX", "cygwin32", "cygwin64", "msys2", "Linux"} (%%(currentOs)))
 %%          IF(IMP$SYSTEM("cmp -s %%(file).tmp %%(file)", output))
 %%          IF(NOT IMP$SYSTEM("rm -f %%(file).tmp", output))
 %%              EXIT(1,"Trouble removing generated %%(file) '%%(output)', try to remove the %%(file)")
