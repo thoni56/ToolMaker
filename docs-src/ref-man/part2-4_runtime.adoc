@@ -1,0 +1,197 @@
+// PAGE 106 -- ParserMaker Reference Manual
+
+= PARSER RUN-TIME USAGE
+
+// @XREF: The ToolMaker Description File
+// @XREF: ToolMaker System Description
+
+In the descriptions below, all functions external to the generated parser are described with their default prefix `pm`.
+This prefix may be changed with the parser prefix option (see _The ToolMaker Description File_ in the _ToolMaker System Description_, page 27).
+
+
+== Principles of Operation
+
+=== Parsing
+
+When the parser implementor wants to parse the input stream, all that need be done is to call the `__pm__Parse()` function.
+The only requirement the parser has is that the input stream must be initialized so that the first call of the scanning function defined in the scanner section of the description file will return the first symbol of the input stream to be parsed.
+If ScannerMaker is used to generate the scanner, this involves initialising it and setting up a context.
+Of course it is appropriate to perform other initialization like initializing the listing system, setting data structures for the semantic actions etcetera before calling `__pm__Parse()`.
+
+
+=== Scanning
+
+The generated parser expects the code defined in the scanner section (or default) to supply it with tokens from the input stream.
+This functionality must be implemented by the parser implementor.
+If ScannerMaker is used this is no problem since this is exactly the task of ScannerMaker.
+
+// @XREF: The Vocabulary File
+
+The parser expects the scanner section to return exactly one token from the input stream each time it is called.
+The tokens it expects the scanner to recognize are defined together with their token codes in the vocabulary file (see _The Vocabulary File_ on page 102 for the format of the vocabulary file).
+
+
+=== Error Recovery
+
+The error recovery system of the generated parser is very good at recovering from syntax errors.
+What is lacking is a means for reporting to the user what has occurred during error recovery.
+The _error recovery interface routines_ of the generated parser provide the necessary hooks for reporting the error recovery activities to the user.
+The error recovery interface routines are `__pm__ISym()`, `__pm__DSym()`, `__pm__Mess()` and `__pm__RPoi()`.
+These routines can be automatically generated if the `errorhandler` option is used.
+The default interface assumes a ListerMaker generated lister module.
+The error recovery interface may also be completely provided by the implementor.
+
+When an error is detected by the parser, the generated error recovery system in the parser is activated to try to repair the error.
+If this is successful, and if recovery has been made by inserting or deleting one or more symbols, `__pm__ISym()` and/or `__pm__DSym()` are called one or more times (once for each inserted or deleted symbol).
+
+// PAGE 107
+
+NOTE: when the error recovery method is _replacement_ of symbols, _both_ of these routines will be called.
+
+Regardless whether the recovery process was successful or not, the next step is that `__pm__Mess()` is called to report that the error recovery process is finished, and the result of the process.
+At this time it is appropriate to output an error message to the poor parser user.
+
+If the error recovery process was successful, i.e. the parser was able to recover from the error, `__pm__RPoi()` is called to indicate from what point the parser will continue to process the input (the recovery point).
+For small errors, this is often the same point that caused the error, and in these cases it is probably not necessary to do any special reporting to the user.
+
+In summary, this is the calling sequence of the error recovery interface routines:
+
+1. `__pm__ISym()` and/or `__pm__DSym()` are called zero or more times depending on the recovery method selected.
+
+2. `__pm__Mess()` is called once.
+
+3. `__pm__RPoi()` is called once if the error recovery process was successful.
+
+After these corrections of the input has been made the parsing is continued as if the input had actually been the corrected stream of tokens.
+No semantic actions are executed during error recovery until the final decision on which corrections to apply has been made, and then it is executed exactly as if the corrected input had been found.
+This means if the routines above (particularly `__pm__ISym()` as defined by the _insertsymbol section_) have been designed properly the semantic actions will be executed exactly as if the user had input the corrected input, thus making it possible to perform even semantic analysis on the input.
+The design of the semantic actions is thus greatly simplified as no special care have to be taken for the erroneous input.
+
+
+== Run-Time Interface
+
+=== Function: __pm__Parse()
+
+// SYNTAX: ????
+[subs=quotes]
+----------
+__pm__Parse()
+----------
+
+The parser entry point.
+To be called from the application when a source language text should be parsed.
+The scanner must be initialized when this function is called so that the _scanner section_ can be called to fetch the first input symbol.
+
+// PAGE 108
+
+=== Function: __pm__ISym()
+
+// SYNTAX: ????
+[subs=quotes]
+----------
+__pm__ISym()(code, symString, printString, token)
+
+code: IN %%(codeType)
+symString: IN STRING
+printString: IN STRING
+token: OUT %%(tokenType)
+----------
+
+Called from the error recovery routines when the parser has decided upon inserting a symbol in the input stream in order to recover from a syntax error.
+It is intended for error reporting, and for constructing a semantically feasible token.
+The parser error recovery process has no notion at all about semantics, it just decides upon a syntactically reasonable token to insert.
+Thus the parser implementor must supply code to construct a token that has semantic meaning to the application.
+
+Consider the following example: when the scanner reads an `INTEGER`, a normal action for the scanner is to compute the value of the integer read and return it as a terminal attribute.
+When the parser error recovery process decides to insert an `INTEGER` token in the input string, it has no knowledge about how the scanner handles an `INTEGER`, so in order to construct a semantically feasible token we must set the value attribute to some value for an `INTEGER` in `__pm__ISym()`.
+
+The parameters: `code` is the terminal code for the inserted token, `symString` is the terminal string as used in the grammar, `printString` is the terminal print string as defined in the grammar, and `token` is the token that should be created.
+
+// @XREF: The Insertsymbol Section
+
+This function is defined in the generated error recovery interface module, `__pm__Err`, if selected by use of the `errorhandler` option.
+The actual code to construct a semantically valid token should be defined in the ParserMaker description file (see _The Insertsymbol Section_ on page 97).
+The code from the _insertsymbol section_ is inserted into the body of the `__pm__ISym()` function if the option `Errorhandler;` is set, otherwise this functionality must be supplied by the implementor.
+
+
+=== Function: __pm__DSym()
+
+// SYNTAX: ????
+[subs=quotes]
+----------
+__pm__DSym(token, symString, printString)
+
+token: IN %%(tokenType)
+symString: IN STRING
+printString: IN STRING
+----------
+
+Called from the error recovery routines when the parser has decided upon deleting a symbol from the input stream in order to recover from a syntax error.
+It is intended for error reporting and clean up.
+The first parameter is the deleted `token`.
+The `symString` and `printString` has the same interpretation s for `__pm__ISym()`.
+The function is defined in the default error recovery interface module that is automatically generated if the `Errorhandler` option is set.
+
+// PAGE 109
+
+// @XREF: The Deletesymbol Section
+
+The actual code to necessary to clean up may be defined in the ParserMaker description file (see _The Deletesymbol Section_ on page 97).
+The code may for example return dynamically allocated areas referenced by the semantic attributes of the token.
+The code from the _deletesymbol section_ is inserted into the body of the `__pm__DSym()` function if the option `Errorhandler;` is set, otherwise this functionality must be supplied by the implementor.
+
+
+=== Function: __pm__RPoi()
+
+// SYNTAX: ????
+[subs=quotes]
+----------
+__pm__RPoi(token)
+
+token: IN %%(tokenType)
+----------
+
+Called from the error recovery routines when an error has been recovered from.
+It is intended for error reporting.
+The parameter is the `token` from which the parsing process will continue.
+The default module `__pm__Err` implementing the function is generated if the `Errorhandler` option is set, otherwise the function must be supplied by the implementor.
+
+
+=== Function: __pm__Mess()
+
+// SYNTAX: ????
+[subs=quotes]
+----------
+__pm__Mess(token, method, code, severity)
+
+token: IN %%(tokenType)
+method: IN INTEGER
+code: IN INTEGER
+severity: IN INTEGER
+----------
+
+Called from the error recovery routines when the syntax error has been repaired, and an error message should be output.
+The function is generated in the error recovery interface module if the `Errorhandler` option is set.
+Otherwise the function must be supplied by the implementor.
+
+The parameters: `token` is the token which activated the error recovery process, `method` is the recovery method applied, `code` is an error classification, and `severity` is the error severity code.
+
+The values of the integer arguments have the following meaning:
+
+[horizontal]
+Method: ::: {blank}
+1 = Symbol(s) insertion +
+2 = Symbol(s) deletion +
+3 = Symbol(s) replacement +
+4 = Stack backup +
+5 = Halted
+Code: ::: {blank}
+1 = Unknown token received from scanner +
+2 = Syntax error +
+3 = Parse stack overflow +
+4 = Parse table error
+Severity: ::: {blank}
+1 = Warning +
+2 = Error (recoverable) +
+3 = Fatal error +
+4 = System error & Limit error

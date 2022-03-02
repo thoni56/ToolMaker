@@ -1,0 +1,84 @@
+// PAGE 104 -- ParserMaker Reference Manual
+
+= THE PARSERMAKER COMMAND
+
+To invoke ParserMaker the following command should be given:
+
+// SYNTAX: Shell
+
+-------------------------------------
+pmk [-help] [options] <input grammar>
+-------------------------------------
+
+The special option `-help` will cause ParserMaker to print a short description of the parameters and available options and then immediately exit.
+
+
+== Parameters
+
+ParserMaker takes only one parameter, `<input grammar>`, which is the name of the ParserMaker, or grammar, description file.
+If no extension is given, `.pmk` is assumed.
+
+
+== Options
+
+Any number of options may be given on the command line. These options override or complement the options given in the options section in the grammar file. The Command Line Options and their corresponding directives in the options section are the following:
+
+// @NOTE: Output from current ParserMaker 2.1(17) was pasted below:
+// SYNTAX: Shell
+
+------------------------------
+Usage: pmk [-help] [options] <input file>
+Options:
+  -[-]verbose       enable[disable] verbose mode
+  -target <lang>    generate file for target language <lang>
+  -os <os>          generate source files for target operating system <os>
+  -[-]prefix [<prefix>] set [no] parser prefix
+  -library <lib>    use directory <lib> for library files
+  -[-]escape [<c>]  set [no] escape character
+  -[-]width [<n>]   set [no] listing width
+  -[-]height [<n>]  set [no] listing height
+  -[-]generate      select [no] generated output {tables | source}
+  -[-]force         do [not] force generating of source code
+  -[-]listerprefix [<prefix>] set [no] lister prefix
+  -[-]errorhandler  enable [disable] generation of error handler
+  -[-]trace         enable [disable] trace mode
+  -[-]line          do [not] generate line information in the semantic actions
+  -lookaheadmax <n> set max lookahead to <n>
+  -shiftcost <n>    set shift cost for terminals to <n>
+  -stacklimit <n>   set parse stack limit to <n> entries
+  -[-]pack          set [no] table packing { row | column | rds | gcs | les }
+  -[-]actionpack    set [no] packing of action tables
+  -[-]gotopack      set [no] packing of goto tables
+  -[-]list          set [no] listings { input | grammar | items | tables | statistics | info }
+  -[-]optimize      set [no] optimize mode
+  -[-]recovery      set [no] recovery mode { single | multiple | panic }
+  -[-]resolve       set [no] resolve mode { sr | rr }
+  -voc <file>       write vocabulary to <file>
+  -pml <file>       write lists to <file> (if any)
+  -pmt <file>       write tables to <file> (if any)
+  -tmk <file>       read common options from <file>
+  -help             this help information
+------------------------------
+
+// PAGE 105
+
+// @XREF: The Options Section
+
+Refer to the corresponding directives and options in _The Options Section_ on page 86 for a detailed description of the options.
+
+// @XREF: Output Files
+
+The `-voc`, `-pmt` and `-pml` options are only available from the command line and are used to give explicit names to the _vocabulary file_, the _table and definition file_ and the _list file_ respectively (see _Output Files_ on page 78).
+
+
+== Example
+
+The command line:
+
+// SYNTAX: Shell
+
+------------------------------
+pmk --pack -generate tables -list items pl0
+------------------------------
+
+tells ParserMaker to take the file `pl0.pmk` as the input grammar description, not to use any table packing, to list the generated item sets in the list file and to just generate the table file (no source files).

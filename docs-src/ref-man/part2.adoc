@@ -29,6 +29,8 @@ Familiarity with the other tools in the ToolMaker family is also beneficial but 
 
 include::part2-1_concepts.adoc[]
 include::part2-2_production.adoc[]
+include::part2-3_command.adoc[]
+include::part2-4_runtime.adoc[]
 
 = TBD!
 
