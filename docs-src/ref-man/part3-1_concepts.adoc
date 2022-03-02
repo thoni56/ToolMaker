@@ -4,4 +4,56 @@
 
 = CONCEPTS AND ASSUMPTIONS
 
-WARNING: The rest of this book part still needs to be ported!
+== ScannerMaker and Scanner
+
+ScannerMaker is a program which takes a formal description of a set of vocabularies and scanners and then produces a fully usable scanner.
+
+
+== Vocabulary
+
+ToolMaker introduces the concept of _vocabulary_.
+A vocabulary is a set of tokens with a defined external code.
+In ToolMaker a vocabulary is described in a vocabulary file.
+ScannerMaker uses this concept to partition a scanner description file into vocabularies.
+These are further partitioned in scanners and those into rules or skip tokens.
+
+
+== Token
+
+A vocabulary is a set of _tokens_.
+A token is identified by a name or a string and each token has an associated unique number, an external token code.
+This code is used to report which token was found.
+
+
+== Scanner
+
+The collection of rules which is used to identify one or more tokens in a stream of characters, strings, files, etc., is called a scanner.
+A scanner also defines semantic actions to be taken when a rule which matches a part of the character stream is found, this may include manipulating or copying the characters that constitutes the token.
+
+
+== Scanner and Inheritance
+
+Scanners can use rules which are defined in another scanner by _inheriting_ them, thus creating extensions of scanners without explicitly copying definitions.
+
+
+== Screening
+
+_Screening_ is a concept which is used to minimize the tables used to implement the scanners.
+This optimization of space has, as usual, the drawback of generating slower code.
+Another aspect of screening is the possibility to turn on and off recognition of _screened_ tokens.
+A token which is used to find a screened token is said to _screen_ the token.
+A scanner which includes rules which screens a token is said to _screen_ tokens.
+Tokens and scanners which screens a token may also be turned on or off at run-time.
+
+
+// PAGE 135
+
+== Token and Source Position Definitions
+
+// @XREF: The Token Section
+// @XREF: The Srcp Section
+// @XREF: ToolMaker System Description
+
+The generated scanner supports automatic source position calculation.
+The _row_, _column_ and _position_ source position members are automatically updated by the generated scanner if they are defined in the _source position section_ in the ToolMaker Common Description file (`.tmk`).
+See _The Token Section_ on page 36 and _The Srcp Section_ in the _ToolMaker System Description_, page 34.
