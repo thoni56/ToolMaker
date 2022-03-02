@@ -1,0 +1,283 @@
+// PAGE 123 -- ParserMaker Reference Manual
+
+[appendix]
+= DESCRIPTION LANGUAGE
+
+// @XREF: The ParserMaker Description File
+// @XREF: ToolMaker System Description
+// @XREF: SYNTAX NOTATION
+
+This appendix contains a syntax summary of the ParserMaker description language.
+For a full discussion of the language, see _The ParserMaker Description File_ on page 79.
+
+For a brief discussion of the notation used in this description see appendix C in the _ToolMaker System Description_, _SYNTAX NOTATION_, page 52.
+
+== Language Syntax
+
+// @TODO: split each ENBF in rule in its own code block? (it's *very* long)
+// @CHECK: Carefully compare to original scans!
+// @EXTERNALIZE EBNF Source
+// SYNTAX EBNF
+
+------------------------------
+<description file> ::=
+    [ <toolmaker sections> ]
+    [ <other sections> ]
+    <rules section>
+
+<toolmaker sections> ::=
+    [ <options section> ]
+    { <import section> | <srcp section> | <token section> }
+
+<other sections> ::=
+    { <declarations section>
+    | <terminals section>
+    | <attributes section>
+    | <recovery section>
+    | <export section>
+    | <scanner section>
+    | <insertsymbol section>
+    | <deletesymbol section> }
+
+<options section> ::=
+    ['%%OPTIONS' <directive> {<directive>} ['%%END']]
+
+<directive> ::=
+       <common directive>
+     | <listerprefix directive>
+     | <errorhandler directive>
+     | <trace directive>
+     | <lookaheadmax directive>
+     | <shiftcost directive>
+     | <stacklimit directive>
+     | <pack directive>
+     | <list directive>
+     | <optimize directive>
+     | <recovery directive>
+     | <resolve directive>
+     | <vocabulary directive>
+     | <table file directive>
+     | <list file directive>
+
+<common directive> ::=
+      <target directive>
+    | <os directive>
+    | <prefix directive>
+    | <library directive>
+    | <escape directive>
+    | <width directive>
+    | <height directive>
+    | <generate directive>
+    | <force directive>
+
+<listerprefix directive> ::=
+    'LISTERPREFIX' <quoted string> ';'
+
+<errorhandler directive> ::=
+    ['NO'] 'ERRORHANFLER' ';'
+
+<trace directive> ::=
+    ['NO'] 'TRACE' ';'
+
+<lookaheadmax directive> ::=
+    'LOOKAHEADMAX' <number> ';'
+
+<shiftcost directive> ::=
+    'SHIFTCOST' <number> ';'
+
+<stacksize directive> ::=
+    'STACKLIMIT' <number> ';'
+
+<pack directive> ::=
+      'PACK' <pack option>
+            {',' <pack option>} ';'
+    | ['NO'] 'PACK' ';'
+    | 'ACTIONPACK' <pack option>
+            {',' <pack option>} ';'
+    | 'GOTOPACK' <pack option>
+            {',' <pack option>} ';'
+
+<pack option> ::=
+    'ROW' | 'COLUMN' | 'RDS'
+    'GCS' | 'LES' | 'ERROR'
+
+<list directive> ::=
+      'LIST' <list option>
+            {',' <list option>} ';'
+    | ['NO'] 'LIST'
+
+<list option> ::=
+      'INPUT' | 'GRAMMAR' | 'ITEMS'
+    | 'TABLES' | 'STATISTICS' | 'INFO'
+
+<optimize directive> ::=
+      'OPTIMIZE' [<optimize option>
+            {',' <optimize option>}] ';'
+    | ['NO'] 'OPTIMIZE' ',
+
+<optimize option> ::= 'LR0'
+
+<recovery directive> ::=
+      'RECOVERY' [<error option>
+            {',' <error option>}] ';'
+    | ['NO'] 'RECOVERY' ';'
+
+<error option> ::=
+    'SINGLE' | 'MULTIPLE' | 'PANIC'
+
+<resolve directive> ::=
+      'RESOLVE' <resolve option>
+        {',' <resolve option>}directive
+    | ['NO'] 'RESOLVE' ';'
+
+<resolve option> ::=
+    'SR' | 'RR'
+
+<import section> ::=
+    '%%IMPORT' <target language code> ['%%END']
+
+<export section> ::=
+    '%%EXPORT' <target language code> ['%%END']
+
+<declarations section> ::=
+    '%%DECLARATIONS' <target language code> ['%%END']
+
+<terminals section> ::=
+    '%%TERMINALS' {<terminal definition> ';'}
+    ['%%END']
+
+<terminal definition> ::=
+    TERMINAL '=' <token code> [<error recovery data>]
+
+<token code> ::= <number>
+
+<error recovery data> ::
+    ',' <insert cost> ',' <delete cost> [<print symbol>]
+
+<insert cost> ::= <number>
+
+<delete cost> ::= <number>
+
+<print symbol> ::= '=>' TERMINAL
+
+<attributes section> ::=
+    '%%ATTRIBUTES'
+    <grammar attribute> {',' <grammar attribute>} ';'
+    ['%%END']
+
+<grammar attribute> ::=
+    <identifier> [ '%%' <target language code> '%%' ]
+
+<scanner section> ::=
+    '%%SCANNER' <target language code> ['%%END']
+
+<insertsymbol section> ::=
+    '%%INSERTSYMBOL' <target language code> ['%%END']
+
+<deletesymbol section> ::=
+    '%%DELETESYMBOL' <target language code> ['%%END']
+
+<recovery section> ::=
+    '%%RECOVERY'
+    [<meta part>]
+    [<separator part>]
+    [<fiducial part>]
+    [<skip part>]
+    ['%%END']
+
+<meta part> ::=
+    'META' {<mete name> '=' '(' TERMINAL
+        {',' TERMINAL} ')' ['=>' TERMINAL] ';'}
+
+<separator part> ::=
+    'SEPARATOR' '(' TERMINAL {',' TERMINAL} ')' ';'
+
+<fiducial part> ::=
+    'FIDUCIAL' '(' TERMINAL {',' TERMINAL} ')' ';'
+
+<skip part> ::=
+    'SKIP' '(' TERMINAL {',' TERMINAL} ')' ';'
+
+<rules section> ::=
+    '%%RULES'
+    {NONTERMINAL '=' <alternatives> ';'}
+    ['%%END']
+
+<alternatives> ::=
+    <right hand side> {'!' <right hand side>}
+
+<right hand side> ::= <components> <opt modify>
+
+<components> ::= {<component>}
+
+<component> ::=
+      <symbol>
+    | <action modify>
+    | '(' <components> {'|' <components>} ')'
+    | '{' <components> '}'
+    | '[' <components> ']'
+
+<symbol> ::= TERMINAL | NONTERMINAL
+
+<action modify> ::=
+    <opt modify> <semantic action> <opt modify>
+
+<semantic action> ::=
+    '%%' <any character sequence, but %%> '%%'
+
+<opt modify> ::
+    {('%+' | '%-') '(' TERMINAL {',' TERMINAL} ')'}
+------------------------------
+
+
+== Lexical Items
+
+// @TODO: split each ENBF in rule in its own code block? (it's *very* long)
+// @CHECK: Carefully compare to original scans!
+// @EXTERNALIZE EBNF Source
+// SYNTAX EBNF
+
+------------------------------
+TERMINAL ::=
+      <identifier>
+    | <angle bracketed string>
+    | <quoted string>
+
+NONTERMINAL ::=
+      <identifier>
+    | <angle bracketed string>
+
+ATTRIBUTE ::=
+    <identifier>
+
+<identifier> ::=
+    <letter> {<letter> | <digit> | '_'}
+
+<string> ::=
+      <quoted string>
+    | <angle bracketed string>
+
+<quoted string> ::=
+    ''' <character> {<character>} '''
+
+<angle bracketed string> ::=
+    '<' <character> {<character>} '>'
+
+<number> ::= <decimal integer> | <hexadecimal integer>
+
+<decimal integer> ::= <digit> {<digit>}
+
+<hexadecimal integer> ::= '#' <hex digit> {<hex digit>)
+
+<hex digit> ::= <digit>
+    | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+    | 'a' | 'b' | 'c' | 'd' | 'e' | 'f'
+
+<letter>  ::=
+    <upper case letter> | <lower case letter>
+
+<special character> ::=
+      '!' | '#' | '$' | '%' | ''' | '(' | ')' | '+'
+    | ',' | '-' | '.' | ';' | '<' | '=' | '>' | '_'
+    | '&' | '{' | '}' | '|' | '\' | '[' | ']'
+------------------------------

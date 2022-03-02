@@ -1,0 +1,62 @@
+// PAGE 128 -- ParserMaker Reference Manual
+
+[appendix]
+= TARGET LANGUAGE DETAILS
+
+// @XREF: The Token Section
+// @XREF: ToolMaker System Description
+
+In the descriptions below, the IMP insert statements `%%(tokenType)` and `%%(codeType)` refers to the type names defined by the token section (see _The Token Section_ in the _ToolMaker System Description_, page 36).
+
+== '`c`'
+
+// SYNTAX: C + IMP macros? (generated)
+
+[subs=quotes]
+------------------------------
+void __pm__Parse();
+
+void __pm__RPoi(token)
+    %%(tokenType) *token;
+
+void __pm__ISym(code, symString, printString, token)
+    %%(codeType) code;
+    char *symString;
+    char *printString;
+    %%(tokenType) *token;
+
+void __pm__DSym(token, symString)
+    %%(tokenType) *token;
+    char *symString;
+
+void __pm__Mess(token, method, code, severity)
+    %%(tokenType) *token;
+    int method;
+    int code;
+    int severity;
+------------------------------
+
+
+== '`ansi-c`' and '`c++`'
+
+// SYNTAX: C + IMP macros? (generated)
+
+[subs=quotes]
+------------------------------
+void __pm__Parse();
+
+void __pm__RPoi(%%(tokenType) *token);
+
+void __pm__ISym(%%(codeType) code,
+            char *symString,
+            char *printString,
+            %%(tokenType) *token);
+
+void __pm__DSym(%%(tokenType) *token,
+            char *symString);
+
+void __pm__Mess(%%(tokenType) *token,
+            int method,
+            int code,
+            int severity);
+------------------------------

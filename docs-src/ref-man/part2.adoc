@@ -31,9 +31,9 @@ include::part2-1_concepts.adoc[]
 include::part2-2_production.adoc[]
 include::part2-3_command.adoc[]
 include::part2-4_runtime.adoc[]
-
-= TBD!
-
-WARNING: The rest of this book part still needs to be ported!
+include::part2-5_app_pl0-example.adoc[]
+include::part2-6_app_errors.adoc[]
+include::part2-7_app_desc-lang.adoc[]
+include::part2-8_app_target-lang.adoc[]
 
 :leveloffset: 0
