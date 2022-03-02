@@ -1,0 +1,1750 @@
+// PAGE 136 -- ScannerMaker Reference Manual
+
+= SCANNER PRODUCTION
+
+ScannerMaker requires a number of files to describe the scanner that should be generated.
+In this chapter descriptions of these files are given.
+
+
+== Creating a Running Scanner
+
+The figure below gives an overview over the relation between the files required and produced by ScannerMaker.
+The system prefix `_sm_` is chosen by the scanner implementor, and the file names for any produced target source code module is target language dependent.
+
+// @FIG 3: Convert to SVG.
+
+[[fig3]]
+.Files used and produced by ScannerMaker.
+image::Fig-3-2_temp.gif[width=40%,align="center"]
+
+
+// PAGE 137
+
+Depending on the target language used the produced target language module, `__sm__Scan`, may be one or more files, e.g. for '`c`' there will be one `__sm__Scan.c` and one `__sm__Scan.h` created.
+
+The only files that must be maintained by the user are `__sm__.smk` and `__sm__.tmk`.
+A vocabulary file is not necessary though it is strongly recommended that a vocabulary file is used.
+
+The following walk-through should give you a feeling how to create an operational scanner, step by step.
+
+// @XREF: (1) THE TOOLMAKER DESCRIPTION FILE
+// @XREF: (1) ToolMaker System Description
+// @XREF: (2) The ScannerMaker Description File
+// @XREF: (3) THE SCANNERMAKER COMMAND
+
+1. Create a ToolMaker description file (`__sm__.tmk`) according to the specifications in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+This step is not necessary if you are developing a stand-alone scanner (in this case the information can be put inside `__sm__.smk` instead).
+
+2. Create a ScannerMaker description file (`__sm__.tmk`) according to the specifications in _The ScannerMaker Description File_ on page 138.
+
+3. Either run _**make**_ and skip to step 6, or run _**smk**_, ScannerMaker, with `__sm__.tmk` as argument.
+ScannerMaker can be controlled by using various options as described in _THE SCANNERMAKER COMMAND_ on page 162.
+
+4. Compile the ScannerMaker generated source module, `__sm__Scan`, the scanner semantic actions module `__sm__ScSema`, and the common definition module `__sm__Common`.
+If the target language was '`c`', `__sm__Scan.c`, `__sm__Scan.h`, `__sm__ScSema.c` and `__sm__Common.h` were produced.
+
+5. Compile and link the main program and any auxiliary modules with the object files produced.
+
+6. Execute and test the scanner.
+
+// @XREF: Toolmake Reference Manual
+
+Points 1 and 2 can be simplified by invoking _**toolmake**_ to set up a development environment for you (see the _Toolmake Reference Manual_).
+The files created by _*toolmake*_ must be modified to suit your requirements.
+
+TIP: In rare cases the description files are not sufficient to capture all the target dependencies or special requirements for a project, and you have to modify the scanner skeletons.
+If this is the case copy the file `Scan.imp` to the development directory from the appropriate library and modify them.
+#TO DO THIS IT IS ABSOLUTELY NECESSARY THAT YOU HAVE A THOROUGH UNDERSTANDING OF THE SYSTEM.#
+Change the library option in the ScannerMaker description file to point to the directory where the modified skeletons resides.
+When ScannerMaker is executed, it will use these skeletons instead of the standard ones.
+
+// PAGE 138
+
+=== File Descriptions
+
+==== Input Files
+
+// @XREF: The ScannerMaker Description File
+
+_ScannerMaker description file_ (`.smk`).
+This file describes the scanners which should be generated using the ScannerMaker program, _**smk**_.
+This file is described in _The ScannerMaker Description File_ on page 138.
+
+_ToolMaker description file_ (`.tmk`).
+This file describe common definition for all tools in ToolMaker.
+ScannerMaker uses the token and source position, options, etc., as described in this file.
+
+// @XREF: The Vocabulary file
+
+_Vocabulary file_, (`.voc`).
+This file describes the vocabularies to be used by the scanner.
+The vocabulary file is normally produced by ParserMaker.
+This file is described in _The Vocabulary file_ on page 160.
+
+
+==== Output Files
+
+_ScannerMaker source module_, (`__sm__Scan`).
+This module describes the interface to and implements the scanner.
+
+_ScannerMaker semantic action module_, (`__sm__ScSema`).
+This module implements the actions specified in the description file.
+
+_ScannerMaker table file_, (`.smt`).
+This intermediate file is normally not kept after successful source generation.
+It controls the generation of the files above from skeleton files.
+
+
+== The ScannerMaker Description File
+
+// @XREF: ToolMaker System Description
+// @XREF: SYNTAX NOTATION
+
+This section describes the ScannerMaker description file.
+In this description a modified BNF notation is used to describe the syntax.
+This notation is briefly described in appendix C in the _ToolMaker System Description_, _SYNTAX NOTATION_, page 52.
+
+
+=== Lexical items
+
+Symbols in the ScannerMaker description language are constructed from using upper case letters from the ISO-8859-1 character set, lower case letters (ISO-8859-1) and digits.
+
+// SYNTAX: EBNF
+
+---------------------------------
+<letter> ::=
+    <upper case letter> | <lower case letter>
+
+<digit> ::=
+      '0' | '1' | '2' | '3' | '4'
+    | '5' | '6' | '7' | '8' | '9'
+
+<special character> ::=
+      '!' | '@' | '#' | '$' | '%' | '^' | '&' | '*'
+    | '(' | ')' | '_' | '-' | '+' | '=' | '|' | '{'
+    | '}' | '[' | ']' | ';' | ':' | ''' | '"' | '~'
+    | '`' | '<' | '>' | ',' | '.' | '?' | '/' | '\'
+
+<target code> ::=
+    <any characters in the target language except '%%'>
+
+<token name> ::=
+    <letter> {<letter> | <digit> | '_'}
+
+<definition name> ::=
+    <letter> {<letter> | <digit> | '_'}
+
+<string> ::=
+    ''' {<letter> | <digit> | <special character>} '''
+---------------------------------
+
+// PAGE 139
+
+
+=== Overall Structure
+
+The overall structure of the Scanner Description file is as follows:
+
+// SYNTAX: EBNF
+
+---------------------------------
+<description file> ::=
+     <toolmaker sections>
+    {<target code section>}
+    {<set definition section>}
+    {<general definition section>}
+    {<vocabulary section>}
+---------------------------------
+
+// @XREF: THE TOOLMAKER DESCRIPTION
+// @XREF: ToolMaker System Description
+
+The _toolmaker sections_ are further described in _THE TOOLMAKER DESCRIPTION_ FILE in the _ToolMaker System Description_, page 30.
+
+// SYNTAX: EBNF
+
+---------------------------------
+<toolmaker sections> ::=
+    [ <options section> ]
+    { <import section> | <srcp section>
+        | <token section> }
+---------------------------------
+
+// @XREF: The Options Section
+// @XREF: ToolMaker System Description
+// @XREF: Options
+// @XREF: THE TOOLMAKER DESCRIPTION FILE
+// @XREF: ToolMaker System Description
+
+The option section follows the general guidelines as described in _The Options Section_ in the _ToolMaker System Description_, page 30.
+The options which can be specified in the options section are described in _Options_ on page 162.
+The import, srcp and token sections are described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+
+The _target code sections_ are one of the following subsections:
+
+// SYNTAX: EBNF
+
+---------------------------------
+<target code section> ::=
+      <declaration section>
+    | <context section>
+    | <export section>
+    | <reader section>
+    | <prehook section>
+    | <posthook section>
+    | <action section>
+---------------------------------
+
+The _general definition sections_ are one of the following subsections:
+
+// SYNTAX: EBNF
+
+---------------------------------
+<general definition section> ::=
+      <map definition section>
+    | <definition section>
+---------------------------------
+
+The _vocabulary sections_ have the following structure:
+
+// PAGE 140
+
+// SYNTAX: EBNF
+
+---------------------------------
+<vocabulary section> ::=
+    '%%VOCABULARY' <vocabulary name>
+    { <token name> '=' <external token code> ';' }
+    { <scanner section> }
+---------------------------------
+
+The _scanner sections_ have the following structure:
+
+// SYNTAX: EBNF
+
+---------------------------------
+<scanner section> ::=
+    '%%SCANNER' <scanner name> [':' <scanner name>]
+    [ <screened token section> ]
+    [ <undefine token section> ]
+    { <rule definition section> }
+---------------------------------
+
+The _rule section_ includes the following subsections:
+
+// SYNTAX: EBNF
+
+---------------------------------
+<rule definition section> ::=
+      <rules section>
+    | <skip section>
+---------------------------------
+
+Each section maybe optionally ended by the `%%END` keyword.
+The case of the letters in keywords are not significant and all keywords starting with `%%` may be specified in plural as well as in singular.
+For example the following keywords are equivalent
+
+* `%%OPTION`
+* `%%Option`
+* `%%Options`
+
+// @CHECK: MISSING WORD? Looks like part of the sentence was lost:
+//      "after an `%%END` token up to the next `%%` characters,
+//       [???] is treated as comments." -- what is treated as comment?
+
+Between sections, that is, after an `%%END` token up to the next `%%` characters, is treated as comments.
+The special `%%COMMENT` keyword also starts a comment up to `%%`.
+The `%%` may be quoted by the escape character to be part of the comment.
+Inside a section comments may appear anywhere as long as they do not break a lexical unit such as an identifier or a string.
+Comments begin with two hyphens and end with a new line.
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+-- This is a comment
+------------------------------
+
+
+=== The Options Section
+
+// SYNTAX: EBNF
+
+---------------------------------
+'%%OPTIONS' {<directive>} ['%%END']
+
+<directive> ::=
+      <common directive>
+    | <optimize directive>
+    | <trace direvtive>
+    | <set directive>
+    | <pack directive>
+    | <screening directive>
+    | <list directive>
+    | <token size directive>
+    | <token limit directive>
+    | <exclude character directive>
+---------------------------------
+
+
+// @XREF: THE SCANNERMAKER COMMAND
+
+In this section options can be specified to control some actions taken by the scanner generator.
+These options can be overridden by options given on the command line when the scanner generator is invoked (see _THE SCANNERMAKER COMMAND_ on page 162).
+If an option is not specified its default value is used.
+The default options are:
+
+// PAGE 141
+
+// SYNTAX: ToolMaker description file?
+
+---------------------------------
+No Verbose;
+Target 'ansi-c';
+Os 'SunOS';
+Prefix 'sm';
+Library '$TMHOME/lib/ansi-c';
+Escape '`';
+Width 78;
+Height 60;
+Generate source;
+No Force;
+Optimize;
+No Trace;
+Set 'ISO8859_1';
+Pack row, column;
+No Screening;
+No List;
+Tokensize 1024;
+Tokenlimit 524288;
+---------------------------------
+
+// @XREF: The Options Section
+// @XREF: ToolMaker System Description
+
+Note however that the settings of common options in the ToolMaker Common Description file influences the default values (see _The Options Section_ in the _ToolMaker System Description_, page 30).
+
+
+==== Common Directives
+
+// SYNTAX: EBNF
+
+---------------------------------
+<common directive> ::= <target directive>
+      <os directive>
+    | <prefix directive>
+    | <library directive>
+    | <escape directive>
+    | <width directive>
+    | <height directive>
+    | <generate directive>
+    | <force directive>
+---------------------------------
+
+// @XREF: The Options Section
+// @XREF: ToolMaker System Description
+
+The common directives are directives available for all of the Makers in the ToolMaker kit.
+For a detailed description of these refer to _The Options Section_ in the _ToolMaker System Description_, page 30.
+All directives are available for ScannerMaker, and if used overrides settings and default values from the ToolMaker Common Description file.
+
+
+The prefix directive does not inherit its default value, instead it defaults to
+`_sm_` if not explicitly set in the `.tmk` file.
+If set in the ToolMaker Common Description file and _not_ used in the ScannerMaker Description file it defaults to the system prefix (the value set in the ToolMaker Common Description file).
+
+
+==== The Optimize Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<optimize directive> ::=
+    ['NO'] 'OPTIMIZE' ';'
+---------------------------------
+
+// PAGE 142
+
+This option specifies if the state table should be minimized or not.
+The generated unoptimized state table is very small as it is, although not always minimal.
+The default setting is
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+Optimize;
+---------------------------------
+
+
+==== The Trace Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<trace directive> ::=
+    ['NO'] 'TRACE' ';'
+---------------------------------
+
+This option turns on [off] generation of tracing of tokens found by the generated scanner.
+The default for the trace directive is
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+No Trace;
+---------------------------------
+
+
+==== The Set Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<set directive> ::=
+    'SET' <set name> ';'
+---------------------------------
+
+This option specifies which character set to be used.
+Predefined sets are
+
+[horizontal]
+`iso8859_1` :::
+Defines a full 8bit characters set to be used.
+
+`ascii` :::
+Defines only a 7bit character set.
+
+`ebcdic` :::
+Defines the EBCDIC character set as defined by the UNIX `dd` command with
+ebcdic conversion.
+
+`ibm` :::
+Defines the EBCDIC characters set as defined by the UNIX `dd` command with ibm
+conversion.
+
+Other character sets can be defined by one or more _set sections_.
+The default set directive is
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+Set 'IS08859_1';
+---------------------------------
+
+
+==== The Pack Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<pack directive> ::=
+      'NO' 'PACK'
+    | 'PACK' <pack> {',' <pack>} ';'
+---------------------------------
+
+This option specifies which packing schemes should be used to reduce the size of the state table.
+The following `<pack>` schemes are supported:
+
+[horizontal]
+`ROW` :::
+merge equivalent rows (states)
+
+`COLUMN` :::
+merge equivalent columns (characters)
+
+`RDS` :::
+optimized row displacement scheme
+
+`LES` :::
+line elimination scheme
+
+`GCS` :::
+graphic coloring scheme
+
+`ERROR` :::
+pack error state table generated by `LES` or `GCS` by merging equivalent rows and
+columns
+
+The default packing is
+
+// PAGE 143
+
+// SYNTAX: ToolMaker description file
+---------------------------------
+Pack row, column;
+---------------------------------
+
+Each packing scheme may be combined freely with any other packing scheme with the only exception of `ERROR` which only has significance together with `GCS` or `LES` packing schemes.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+PACK LES, RDS, COLUMN;
+---------------------------------
+
+instructs ScannerMaker to first locate equivalent columns in the state table and merge them.
+Thereafter a line elimination scheme is used to further reduce the size of the packed table and finally row displacement is used to minimize the table still further.
+
+The order in which the packing is performed is
+
+1. ROW and/or COLUMN
+2. LES
+3. GCS
+4. RDS
+
+Which packing scheme to use depends on if speed or space requirements is of greatest importance.
+The same packing scheme may pack some state tables better than other tables.
+Generally, the best packing schemes are `ROW` and `COLUMN`, or `RDS`, while `LES` and `GCS` often gives a good result but are rather slow mainly because of the need of an error state table.
+
+If `LES` is used it is recommended that `GCS` is also used because the use of `GCS` does not affect the speed.
+The use of `RDS` is also recommended when `LES` and/or `GCS` is used to further enhance packing without greatly affecting the execution speed.
+However, if speed is essential no packing at all, `ROW` or `COLUMN` packing or `RDS` packing should be used.
+
+
+==== The Screening directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<screening directive> ::=
+      'NO' 'SCREENING' ';'
+    | 'SCREENING' <minimum token size> ';'
+---------------------------------
+
+Screening is used to reduce the size of the generated scanners.
+Screening removes the need for all special states for rules which is defined as a sequence of characters, a stream of characters, with a specified minimum length and for which there is another rule which accepts the same token.
+The rule which is removed defines a _screened_ token and the more general rule which accepts the same token is said to _screen_ a screened token.
+
+When a token which screens another token is found a look-up is performed to check if there is a screened token which is equal to the token found.
+For example:
+
+// PAGE 144
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+%%RULE
+    'BEGIN' = 'BEGIN';
+    Keyword = [A-Za-z]+;
+---------------------------------
+
+In the example above the token `BEGIN` has a same accept state that hides the `Keyword` definition.
+When screening is used the `BEGIN` token is removed from the resulting _DFA_ and when `Keyword` is found by the generated scanner it is compared against the string ``'BEGIN'`` and if it matches this token is selected instead of `Keyword`.
+
+Screening can be enabled for single tokens individually in the _screening section_.
+By default all tokens may be screened.
+To actually use screening the `Screening` option _must_ be specified.
+The default is to not use screening
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+No Screening;
+------------------------------
+
+
+==== The List Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<list directive> ::=
+      'NO' 'LIST' ';'
+    | 'LIST' <list> {',' <list>} ';'
+---------------------------------
+
+This option specifies what should be written into the list file.
+The following `<list>` options are supported:
+
+[horizontal]
+`INPUT` ::: description file
+`SET`   ::: character set
+`MAP`   ::: character map used by the generated scanner
+`TOKEN` ::: defined tokens
+`DFA`   ::: the state table
+`NFA`   ::: the NFA
+`RULE`  ::: the rules defined for each scanner
+
+The list file has the same name as the description file but with any extension replaced by `.sml`.
+The default is
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+No List;
+---------------------------------
+
+
+==== The Token Size Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<token directive> ::=
+    'TOKENSIZE' <minimal token size> ';'
+---------------------------------
+
+The normal or minimal size of the buffer used when scanning.
+The default setting is
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+Tokensize 1024;
+---------------------------------
+
+It should be set so that most tokens will fit inside this limit, however if exceeded the token buffer will be automatically extended gradually to a maximal limit (see the `TokenLimit` directive below).
+
+// PAGE 145
+
+==== The Token Limit Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<token directive> ::=
+    'TOKENLIMIT' <maximal token size> ';'
+---------------------------------
+
+The token scanned may not be larger than the specified maximal token length.
+By the default this is set to
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+Tokenlimit 524288;
+---------------------------------
+
+
+==== The Exclude Character Directive
+
+// SYNTAX: EBNF
+
+---------------------------------
+<exclude character directive> ::=
+    'EXCLUDE' <exclude character>  ';'
+---------------------------------
+
+This option specifies a character excluded from the normal character set.
+The specified character may never occur in the input and can be used for special purposes by ScannerMaker to create an even more efficient scanner.
+The default is
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+No Exclude;
+---------------------------------
+
+I.e not to exclude any character from the selected character set.
+
+
+=== The Declaration Section
+
+// SYNTAX: EBNF
+
+---------------------------------
+<declaration section> ::=
+    '%%DECLARATION' <target language code> ['%%END']
+---------------------------------
+
+In this section types, variables and functions used within the scanner should be defined.
+This target language dependent source code is copied into the generated scanner and is accessible (valid) in all other target language sections.
+
+
+=== The Context Section
+
+// SYNTAX: EBNF
+
+---------------------------------
+<context section> ::=
+    '%%CONTEXT' <target language code> ['%%END']
+---------------------------------
+
+// @XREF: Semantic Actions
+// @XREF: Type: smScContext and smScContextItem
+
+In this section variables used within a scanner context should be defined, see _Semantic Actions_ on page 158 and _Type: smScContext and smScContextItem_ on page 164 for a complete description of how to use the scanner context.
+
+
+=== The Export Section
+
+// SYNTAX: EBNF
+
+---------------------------------
+<export section> ::=
+    '%%EXPORT' <target language code> ['%%END']
+---------------------------------
+
+User defined functions and variables that should be visible outside the generated scanner should be defined in this section, this section is included in the interface description of the generated scanner (in '`c`' the `__sm__Scan.h` file).
+
+// PAGE 146
+
+
+=== The Reader Section
+
+// SYNTAX: EBNF
+---------------------------------
+<reader section> ::=
+    '%%READER' <target language code> ['%%END']
+---------------------------------
+
+// @XREF: Semantic Actions
+
+The code specified in the _reader section_ is executed when reading characters into the input stream, see _Semantic Actions_ on page 158 for more information on the contents of this section.
+The _reader section_ may be viewed as the body of a function with the following definition.
+
+// SYNTAX: ToolMaker description file???
+
+[subs=quotes]
+------------------------------
+length = __sm__ScReader(smThis, smBuffer, smLength)
+smThis    :  IN __sm__Context
+smBuffer  :  OUT STRING
+smLength  :  IN INTEGER
+------------------------------
+
+The function must return the number of characters read.
+If no more characters can be read, zero should be returned.
+In case of an error, a negative value should be returned.
+This will cause the scanner to abort and return the value as an error code instead of an external token code.
+For example
+
+// SYNTAX: ToolMaker description file???
+
+---------------------------------
+%%CONTEXT
+    int fd;
+%%READER
+    return read(smThis->fd, smBuffer, smLength);
+%%END
+---------------------------------
+
+This reader reads from the file `fd` into the buffer `smBuf` fer a maximal of `smLength` characters.
+It returns the number of characters read or -1 if an error occurs (which will abort the scanner as described above).
+The default reader is
+
+// SYNTAX: ToolMaker description file???
+
+---------------------------------
+%%READER
+    return read(0, smBuffer, smLength);
+%%END
+---------------------------------
+
+That is, characters are read from _standard input_.
+
+
+=== The Action Section
+
+// SYNTAX: EBNF
+
+---------------------------------
+<action section> ::=
+    '%%ACTION' <target language code> ['%%END']
+---------------------------------
+
+// @XREF: Semantic Actions
+
+The code specified in the _action section_ is executed just before entering any token specific action and is therefore common to all token specific actions, see _Semantic Actions_ on page 158 for a complete definition of semantic actions.
+This code is copied in-line into the body of the `__sm__ScAction` function and then followed by the semantic actions for the tokens.
+
+// SYNTAX: ToolMaker description file???
+
+[subs=quotes]
+------------------------------
+code = __sm__ScAction(smThis, smInternalCode, smToken)
+
+smThis   :  IN __sm__ScContext
+smToken  :  IN OUT %%(tokenType)
+returns INTEGER
+------------------------------
+
+// PAGE 147
+
+=== The Prehook Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<prehook section> ::=
+    '%%PREHOOK' <target language code> ['%%END']
+------------------------------
+
+// @XREF: Semantic Actions
+
+In the _prehook section_ code which should be performed before scanning a token is defined.
+For more information on the contents of this section, see _Semantic Actions_ on page 158.
+The _prehook section_ may be viewed as the body of a function with the following definition
+
+// SYNTAX: ToolMaker description file???
+
+[subs=quotes]
+------------------------------
+code = __sm__ScPreHook(smThis, smToken)
+
+smThis   :  IN __sm__ScContext
+smToken  :  IN OUT %%(tokenType)
+returns INTEGER
+------------------------------
+
+If a positive number, zero included, is returned the scanning is terminated immediately.
+The number is used as the external token code returned by the scanner.
+
+NOTE: When executing the prehook the variable `srnLength` has the value `0` (zero).
+
+
+=== The Posthook Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<posthook section> ::=
+    '%%POSTHOOK' <target language code> ['%%END']
+------------------------------
+
+// @XREF: Semantic Actions
+
+The code specified in the _posthook section_ is executed after a complete token is found, see _Semantic Actions_ on page 158 for more information on the contents of this section.
+The _posthook section_ may be viewed as the body of a function with the following definition:
+
+// SYNTAX: ToolMaker description file???
+
+[subs=quotes]
+------------------------------
+code = __sm__ScPostHook(smThis, smToken)
+
+smThis   :  IN __sm__ScContext
+smToken  :  IN OUT %%(tokenType)
+returns INTEGER
+------------------------------
+
+The found token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in '`c`') when the posthook function is terminated.
+This field is initially set to the value as specified in the vocabulary file or the vocabulary section depending on the token recognised.
+
+The external token code for the token found can be changed in two ways, either by setting `smToken->smCode` to the new external code or by returning the new external code by executing a `return` statement.
+The external token code should be one of the enumeration values defined for tokens in the vocabulary to which the current token belongs, or the predefined enumeration `smSkipToken`.
+
+When `smSkipToken` is returned the current token is skipped, as if it was given in the skip section.
+
+// PAGE 148
+
+NOTE: It is not possible to specify that the scanning of tokens should be continued within the _posthook section_.
+
+
+=== The Set Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<set section> ::=
+    '%%SET' <set name> (<set>} ['%%END']
+------------------------------
+
+This section defines a character set.
+The use of a character set is primarily to generate a scanner that should execute on a machine with a different character representation than the machine on which is was generated.
+A character set may be viewed as the mapping from the native set (the set on the machine which the scanner is running) to the internal for which the tables are generated.
+This makes it very easy to generate scanners that can be compiled and run on various machines even with different character sets.
+
+The name of the set is specified followed by 256 character specifications.
+Allowed representation of characters are all non-white printable ISO-8859-1 characters, two digit hexadecimal numbers and the special character combination two dots.
+The two dots specifies an undefined character.
+Comments are the same as for the rest of the scanner, double hyphens.
+
+The mapping determines which character is used in the rules description for the n-th character in the character set.
+For example,
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+a b .. 0F
+------------------------------
+
+specifies that the first four characters in the set are `a`, `b`, undefined and `0F`.
+That is, if the character `a` is used in the description of the scanner, the generated scanner uses `a` as the first character in the set (value 97).
+For example:
+
+// SYNTAX: ToolMaker description file
+
+// @CHECK: Carefully compare to original scans!
+
+-------------------------------------------------------------------------------
+%%SET IBMSET
+-- 0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
+----------------------------------------------------------------------
+  00  01  02  03  ..  09  ..  7F  ..  ..  ..  0B  0C  0D  0E  0F  -- 0
+  10  11  12  13  ..  ..  08  ..  18  19  ..  ..  ..  ..  ..  ..  -- 1
+  ..  ..  1C  ..  ..  0A  17  1B  ..  ..  ..  ..  ..  05  06  07  -- 2
+  ..  ..  ..  ..  ..  ..  ..  04  ..  ..  ..  ..  14  15  ..  16  -- 3
+  20  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  <   (   +   ..  -- 4
+  &   ..  ..  ..  ..  ..  ..  ..  ..  ..  !   $   *   )   ;   ..  -- 5
+  -   /   ..  ..  ..  ..  ..  ..  ..  ..  |   ,   %   _   >   ..  -- 6
+  ..  ..  ..  ..  ..  ..  ..  ..  ..  `   :   #   @   ´   =   "   -- 7
+  ..  a   b   c   d   e   f   g   h   i   ..  ..  ..  ..  ..  ..  -- 8
+  ..  j   k   l   m   n   o   p   q   r   ..  ..  ..  ..  ..  ..  -- 9
+  ..  ~   s   t   u   v   w   x   y   z   ..  ..  ..  ..  ..  ..  -- A
+  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  ..  -- B
+  {   A   B   C   D   E   F   G   H   I   ..  ..  ..  ..  ..  ..  -- C
+  }   J   K   L   M   N   O   P   Q   R   ..  ..  ..  ..  ..  ..  -- D
+  \   ..  S   T   U   V   W   X   Y   Z   ..  ..  ..  ..  ..  ..  -- E
+  0   1   2   3   4   5   6   7   8   9   ..  ..  ..  ..  ..  ..  -- F
+-------------------------------------------------------------------------------
+
+defines a set of a possible IBM character set.
+
+Undefined characters always result in error states in the generated DFA.
+That is, if such a character is encountered in the input string when the generated scanner is used, the scanning is aborted and eventually the character is returned as an undefined token.
+
+// PAGE 149
+
+Any number of character sets can be defined in addition to the built-in allowing easy generation of the same scanner for different character sets.
+
+
+=== The Map Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<map section> ::=
+    '%%MAP' {<character map>} ['%%END']
+
+<character map> ::=
+    <character class> '=' <character class> ';'
+------------------------------
+
+This section defines the mapping of a character read in the scanner.
+This can for example be used to map lower case characters on the upper case, creating a case-insensitive scanner (as opposed to character sets which handle the complete representation of characters and should be changed by changing the setting of the set option).
+
+To define a character map character classes are used.
+Characters are given on the left-hand side and the equivalent characters on the right-hand side.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+[0-9] = [\xF0-\xF9];
+------------------------------
+
+maps the digits to the characters with hexadecimal values `F0` and `F9`.
+
+The characters in the character class are ordered from the lowest to the highest character value.
+The mapping is then performed by assigning the lowest character on the left-hand side to the value of the character on the right-hand side, and so on until the highest value is reached.
+
+If the set of characters on the right-hand side contains fewer characters than that on the left-hand side the highest value of the set with the least number of characters is assigned to the remaining characters of the left-hand side.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+[0-9] = \x0;
+------------------------------
+
+maps all digits to the hexadecimal value `0` (zero).
+
+If the left-hand side has fewer characters than the right-hand side the remaining characters are discarded.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+[0-9] = [A-Z];
+------------------------------
+
+maps all digits to the ASCII values `A` to `J` respectively.
+
+If the character class begins with a character that is greater than the last character in the specified set of characters, the characters are processed in reversed order.
+For example:
+
+// PAGE 150
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+[a-z] = [Z-A];
+[9-0] = [\000-\011];
+------------------------------
+
+maps the character `a` to `z` to the ASCII values `Z` down to `A` and the digits `0` to `9` to the values `9` (11 octal) down to `0`.
+
+The mapping of the empty character set defines undefined values in the character set.
+It is recommended that the first mapping is to make all characters undefined.
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+[-] = [];
+------------------------------
+
+This will disallow the use of any non mapped character.
+By default all characters are mapped to themselves.
+That is, the character `A` is mapped to the character `A`, etc.
+
+The mapping of characters are given in the same manner as for the mapping of a character set.
+The only difference is that if characters are mapped to the empty set, those characters are skipped by the scanner.
+However the characters remain in the token string.
+This is especially significant when defining a scanner for languages such as FORTRAN where all blank characters are discarded in the input stream.
+
+
+=== The Definition Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<definition section> ::=
+    '%%DEFINITION' {<definition>} ['%%END']
+
+<definition> ::=
+    <definition name> '=' [<selection rule>]
+        [<action>] ';'
+------------------------------
+
+This section defines identifiers which can be used within regular expressions and/or a semantic action.
+These definitions can have the same name as a token defined in the _rule definition sections_.
+The name of a definition can not be given as a string (i.e. surrounded by quotes).
+
+The definition is defined by using a regular expression in the same way as in the _rule definition sections_, except that no lookahead definition is allowed.
+A definition can also be specified without a regular expression.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Digit   = [0-9];
+Integer = digit+ %% gotInteger(smThis); %%
+Copy    = %% smScCopy(aBuffer, 0, smThis->smLength); %%
+------------------------------
+
+In the example above digit defines a rule as being a number `0` to `9`.
+`Integer` is defined to be both a rule, a number of digits, and a semantic action.
+`Copy` on the other hand only defines a semantic action.
+
+Semantic actions defined in this way can be used later in the _rule_ and _skip sections_ in place of an ordinary semantic action by using the `%%DO` keyword.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Integer = Digit+ %%DO Integer;
+------------------------------
+
+// PAGE 151
+
+This is further described in the description of semantic actions below.
+
+
+=== The Vocabulary Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<vocabulary section> ::=
+    '%%VOCABULARY' <vocabulary name>
+    {<token name> '=' <external token code> ';'}
+    {<scanner section>}
+------------------------------
+
+The vocabulary section is used to specify the vocabulary used by the scanners defined for a specific vocabulary.
+A vocabulary also defines a set of tokens.
+The tokens can either be specified in a vocabulary file or directly after the name of the vocabulary in the vocabulary section.
+Each vocabulary may specify a number of scanners to recognise its set of tokens.
+
+A token must always have an external token code which must be unique in the vocabulary.
+Tokens may be _string tokens_, in which case the name of the token is given as a quoted string.
+All string tokens are automatically defined in the first scanner in the vocabulary that defines them if they are not explicitly defined in a scanner.
+
+ScannerMaker will complain if a token have not been defined, or explicitly undefined, in any of the scanners defined for the vocabulary.
+
+
+=== The Scanner Subsection
+
+// SYNTAX: EBNF
+
+------------------------------
+<scanner section> ::=
+    '%%SCANNER' <scanner name> [':' <scanner name>]
+    [<screened token section>]
+    [<undefine token section>]
+    {<rule definition section>}
+------------------------------
+
+where the rule definition section is
+
+// SYNTAX: EBNF
+
+------------------------------
+<rule definition section> ::=
+      <rule section>
+    | <skip section>
+------------------------------
+
+The scanner section defines a scanner.
+It consist of a scanner name, an optional screening section, an optional undefine token section, and rule definition sections.
+The name of the scanner is local for each vocabulary.
+That is, the same scanner name can be used in several vocabularies.
+However, a vocabulary may only define _one_ scanner with a specific name.
+
+The definition
+
+// SYNTAX: EBNF
+
+------------------------------
+<scanner name> ':' <scanner name>
+------------------------------
+
+defines a scanner which inherits definitions from another scanner.
+The new scanner copies all rules and semantic actions from the other scanner.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%SCANNER newScanner : oldScanner %%RULE
+------------------------------
+
+// PAGE 152
+
+defines `newScanner` to be a copy of `oldScanner`.
+The new scanner can then be expanded with new definitions but also restricted by removing a definition or altered by first removing a definition and then redefining them.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%SCANNER newScanner : oldScanner %%UNDEFINE
+    Integer;
+%%RULE
+    Integer = [0-9A-Fa-f]+;
+------------------------------
+
+if the old scanner has a definition of integer it is replaced by the new definition.
+
+// @GRAMMAR: Sentence needs serious polishing!
+
+ScannerMaker will complain about tokens which have been defined in another scanner than the first and is only predefined in the first scanner.
+However, if the token is explicitly undefined in the first scanner, ScannerMaker will not complain since the token has been explicitly said to be undefined until it is later defined in a rule or skip section.
+
+
+=== The Screened Token Subsection
+
+// SYNTAX: EBNF
+
+------------------------------
+<screened token section> ::=
+    '%%SCREENING'
+    {<token name> ';'}
+------------------------------
+
+This section specifies which tokens in the scanner can be screened.
+By default _all_ tokens can be screened.
+
+
+=== The Undefine Token Subsection
+
+// SYNTAX: EBNF
+
+------------------------------
+<undefined token section> ::=
+    '%%UNDEFINE'
+    {<token name> ';'}
+------------------------------
+
+This section undefines a predefined or inherited token.
+All rules associated to the token are marked as undefined.
+
+
+=== The Rules Subsection
+
+// SYNTAX: EBNF
+
+------------------------------
+<rules section> ::=
+    '%%RULE' {<token rule>} ['%%END']
+
+<token rule> ::=
+      <token name> '=' <lookahead rule> [<action>] ';'
+    | <string> '=' <lookahead rule> [<action>] ';'
+------------------------------
+
+In the _rules section_ the tokens which the scanner should recognize are defined.
+The token could be both a token name and a string and the definition is a regular expression which can be followed by a lookahead regular expression.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+integer = integer;
+integer = integer / '..';
+------------------------------
+
+// PAGE 153
+
+defines that the externally visible token integer is to be an integer, as defined in the _definition section_ above, and it is also an integer followed by a lookahead string `..`.
+This is a rather perplexing definition because of the use of the token `integer` defined in the _definition section_ in the regular expression and the definition of an external visible token which may be defined in the vocabulary file.
+However this example shows that it is possible to use the same name for a token defined in the _definition section_ and a token defined in the _rules section_ without name clash.
+The example also shows the possibility to give multiple internal definitions for the same externally visible token.
+That is, both definitions return the same external token code.
+
+An alternative definition of integer could be
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+integer = integer / '..'?;
+------------------------------
+
+which is an integer followed by an optional lookahead string `..`.
+Both definitions define exactly the same token but the first set of definitions creates a more efficient scanner because the lookahead is fixed to two characters while the other definition uses a variable length lookahead of either none or two characters.
+
+TIP: If possible use fixed length regular expression either in the regular expression preceding the lookahead or in the lookahead (or both) when lookahead is used.
+
+The scanner always tries to find the longest possible token, even when using lookahead.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+absurd = [0-9]+/[0-9]+;
+------------------------------
+
+locates a string which has one or more digits followed by at least one digit.
+However, such a definition is absurd because there is no definite way to determine when the lookahead starts but with the convention to always locate the longest token, even this type of definitions has a well defined meaning.
+The rule
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+absurd = [0-9]+/[0-9];
+------------------------------
+
+will find the same token as above but is more efficient because the lookahead has a fixed length of one character.
+
+
+=== The Skip Subsection
+
+// SYNTAX: EBNF
+
+---------------------------------
+<skip section> ::=
+    '%%SKIP' {<skip rule>} ['%%END']
+
+<skip rule> ::=
+      <token name> '=' <lookahead rule> [<action>] ';'
+    | <string> '=' <lookahead rule> [<action>] ';'
+---------------------------------
+
+This section defines the tokens that should be skipped by the scanner, that is, not be passed to the caller of the scanner function.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+blank = [ \t\n];
+------------------------------
+
+// PAGE 154
+
+skips all blank spaces ("`space`", tabs and newline) in the input stream between tokens.
+Skip tokens are defined exactly in the same manner as for ordinary tokens defined in the _rules section_ including lookahead.
+The rules for semantic actions are the same as for semantic rules in the rules section.
+
+
+=== Regular Expressions
+
+// SYNTAX: EBNF
+
+------------------------------
+<regular expression> ::=
+      <selection>
+    | <concatenation>
+    | <closure>
+    | <cut>
+    | <grouping>
+    | <character class>
+    | <character string>
+    | <identifier>
+    | <end of text>
+    | <unknown>
+------------------------------
+
+
+==== Selection
+
+// SYNTAX: EBNF
+
+------------------------------
+<selection> ::=
+    <regular expression> '!' <regular expression>
+------------------------------
+
+The meaning of selection of two regular expressions is that either the left or the right regular expression matches.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+'ab' ! 'cd'
+------------------------------
+
+matches either the token '`ab`' or '`cd`'.
+
+==== Concatenation
+
+// SYNTAX: EBNF
+
+------------------------------
+<concatenation> ::=
+    <regular expression> <regular expression>
+------------------------------
+
+The meaning of concatenating two regular expressions is to match the left regular expression followed by the right regular expression.
+The token thus matched are both regular expressions in the concatenation.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+'A' 'B'
+------------------------------
+
+is the concatenation of the `A` character (regular expression) and the `B` character.
+This matches the input `AB`.
+
+
+==== Closure
+
+// SYNTAX: EBNF
+
+------------------------------
+<closure> ::=
+<regular expression> '*'
+<regular expression> '+'
+<regular expression> '?'
+<regular expression> '{' <m> '}'
+<regular expression> '{' <n> '-' '}'
+<regular expression> '{' '-' <m> '}'
+<regular expression> '{' <n> '-' <m> '}'
+------------------------------
+
+// PAGE 155
+
+The first closure repeats the regular expression zero or more times, the second form repeats the regular expression one or more times while the third form means zero or one time.
+The other forms indicate a more general form where `<n>` is a number indicating the minimum number of times which the regular expression should be repeated, if missing zero is assumed.
+`<m>` is a number indicating the maximum number of times which the regular expression should be repeated, if missing infinite number of times is assumed.
+If only `<m>` is given a repetition of exactly `<m>` times is assumed.
+
+The operations on regular expressions using curly braces should be used with care because it tends to create large state tables.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+complex{6}
+------------------------------
+
+is equivalent to
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+complex complex complex complex complex complex
+------------------------------
+
+If `complex` derives 20 states the expression above will derive 120 states.
+
+
+==== Cut
+
+// SYNTAX: EBNF
+
+------------------------------
+<cut> ::=
+    <regular expression> '.'
+------------------------------
+
+When a token up to the cut operator is found the scanning is immediately abandoned.
+For example, this operator is very useful to describe comments in for example '`c`'
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+comment = '/*' [^]* '*/'.;
+------------------------------
+
+The meaning of the rule above is to find a `/{asterisk}` prefix and then match any character up to and including the first occurrence of a `{asterisk}/`.
+With no cut operator the matched token would be up to the last occurrence `{asterisk}/` in the input stream.
+
+Another way to look at the example above is that the cut operator selects the shortest possible token which matches the definition.
+Without a cut operator the longest possible token which matches the definition will be selected.
+
+
+==== Grouping
+
+// SYNTAX: EBNF
+
+------------------------------
+<grouping> ::=
+    '(' <regular expression> ')'
+------------------------------
+
+Grouping are used to alter the priority of operations.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+('ab' ! 'cd')+
+------------------------------
+
+matches tokens with one or more occurrence of the `ab` or `cd` patterns.
+For example:
+
+// PAGE 156
+
+..........
+ababcdcdab
+..........
+
+
+==== Character Class
+
+// SYNTAX: EBNF
+---------------------------------
+<character class> ::=
+      '['     {<character>} ']'
+    | '[' '^' {<character>} ']'
+---------------------------------
+
+A character class represents one of the characters given between the square brackets.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+[abcd]
+---------------------------------
+
+represents one of the characters `a`, `b`, `c`, or `d`.
+Non-printable characters can be represented by giving their octal or hexadecimal value
+
+[horizontal]
+`{backslash}__nnn__` ::: where _nnn_ is the octal value
+`\x__nn__` ::: where _nn_ is the hexadecimal value
+`\n` ::: newline
+`\t` ::: horizontal tab
+`\v` ::: vertical tab
+`\b` ::: backspace
+`\r` ::: carriage return
+`\f` ::: form feed
+
+If the backslash character, `\`, is followed by a character not mentioned above it is used as it is.
+That is, if the backslash, hyphen, or right square bracket should be used as a character in the character class they should be preceded by a backslash.
+
+[horizontal]
+`\\` ::: backslash
+`\-` ::: hyphen
+`\]` ::: right square bracket
+
+Further more the hyphenation character, `-`, is used to indicate a range of characters.
+For example a character class representing any digit can be specified as
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+[0-9]
+---------------------------------
+
+If the character `^` is given directly after the initial square bracket all characters in the character class definition are not a members of the character class.
+For example
+
+// SYNTAX: ToolMaker description file
+
+---------------------------------
+[^\n]
+---------------------------------
+
+represents all characters which are not a newline.
+The `^` character can be quoted by a backslash, `\`.
+
+// PAGE 157
+
+==== Character String
+
+// SYNTAX: EBNF
+
+------------------------------
+<character string> ::=
+    ''' { <character> } '''
+------------------------------
+
+A character string represents the regular expression needed to recognize that string.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+'BEGIN'
+------------------------------
+
+is interpreted exactly as
+
+...................
+[B] [E] [G] [I] [N]
+...................
+
+Inside a character string the non-printable characters can be represented in the same way as non-printable characters in a character class.
+However the characters `^`, `-`, and `]` have no special meaning in a character string.
+To use a single quote, `{apos}`, inside a character string it must be preceded by a backslash (`\`).
+
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+'can\'t'
+------------------------------
+
+represents the character sequence
+
+.....
+can't
+.....
+
+
+==== Identifier
+
+An identifier defined in the _definition section_ can be used in regular expressions.
+In such a case the definition of the identifier is inserted in that place of the regular expression.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%DEFINITION
+    integer  = [0-9]+;
+%%RULE
+    FIXATION = integer[.]integer;
+    FLOAT    = integer[.]integer([Ee][+\-]integer)?;
+    INTEGER  = integer;
+------------------------------
+
+
+==== End of Text
+
+// SYNTAX: EBNF
+
+------------------------------
+<end of text> ::=
+    '_EndOfText'
+------------------------------
+
+// @XREF: The Reader Section
+
+This special symbol matches the end of the input stream, the end of text.
+The end of the input stream is reached when the reader (as defined in the _reader section_, see _The Reader Section_ on page 146) returns zero.
+
+The `_EndOfText` symbol is case insensitive and must be the full regular expression.
+That is, `_EndOfText` can not be combined with selection, concatenation or closure.
+
+// PAGE 158
+
+==== Unknown
+
+// SYNTAX: EBNF
+
+------------------------------
+<unknown> ::=
+    '_Unknown'
+------------------------------
+
+This special symbol matches all unknown tokens found in the input stream.
+An unknown token is always only one character long but may be manipulated as any other token.
+
+The `_Unknown` symbol is case insensitive and must be the full regular expression.
+That is, `_Unknown` cannot be combined with selection, concatenation or closure.
+
+
+==== Operator Priorities and Associativity
+
+In the table below each operator is given in order of priority, and with its associativity:
+
+[%autowidth]
+[cols=">d,^m,3*<d"]
+|====================================================
+| Priority | Operator | Name      | Type   | Associativity
+
+| 1        | .        | cut       | unary  | none
+| 2        | *        | closure   | unary  | none
+| 2        | +        | closure   | unary  | none
+| 2        | ?        | closure   | unary  | none
+| 2        | { ... }  | closure   | unary  | none
+| 3        |          | concat.   | binary | left
+| 4        | !        | selection | binary | left
+|====================================================
+
+The highest operator priority is 1 and lowest priority is 4.
+
+
+=== Semantic Actions
+
+// SYNTAX: EBNF
+
+------------------------------
+<action> ::=
+      '%%' <any character sequence except '%%'> '%%'
+    | '%%DO' <action name>
+------------------------------
+
+In the _rule_ and _skip__ sections_ an action can be placed after each token definition, before its trailing semicolon, `;`.
+The action begins and ends with two percent characters, `%%`, or a reference to a semantic action defined in the _definition section_ using the `%%DO` keyword.
+
+All characters inside an action are considered to be code written in the same language as the scanner skeleton.
+This language is the same as the language specified in the `TARGET` option.
+The code in a semantic action is executed when the corresponding token is found.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+integer = digit+
+%%
+    unsigned char tmp;
+
+    tmp = smThis->smText[smThis->smLength];
+    smThis->smText[smThis->smLength] = 0;
+    smToken->ival = (int)atoi(smThis->smText);
+    smThis->smText[smThis->smLength] = tmp;
+%% ;
+------------------------------
+
+// PAGE 159
+
+Definitions from the _definition section_ can be referenced.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Integer = Integer %%DO Copy;
+------------------------------
+
+Using the definitions above in the description of the _definition section_ the integer found is copied to _aBuffer_.
+
+Similarly, target language code can be specified in the _declaration_, _context_, _reader_, _action_, _prehook_ and _posthook__ sections_.
+Each of these target language code sections begins with its keyword and ends with anything starting with two percent characters.
+For example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%DECLARATION
+    int commentLevel=0;
+    int commentModifier=0;
+%%MAP
+------------------------------
+
+// @XREF: The Escape Directive
+// @XREF: ToolMaker System Description
+
+By default the character `{backtick}` has special meaning in the target language code sections.
+This character is called the escape character (see _The Escape Directive_ in the _ToolMaker System Description_, page 32).
+By giving an escape character the following character is unconditionally processed.
+For example, if double percent characters should be used in the code they should be preceded by the escape character.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%% printf("%d`%%\n", percent); %%
+------------------------------
+
+is translated to
+
+// SYNTAX: C (plain)
+------------------------------
+printf("%d%%\n", percent);
+------------------------------
+
+instead of terminating at the first pair of percent characters.
+The escape character is escaped by itself.
+Thus, `{backtick}{backtick}` means `{backtick}`.
+
+The code in a semantic action is executed when a token that matches the corresponding definition is found.
+Each semantic action may be viewed as a function with the following definition:
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+code = __sm__ScAction(smThis, smInternalCode, smToken)
+
+smThis   :  IN __sm__ScContext
+smToken  :  IN OUT %%(tokenType)
+returns INTEGER
+------------------------------
+
+// @XREF: The Action Section
+
+In addition the code given in the _action section_ is executed first.
+The token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in '`c`') when the function is terminated.
+This variable is initially set to the value as specified in the vocabulary file or the vocabulary section or as set in a possible _action section_ (see _The Action Section_ on page 146).
+
+The external token code for the token found can be changed (simulating finding of another token) in two ways by either setting `smToken->smCode` to the new external code or by returning the new external code by executing a _return statement_.
+The external token codes should be one of the enumeration values defined for tokens in the vocabulary to which the current token belongs, or the predefined enumerators `smSkipToken` or `smContinueToken`.
+
+// PAGE 160
+
+When `smSkipToken` is returned the current token is skipped, as if it had been specified in the skip section.
+
+// @XREF: Continued Scanning
+// @MISSING TEXT: "will be performed, [SEE?] Continued Scanning on page 171."
+
+When `smContinueToken` is returned continued scanning will be performed, _Continued Scanning_ on page 171.
+
+
+== The ToolMaker Common Description file
+
+// @XREF: THE TOOLMAKER DESCRIPTION FILE
+// @XREF: ToolMaker System Description
+
+Unless ScannerMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+Otherwise these two sections may be specified in the ScannerMaker Description file, removing any need for the ToolMaker Common Description file.
+
+
+== The Vocabulary file
+
+The vocabulary file used by ScannerMaker corresponds to the vocabulary file produced by ParserMaker.
+The format of the vocabulary file consist of four fields:
+
+
+1. The number of the row in the vocabulary file.
+
+2. The external token code number.
+
+3. The token name.
+The token name may either be an identifier; a letter followed by zero or more letters, digits or underscores, or a string as defined by ScannerMaker.
+
+4. The name of the vocabulary to which the token belongs.
+The vocabulary name should be an identifier; a letter followed by zero or more letters, digits or underscores.
+
+
+Each field should be separated by blank characters.
+If multiple vocabularies are defined they must all be defined in the same vocabulary file, ScannerMaker only reads one vocabulary file.
+Below is an example of a vocabulary file:
+
+// SYNTAX: ToolMaker description file [ vocabulary file]
+
+---------------------------
+0    0    Unknown      main
+1    1    EndOfText    main
+2    2    ';'          main
+3    3    '('          main
+4    4    ')'          main
+5    5    ','          main
+---------------------------
+
+Each token should appear only once for each vocabulary and two token may not have the same external token in the same vocabulary.
+
+// PAGE 161
+
+For compatibility an older format is also supported.
+The format of the older vocabulary file is not described.
+However, if this format is used the end-of-text marker, `$`, is replaced with the `EndOfText` token and all tokens are defined to belong to a scanner called `main`.
