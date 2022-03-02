@@ -28,6 +28,7 @@ Familiarity with the other tools in the ToolMaker family is also beneficial but 
 :leveloffset: +1
 
 include::part2-1_concepts.adoc[]
+include::part2-2_production.adoc[]
 
 = TBD!
 
