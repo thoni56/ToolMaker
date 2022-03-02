@@ -1,0 +1,252 @@
+// PAGE 117 -- ParserMaker Reference Manual
+
+[appendix]
+= ERROR MESSAGES
+
+Error messages produced by ParserMaker are output to the terminal, and if the
+option `List Input;` is set, also to the list file.
+
+// @XREF: Message Format
+// @XREF: ToolMaker System Description
+
+For a description of the format of error messages refer to _Message Format_ in the _ToolMaker System Description_, page 49.
+
+
+== Message Explanations
+
+// @XREF: Messages Explanations
+// @XREF: ToolMaker System Description
+// @XREF: License Errors
+// @XREF: ToolMaker System Description
+
+The following list gives a brief summary of the error messages and in some cases the actions that should be taken by the user.
+Messages with numbers less than 100 are messages common for all Makers.
+These are described in _Messages Explanations_ in the _ToolMaker System Description_, page 50.
+Messages indicating license problems or limitations are described in _License Errors_ in the _ToolMaker System Description_, page 51.
+
+
+
+`100 I Parsing resumed.` :::
+Issued after a syntax error has resulted in some symbols being deleted.
+The `sequence number` indicates the point from which scanning
+and parsing will continue.
+
+`101 E %1 inserted.` :::
+Syntax error, the recovery method has inserted some symbol(s) in order to be able to continue parsing.
+The syntax error(s) must be corrected in order for a valid result to be produced.
+
+`102 E,F %1 deleted.` :::
+Syntax error, the recovery method has deleted some symbol(s) in order to be able to continue parsing.
+The syntax error(s) must be corrected in order for a valid result to be produced.
+
+`103 E %1 replaced by %2.` :::
+Syntax error, the recovery method has replaced some symbol(s) in order to be able to continue parsing.
+The syntax error(s) must be corrected in order for a valid result to be produced.
+
+`104 E Syntax error, stack backed up.` :::
+Severe syntax error, the recovery method has been forced to pop symbols off the stack in order to be able to continue.
+The syntax error(s) must be corrected in order for a valid result to be produced.
+
+`106 S Parse stack overflow.` :::
+The ParserMaker internal parse stack has overflowed.
+Please save the files that have caused the error and contact your ToolMaker contact person.
+
+// PAGE 118
+
+`107 S Parse table error.` :::
+Errors have been detected in the ParserMaker internal parse tables.
+Please save the files that have caused the error and contact your ToolMaker contact person.
+
+`108 I Parsing terminated.` :::
+Issued when it is impossible for ParserMaker to make any sense of the input.
+The error messages preceding this message will hopefully give some hint to what is wrong.
+
+`113 E Reduction and no-reduction sets intersect. Set = {%1}.` :::
+In the indicated production there is both a _reduce-for_ and a _reduce-not-for_ clause for the indicated symbols.
+Decide what action you want on the indicated symbols and delete them from the other clause.
+
+`114 W Repetition of Null string ignored.` :::
+The EBNF-construct for repetition has been used, but it contains no symbols and is thus not necessary.
+If the offending rule is correct without the repetition, remove the repetition, otherwise correct the rule.
+
+`115 E Ambiguous symbol %1 ignored, terminal or non-terminal expected.` :::
+A terminal or a non-terminal are the only symbols allowed in this position, and the found symbol was neither.
+
+`116 E Ambiguous symbol %1, non-terminal expected.` :::
+A non-terminal is the only symbol allowed in this position, and the found symbol was not a non-terminal.
+
+`117 E Ambiguous symbol %1, terminal expected.` :::
+A terminal is the only symbol allowed in this position, and the found symbol was not a terminal.
+
+`118 E Ambiguous symbol %1, attribute expected.` :::
+An attribute is the only symbol allowed in this position, and the found symbol was not an attribute.
+
+`119 W Attribute %1 defined twice.` :::
+The indicated attribute has been multiply defined in the _attributes section_.
+Remove all but one definition.
+
+`120 E Terminal code %1 already in use.` :::
+The indicated terminal code has been used for more than one terminal.
+Each terminal must have a unique terminal code.
+Note that terminal codes `0` and `1` are reserved by ParserMaker and must not be used.
+
+// PAGE 119
+
+`121 W Terminal %1 defined twice, old definition overridden.` :::
+The indicated terminal has been defined more than once in the _terminals section_.
+The last definition is the one used by the system.
+Remove all but one definition.
+
+`123 S Ambiguous symbol %1, terminal expected.` :::
+A symbol has been found in the _terminals section_ that ParserMaker thinks is not a terminal.
+Please save the files that have caused the error and contact your ToolMaker contact person.
+
+`130 F End of file in %1.` :::
+End of file has been found in a target code section.
+Truncated file or missing `%%`?
+
+`131 F Quoted string in semantic action does not terminate.` :::
+A single-quoted string following a `%`-sign (i.e. a ParserMaker symbol) does not terminate.
+You have probably forgotten the ending quote, and thus the rest of the semantic action has been skipped.
+
+`148 E Repetition construct contains only modifiers or semantic actions.` :::
+The EBNF repetition construct has been used in a production, but it contains no grammar symbols and is thus meaningless.
+Remove the repetition construct or correct the rule.
+
+// @XREF: Grammar Attributes
+
+`149 E Symbol not recognized in production.` :::
+The indicated grammar symbol used in the attribute reference does not occur in the production and is thus erroneous.
+Misspelling or an attempt to use attribute references in semantic actions embedded in a production (this is not allowed, see _Grammar Attributes_ on page 64 for further details).
+
+`150 E Undefined attribute %1.` :::
+The indicated attribute has not been defined in the _attributes section_.
+Misspelling?
+
+`151 E Reference to outer EBNF construct is not possible.` :::
+An attribute to an outer EBNF (`OEBNF`) construct has been made, but no outer EBNF construct exists in this context, so a reference is not possible.
+
+`152 E Attribute %1 must be non-terminal or vocabulary attribute.` :::
+A reference to a terminal attribute has been made, but for this symbol only non-terminal or predefined attributes are allowed.
+
+// PAGE 120
+
+`153 E Wrong instance in attribute reference (OEBNF), first instance assumed.` :::
+The indicated instance of the outer EBNF symbol does not exist in this context.
+
+`155 E %1 expected.` :::
+The indicated symbol is not allowed in this context, instead the symbol given in the error message is expected.
+
+`156 E EBNF expression instance not recognized in production.` :::
+The indicated instance of the outer EBNF (OEBNF) symbol does not exist in this context.
+
+`158 E Attribute class in conflict with symbol type.` :::
+A terminal attribute has been referenced for a non-terminal or vice versa.
+
+`159 E Symbol instance not recognized in production.` :::
+The indicated instance of the grammar symbol does not exist in this context.
+
+`166 E You are not allowed to use both the %1 and the PACK directives.` :::
+The packing of tables are selected either using the `Pack` directive which influences the packing of both the action and goto tables simultaneously, or using the `Actionpack` and `Gotopack` directives which influences the packing separately.
+If you have specified `Actionpack` you _must_ use `Gotopack` if you want to specify the packing of the goto tables.
+
+`196 F Cannot allocate memory for hash table.` ::: {blank}
+
+`197 F Cannot allocate memory for entry in vocabulary table.` ::: {blank}
+
+`201 F Cannot allocate memory for production data structure.` ::: {blank}
+
+`204 F Cannot allocate memory for nodes to build syntax tree` ::: {blank}
+
+`205 F Cannot allocate memory for modification data structure.` ::: {blank}
+
+`206 F Cannot allocate memory for attribute reference data structure.` ::: {blank}
+
+`207 F Cannot allocate memory for semantic actions table.` ::: {blank}
+
+`208 F Cannot allocate memory for attribute storage structure.` ::: {blank}
+
+`209 F Cannot allocate memory for strings to generate non terminal.` ::: {blank}
+
+`213 F Cannot allocate memory for sorting grammar.` ::: {blank}
+
+`214 F Cannot allocate memory for strings to make error message.` :::
+Failure to allocate memory for the indicated data structure.
+Contact your system administrator for advice on how to obtain more memory.
+
+// PAGE 121
+
+`215 S Production queue is empty.` :::
+The ParserMaker internal production processing queue has been emptied abnormally.
+Please save the files that have caused the error and contact your ToolMaker contact person.
+
+`230 W %1 given in the TERMINALS SECTION but never used in grammar.` :::
+A terminal has been explicitly given in the terminals section, but it does not appear in any production, so it is ignored. Misspelling?
+
+`231 I %1 was not included in the TERMINALS SECTION.` :::
+The indicated terminal has been used in the grammar, without being defined in the _terminals section_.
+Since this is perfectly legal, and sometimes desirable, one way to get rid of this message is to specify the directive `List` without the `info` option.
+
+`232 W More than one goal symbol found, %1 used.` :::
+More than one non-terminal fulfils the conditions for being chosen as goal symbol, so the grammar is probably erroneous.
+Misspelling?
+Remember that symbols are case sensitive!
+
+`233 W No explicit goal symbol found, %1 used.` :::
+No non-terminal fulfils the condition that it should never appear in any right hand side, so the indicated non-terminal (the left hand side of the first production) is chosen by ParserMaker as the goal symbol.
+If your goal symbol appears on the right hand side of at least one production, make sure that a rule deriving your goal symbol is the first production of the grammar!
+
+`234 E Grammar is non terminating, symbol %1.` :::
+The grammar has infinite recursion, e.g. the definition of symbol X includes X in all its right hand sides:
++
+.........
+X = X Y Z
+  ! T X V
+  ;
+.........
+Note that the symbol printed in the error message is not necessarily the offending symbol, instead it is the top symbol in the infinite derivation tree.
+Thus all symbols that can be derived from the printed symbol in one or more steps should be checked!
+
+`235 E Section already defined.` :::
+You may only specify the various sections once in the description file.
+
+`236 E No sections allowed after %%RULES-section.` :::
+The _rules section_ must be the last section in the description file.
+
+// PAGE 122
+
+`237 W %%INSERTSYMBOL and/or %%DELETESYMBOL sections used although errorhandler generation turned off.` :::
+One or both of the _insertsymbol_ and _deletesymbol__ sections_ where present in the description file.
+The option `No Errorhandler;` was also used to turn the generation of an errorhandler off.
+This means that the target code in the sections will not be used.
+
+`301 W Conflicts resolved by default rules.` :::
+Default rules have been used to resolve LALR(1) conflicts.
+The list file contains details about the changes that have been made.
+
+`302 W Conflicts resolved by modifications.` :::
+Modifications have been used to resolve ambiguities.
+The log file contains information about the effects.
+
+// @XREF: Format of the Generated Item Set
+
+`303 E Grammar is not LALR(1).` :::
+The grammar is ambiguous, and the default disambiguating rules and/or the supplied modifications were not sufficient to disambiguate the grammar.
+Inspect the log file (see _Format of the Generated Item Set_ on page 100) and modify the grammar.
+If the grammar is hard to make LALR(1), try using more disambiguating rules.
+
+`401 F Description file "%1" not found.` :::
+The indicated description file could not be found.
+Some possible causes:
++
+* You misspelled the file name.
+* You are in the wrong directory.
+* You did not take into account that `.pmk` is added to files without any extension.
+
+`402 F Could not open list file "%1".` ::: {blank}
+
+`403 F Could not open table file "%1".` ::: {blank}
+
+`404 F Could not open vocabulary file "%1".` :::
+The indicated output file could not be opened.
+The most probable cause is that you do not have write permission on the directory or that the file already existed and is write protected.
