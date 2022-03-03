@@ -1,0 +1,355 @@
+// PAGE 182 -- ScannerMaker Reference Manual
+
+[appendix]
+= DESCRIPTION LANGUAGE
+
+// @XREF: The ScannerMaker Description File
+
+This appendix contains a syntax summary of the ScannerMaker description language.
+For a full discussion of the language, see _The ScannerMaker Description File_ on page 138.
+
+// @XREF: ToolMaker System Description
+// @XREF: SYNTAX NOTATION
+
+For a brief discussion of the notation used in this description see appendix C in the ToolMaker System Description_, _SYNTAX NOTATION_, page 52
+
+
+== Language Syntax
+
+// @CHECK: Carefully compare to original scans!
+// @EXTERNALIZE SOURCE: EBNF
+// SYNTAX: EBNF
+// @XREF: The EBNF syntax contains various XRefs!
+
+// @FIXME: Can't use quotes subs for it breaks the syntax!
+// [subs=quotes]
+------------------------------
+<description file> ::=
+    {<toolmaker section>}
+    {<target code section>}
+    {<set definition section>}
+    {<general definition section>}
+    {<vocabulary section>}
+
+<toolmaker sections> ::=
+    [ <options section> ]
+    { <import section> | <srcp section>
+        <token section> }
+
+<import section> ::=
+    see the ToolMaker System Description
+
+<srcp section> ::=
+    see the ToolMaker System Description
+
+<token section> ::=
+    see the ToolMaker System Description
+
+<options section> ::=
+    '%%OPTIONS' {<directive>} ['%%END']
+
+<directive> ::=
+      <common directive>
+    | <optimize directive>
+    | <trace direvtive>
+    | <set directive>
+    | <pack directive>
+    | <screening directive>
+    | <list directive>
+    | <token size directive>
+    | <token limit directive>
+    | <exclude character directive>
+
+<common directive> ::=
+      <target directive>
+    | <os directive>
+    | <prefix directive>
+    | <library directive>
+    | <escape directive>
+    | <width directive>
+    | <height directive>
+    | <generate directive>
+    | <force directive>
+
+<optimize directive> ::=
+    ['NO'] 'OPTIMIZE' ';'
+
+<generate directive> ::=
+    ['NO'] 'GENERATE' <generate> ';'
+
+<generate> ::=
+      'SOURCE'
+    | 'TABLES'
+
+<verbose directive> ::=
+    ['NO'] 'VERBOSE' ';'
+
+<trace directive> ::=
+    ['NO'] 'TRACE' ';'
+
+<set directive> ::=
+    'SET' <set name> ';'
+
+<set name> ::=
+    <string>
+
+<pack directive> ::=
+      'NO' 'PACK' ';'
+    | 'PACK' <pack> {',' <pack>} ';'
+
+<pack> ::=
+      'ROW'
+    | 'COL'
+    | 'LES'
+    | 'GCS'
+    | 'RDS'
+    | 'ERROR'
+
+<screening directive> ::=
+      'NO' 'SCREENING' ';'
+    | 'SCREENING' <minimum token size> ';'
+
+<minimum token size> ::=
+    <number>
+
+<list directive> ::=
+      'NO' 'LIST'
+    | 'LIST' <list> {',' <list>} ';'
+
+<list> ::=
+      'SCREENING'
+    | 'TOKEN'
+    | 'MAP'
+    | 'SET'
+    | 'NFA'
+    | 'DFA'
+    | 'RULE'
+
+<escape directive> ::=
+      'NO' 'ESCAPE' '
+    | 'ESCAPE' <escape character>';'
+
+<width directive> ::=
+      'NO' 'WIDTH' ';'
+    | 'WIDTH' <width> ';'
+
+<width> ::=
+    <number>
+
+<height directive> ::=
+      'NO' 'HEIGHT' ';'
+    | 'HEIGHT' <height> ';'
+
+<height> ::=
+    <number>
+
+<target operating system directive> ::=
+    'OS' <operating system> ';'
+
+<operating system> ::=
+    <string>
+
+<target language directive> ::=
+    'TARGET' <language> ';'
+
+<language> ::=
+    <string>
+
+<library directive> ::=
+    'LIBRARY' <library> ';'
+
+<library> ::=
+    <string>
+
+<prefix> ::=
+    'PREFIX' <system name prefix> ';'
+
+<system name prefix> ::=
+    <string>
+
+<token size directive> ::=
+    'TOKENSIZE' <minimal token size> ';'
+
+<token limit directive> ::=
+    'TOKENLIMIT' <maximal token size> ';'
+
+<exclude character directive> ::
+    'EXCLUDE' <exclude character> ';'
+
+<target code sections> ::=
+      <declaration section>
+    | <context section>
+    | <export section>
+    | <code section>
+    | <reader section>
+    | <prehook section>
+    | <posthook section>
+    | <action section>
+
+<declaration section> ::=
+    '%%DECLARATION' <target language code> ['%%END']
+
+<context section> ::=
+    '%%CONTEXT' <target language code> ['%%END']
+<code section> ::=
+'%%CODE' <target language code> ['%%END']
+
+<export section> ::=
+    '%%EXPORT' <target language code> ['%%END']
+
+<reader section> ::=
+    '%%READER' <target language code> ['%%END']
+
+<action section> ::=
+    '%%ACTION' <target language code> ['%%END']
+
+<prehook section> ::=
+    '%%PREHOOK' <target language code> ['%%END']
+
+<posthook section> ::=
+'%%POSTHOOK' <target language code> ['%%END']
+
+<general definition section> ::=
+      <map definition section>
+    | <definition section>
+
+<set section> ::=
+    '%%SET' <set name> {<set>} ['%%END']
+
+<set> ::=
+      <character>
+    | <hex digit> <hex digit>
+    | '..'
+
+<map section> ::=
+    '%%MAP' {<character map>} ['%%END']
+
+<character map> ::=
+    <character class> '=' <character class> ';'
+
+<definition section> ::=
+    '%%DEFINITION' {<definition>} ['%%END']
+
+<definition> ::=
+    <definition name> '='
+        [<selection rule>] [<action>] ';'
+
+// @FIXME: There's a missing '{'
+<vocabulary section> ::=
+    '%%VOCABULARY' <vocabulary name>
+    <token name> '=' <external token code> ';'}
+    {<scanner section>}
+
+<scanner section> ::=
+    '%%SCANNER' <scanner name> [':' <scanner name>]
+    [<screened token section>]
+    [<undefine token section>]
+    {<rule definition section>}
+
+<screened token section> ::=
+    '%%SCREENING'
+    {<token name> ';'}
+
+<undefined token section> ::=
+    '%%UNDEFINE'
+    {<token name> ';'}
+
+<rule definition section> ::=
+      <rule section>
+    | <skip section>
+
+<rule section> ::=
+    '%%RULE' {<token rule>} ['%%END']
+
+<token rule> ::=
+      <token name> '=' <lookahead rule> [<action>] ';'
+    | <string>     '=' <lookahead rule> [<action>] ';'
+
+<skip section> ::=
+    '%%SKIP' {<skip rule>} ['%%END']
+
+<skip rule> ::=
+      <token name> '=' <lookahead rule> [<action>] ';'
+    | <string>     '=' <lookahead rule> [<action>] ';'
+
+<lookahead rule> ::=
+    <selection rule> ['/' <selection rule>]
+
+<selection rule> ::=
+    [<selection rule> '!'] <concatenation rule>
+
+<concatenation rule> ::=
+    [<concatenation rule>] <closure rule>
+
+<closure rule> ::=
+      <item> '*'
+    | <item> '+'
+    | <item> '?'
+    | <item> '{' <number> '}'
+    | <item> '{' <number> '}'
+    | <item> '{' [<number>] '-' [<number>] '}'
+
+<item> ::=
+      <definition name>
+    | <string>
+    | <character class>
+    | '.'
+    | '(' <selection  rule> ')'
+
+<character class> ::=
+      '['     {<character>} ']'
+    | '[' '^' {<character>} ']'
+
+<action> ::=
+    '%%' <target language code> '%%'
+------------------------------
+
+Note that every keyword starting with `%%` can be specified using both upper or lower case letters and it may also be specified in plural.
+
+
+== Lexical Items
+
+// @CHECK: Carefully compare to original scans!
+// @EXTERNALIZE SOURCE: EBNF
+// SYNTAX: EBNF
+
+------------------------------
+<upper case letter> ::=
+      'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H'
+    | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P'
+    | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W'   'X'
+    | 'Y' | 'Z'
+
+<lower case letter> ::=
+      'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h'
+    | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p'
+    | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w'   'x'
+    | 'y' | 'z'
+
+
+<letter> ::=
+    <upper case letter> | <lower case letter>
+
+<digit> ::=
+      '0' | '1' | '2' | '3' | '4'
+    | '5' | '6' | '7' | '8' | '9'
+
+<special character> ::=
+      '!' | '@' | '#' | '$' | '%' | '^' | '&' | '*'
+    | '(' | ')' | '_' | '-' | '+' | '=' | '|' | '{'
+    | '}' | '[' | ']' | ';' | ':' | ''' | '"' | '~'
+    | '`' | '<' | '>' | ',' | '.' | '?' | '/' | '\'
+
+<target language code> ::=
+    any characters in the target language except the escape character,
+    see The ScannerMaker Description File on page 138.
+
+<token name> ::=
+    <letter> {<letter> | <digit> | '_'}
+
+<definition name> ::=
+    <letter> {<letter> | <digit> | '_'}
+
+<string> ::=
+    ''' {<letter> | <digit> | <special character>} '''
+------------------------------

@@ -28,9 +28,11 @@ The concept of regular expressions, semantic actions, and tokens should be well 
 
 include::part3-1_concepts.adoc[]
 include::part3-2_production.adoc[]
+include::part3-3_command.adoc[]
+include::part3-4_runtime.adoc[]
+include::part3-5_app_pl0-example.adoc[]
+include::part3-6_app_errors.adoc[]
+include::part3-7_app_desc-lang.adoc[]
+include::part3-8_app_target-lang.adoc[]
 
 :leveloffset: 0
-
-== TBD
-
-WARNING: The rest of this book part still needs to be ported!

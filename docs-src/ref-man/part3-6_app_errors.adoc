@@ -1,0 +1,233 @@
+// PAGE 176 -- ScannerMaker Reference Manual
+
+[appendix]
+= ERROR MESSAGES
+
+Error messages produced by ScannerMaker are output to the terminal, and if the option `List Input;` is set, messages are also output to the list file.
+
+// @XREF: Message Format
+// @XREF: ToolMaker System Description
+
+For a description of the format of error messages refer to _Message Format_ in the _ToolMaker System Description_, page 49.
+
+
+== Message Explanations
+
+The following list gives a brief summary of the error messages and in some cases the actions that should be taken by the user.
+An error message containing `%__n__`, where `_n_` is a number, means that an insert string is inserted in that position during the actual generation of the message.
+
+// @XREF: Messages Explanations
+// @XREF: ToolMaker System Description
+// @XREF: License Errors
+// @XREF: ToolMaker System Description
+
+Messages with numbers less than 100 are messages common for all Makers.
+These are described in _Messages Explanations_ in the _ToolMaker System Description_, page 50.
+Messages indicating license problems or limitations are described in _License Errors_ in the _ToolMaker System Description_, page 51.
+
+
+
+`100 Parsing resumed.` :::
+This error specifies a point in the description file where parsing could be resumed after a wild error.
+
+`101 %1 inserted.` :::
+The token or tokens is inserted into the description file because the ScannerMaker thought it was missing.
+
+`102 %1 deleted.` :::
+The token or tokens is deleted from the description file because the parser thought it was wrongly inserted.
+
+`103 %1 replaced by %2.` :::
+The token is replaced with another token.
+More than one token can be replaced with one or more tokens.
+
+`104 syntax error, stack backed up.` :::
+Severe syntax error where the normal error recovery strategies failed and the parser was forced to do severe error recovery. The meaning of the scanner description is probably lost.
+
+`105 Syntax error.` :::
+An unspecified syntax error.
+This error message should not appear.
+
+`106 Parser stack overflow.` ::: {blank}
+
+`107 Parse table error.` ::: {blank}
+
+`108 Parsing terminated.` :::
+These are errors in the scanner generator.
+Contact your ToolMaker contact person for bug report.
+
+`207 Can not overwrite table file "%1".` :::
+The protection of an existing table file prevents ScannerMaker to over-write it.
+
+`208 Can not overwrite list file "%1".` :::
+The protection of an existing list file prevents ScannerMaker to overwrite it.
+
+`209 Scanner "%1" already defined.` :::
+The scanner is already defined earlier in the description file.
+
+`210 Token "%1" already screened.` :::
+The token is already screened in this scanner.
+
+`211 Token "%1"" not in vocabulary.` :::
+The token can not be found in the vocabulary.
+
+`212 External code already exist.` :::
+The external token code is already used in this scanner.
+
+`213 Token name already exist.` :::
+The token is already defined in this scanner.
+
+`214 Multiple matches of END OF TEXT token in scanner.` :::
+Only one token can be defined to match the end of text.
+
+`215 Multiple matches of UNKNOWN token in scanner.` :::
+Only one token can be defined to match unknown tokens.
+
+`216 END OF TEXT token not defined.` :::
+There is no token which match the end of text.
+
+`218 UNKNOWN token not defined.` :::
+There is no token which match unknown tokens.
+
+`220 String contains mapped or excluded character, or characters not in the current character set.` :::
+Only characters in the current character set are allowed within string tokens.
+Mapped or excluded characters are not allowed.
+
+`221 Automatically defined in "%1".` :::
+The string token is not defined in the scanner but it is automatically defined to match itself.
+
+`222 Not defined in "%1".` :::
+The token is not defined in the scanner.
+
+`223 Vocabulary file "%1" not found.` :::
+The vocabulary file can not be found.
+
+`224 Line number expected.` :::
+Line number is expected in the first field of the vocabulary file.
+
+`225 External code expected.` :::
+External token code is expected in the second field of the vocabulary file.
+
+`226 Old end of text symbol, converting to END OF TEXT.` :::
+The old end of text symbol `$` is found.
+Convert it to the token `EndOfText`.
+
+`227 Token name expected.` :::
+Token name is expected in the third field of the vocabulary file.
+
+`228 Old format, using "main" as vocabulary.` :::
+Old format of vocabulary file.
+All tokens are considered to belong to the vocabulary `main`.
+
+`229 Scanner name expected.` :::
+Scanner name is expected in the fourth field of the vocabulary file.
+
+`230 End of line expected.` :::
+End of line is expected in the vocabulary file.
+
+`231 Must be one character long.` :::
+The character string must be one character long.
+The character may be quote character.
+
+`232 Set not uniquely mapped.` :::
+The set is not unique.
+That is, each character in the set must have a unique character equivalent or be skipped.
+
+`233 Token already defined.` :::
+Token is already defined.
+
+`234 Scanner not found.` :::
+The scanner reference is not found.
+
+`235 Token reference not found in scanner "%1".` :::
+The token referenced in the scanner is not found.
+
+`236 Token not defined.` :::
+The token is not defined in the scanner.
+
+`237 Number must be greater than or equal to the first number.` :::
+The first number in the general closure specification must be less than the last number.
+
+`238 Class contain mapped or excluded characters.` :::
+Mapped or excluded characters are not allowed in a class.
+
+`239 Token not defined.` :::
+The token is not defined in the definition section.
+
+`240 Scanner description file "%1" not found.` :::
+The description file can not be found.
+
+`241 The cut operator must lead to a final state.` :::
+The cut operator must be used in such as way that the character preceding it matches the last character in the regular expression.
+
+`242 Not accepted by "%1".` :::
+The screened token is not accepted by the token used to screen it.
+
+`243 %1 definition takes precedence (ambigous accepting state).` :::
+Two or more tokens have the same accepting state.
+
+`244 Old format, defines UNKNOWN with external code 0.` :::
+Old format of the vocabulary file implicitly defined unknown tokens to be 0.
+
+`245 Action not defined.` :::
+The action is not defined in the definition section.
+
+`246 Action already defined.` :::
+An action can only be defined once.
+
+`247 Name of set expected.` :::
+The name of the set being defined was expected.
+
+`248 Set already defined.` :::
+A set with the same name is already defined.
+
+`249 Unexpected end of set.` :::
+More characters are expected in the set.
+
+`250 Character already defined.` :::
+It is illegal to define the same character twice in a set.
+
+`251 Unknown token, ignored.` :::
+Unknown token found in the set.
+
+`252 Character %1 multiply defined in %2 set.` :::
+It is illegal to define the same character twice in a set.
+
+`254 Specified set %1 does not exist.` :::
+The set is not defined.
+
+`255 Vocabulary already defined.` :::
+Vocabularies must have unique name.
+A vocabulary with the same name has already been used in this description file.
+
+`256 Vocabulary not defined.` :::
+The vocabulary can not be found in the vocabulary file.
+
+`257 Scanner already defined.` :::
+A scanner with the same name is already defined in the same vocabulary.
+
+`258 Scanner not defined.` :::
+The scanner is not defined in the same vocabulary.
+
+`259 Token is not defined in this vocabulary.` :::
+The token must be defined in this vocabulary or be specified in the undefine section of the scanner.
+
+`260 Screening turned off, no other token may screen it.` :::
+No token was found in the scanner which could be used to screen the token.
+The token will be part of the scanner.
+
+`261 Token predefined in %1 scanner.` :::
+The token is predefined in the first scanner defined for the vocabulary.
+
+`262 Section already defined.` :::
+The specified code section can only be used once in the description file.
+
+`401 Scanner description file "%1" not found.` :::
+The scanner description file could not be found.
+
+`402 Trouble producing code.` :::
+It was not possible to generate any target language code.
+The problem may be that generated files could not be written due to protection problem, older protected files or protected current directory, or an error in the skeleton file.
+
+`405 Target language "%1" not officially supported.` :::
+This warning is issued if the target language is set to a language not officially supported.
+Note that the option value is case sensitive and the message may be caused by a typing error.

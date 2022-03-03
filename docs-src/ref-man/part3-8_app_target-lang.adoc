@@ -1,0 +1,263 @@
+// @PAGE 188 -- ScannerMaker Reference Manual
+
+[appendix]
+= TARGET LANGUAGE DETAILS
+
+This appendix describes the actual definition of the run-time environment by the generated scanner for different target languages.
+
+
+== '`c`'
+
+=== Types
+
+// SYNTAX: ToolMaker description file + C
+
+[subs=quotes]
+------------------------------
+typedef enum __sm__ScScanner {
+    __sm___vocabularyname_scannername_Scanner = scannercode,
+        ⋮
+} __sm__ScScanner;
+
+typedef enum __sm___scannerName_ScToken {
+    __sm___vocabularyname_tokenname_Scanner = tokencode,
+        ⋮
+} __sm___scannerName_ScToken;
+
+typedef struct __sm__ScContextItem *__sm__ScContext;
+typedef struct __sm__ScContextItem {
+    int smSize;
+    int smLength;
+    unsigned char *smLength;
+    int smLine;
+    int smColumn;
+    int smPosition;
+    int smNextLine;
+    int smNextColumn;
+    int smNextPosition;
+    __sm__ScScanner smScanner;
+    __code from **context section**__
+} *__sm__ScContext, __sm__ScContextItem;
+------------------------------
+
+=== Functions
+
+
+// SYNTAX: ToolMaker description file + C
+
+[subs=quotes]
+------------------------------
+int __sm__Scan(smThis, smToken)
+    __sm__ScContext smThis;
+    %%(tokenType) *smToken;
+
+__sm__ScContext __sm__ScNew(smScanner)
+    __sm__ScScanner smScanner;
+
+void __sm__ScDelete(smThis)
+    __sm__ScContext smThis;
+
+int __sm__ScSkip(smThis, smLength)
+    __sm__ScContext smThis;
+    int smLength;
+
+int __sm__ScModify(smThis,smBuffar,smLength)
+    __sm__ScContext smThis;
+    int unsigned char *smBuffer;
+    int smLength;
+
+int __sm__ScCopy(smThis, smBuffer, smFrom, smTo)
+    __sm__ScContext smThis;
+    unsigned char *smBuffer;
+    int smFrom;
+    int smTo;
+
+int __sm__ScMapCopy(smThis, smBuffer, smFrom, smTo)
+    __sm__ScContext smThis;
+    unsigned char *SmBuffer;
+    int smFrom;
+    int smTo;
+
+void __sm__ScScrScanner(smScanner smOnOff)
+    __sm__ScScanner smScanner;
+    int smOnOff;
+
+void __sm__ScScrToken(smScanner, smToken, smOnOff)
+    __sm__ScScanner smScanner;
+    __sm___vocabularyname_Token smToken;
+    int smOnOff;
+
+void __sm__ScScrRule(smScanner, smToken, smOnOff)
+    __sm__ScScanner smScanner;
+    __sm___vocabularyname_Token smToken;
+    int smOnOff;
+------------------------------
+
+
+== '`ansi-c`' and '`c++`'
+
+This interface is used both for '`ansi-c`' and '`c++`'.
+
+=== Types
+
+// SYNTAX: ToolMaker description file + C
+
+[subs=quotes]
+------------------------------
+typedef enum __sm__ScScanner {
+    __sm___vocabularyname_scannername_Scanner scannercode,
+        ⋮
+} __sm__ScScanner;
+
+typedef enum __sm___scannerName_ScToken {
+    __sm___vocabularyname_tokenname_Scanner = tokencode,
+        ⋮
+} __sm___scannerName ScToken;
+
+typedef struct __sm__ScContextItem *__sm__ScContext;
+typedef struct __sm__ScContextItem {
+    int smSize;
+    int smLength;
+    unsigned char *smLength;
+    int smLine;
+    int smColumn;
+    int smPosition;
+    int smNextLine;
+    int smNextColumn;
+    int smNextPosition;
+    __sm__ScScanner smScanner;
+    __code from **context section**__
+} *__sm__ScContext, __sm__ScContextItem;
+------------------------------
+
+
+=== Functions
+
+// PAGE 189
+
+// SYNTAX: ToolMaker description file + C
+
+[subs=quotes]
+------------------------------
+int __sm__Scan(
+    __sm__ScContext smThis,
+    %%(tokenType) *smToken)
+
+__sm__ScContext __sm__ScNew(
+    __sm__ScScanner smScanner)
+
+void __sm__ScDelete(
+    __sm__ScContext smThis)
+
+int __sm__ScSkip(
+    __sm__ScContext smThis,
+    int smLength)
+
+int __sm__ScModify(
+    __sm__ScContext smThis,
+    int unsigned char *smBuffer,
+    int smLength)
+
+int __sm__ScCopy(
+    __sm__ScContext smThis,
+    unsigned char *smBuffer,
+    int smFrom,
+    int smTo)
+
+int __sm__ScMapCopy(
+    __sm__ScContext smThis,
+    unsigned char *smBuffer,
+    int smFrom,
+    int smTo)
+
+void __sm__ScScrScanner(
+    __sm__ScScanner smScanner,
+    int smOnOff)
+
+void __sm__ScScrToken(
+    __sm__ScScanner smScanner,
+    __sm___vocabularyname_Token smToken,
+    int smOnOff)
+
+void __sm__ScScrRule(
+    __sm__ScScanner smScanner,
+    __sm___vocabularyname_Token smToken,
+    int smOnOff)
+------------------------------
+
+
+== Object oriented '`c++`' (proposal)
+
+This is a suggestion how an object-oriented '`c++`' interface may look like.
+Currently there exist no such interface.
+'`c++`' users should use the '`ansi-c`' interface to generate source code compilable with '`c++`' compilers.
+
+
+=== Types
+
+// PAGE 190
+
+// SYNTAX: ToolMaker description file + C
+
+[subs=quotes]
+------------------------------
+typedef enum __sm__ScScanner {
+    __sm___vocabularyname_scannername_Scanner scannercode,
+        ⋮
+} __sm__ScScanner;
+
+typedef enum __sm___scannerName_ScToken (
+    __sm___vocabularyname_tokenname Scanner = tokencode,
+        ⋮
+} __sm___scannerName_ScToken;
+
+class __sm__ScContextItem {
+public:
+    int smSize;
+    int smLength;
+    unsigned char *smLength;
+    int smLine;
+    int smColumn;
+    int smPosition;
+    int smNextLine;
+    int smNextColumn;
+    int smNextPosition;
+    __sm__ScScanner smScanner;
+public:
+    int __sm__Scan(
+        %%(tokenType) *smToken);
+    __sm__ScContext(
+        __sm__ScScanner smScanner);
+    ~__sm__ScContext();
+    int __sm__ScSkip(
+        int smLength);
+    int __sm__ScModify(
+        unsigned char *smBuffer,
+        int smLength);
+    int __sm__ScCopy(
+        unsigned char *smBuffer,
+        int smFrom,
+        int smTo);
+    int __sm__ScMapCopy(
+        unsigned char *smBuffer,
+        int smFrom,
+        int smTo);
+    __declarations from **context section**__
+};
+
+void __sm__ScScrScanner(
+    __sm__ScScanner smScanner,
+    int smOnOff)
+
+void __sm__ScScrToken(
+    __sm__ScScanner smScanner,
+    __sm___vocabularyname_Token smToken,
+    int smOnOff)
+
+void __sm__ScScrRUle(
+    __sm__ScScanner smScanner,
+    __sm___vocabularyname_Token smToken,
+    int smOnOff)
+------------------------------
+
+// PAGE 192
