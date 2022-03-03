@@ -1,0 +1,523 @@
+// PAGE 164 -- ScannerMaker Reference Manual
+
+= SCANNER RUN-TIME USAGE
+
+== Principles of Operation
+
+To use a ScannerMaker generated scanner the following step should be performed:
+
+* create a new scanner context (see below)
+* initialise the reading from the input stream (e.g. open the file and attach it to the context)
+* call `__sm__Scan` until end of input
+
+// @XREF: Semantic Actions
+
+During each call to the scanner the appropriate semantic action will automatically be performed (see _Semantic Actions_ on page 158) in which various of the features of the generated scanner can be used.
+It is also possible to create additional contexts, using the function `__sm__ScNew`, and switch scanner and vocabulary during the scanning process.
+
+
+=== Type: __sm__ScContext and __sm__ScContextItem
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+TYPE __sm__ScContext IS POINTER TO __sm__ScContextItem
+
+TYPE __sm__ScContextItem IS STRUCTURE
+     smSize    : INTEGER
+     smText    : STRING
+     smLength  : INTEGER
+     smBufferOverflow: INTEGER
+     SmPosition: INTEGER
+     smLine    : INTEGER
+     smColumn  : INTEGER
+     smNextPosition: INTEGER
+     smNextLine: INTEGER
+     smNextColumn: INTEGER
+     smScanner : __sm__ScScanner
+
+        _declarations from the context section_
+
+END STRUCTURE
+------------------------------
+
+A context is the main object in the generated scanner.
+Almost all functions operate on that object.
+A context consist of a buffer, source position, scanner, and user defined variables.
+
+In object oriented languages this type is declared as a class named `__sm__ScContext` with the structure components above as public members.
+
+NOTE: All predefined variables starts with the characters `sm` and can not be changed.
+This is _not_ the scanner prefix used as a prefix for the exported functions and the context data type.
+
+// PAGE 165
+
+=== The Context Buffer
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+smSize   : INTEGER
+------------------------------
+
+The context buffer is divided into two parts, the token and the input stream, where the input stream always follows the token.
+Initially the token length is zero and when end of text is found the input stream has a length of zero.
+The size of the context buffer can be found in the `smSize` field.
+Initially the length of the context buffer is zero.
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+smLength : INTEGER
+smText   : STRING
+------------------------------
+
+The variable `smText` holds the last scanned token and `smLength` is the length of the token.
+The characters in `smText` may be altered freely but if any altered characters are skipped back into the input stream the source position calculation will be wrong if any newline characters was altered or inserted.
+
+Great care should be taken not to alter any characters after the last character in the token permanently.
+It is alright to alter the character while in a semantic action and then restoring the old character before leaving the semantic action or calling the scanner recursively.
+For example, to convert a token representing an integer into an integer, the Unix standard function `atoi` could be used.
+However, this function requires that the string representation is null terminated but ScannerMaker does not null terminate a token string so this must be done explicitly.
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+Integer = [0-9]+
+%%
+{
+    unsigned char *remind;
+
+    remind = smThis->smText[smThis->smLength];
+    smThis->smText[smThis->smLength] = 0;
+    smToken->ival = atoi(smThis->smText);
+    smThis->smText[smThis->smLength] = remind;
+}
+%%;
+------------------------------
+
+It is very important to restore the character over-written by the null character as in the example above or else the next token would start with a null character.
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+smBufferOverflow: INTEGER
+------------------------------
+
+If the scanning of a token exceeds the maximum token length or the reallocation to a larger buffer fails, characters in the buffer will be skipped.
+The number of characters saved equals to the minimum length of the token and the only characters saved are the last ones in the buffer.
+The variable `smBufferOverflow` holds the number of characters which are skipped.
+The source position will still however reference the true beginning of the character but the `smLength` will not include any skipped characters.
+Thus the true length of the token is the sum of `smBufferOverflow` and `smLength`.
+
+If no overflow occurs `smBufferOverflow` will be zero.
+
+// PAGE 166
+
+Changing the context can be necessary when changing from one source of input to another.
+This can be achieved by simply replacing the current context variable with a new (created using the `__sm__New` function).
+To be able to restore the previous context the context buffers should be linked or stacked, which is the responsibility of the user
+
+The change of a context should preferably be performed _outside_ the actual generated scanner, e.g. in a function enclosing the `__sm__Scan` function, which recognises and handles situations when this is necessary.
+
+NOTE: The _prehook_, _action_ and _posthook sections_ and the semantic actions are all called using the same context (the one passed to `__sm__Scan`).
+
+
+=== Source Position
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+smPosition: INTEGER
+smLine    : INTEGER
+smColumn  : INTEGER
+------------------------------
+
+The source position is only calculated if the appropriate source position directive is given in the _source position section_.
+The line number and column number start from one and the position from zero.
+The position is the number of characters read in this context before the token.
+The source position will always be correct with one exception.
+If altered characters are returned to the input stream by using `__sm__ScSkip` instead of `__sm__ScModify` and any newline is altered to a character other than the newline character or if a character is altered to a newline, then the source position will be computed incorrectly.
+However, if the number of newlines are the same the source position will be correct after the next newline following the altered characters.
+The suggestion is not to return any altered character with the `__sm__ScSkip` function.
+
+
+When `__sm__ScModify` is used to return altered characters to the input stream any token found containing altered characters will have the source position of the token following the token which altered the input stream.
+For example
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+'hello' = 'hello' %% smScModify(smThis, "theis", -5) %%;
+'the' = 'the' %% ... %%;
+'is' = 'is' %% ... %%;
+------------------------------
+
+when the token `hello` is found, the token is altered to `theis`.
+If the source position of `hello` was line one and column five, then the next token should be found at line one and column ten.
+This is the line number which is reported by `the`, `is`, and the token following `is`.
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+smNextPosition: INTEGER
+smNextLine    : INTEGER
+smNextColumn  : INTEGER
+------------------------------
+
+The next positions gives the next token's position.
+That is, the token following the current one.
+
+// PAGE 167
+
+=== Scanner
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+smScanner: __sm__ScScanner
+------------------------------
+
+Which scanner a context should use is determined by the value of the `smScanner` variable.
+Available scanners are determined by the description file defining the scanners.
+An enumeration type is defined containing an enumeration literal for each scanner.
+The name of the enumeration literal is the scanner prefix concatenated by the vocabulary name and scanner name surrounded by underscores and finally the characters `Scanner` as a suffix.
+For example, if the scanners `main` and `comment` are defined the following enumeration type is defined (if '`c`' is the target language):
+
+// SYNTAX: C + IMP macros? (generated)
+
+[subs=quotes]
+------------------------------
+typedef enum __sm__ScScanner {
+    __sm___MAIN_MAIN_Scanner    = 0,
+    __sm___MAIN_COMMENT_Scanner = 1,
+    __sm___SET_MAIN_Scanner     = 2
+} __sm__ScScanner;
+------------------------------
+
+By simply changing the value of the `smScanner` field in the context variable a new scanner is entered.
+The variable can be changed any time and the effect is immediate.
+For example, it is possible to change scanner in a semantic action and then continue scanning using the newly selected scanner.
+
+For each vocabulary there is also an enumeration type defined containing enumeration literals for all tokens defined in that vocabulary.
+The name of the enumeration type is `_sm_` followed by the vocabulary name enclosed by underscores and followed by the characters `ScToken`.
+Each enumeration literal is named `_sm_` followed by underscore, vocabulary name, underscore, token name or external token code for a string token, underscore, and `Token`.
+For example, if '`c`' is the target language:
+
+// SYNTAX: C + IMP macros? (generated)
+
+[subs=quotes]
+------------------------------
+typedef enum __sm___main_ScToken {
+    __sm___MAIN_UNKNOWN_Token   = 0,
+    __sm___MAIN_ENDOFTEXT_Token = 1,
+    __sm___MAIN_2_Token         = 2,
+    __sm___MAIN_INTEGER_Token   = 3,
+        ⋮
+        ⋮
+} __sm___main_ScToken;
+------------------------------
+
+
+== Run Time Interface
+
+The run time interface consist of a number of functions.
+All functions except `__sm__ScScrScanner`, `__sm__ScScrToken`, and `__sm__ScScrRule` operate on a context.
+In a non-object oriented language the context is always given as the first argument.
+In an object oriented language these functions are member functions to the `__sm__ScContext` class and messages are sent to a context object.
+
+
+=== Function: __sm__Scan
+
+// PAGE 168
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+code = __sm__Scan(smThis, smToken)
+
+smThis   :  IN __sm__ScContext
+smToken  :  IN OUT %%(tokenType)
+returns INTEGER
+------------------------------
+
+This function scans a new token.
+If successful, the token code is returned and the token structure or record is assigned the token code and source position, if used.
+If the reader, as defined in the reader section, returns a negative value this is immediately propagated as the return value of the `__sm__Scan` and the scanning is aborted.
+
+
+=== Function: __sm__ScNew
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+context = __sm__ScNew(smScanner)
+
+smScanner : IN __sm__ScScanner
+returns __sm__ScContext
+------------------------------
+
+This function is a so called constructor.
+It constructs a new context with the specified `smScanner`.
+
+
+=== Function: __sm__ScDelete
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__sm__ScDelete(smThis)
+
+smThis  : IN __sm__ScContext
+------------------------------
+
+This function is a so called destructor.
+It destroys a context and its buffer.
+
+=== Function: __sm__ScSkip
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+length = __sm__ScSkip(smThis, smLength)
+
+smThis    :  IN __sm__Context
+smLength  :  IN INTEGER
+returns INTEGER
+------------------------------
+
+This function changes the token by either replacing characters from the end of the token to the input stream, or by extending it by reading characters from the input stream.
+The number of characters replaced or read are given by the value of `smLength`.
+A negative value replaces characters and a positive value reads characters.
+The actual number of characters replaced or read are returned.
+For example,
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+smScSkip(smThis, -3);
+------------------------------
+
+returns the three last characters of the token to the beginning of the input stream.
+The length of the token will be three characters shorter.
+However, if it has a length of less than three characters, for example one character, only that many characters will be returned.
+If the reader, as defined in the reader section, needs to be called to fetch further characters from the input stream and it returns a negative value, this is immediately propagated as the return value of `__sm__ScSkip` and the skipping is terminated.
+
+// PAGE 169
+
+=== Function: __sm__ScModify
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+length = __sm__ScModify(smThis, smBuffer, smLength)
+
+smThis    :  IN __sm__ScContext
+smBuffer  :  IN STRING
+smLength  :  IN INTEGER
+returns INTEGER
+------------------------------
+
+This function modifies the token or input stream in the same way as `__sm__ScSkip` but all affected characters (replaced to the input stream or appended to the token) are modified by characters from the specified buffer.
+For example
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+smScModify(smThis, "123", 3);
+------------------------------
+
+appends the token with three characters from the input stream and modifies them to be "`123`".
+That is, the token now ends with "`123`".
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+smScModify(smThis, "123", -3);
+------------------------------
+
+returns the three last characters of the token to the beginning of the input stream and replaces them with "`123`".
+If the reader, as defined in the reader section, returns a negative value this is immediately propagated as the return value of `__sm__ScModify` and the modification is terminated.
+
+
+=== Function: __sm__ScCopy
+
+// @FIXED: 'smScContext' was not '__sm__ScContext' in original, but since it's
+//         italicized in next section I've assumed it was an omission.
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+length = __sm__ScCopy(srThis, smBUffer, smFrom, smTo)
+
+smThis   :  IN __sm__ScContext
+smBuffer :  OUT STRING
+smFrom   :  IN INTEGER
+smTo     :  IN INTEGER
+returns INTEGER
+------------------------------
+
+Copy the token into the buffer specified.
+The token's characters are _not_ mapped.
+The copy starts to copy characters from the `smFrom` position up to but not including the `smTo` position from the current token.
+The number of characters copied is returned.
+For example, to copy all characters use:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+smScCopy(smThis, buffer, 0, smThis->smLength);
+------------------------------
+
+
+=== Function: __sm__ScMapCopy
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+length = __sm__ScMapCopy(smThis, smBuffer, smFrom, smTo)
+
+smThis   :  IN __sm__ScContext
+smBuffer :  OUT STRING
+smFrom   :  IN INTEGER
+smTO     :  IN INTEGER
+returns INTEGER
+------------------------------
+
+Copy the token into the buffer specified in the function call.
+The characters of the token are mapped using the specified character map as specified in the _map section_.
+The copy starts to copy characters from the `smFrom` position up to but not including the `smTo` position from the current token.
+The number of characters copied is returned.
+
+
+// PAGE 170
+
+=== Function: __sm__ScScrScanner
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+void __sm__ScScrScanner(smScanner, smOnOff)
+
+smScanner  :  IN __sm__ScScanner
+smOnOff    :  IN BOOLEAN
+------------------------------
+
+This function turns on or off checking of screened tokens for the specified scanner.
+If the scanner has screened tokens these are not recognized if screening is turned off.
+
+
+=== Function: __sm__ScScrToken
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+void __sm__ScScrToken(smScanner, smToken, smOnOff)
+
+smScanner  :  IN __sm__ScScanner
+smToken    :  IN __sm___vocabularyname_ScToken
+smOnOff    :  IN BOOLEAN
+------------------------------
+
+This function turns on or off checking of screened tokens for the specified token.
+If the token has screened tokens these are not recognized if screening is turned off.
+
+
+=== Function: __sm__ScScrRule
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+void __sm__ScScrRule(smScanner, smToken, smOnOff)
+
+smScanner  :  IN __sm__ScScanner
+smToken    :  IN __sm___vocabularyname_ScToken
+smOnOff    :  IN BOOLEAN
+------------------------------
+
+This function turns on or off checking of the specified token.
+If the token is a screened token it is not recognized if screening is turned off.
+
+
+== Recursive Calls and Continued Scanning
+
+There are two ways in which scanning may proceed directly from inside a semantic action without actually returning from the current call.
+Either the scanner can be called recursively or the scanning may be continued.
+
+
+=== Recursive Calls
+
+Inside any action or target language code section it is possible to call the scanner recursively.
+However `smToken` should _never_ be passed to any called scanner because it will over-write the current token code.
+Also note that the variable `smToken` is not defined in the _code section_.
+
+The current token is reset by a recursive call.
+That is, after a recursive call the `smText` and `smLength` will refer to the last scanner token.
+For example
+
+// PAGE 171
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+INCLUDE = '#include'
+%%
+    TmToken myToken;
+
+    /* #include "astring" */
+
+    if(smScan(smThis, &myToken)==2) {
+
+        /* open file and create a new context */
+
+    } else {
+        error("Illegal include statement");
+    }
+%%
+------------------------------
+
+After calling `__sm__Scan()` the string `#include` which could be found in `smText` is replaced by the next token, in this case hopefully a string.
+
+
+=== Continued Scanning
+
+It is also possible to continue scanning after a token is found by setting the external code to `smContinueToken` or returning `smContinueToken` in the action section or the semantic actions.
+The current token will be appended with the new token found after a continued scanning is made.
+The new token will be returned.
+That is, in the example below the complete string will be found in the last semantic action.
+
+For example
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+STRING = '"' [^"] '"' / '"'
+         %% return smContinueToken; %%;
+STRING = '"' [^"] '"'
+------------------------------
+
+or
+
+// SYNTAX: C + IMP macros? (generated)
+
+------------------------------
+STRING = '"' [^"] '"' / '"'
+         %% smCode = smContinueToken; %%;
+STRING = '"' [^"] '"'
+         %% ... %%;
+------------------------------
+
+Continued scanning can only be used in the _action section_ and inside semantic actions.

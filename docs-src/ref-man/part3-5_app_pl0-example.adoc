@@ -1,0 +1,209 @@
+// PAGE 172 -- ScannerMaker Reference Manual
+
+[appendix]
+= THE PL/0 EXAMPLE
+
+// @XREF: ToolMaker System Description [-> PL/0 EXAMPLE]
+
+This example is a part of the pl/0 example used throughout the ToolMaker documentation.
+The _ToolMaker System Description_ contains a detailed walkthrough of the relevant parts of the example.
+This appendix contains the files relevant for ScannerMaker.
+
+
+== pl0.smk -- The ScannerMaker Description File
+
+// @EXTERNALIZE SOURCE: C + IMP macros
+// SYNTAX: C + IMP macros? (generated)
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------
+-- pl0.smk    Date: 1993-06-24/toolmake
+--
+-- pl0 - ScannerMaker description file
+--
+-------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1993-06-24 12:42:46/toolmake v2,r0,c12
+-------------------------------------------------------
+
+%%OPTIONS
+    Verbose;
+
+%%IMPORT
+#include <stdio.h>
+
+#include "pl0List.h"
+#include "pl0Scan.h"
+
+%%EXPORT
+
+extern void scan(TmToken *token);
+extern int pl0ScanEnter(char *fileName);
+extern void pl0ScanTerminate(void);
+
+%%CONTEXT
+  char *fileName;
+  int fd;
+  pl0ScContext previous;
+  int fileNo;
+
+%%READER
+    return read(smThis->fd, (char *)smBuffer, smLength);
+
+%%DECLARATIONS
+
+static pl0ScContext lexContext;
+
+static int fileNo = 0;/* Count included files */
+int pl0ScanEnter(
+    char fnm[]/* IN - Name of file to open */
+){
+  pl0ScContext tmp;
+
+  tmp = pl0ScNew(pl0_MAIN_MAIN_Scanner);
+  if (fnm == NULL)
+    tmp->fd = 0;
+  else if ((tmp->fd = open(fnm,0)) < 0) {
+    pl0ScDelete(tmp);
+    return 0;
+  } else {
+    tmp->fileName = fnm;
+    tmp->fileNo = fileNo++;
+    tmp->previous = lexContext;
+    lexContext = tmp;
+  }
+  return 1;
+}
+
+/*-----------------------------------------------------
+    pl0scanExit()
+
+    Terminate and delete the current lexical context.
+*/
+
+static void pl0ScanExit(void)
+{
+  pl0ScContext old;
+
+  close(lexContext->fd);
+  old = lexContext;
+  lexContext = lexContext->previous;
+  pl0ScDelete(old);
+}
+
+/*-----------------------------------------------------
+
+    pl0ScanTerminate()
+
+    Make sure all contexts are terminated (e.g. in case
+    of parser abort).
+*/
+
+void pl0ScanTerminate(void)
+{
+  while (lexContext)
+    pl0ScanExit();
+}
+
+/*-----------------------------------------------------
+
+    scan()
+
+    Outer scanner called from the parser.
+    Handles switching of contexts.
+*/
+
+void scan(
+  TmToken *token
+){
+  pl0Scan(lexContext, token);
+
+  switch (token->code) {
+
+  case pl0 MAIN_INCLUDE_Token:
+    if (pl0ScanEnter(token->stringValue)) {
+      TmSrcp srcp, start;
+
+      srcp = token->srcp;
+      srcp.line++;/* Make include start on next line */
+      srcp.col = 1;
+      start.file = fileNo;
+      start.line = 0;
+      pl0LiEnter(&srcp, &start, token->stringvalue);
+    } else {
+      pl0Log(&token->srcp, 199, sevFAT,
+             token->stringValue);
+    }
+    /* Get next token and return instead of the INCLUDE */
+    pl0Scan(lexContext, token);
+    break;
+
+  case pl0_MAIN_ENDOFTEXT_Token:
+    pl0ScanExit();
+    if (lexContext)/* If still more input get a token */
+      pl0Scan(lexContext, token);
+      break;
+  }
+}
+
+%%POSTHOOK
+
+  smToken->srcp.file = smThis->fileNo;
+
+%%DEFINITIONS
+
+  Letter = [A-Za-z\xC0-\xD6\xD8-\xF6\xF8-\xFF];
+  Digit = [0-9];
+  White = [ \t\n];
+
+%%VOCABULARY main
+
+%%SCANNER main %%RULES
+
+  NUMBER = Digit+
+    %%
+      pl0ScCopy(smThis,
+                (unsigned char *)smToken->stringValue, 0,
+                smThis->smLength);
+      smToken->stringValue[smThis->smLength] = 0;
+      smToken->integerValue = atoi(smToken->stringValue);
+    %%;
+
+  IDENTIFIER = Letter ('_' ? Letter ! '_' ? Digit)*
+    %%
+      pl0ScCopy(smThis,
+                (unsigned char *)smToken->stringValue, 0,
+                 smThis->smLength);
+      smToken->stringValue[smThis->smLength] = 0;
+    %%;
+
+  Include = '$INCLUDE'
+    %%
+      TmToken token;
+      int i;
+      char c;
+
+      pl0Scan(smThis, &token);    /* Get file name */
+      do {
+        i = pl0ScSkip(smThis, 1);
+        c = smThis->smText[smThis->smLength-1];
+      } while(c != '\n' && i != 0); /* Skip to EOL or EOF */
+        strcpy(smToken->stringValue, token.stringValue);
+    %%;
+
+  Unknown = _Unknown;
+  EndOfText = _EndOfText;
+
+%%SKIP
+
+  Blank = White+;            -- Skip any white space
+  Comment = '--' [^\n]*[\n]; -- and Ada style comments
+
+%%END
+-------------------------------------------------------------------------------
+
+// @CHECK: Code indent of last few lines (from 'Unknown = _Unknown;'), [P.175]
+//         since due to page change in PDF I wasn't able to determine
+//         how their alignments compares to previous lines [P.174].
+
+// PAGE 175

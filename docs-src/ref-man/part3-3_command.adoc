@@ -1,0 +1,75 @@
+// PAGE 162 -- ScannerMaker Reference Manual
+
+= THE SCANNERMAKER COMMAND
+
+The invocation of the scanner generator is performed by the following program call
+
+// SYNTAX: Shell
+
+------------------------------
+smk [-help] [<options> ...] <file>
+------------------------------
+
+The special option `-help` gives a short help of available options and their meaning.
+
+The default extension on the ScannerMaker description file is `.smk` which is added if not explicitly stated.
+
+
+== Parameters
+
+// @XREF: The ScannerMaker Description File
+
+The command takes only one argument, the name of a description file.
+The description file contains a description of the scanner to be made using a formal language as described in _The ScannerMaker Description File_ on page 138.
+The argument may appear anywhere on the command line except between any option and its argument.
+
+
+== Options
+
+One or more options may be specified on the command line overriding any specified options in the _options section_ in the description file.
+The only options which can not be specified in the _options section_ are
+
+// @NOTE: Maybe we should swap the order of '-smt' and '-sml' so they mirror
+//        the order in which they are explained further down...
+
+.option
+* `-help`
+* `-voc <file>`
+* `-smt <file>`
+* `-sml <file>`
+
+// @XREF: Command Line Option Format
+// @XREF: ToolMaker System Description
+
+All other options have the same names as in the _options section_.
+For a detailed description on how to specify options on the command line see _Command Line Option Format_ in the _ToolMaker System Description_, page 40.
+
+The following options have no corresponding directive in the _options section_ of the description file and are therefore thoroughly described:
+
+* `-help`
+
+This special option produce a verbose listing of the usage format of the command.
+Each argument and option is given a short explanation.
+
+* `-voc <file>`
+
+The vocabulary used is read from the `<file>` as specified as argument to this option.
+By default the vocabulary is read from a file with the same base name as the description file but with extension `.voc`.
+
+// PAGE 163
+
+* `-sml <file>`
+
+The specified file is used as list file.
+By default the name of the list file is the same as the description file but with extension `.sml`.
+Note that this option does not produce any list file if no list directives are used.
+
+* `-smt <file>`
+
+// @XREF: The Maker
+// @XREF: ToolMaker System Description
+// @XREF: File Descriptions
+
+The specified file is used as the table file.
+By default the name of the table file is the same as the description file but with extension `.smt`.
+Note that this option does not imply that the table file should be saved after source code generation, it simply indicates its name (see also _The Maker_ in the _ToolMaker System Description_, page 25 for a description of the intelligent generation strategy and _File Descriptions_ on page 138).
