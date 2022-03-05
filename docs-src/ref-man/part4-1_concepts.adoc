@@ -1,7 +1,111 @@
-// @PAGE 198 -- ListerMaker Reference Manual
+// PAGE 198 -- ListerMaker Reference Manual
 
 // @STATUS: TBD!
 
 = CONCEPTS AND ASSUMPTIONS
 
-WARNING: The rest of this book part still needs to be ported!
+== ListerMaker and Lister
+
+ListerMaker is a software tool to produce _Listers_.
+The term Lister is used to describe a software component or subroutine package designed to handle messages issued during analysis of an input, typically error and warning messages.
+A Lister also allows production of listing files containing the input and any associated messages.
+It is also possible to retrieve the messages one by one from the Lister.
+
+ListerMaker is the tool and Lister is thus the subroutine package produced by that tool.
+
+
+== Source Positions
+
+The most important concept in ListerMaker is the _source position_.
+A source position is an identification of a position in the source (input) worked upon by the application (i.e the program written by you, the tool writer).
+Although perfectly usable anyway, conceptually this is the first assumption made by ListerMaker, that the application is reading its input from a file.
+A source position is a structure containing a column, a line and optionally a file number.
+
+A source position is sent to Lister together with every message logged.
+This makes it possible for the Lister to find and show the source corresponding to the error and to place the message at the correct point in the output.
+A message that should be placed at the end of the listing of a file should have the line component set to 0 (zero).
+All such messages are collected and printed after listing the file.
+In case multiple files are handled, global messages, i.e. messages pertaining to the complete input can be collected and shown after all files are listed if the file component is set to -1.
+
+TIP: The automatic source position calculation of ScannerMaker can be used to create the line and column part of the source position information.
+
+
+== Messages
+
+// @XREF: Message section => (see below)
+
+A _message_ is actually a number of different things.
+The first meaning of a message is _one number and corresponding text in the Message section in the description file_ (see below).
+This type of message is a template for actual messages output to the end-user.
+
+The second use of the term is _the call to Lister to log a message_, this call carries among other things a message number referring to the message in the previous sense, i.e it refers to a template found in the description or message file.
+
+// PAGE 199
+
+The third use is _the actual presented text_ together with the source where the error was discovered.
+This is produced by the Lister using a call to a list function after all messages have been logged and shown on the terminal or the screen.
+
+A final observation on error messages is that although the term is error message it does not actually have to indicate errors (other classes of messages handled by a Lister is Informational, Warning, Fatal and System messages) but is used for convenience throughout this document.
+ListerMaker does not place any restrictions or assumptions on what to do when a message is logged, the recovery, abortion of execution or other action is totally up to the implementor.
+
+
+== Error Message Templates and Insert Strings
+
+As described above an error message starts out as a template in the description file.
+These templates consist of a number used to identify the message and a string which is the actual message each taking up one line in the error message file.
+For example
+
+// SYNTAX: Shell
+
+------------------------------
+102 '%1 deleted.';
+------------------------------
+
+The message string may contain insertion markers (`%__d__`, where `_d_` is a digit).
+This allows a message to be customised during run-time by inserting additional information in the message clarifying the meaning, such as the name of an identifier.
+The needed number of insert strings must be concatenated and sent to Lister in the log call.
+Lister will then extract the insert strings and insert them at the appropriate places in the message before presenting it to the user.
+
+
+== Severities
+
+A logged message is also associated with a severity code.
+This code is not implied by the message code, as it sometimes might be handy to be able to log a message with the same code but with different severities.
+An example of this is the insertion of a symbol by a parser, if the symbol was just a comma or semicolon, this might be considered a Warning, but if the inserted symbol was an identifier it surely must be an Error as the parser has no idea as to what identifier the programmer meant.
+
+ListerMaker (and the Lister) defines the following severity levels (in order of increasing severity):
+
+// SYNTAX: None?
+
+......................................
+sevINF, sevWAR, sevERR, sevFAT, sevSYS
+......................................
+
+corresponding to Informational, Warning, Error, Fatal and System messages.
+Any semantic meaning of these, except for their ordering, is not assumed by the Lister, it is only used as a classification of the messages.
+
+// PAGE 200
+
+The most serious severity logged so far may be read by the function `__lm__Severity()`.
+
+
+== Listing Types
+
+In order to direct Lister to produce the selected kinds of information in the listing the generated Lister also defines an enumerated type.
+One of the parameters to `__lm__List()` is a set of values from this type.
+
+// @TODO: Convert to horiz. description list? (must drop table headings!)
+
+[cols="<m,<d",options=autowidth,role=center]
+|==========================================================================
+| Value   | Description
+
+| liSUM   | Print a summary of the number of messages found
+| liERR   | Print source lines with messages associated to them in the list
+| liOK    | Print source lines without any messages in the list
+| liINCL  | List and show (as appropriate) included files
+| liHEAD  | Print a header on top of all pages
+|==========================================================================
+
+Lister also has a shorthand notation for two common combinations of these, `liTINY`, which is a tiny listing including a header and source for just those lines that have messages associated to them and a summary, and `liFULL`, which also shows the source lines without messages.
+Normally a tiny list is useful to present on the screen, and a full list if listing to a file.

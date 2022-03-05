@@ -21,5 +21,12 @@ Familiarity with compiler construction, and the principles of operation of the o
 :leveloffset: +1
 
 include::part4-1_concepts.adoc[]
+include::part4-2_production.adoc[]
+include::part4-3_command.adoc[]
+include::part4-4_runtime.adoc[]
 
 :leveloffset: 0
+
+== TBD!
+
+WARNING: The rest of this book part still needs to be ported!

@@ -1,0 +1,664 @@
+// PAGE 208 -- ListerMaker Reference Manual
+
+= LISTER RUN-TIME USAGE
+
+This chapter describe the functions in the run time part of ListerMaker, the Lister, and how your application accesses these functions.
+
+
+== Principles of Operation
+
+The first thing to do is to initiate the listing system.
+This is done by calling the function `__lm__LiInit()`, preferably at the beginning of the main program.
+This call includes the name of the input file and the string to insert in the header of any listing files produced later and the message section that is to be used for templates.
+If message templates were placed in a separate file (by the use of the appropriate option) the name of the file containing the error message templates should also be given in this call.
+
+// @XREF: ParserMaker Reference Manual
+
+The next step is to start analysis of the input, for example by initiating a ScannerMaker generated scanner and calling the parsing routine in the ParserMaker generated parser.
+During this analysis lexical and syntactical errors discovered are logged by the error handling procedures in the error handler module used by ParserMaker (see _ParserMaker Reference Manual_).
+The supplied ListerMaker description file contains error message templates for the errors automatically handled here.
+
+Messages are logged using the function `__lm__Log()`.
+This function is also used by the standard error handler module in the parser.
+Of course this module may be replaced by code written by you, but as it stands it is tuned to directly work with a ListerMaker produced Lister.
+
+If you are not using a ParserMaker generated parser you might still want to use Lister, and this is of course possible.
+Just use `__lm__Log()` to log the messages.
+This is also what you do for example during later passes of your application when you want to log a message.
+
+The last step in using Lister is to use it to present the messages to the user.
+This is performed by calling `__lm__List()` which creates a listing presented in a file or on the screen.
+The information contained in the listing is controlled by parameters to `__lm__List()`, examples of information possible to select are whether only messages or source lines corresponding to the errors or all lines should be shown.
+This is performed by re-reading the input files and for each line produce the appropriate output (input lines and/or messages).
+
+An alternate way of presenting the messages for a user is to use the `__lm__Msg()` function.
+This function will return the message text for a any selected message together with its source position.
+This information may then be used to position the message text on a screen for example.
+
+// PAGE 209
+
+If multiple files are to be listed the source position structure _must_ contain a file component.
+This field should be initialised with a unique value for each instance of input files.
+To use the value from a simple counter which is incremented for each newly opened file is normally adequate.
+
+
+=== Phases
+
+Lister works in three different phases, UNINITIALISED, COLLECTING and RETRIEVING.
+During the UNINITIALISED phase no calls except to initiate the Lister is legal.
+Calls to procedures logging messages is allowed in the COLLECTING phase, and calls for producing lists, retrieving messages and printing text is only allowed in the RETRIEVING phase.
+Transition between the COLLECTING and RETRIEVING phases is performed by the first call to `__lm__List()`, `__lm__Listm()`, `__lm__Listsi()` or `__lm__Msg()`.
+
+To sum up, the following functions are available in each phase:
+
+.INITIATING:
+* `__lm__LiInit()`
+
+.COLLECTING:
+* `__lm__Log()`
+* `__lm__Logv()`
+* `__lm__LiOn()`
+* `__lm__LiOff()`
+* `__lm__LiPage()`
+* `__lm__Severity()`
+
+.RETRIEVING:
+* `__lm__List()`
+* `__lm__Msg()`
+* `__lm__SkipLines()`
+* `__lm__LiPrint()`
+* `__lm__Severity()`
+* `__lm__LiTerminate()`
+
+
+// PAGE 210
+
+=== Include-handling
+
+In some cases a method of handling nested files is needed.
+This is for example the case with so called include-files in some programming languages.
+ListerMaker supplies functions to handle this feature.
+
+Suppose that we want to create a '`c`'-preprocessor.
+The preprocessor has a directive, `#include`, which allows inclusion of secondary files containing '`c`' source.
+
+To solve the problem of creating lists of such input using ListerMaker the function `__lm__LiEnter()` is used.
+When encountering the `#include` directive this function should be called with the name of the new (included) file and a source position where the file should be inserted (normally at the first position on the line following the `#include` directive.
+
+During the RETRIEVING phase any messages logged using source positions indicating this included file will be shown (or returned using `__lm__Msg()`) before messages occurring after the `#include` directive in the top level file.
+So all messages are sorted correctly.
+
+Note that the `file` component of the source position structure should differentiate between every instance of an included file since even if the same file is included more than once the context is different each time and different messages may be generated for every instance depending on the context.
+
+The following extra functions are available if the `include` option is used:
+
+.COLLECTING:
+* `__lm__LiEnter()`
+* `__lm__LiExit()`
+
+
+=== Multiple Input Files
+
+Another major feature of Lister is the ability to handle listing of multiple top-level input files.
+These files have no hierarchical relations as is the case with included files, as described above.
+
+As opposed to the include file handling this is used when multiple files are worked upon at the same time, for example a file compare program or a module interface verifier.
+This kind of applications require that a small number of related input files are analysed (the files having no hierarchical relation to each other).
+When creating a listing the files should appear in the same listing file, but separated, not nested.
+
+// PAGE 211
+
+This requires an array of file names, each index corresponding to the file number used in the source position structure, to be passed to Lister, as is the case in the parameter list for the `__lm__Listm()` function, which is designed for this purpose.
+In this case the file numbers for the top level files must be from zero and up.
+Any further files may have any number.
+
+TIP: this feature is possible to use together with the include-feature, meaning that a number of top level files are listed together, each having (possibly) nested input files.
+
+The following extra functions are available if the `Listings multiple;` option is used:
+
+.RETRIEVING:
+* `__lm__Listm()`
+
+
+=== Separate Listing of Multiple Input Files
+
+The listing of multiple input files can also be handled separately as opposed to the multiple handling described above.
+This means that a call to a function (`__lm__Lists()`) must be performed for each of the files.
+This makes it possible to handle output (using `__lm__LiPrint()`) between listings of each file.
+
+The following extra functions are available if the `Listings separate;` option is used:
+
+.COLLECTING:
+* `__lm__LocSeverity()`
+* `__lm__ResLocSeverity()`
+
+.RETRIEVING:
+* `__lm__Listsi()`
+* `__lm__Lists()`
+* `__lm__Listse()`
+
+
+
+== Run Time Interface
+
+Below all functions in a Lister are described with their default prefix, `_lm_`.
+By using the option `Prefix` this may be changed to any selected string.
+
+
+// PAGE 212
+
+=== Constant: __lm__SEPARATOR
+
+This character constant contains the value to be used as separator between concatenated insertion strings.
+Thus the operation to send two insertion strings to a message in one `__lm__Log()` call is to concatenate the two strings separated with the value `__lm__SEPARATOR`, and then to send the resulting string as the insertion string in the `__lm__Log()` call.
+
+
+=== Type: __lm__Messages
+
+This type contains the enumerated values of the names of the sections given in the Message sections in the description file.
+There is one value for each named Message section constructed by prepending the lister prefix and an underscore, and appending an underscore and the text '`Messages`' to the name given to the section, e.g. if the section was called '`english`' the corresponding constant is called
+
+...................
+lm_ENGLISH_Messages
+...................
+
+One of these values must be transferred in the call to the `__lm__LiInit()` function to indicate which set of message templates to use.
+
+
+=== Type: __lm__Sev
+
+This enumerated type has all severities exported from Lister as its value set.
+Values from this type may be combined to form sets used in `__lm__List()`.
+
+// @TODO: Convert to horiz. description list? (must drop table headings!)
+
+[cols="<m,<d",options=autowidth,role=center]
+|==================================
+| Value  |  Description
+
+| sevOK  | OK severity, no message.
+| sevINF | Informational message.
+| sevWAR | Warning message.
+| sevERR | Error message.
+| sevFAT | Fatal error message.
+| sevSYS | System error message.
+|==================================
+
+
+=== Constant: sevALL
+
+An `__lm__Sev` constant containing the set of all severities (`sevOK`, `sevINF`, `sevWAR`, `sevERR`, `sevFAT`, `sevSYS`).
+
+
+=== Type: __lm__Typ
+
+This enumerated type is used to indicate selected information to include in the listing file (or on the screen).
+
+// @TODO: Convert to horiz. description list? (must drop table headings!)
+
+[cols="<m,<d",options=autowidth,role=center]
+|==========================================================================
+| Value  |  Description
+
+| liSUM  | List a summary of found messages.
+| liERR  | List source for lines with messages.
+| liOK   | List source for lines without messages.
+| liINCL | List source lines and messages from included files as indicated by
+the presence of `liERR` and `liOK` flags.
+| liHEAD | Print a header on each page in the listing file.
+|==========================================================================
+
+
+=== Constant: liTINY
+
+A set of `lmTyp` values appropriate for a tiny list, for example on the screen.
+Contains `liSUM`, `liERR`, `liINCL` and `liHEAD`.
+
+
+=== Constant: liFULL
+
+A set of `lmTyp` values appropriate for listing to a list file.
+Also contains `liOK`, so as to also show source lines for which there are no messages.
+
+
+=== Function: imLiEnter()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__LiEnter(srcp, start, file)
+
+srcp   :  IN %%(srcpType)
+start  :  IN %%(srcpType)
+file   :  IN STRING
+------------------------------
+
+If so configured the generated Lister is capable of handling nested files (include files in programmer terminology).
+A call to the `_lm_LiEnter()` function during message collection indicates where the included file should be inserted.
+The `srcp` parameter indicates the source position where the entered file should be inserted, and `start` where in the entered file to begin, normally this should indicate the first column on the first line.
+The `file` component should be set to a unique value indicating this instance of the included file.
+`_lm_LiEnter()` is only callable in COLLECTING phase.
+
+
+=== Function: __lm__LiExit()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lmL__iExit(srcp)
+
+srcp   :  IN %%(srcpType)
+------------------------------
+
+Prematurely exit from a nested file.
+Using this function is analogous to saying that the end of the file is earlier than the physical end of file.
+`srcp` is the source position where to place the simulated end of file.
+Should only be used in special cases and is only allowed in COLLECTING phase.
+
+
+=== Function: __lm__Lilnit()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Init(header, source, section, message)
+
+header  :  IN STRING
+source  :  IN STRING
+section :  IN lmMessage
+message :  IN STRING
+------------------------------
+
+
+
+// PAGE 214
+
+Initiates the listing system.
+Only allowed in UNINITIALISED phase (the call changes phase to COLLECTING).
+`header` is the string to insert in the page header on every page of any listing file.
+This could for example contain a version identification.
+The file name of the top level source file is passed in the `source` parameter, the constant indicating which section of messages to use in `section` and the name of the message template file in `message`.
+
+NOTE: If message templates are placed in the source instead of in a separate message file (by use of the `Messages EMBEDDED` option) the last parameter, `message`, is not available and should not be given.
+
+
+=== Function: __lm__List()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__List(outfnm, lines, columns, listtype, severities)
+
+outfnm     :  IN STRING
+lines      :  IN INTEGER
+columns    :  IN INTEGER
+listtype   :  IN SET OF __lm__Typ
+severities :  IN SET OF __lm__Sev
+------------------------------
+
+The `__lm__List()` function produces a list consisting of the requested information, such as source lines, error messages and page headers on a specified file or on the terminal.
+It is callable only in the COLLECTING (the first call changes phase to RETRIEVING) and RETRIEVING phases.
+The file name for the list is passed in `outfnm`, if it is equal to `""` (the empty string) the result is a listing on the screen (standard error).
+`lines` specifies the numbers of lines per page on the output file, if equal to 0 (zero) no paging is performed.
+`columns` specifies the number of output columns.
+A set of values from the `__lm__Typ` values is sent in the `listtype` parameter specifying the information to be listed.
+`seventies` should contain a set of values from the `__lm__Sev` type indicating which severities to include in the listing.
+
+
+=== Function: __lm__Listm()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Listm(outfnm, lines, columns, listtype, severities, files)
+
+outfnm     :  IN STRING
+lines      :  IN INTEGER
+columns    :  IN INTEGER
+listtype   :  IN SET OF __lm__Typ
+severities :  IN SET OF __lm__Sev
+files      :  IN ARRAY OF STRING
+------------------------------
+
+// @XREF: Include-handling
+// @XREF: Multiple Input Files
+
+Same as `__lm__List()` but allows for listing of multiple input files.
+This allows an application to e.g. analyse a number of input files and still produce one listing file.
+Note that this is not the same as the include handling (see _Include-handling_ on page 210 and _Multiple Input Files_ on page 210 for a comparison).
+Instead each input file is listed separately with a page break between each one.
+The extra parameter `files` is an array of strings with the file names of the files to list.
+The last element must be a NULL pointer.
+
+// PAGE 215
+
+This function is only available if the `Listings multiple;` is used.
+
+
+=== Function: __lm__Listsi()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Listsi(outfnm, lines, columns, listtype, severities)
+
+outfnm     :  IN STRING
+lines      :  IN INTEGER
+columns    :  IN INTEGER
+listtype   :  IN SET OF __lm__Typ
+severities :  IN SET OF __lm__Sev
+------------------------------
+
+// @XREF: Separate Listing of Multiple Input Files
+
+This function initialises the lister to start separate listing (see _Separate Listing of Multiple Input Files_ on page 211).
+This function does not produce a complete listing, instead the function `__lm__Lists()` needs to be called once for each file, and the terminating function `__lm__Listse()` after completing the listing.
+
+The parameters have the same interpretation as for `__lm__List()`.
+
+
+=== Function: __lm__Lists()
+
+// @CHECK: It's "lmListse()" in original code, but the function in the title
+//         is "lmLists()" not "lmListse()" -- a typo??
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Listse(severities, fno, fnm)
+
+severities : IN SET OF __lm__Sev
+fno : INTEGER
+fnm : STRING
+------------------------------
+
+// @XREF: Separate Listing of Multiple Input Files
+
+The function performs listing of _one_ file while using separate listing (see _Separate Listing of Multiple Input Files_ on page 211). A call to
+`__lm__Listsi()` must first be performed to set it up, then multiple calls to `__lm__Lists()` can be performed until all files have been handled.
+Between calls other retrieving phase functions can be called (e.g. `__lm__LiPrint()` to print extra information).
+
+
+=== Function: __lm__Listse()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Listse(severities)
+
+severities : IN SET OF __lm__Sev
+------------------------------
+
+// @XREF: Separate Listing of Multiple Input Files
+// @NOTE: "The severity parameter..." => "The `SEVERITIES` parameter"???
+
+This function terminates the listing of separate files (see _Separate Listing of Multiple Input Files_ on page 211) by printing the global messages.
+The severity parameter indicates which severities to include in the global messages section.
+
+
+=== Function: __lm__Log()
+
+// @CHECK: Parameter is "ecode" in func. def, but just "code" below it.
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Log(srcp, ecode, sev, istrs)
+
+srcp   :  IN %%(srcpType)
+code   :  IN INTEGER
+sev    :  IN __lm__Sev
+istrs  :  IN STRING
+------------------------------
+
+// PAGE 216
+
+
+Collects (logs) a message together with source position information (`srcp`) to be expanded and sorted for later retrieval.
+It is only callable in the COLLECTING phase.
+`code` identifies the message template from the message template file to be used.
+The severity associated with the message is indicated in `sev`.
+Concatenated insert strings are passed in `istrs`, i.e. one string for each insertion marker in the template, separated by the `__lm__SEPARATOR` character constant.
+
+
+=== Function: __lm__Logv()
+
+// @CHECK: Parameter is "ecode" in func. def, but just "code" below it.
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Logv(srcp, ecode, sev, ...)
+
+srcp  :  IN %%(srcpType)
+code  :  IN INTEGER
+sev   :  IN __lm__Sev
+------------------------------
+
+Corresponds to the function `__lm__Log()` but uses the '`c`'-language feature of variable number of arguments.
+This greatly simplifies the logging of messages having multiple insert strings.
+
+NOTE: The function is only available in the '`c`' target languages.
+
+NOTE: The parameter list must be terminated by a NULL value.
+
+
+=== Function: __lm__Msg()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__Msg(i, srcp, msg) : INTEGER
+
+i     : IN INTEGER
+srcp  : OUT %%(srcpType)
+msg   : OUT STRING
+returns INTEGER
+------------------------------
+
+Retrieves logged messages one by one.
+For each call the i'th message is retrieved, the source position of the message is returned in the out parameter `srcp` and the message text in `msg`.
+`__lm__Msg()` returns the index, `i`, if the message was found, else a 0 (zero) is returned.
+This can be used to determine that there where no more messages to retrieve.
+Allowed in the RETRIEVING and COLLECTING phases (first call changes phase to RETRIEVING).
+
+
+=== Function: __lm__LiOff()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__LiOff ()Off (srcp)
+
+srcp : IN %%(srcpType)
+------------------------------
+
+The function of `__lm__Lioff()` is to turn off the listing from a specified source position, `srcp`.
+Only allowed in COLLECTING phase.
+
+// PAGE 217
+
+=== Function: __lm__LiOn()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__LiOn(srcp)
+
+srcp : IN %%(srcpType)
+------------------------------
+
+Turns listing on again from source position `srcp`, after it has been turned off.
+Callable only in COLLECTING phase.
+
+
+=== Function: __lm__LiPage()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__LiPage(srcp, lines)
+
+srcp  : IN %%(srcpType)
+lines : IN INTEGER
+------------------------------
+
+Produces a conditional or unconditional page break in the output listing at a specified source position, `srcp`.
+If there are less than `lines` lines more available on the current listing page a page break is performed otherwise not.
+Zero means an unconditional break.
+`__lm__LiPage()` should only be used in COLLECTING phase.
+
+
+=== Function: __lm__LiPrint()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__LiPrint(line)
+
+line : IN STRING
+------------------------------
+
+Print a line in the current output file.
+After each call to `__lm__List()` (or between consecutive calls to `__lm__Listse()`) it is possible to print additional lines in the output file.
+As long as `__lm__List()` is not called again (or `__lm__LiTerminate()`!) each line will be appended to the listing file.
+Each call prints the contents of the parameter and performs a new line in the listing file or on the terminal.
+Page and line breaks are handled correctly.
+Allowed in RETRIEVING phase only.
+`line` is the string to be printed.
+
+
+=== Function: __lm__LocSeverity()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+sev = __lm__LocSeverity()
+
+returns __lm__Sev
+------------------------------
+
+// @XREF: Function: lmResLocSeverity()
+// @NOTE: "(see Function: lmResLocSeverity() on page 217)." => It's actually
+//        the very next section! Maybe just say so instead of using an XRef
+//        or mentioning its page?
+
+The function `__lm__LocSeverity()` may be used to read the highest severity logged since the reset of a special local severity variable (see _Function: lmResLocSeverity()_ on page 217).
+This function is callable both in COLLECTING and RETRIEVING phases and only available if `Listings separate;` is used.
+
+
+=== Function: __lm__ResLocSeverity()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__ResLocSeverity()
+------------------------------
+
+// PAGE 218
+
+The `__lm__ResLocSeverity()` resets the special local severity variable available when the `Listings separate;` option is in effect.
+
+WARNING: the implementor is completely responsible for the use and resetting of the local severity variable.
+
+
+=== Function: __lm__Severity()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+sev = __lm__Severity()
+
+returns __lm__Sev
+------------------------------
+
+To read the highest severity logged so far the procedure `__lm__Severity()` may be used which returns a value from the `__lm__Sev` value set.
+This function is callable both in COLLECTING and RETRIEVING phases.
+
+
+=== Function: __lm__SkipLines()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__SkipLines(lines)
+
+lines : IN INTEGER
+------------------------------
+
+Performs a conditional page break in the output file.
+As with `__lm__LiPrint()` this function performs its output in the current output file or on the terminal.
+`__lm__SkipLines()` corresponds to the COLLECTING phase function `__lm__LiPage()`, but may only be used in RETRIEVING phase.
+`lines` contains the number of lines at least available to _not_ make a page break.
+
+
+=== Function: __lm__LiTerminate()
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+__lm__LiTerminate ()
+------------------------------
+
+Terminates the Lister.
+No more lists may be produced.
+Lister is prepared for a new `__lm__LiInit()` call.
+Allowed only in the RETRIEVING phase (the call changes phase to UNINITIALISED).
+
+
+== Messages Templates
+
+=== Insertion Markers
+
+An insert string supplied in a `__lm__Log()` call is inserted into the message template fetched from the message file.
+The insert string may contain multiple strings separated by the special character `__lm__SEPARATOR` exported by Lister.
+The insertion marker is the character `%` followed by a number indicating which part of the string and should be placed in the template where the corresponding part of the insert string should be inserted.
+Thus the insert string supplied to `__lm__Log()` must contain at least as many `__lm__SEPARATOR` separated parts as there are insertion markers in the message text.
+
+// PAGE 219
+
+=== Reserved Numbers
+
+The following message numbers are reserved and should always be available if the generated Lister is used to produce listings (i.e. it is not necessary if only message retrieval using `__lm__Msg()` is used).
+
+
+1. Heading string (may include insertion markers, position of insertion marker indicates where to insert any insertion strings sent in the `__lm__LiInit()` call).
+
+2. Message text for no errors or warnings (`sevERR` or `sevWAR`).
+
+3. Message text for no detected warnings (`sevWAR`).
+
+4. Message text for no detected errors (`sevERR`).
+
+5. Message text for number of detected informational messages (`sevINF`).
+An insertion marker is used to indicate where to insert the number.
+
+6. Message text for number of detected warning messages (`sevWAR`).
+An insertion marker is used to indicate where to insert the number.
+
+7. Message text for number of detected error messages (`sevERR`).
+An insertion marker is used to indicate where to insert the number.
+
+8. Message text for maximum number of messages exceeded.
+
+
+By altering the templates in the description file these system messages may be customized for different languages or other formats.
+
+NOTE: The reserved message templates must be available in all message sections.
