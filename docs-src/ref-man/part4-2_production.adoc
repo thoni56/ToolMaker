@@ -1,0 +1,286 @@
+// PAGE 201 -- ListerMaker Reference Manual
+
+= LISTER PRODUCTION
+
+== The ListerMaker Description File
+
+The main information necessary to produce a Lister is the message templates.
+These are normally written in a description file used by ListerMaker.
+
+To inform ListerMaker how your Lister is to work there is a number of options that you may choose.
+These include for example whether to include routines for list production and the prefix for all the externally visible functions in the produced Lister.
+
+// @XREF: appendix A, THE PL/0 EXAMPLE
+
+After setting up a directory using _**toolmake**_ there should exist a default description file prepared with all necessary options set to their default values and some example messages.
+An example of a ListerMaker description file is included in appendix A, _THE PL/0 EXAMPLE_, on page 220.
+
+The structure of the ListerMaker description file is
+
+// SYNTAX: EBNF
+
+------------------------------
+<description file> ::=
+    <toolmaker sections>
+    <message section> { <message section> }
+
+<toolmaker sections> ::=
+    [ <options section> ]
+    { <import section> | <srcp section> }
+------------------------------
+
+// @XREF: THE TOOLMAKER DESCRIPTION FILE
+// @XREF: ToolMaker System Description
+
+The _import_ and _srcp sections_ are further described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+These sections are normally located in the ToolMaker description file and should be put in the ParserMaker description file only when developing a stand-alone Lister.
+
+
+=== Lexical items
+
+Symbols in the ListerMaker description language are constructed from using upper case letters from the ISO-8859-1 character set, lower case letters (ISO-8859-1) and digits.
+
+// SYNTAX: EBNF
+
+------------------------------
+<letter> ::= <upper case letter> | <lower case letter>
+
+<digit> ::=
+      '0' | '1' | '2' | '3' | '4'
+    | '5' | '6' | '7' | '8' | '9'
+
+<number> ::= <digit>+
+
+<name> ::= <letter> {<letter> | <digit> | '_' }
+
+<quoted string> ::=
+    ''' {<letter> | <digit> | <special character>} '''
+------------------------------
+
+
+// PAGE 202
+
+=== The Options Section
+
+// SYNTAX: EBNF
+
+------------------------------
+<options section> ::=
+    '%%OPTIONS' <directive> {<directive>} ['%%END']
+
+<directive> ::=
+      <common directive>
+    | <listings directive>
+    | <include directive>
+    | <message directive>
+    | <limit directive>
+------------------------------
+
+// @XREF: The ToolMaker Description File
+// @XREF: ToolMaker System Description,
+
+In the options section various options can be set.
+The available options for ListerMaker are described below.
+The term default describes the initial setting unless otherwise stated in the ToolMaker Common Description file when appropriate (see _The ToolMaker Description File_ in the _ToolMaker System Description,_ page 27).
+
+// @XREF: THE LISTERMAKER COMMAND
+
+These options can be overridden by options given on the command line when ListerMaker is invoked (see _THE LISTERMAKER COMMAND_ on page 206).
+If an option is not specified its default value is used.
+The default options are:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+No Verbose;
+Target 'ansi-c';
+Os 'SunOS';
+Prefix 'lm';
+Library '$TMHOME/lib/ansi-c';
+Escape '`';
+width 78;
+Height 60;
+Generate source;
+No Force;
+Listings single;
+Include;
+Limit 100;
+Messages embedded;
+------------------------------
+
+// @XREF: The Options Section
+// @XREF: ToolMaker System Description
+// @XREF: Prefix Management
+// @XREF: ToolMaker System Description
+
+Note however that the settings of common options in the ToolMaker Common Description file influences the default values (see _The Options Section_ in the _ToolMaker System Description_, page 30, and _Prefix Management_ in the _ToolMaker System Description_, page 42).
+
+
+==== Common Directives
+
+// SYNTAX: EBNF
+
+------------------------------
+<common directive> ::=
+      <prefix directive>
+    | <escape directive>
+    | <target directive>
+    | <os directive>
+    | <library directive>
+------------------------------
+
+// @XREF: The Options Section
+// @XREF: ToolMaker System Description
+
+The common directives are directives available for all Makers in the ToolMaker kit.
+For a detailed description of these refer to The Options Section in the ToolMaker System Description, page 30.
+The directives listed above are the directives relevant for ListerMaker, and if used overrides settings and default values from the ToolMaker Common Description file.
+
+// PAGE 203
+
+The prefix directive does not inherit its default value, instead it defaults to `_lm_` if not explicitly set in the `.tmk` file.
+If set in the ToolMaker Common Description file and _not_ used in the ListerMaker Description file it defaults to the system prefix (the value set in the ToolMaker Common Description file).
+
+
+==== The Listings Directive
+
+// SYNTAX: EBNF
+
+------------------------------
+<listings directive> ::=
+    'LISTINGS' <listings option>
+        {',' <listings option>} ';'
+    ['NO'] 'LISTINGS' ';'
+
+<listings option> ::=
+    'SINGLE' | 'MULTIPLE' | 'SEPARATE'
+------------------------------
+
+The listings directive tells ListerMaker to include the functions for producing listings in the generated Lister module.
+In cases where only message by message retrieval using the `__lm__Msg()` function is used the `NO LISTINGS` option may be specified to reduce the amount of code in the Lister.
+
+// @XREF: Multiple Input Files
+
+Under certain circumstances it is necessary to make a list of multiple source files, for example if the application is checking the interfaces between program modules.
+If this directive is specified, ListerMaker will generate a `__lm__Listm()` function, which may be used instead of `__lm__List()` to achieve this.
+See _Multiple Input Files_ on page 210.
+
+// @XREF: Separate Listing of Multiple Input Files
+
+The functions to use for separate listings of multiple input files (see _Separate Listing of Multiple Input Files_ on page 211) is only generated into the Lister if the value `SEPARATE` is selected.
+The default value is:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Listings SINGLE;
+------------------------------
+
+
+==== The Include Directive
+
+// SYNTAX: EBNF
+
+------------------------------
+<include directive> ::=
+    ['NO'] 'INCLUDE' ';'
+------------------------------
+
+The include directive specifies if using and nesting source files shall be allowed.
+If `NO INCLUDE` is specified, file handling will not be included in the generated Lister.
+
+The default value is:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Include;
+------------------------------
+
+
+==== The Limit Directive
+
+// SYNTAX: EBNF
+
+------------------------------
+<limit directive> ::=
+    'LIMIT' <number> ';'
+------------------------------
+
+// PAGE 204
+
+The `Messagelimit` directive indicates the maximum number of messages possible to log using `__lm__Log()`.
+Any integer greater than 0 (zero) is allowed.
+Note that also the number of calls to `__lm__LiEnter()`, `__lm__LiExit()`, `__lm__LiOff()`, `__lm__LiOn()`, `__lm__LiPage()`, `__lm__SkipLines()` (i.e. all COLLECTING phase functions) are included in this calculation.
+
+The default value is:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Limit 100;
+------------------------------
+
+
+==== The Message Directive
+
+// SYNTAX: EBNF
+
+------------------------------
+<message directive> ::=
+    'MESSAGE' <target option> ';'
+
+<message option> ::=
+    'FILE' | 'EMBEDDED'
+------------------------------
+
+The message directive tells ListerMaker whether the messages shall be put in a separate file to be read at run-time or embedded in the generated Lister source code.
+
+The default value is:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+Message EMBEDDED;
+------------------------------
+
+
+=== The Messages Sections
+
+// SYNTAX: EBNF
+
+------------------------------
+<messages section> ::=
+    '%%MESSAGES' <name>
+    [<message> {<message>}]
+    ['%%END']
+
+<message> ::= <number> <quoted string> ';'
+------------------------------
+
+Multiple message sections may be specified.
+Using the generated initialisation call (`__lm__LiInit()`) the section used may be selected during run-time.
+Example:
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+%%MESSAGES english
+    10 'Syntax error.';
+    11 'Illegal symbol.';
+%%MESSAGES swedish
+    10 'Syntaxfel.';
+    11 'Felaktig symbol.';
+%%END
+------------------------------
+
+
+== The ToolMaker Common Description File
+
+// PAGE 205
+
+// @XREF: THE TOOLMAKER DESCRIPTION FILE
+// @XREF: ToolMaker System Description
+
+Unless ListerMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+Otherwise these two sections may be specified in the ListerMaker Description file, removing any need for the ToolMaker Common Description file.
