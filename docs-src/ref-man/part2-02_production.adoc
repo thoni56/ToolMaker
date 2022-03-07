@@ -1,6 +1,6 @@
 // PAGE 76 -- ParserMaker Reference Manual
 
-// @STATUS: XRefs
+// STATUS: XRefs
 
 = PARSER PRODUCTION
 

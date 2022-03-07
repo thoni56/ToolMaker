@@ -45,13 +45,12 @@ These files are used as input to IMP together with the appropriate settings of a
 The output should be directed to an appropriate output file in the current directory.
 For example, for a '`ansi-c`'-based system with the system name `pl0`:
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+.........................................
 imp -s_T("12:34:56") -s_D("1990-01-12") \
     -s_sN("pl0") -s_tL("ansi-c") ... \
     $TMHOME/lib/c/main.imp pl0.c
-------------------------------
+.........................................
 
 // @XREF: IMP Reference Manual
 

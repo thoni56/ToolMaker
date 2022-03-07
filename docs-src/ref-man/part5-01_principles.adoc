@@ -1,6 +1,6 @@
-// @PAGE 232 -- Toolmake Reference Manual
+// PAGE 232 -- Toolmake Reference Manual
 
-// @STATUS: OK!
+// STATUS: OK!
 
 = PRINCIPLES OF OPERATION
 

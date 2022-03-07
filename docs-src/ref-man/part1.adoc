@@ -1,8 +1,8 @@
-// @PAGE 17 -- Part I
+// PAGE 17 -- Part I
 
 = ToolMaker System Description
 
-// @STATUS: 1 XRef needs fixing (when Ch.4 is ready).
+// STATUS: 1 XRef needs fixing (when Ch.4 is ready).
 
 // INTRODUCTION (p.21)
 

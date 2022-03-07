@@ -1,6 +1,6 @@
-// @PAGE 30 -- ToolMaker System Description
+// PAGE 30 -- ToolMaker System Description
 
-// @STATUS: XRefs
+// STATUS: XRefs
 
 = THE TOOLMAKER DESCRIPTION FILE
 
@@ -51,7 +51,7 @@ Options given in other description files override those given in the ToolMaker d
 
 NOTE: Directives given in the ToolMaker description file always apply when generating the common declarations for the ToolMaker based components (in '`c`' the `tmCommon.h`) even if that option is set to another value locally for a particular Maker (for example if the target directive is set in the description file for a Maker the common declarations will still be generated in the target language defined in the ToolMaker description file).
 
-// @PAGE 31
+// PAGE 31
 
 The directives can be given in any order.
 If a directive is repeated, only the last one given is used.
@@ -112,7 +112,7 @@ NOTE: Additional target languages may be supported.
 Refer to the Release Notes for the latest version.
 
 
-// @PAGE 32
+// PAGE 32
 
 === The OS Directive
 
@@ -181,7 +181,7 @@ The library directive instructs the ToolMaker tools to look for template files i
 <escape character> ::= <quoted string>
 -------------------------------------
 
-// @PAGE 32/33
+// PAGE 32/33
 
 The escape directive allows the implementor to change the escape character in target language sections.
 The quoted string used to describe the escape character must contain exactly one character which is directly interpreted as the escape character.
@@ -247,7 +247,7 @@ The intermediate table files are normally not kept after successfully generating
 The default for all Makers is to generate only source files.
 To generate tables this option must be used.
 
-// @PAGE 34
+// PAGE 34
 
 NOTE: Setting `Generate tables;` will _only_ generate the table file.
 To get both tables and source use `Generate tables, source;`.
@@ -312,7 +312,7 @@ The srcp section defines the system source position type.
 This definition is for example used by the generated parser in its scanner and error handling interfaces.
 It includes name for the srcp (source position) type and the srcp members.
 
-// @PAGE 35
+// PAGE 35
 
 // @XREF: add XREf to `%%TOKEN` section (useful)
 
@@ -364,7 +364,7 @@ Example:
 Instead of repeating the name of the identifier in the target language declaration, it is possible to use a `%1` as a placeholder for the name.
 The placeholder will automatically be substituted with the name in the produced code.
 
-// @PAGE 36
+// PAGE 36
 
 Example:
 
@@ -426,7 +426,7 @@ Any target language dependent terminators (`;` for example) should not be includ
 These will be provided by the generation process.
 Any special tokens inside the declaration, such as `:` in Pascal declarations should be included.
 
-// @PAGE 37
+// PAGE 37
 
 Example:
 

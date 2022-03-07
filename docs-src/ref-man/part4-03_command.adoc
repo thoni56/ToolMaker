@@ -4,11 +4,10 @@
 
 The invocation of ListerMaker is performed by a command of the form
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+..................................
 lmk [-help] [<options> ...] <file>
-------------------------------
+..................................
 
 The special option `-help` gives a short help of available options and their meaning.
 
@@ -29,11 +28,10 @@ One or more options may be specified on the command line overriding any specifie
 
 All options are available as command line options, the general format is:
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+............................
 -[-]optionname [optionvalue]
-------------------------------
+............................
 
 // @XREF: The Options Section
 
@@ -51,11 +49,10 @@ The general command line option format is described in _Command Line Option Form
 
 The special option
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+........
 -help
-------------------------------
+........
 
 // @XREF: The Options Section
 
@@ -67,10 +64,9 @@ Refer to _The Options Section_ on page 202 for details on the various options.
 
 In addition the following special option is available from the command line:
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+...........
 -lmt <file>
-------------------------------
+...........
 
 This options may be used to direct ListerMaker to write the intermediate tables on a file other than the default.

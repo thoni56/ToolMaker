@@ -1,4 +1,4 @@
-// @PAGE 188 -- ScannerMaker Reference Manual
+// PAGE 188 -- ScannerMaker Reference Manual
 
 [appendix]
 = TARGET LANGUAGE DETAILS

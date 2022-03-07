@@ -1,6 +1,6 @@
 // PAGE 23 -- ToolMaker System Description
 
-// @STATUS: 3 XRefs needs fixing; Fig 1 in SVG.
+// STATUS: 3 XRefs needs fixing; Fig 1 in SVG.
 
 
 = SYSTEM DESCRIPTION

@@ -4,11 +4,10 @@
 
 The invocation of the scanner generator is performed by the following program call
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+..................................
 smk [-help] [<options> ...] <file>
-------------------------------
+..................................
 
 The special option `-help` gives a short help of available options and their meaning.
 

@@ -4,11 +4,10 @@
 
 To invoke ParserMaker the following command should be given:
 
-// SYNTAX: Shell
-
--------------------------------------
+[.shell]
+.....................................
 pmk [-help] [options] <input grammar>
--------------------------------------
+.....................................
 
 The special option `-help` will cause ParserMaker to print a short description of the parameters and available options and then immediately exit.
 
@@ -24,9 +23,8 @@ If no extension is given, `.pmk` is assumed.
 Any number of options may be given on the command line. These options override or complement the options given in the options section in the grammar file. The Command Line Options and their corresponding directives in the options section are the following:
 
 // @NOTE: Output from current ParserMaker 2.1(17) was pasted below:
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+..............................................................................
 Usage: pmk [-help] [options] <input file>
 Options:
   -[-]verbose       enable[disable] verbose mode
@@ -58,8 +56,7 @@ Options:
   -pmt <file>       write tables to <file> (if any)
   -tmk <file>       read common options from <file>
   -help             this help information
-------------------------------
-
+..............................................................................
 // PAGE 105
 
 // @XREF: The Options Section
@@ -75,10 +72,9 @@ The `-voc`, `-pmt` and `-pml` options are only available from the command line a
 
 The command line:
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+...........................................
 pmk --pack -generate tables -list items pl0
-------------------------------
+...........................................
 
 tells ParserMaker to take the file `pl0.pmk` as the input grammar description, not to use any table packing, to list the generated item sets in the list file and to just generate the table file (no source files).

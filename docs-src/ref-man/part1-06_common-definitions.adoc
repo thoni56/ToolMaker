@@ -1,4 +1,4 @@
-// @PAGE 40 -- ToolMaker System Description
+// PAGE 40 -- ToolMaker System Description
 
 = COMMON DEFINITIONS
 
@@ -67,20 +67,18 @@ The exact set of command line options (and arguments) available may be listed us
 
 // PAGE 41
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+.........
 pmk -help
-------------------------------
+.........
 
 will give the following printout:
 
 // @NOTE: The actual 'pmk -help' output from the latest binary was pasted
 //        below, replacing the OCR text: PMK 2.1(17)
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+..............................................................................
 Usage: pmk [-help] [options] <input file>
 Options:
   -[-]verbose       enable[disable] verbose mode
@@ -112,29 +110,27 @@ Options:
   -pmt <file>       write tables to <file> (if any)
   -tmk <file>       read common options from <file>
   -help             this help information
-------------------------------
+..............................................................................
 
 This quick help is always available for all ToolMaker commands.
 
 A boolean option may be set to true from the command line by giving its name preceded by a dash, or to false by preceding it with double dashes.
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+........................
 pmk --force -verbose ...
-------------------------------
+........................
 
 means set the '`force`' flag to false and the '`verbose`' flag to true.
 
 A value option is given its value after the option name separated by a space.
 For example
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+.......................
 pmk -stacklimit 64 ...
 pmk -library ../lib ...
-------------------------------
+.......................
 
 // PAGE 42
 
@@ -142,11 +138,10 @@ A set valued option may be given a set of values by repeating the option with di
 The option is initialised to the empty set when it first occurs thus completely overriding any default setting.
 A set valued option may be given the value of the empty set by giving the option name preceded by double dashes without any value.
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+....................................................
 pmk -generate tables -generate source --recovery ...
-------------------------------
+....................................................
 
 The command above will generate both tables and source and set the recovery option to the empty set (equivalent to `No Recovery;`)
 

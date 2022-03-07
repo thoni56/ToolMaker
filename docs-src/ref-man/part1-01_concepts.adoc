@@ -1,6 +1,6 @@
-// @PAGE 22 -- ToolMaker System Description
+// PAGE 22 -- ToolMaker System Description
 
-// @STATUS: All text OK (no xrefs).
+// STATUS: All text OK (no xrefs).
 
 = CONCEPTS AND ASSUMPTIONS
 

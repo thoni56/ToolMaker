@@ -4,11 +4,10 @@
 
 _**Toolmake**_ is invoked by the following call:
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+..............................................
 toolmake [-help] [<option>...] [<system-name>]
-------------------------------
+..............................................
 
 
 == Parameters
@@ -19,27 +18,24 @@ Or, as a matter of fact, as the subsystem name in combination with the `-go` opt
 
 == Options
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+........
 -[-]go
-------------------------------
+........
 
 Do [not] enter the generation phase immediately without starting any command loop (default: off, i.e ask the user first!).
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+...........
 -[-]verbose
-------------------------------
+...........
 
 Enable [disable] verbose output mode (default: off).
 Verbose mode will give some information regarding the actions chosen by _**toolmake**_.
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+...........
 -help
-------------------------------
+...........
 
 Gives you a brief but informative help on the arguments and options to the _**toolmake**_ program.
