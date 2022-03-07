@@ -1,0 +1,50 @@
+// PAGE 220 -- ListerMaker Reference Manual
+
+[appendix]
+= THE PL/0 EXAMPLE
+
+// @XREF: ToolMaker System Description
+
+This example is a part of the overall example used throughout the ToolMaker documentation.
+In _ToolMaker System Description_ there is a detailed walkthrough of the main parts of the example.
+This appendix contains the files relevant for ListerMaker.
+
+== pl0.lmk -- The ListerMaker Description File
+
+// @EXTERNALIZE SOURCE: C + IMP macros
+// SYNTAX: C + IMP macros? (generated)
+
+-------------------------------------------------------------------------------
+-----------------------------------------------------
+-- pl0.lmk    Date: 1993-06-10/toolmake
+--
+-- pl0 - ListerMaker description file
+--
+------------------------------------------------------
+-- Created:   1993-04-27/reibert@roo
+-- Generated: 1993-06-10 12:47:14/toolmake v2,r0,c7
+------------------------------------------------------
+%%OPTIONS
+    Include;
+
+%%MESSAGES English
+  0   'PL/0 Analysis Tool %1';
+  1   'No warnings or errors detected.';
+  2   'No warnings issued.';
+  3   'No errors detected.';
+  4   '%1 informational message(s) produced.';
+  5   '%1 warning(s) issued.';
+  6   '%1 error(s) detected.';
+  7   'Maximum number of messages exceeded.';
+100   'Parsing resumed.';
+101   '%1 inserted.';
+102   '%1 deleted.';
+103   '%1 replaced by %2.';
+104   'Syntax error, stack backed up.';
+105   'Syntax error.';
+106   'Parse stack overflow.';
+107   'Parse table error.';
+108   'Parsing terminated.';
+199   'File %1 not found.';
+%%END
+-------------------------------------------------------------------------------

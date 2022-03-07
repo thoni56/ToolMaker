@@ -1,0 +1,29 @@
+// PAGE 221
+
+[appendix]
+= ERROR MESSAGES
+
+// @XREF: Message Format
+// @XREF: ToolMaker System Description
+
+For a description of the format of error messages refer to _Message Format_ in the _ToolMaker System Description_, page 49.
+
+
+== Message Explanations
+
+// @XREF: Messages Explanations
+// @XREF: ToolMaker System Description
+// @XREF: License Errors
+// @XREF: ToolMaker System Description
+
+The following list gives a brief summary of the error messages and in some cases the actions that should be taken by the user.
+Messages with numbers less than 100 are messages common for all Makers.
+These are described in _Messages Explanations_ in the _ToolMaker System Description_, page 50.
+Messages indicating license problems or limitations are described in _License Errors_ in the _ToolMaker System Description_, page 51.
+
+
+`200 Message section "%1" already defined.` :::
+The indicated name was already used for another section of error messages.
+
+`300 At least one messages section is required.` :::
+At least one section with error messages must be defined.
