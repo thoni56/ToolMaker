@@ -1,6 +1,6 @@
 // PAGE 198 -- ListerMaker Reference Manual
 
-// @STATUS: TBD!
+// STATUS: TBD!
 
 = CONCEPTS AND ASSUMPTIONS
 
@@ -55,11 +55,10 @@ As described above an error message starts out as a template in the description 
 These templates consist of a number used to identify the message and a string which is the actual message each taking up one line in the error message file.
 For example
 
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+..................
 102 '%1 deleted.';
-------------------------------
+..................
 
 The message string may contain insertion markers (`%__d__`, where `_d_` is a digit).
 This allows a message to be customised during run-time by inserting additional information in the message clarifying the meaning, such as the name of an identifier.

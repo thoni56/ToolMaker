@@ -1,8 +1,8 @@
-// @PAGE 193 -- Part IV
+// PAGE 193 -- Part IV
 
 = ListerMaker Reference Manual
 
-// @STATUS: All text OK (no xrefs).
+// STATUS: All text OK (no xrefs).
 
 // INTRODUCTION (p.197)
 

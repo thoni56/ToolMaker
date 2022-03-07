@@ -1,6 +1,6 @@
-// @PAGE 134 -- ScannerMaker Reference Manual
+// PAGE 134 -- ScannerMaker Reference Manual
 
-// @STATUS: TBD!
+// STATUS: TBD!
 
 = CONCEPTS AND ASSUMPTIONS
 

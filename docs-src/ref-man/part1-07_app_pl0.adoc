@@ -1,6 +1,6 @@
 // PAGE 45 -- ToolMaker System Description
 
-// @STATUS: XRefs
+// STATUS: XRefs
 
 [appendix]
 = THE PL/O EXAMPLE
@@ -16,23 +16,21 @@ The subsystems name is `pl0` [Wirth] and contains ToolMaker-based scanner, parse
 The following listing shows the files that need to be maintained by the user from the PL/O example.
 
 // @CHECK: Carefully compare to original scans!
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+........................................................
 -rw-r--r--  1   tools   1680    May 31  11:29   Makefile
 -rw-r--r--  1   tools   3220    May 31  11:29   pl0.c
 -rw-r--r--  1   tools    414    May 31  11:29   pl0.pmk
 -rw-r--r--  1   tools    305    May 31  11:29   pl0.smk
 -rw-r--r--  1   tools   1082    May 31  11:29   pl0.lmk
 -rw-r--r--  1   tools   3474    May 31  11:29   pl0.tmk
-------------------------------
+........................................................
 
 This listing shows all the files for the complete PL/O frontend example, including objects and executable.
 
 // @CHECK: Carefully compare to original scans!
-// SYNTAX: Shell
-
-------------------------------
+[.shell]
+............................................................
 -rw-r--r--  1   tools    1680    May 31  11:29   Makefile
 -rwxr-xr-x  1   tools   90112    May 31  11:30   pl0
 -rw-r--r--  1   tools    3220    May 31  11:29   pl0.c
@@ -57,7 +55,7 @@ This listing shows all the files for the complete PL/O frontend example, includi
 -rw-r--r--  1   tools   17571    May 31  11:30   pl0Scan.o
 -rw-r--r--  1   tools   17571    May 31  11:30   pl0ScSema.o
 -rw-r--r--  1   tools   17571    May 31  11:30   pl0ScSema.o
-------------------------------
+............................................................
 
 
 == pl0.tmk -- the ToolMaker Description File

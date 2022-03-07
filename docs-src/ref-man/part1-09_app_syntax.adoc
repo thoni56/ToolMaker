@@ -1,6 +1,6 @@
 // PAGE 52 -- ToolMaker System Description
 
-// @STATUS: XRefs; EBNF blocks
+// STATUS: XRefs; EBNF blocks
 
 [appendix]
 = SYNTAX NOTATION

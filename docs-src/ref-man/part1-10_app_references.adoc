@@ -1,5 +1,5 @@
 // PAGE 53 -- ToolMaker System Description
-// @STATUS: Bibliography fixing!
+// STATUS: Bibliography fixing!
 
 [appendix]
 = REFERENCES

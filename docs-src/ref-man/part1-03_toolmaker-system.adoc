@@ -1,6 +1,6 @@
 // PAGE 27 -- ToolMaker System Description
 
-// @STATUS: 6 XRefs
+// STATUS: 6 XRefs
 
 = A TOOLMAKER BASED SYSTEM
 

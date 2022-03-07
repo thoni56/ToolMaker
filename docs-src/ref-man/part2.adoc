@@ -1,8 +1,8 @@
-// @PAGE 55 -- Part II
+// PAGE 55 -- Part II
 
 = ParserMaker Reference Manual
 
-// @STATUS: All text OK (no xrefs).
+// STATUS: All text OK (no xrefs).
 
 // INTRODUCTION (p.59)
 

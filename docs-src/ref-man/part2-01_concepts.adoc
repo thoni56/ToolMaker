@@ -1,6 +1,6 @@
 // PAGE 60 -- ParserMaker Reference Manual
 
-// @STATUS: Biblio-Entries.
+// STATUS: Biblio-Entries.
 
 = CONCEPTS AND ASSUMPTIONS
 
