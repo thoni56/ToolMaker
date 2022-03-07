@@ -1,7 +1,19 @@
 // @PAGE 232 -- Toolmake Reference Manual
 
-// @STATUS: TBD!
+// @STATUS: OK!
 
 = PRINCIPLES OF OPERATION
 
-WARNING: The rest of this book part still needs to be ported!
+When started _**toolmake**_ will ask you about the system name and the target language to be used.
+
+Then the command loop is entered which allows you to select or deselect the components you intend to be ToolMaker based.
+Initially all components are selected.
+If a component is selected _**toolmake**_ will generate template or example versions of the files relating to that component.
+
+The command loop also allows the level of information in the generated files to be specified (minimal, normal or a complete example).
+
+WARNING: When generating without all components the resulting files will _not_ be guaranteed to be compilable without modifications.
+
+Finally the suggestion for a main program and a *makefile* (or command file) may be selected or deselected.
+
+In the generation phase _**toolmake**_ produces necessary (explicitly or implicitly requested) description and other files in the current directory by calling the Macro Processor IMP to prepare them from skeleton files in the target language libraries.

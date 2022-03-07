@@ -1,0 +1,103 @@
+// PAGE 237 -- Toolmake Reference Manual
+
+[appendix]
+= ERROR MESSAGES
+
+The following diagnostic messages may appear when running _**toolmake**_.
+In this list they appear sorted in severity order, with the most severe messages first.
+_Emphasized_ words in the error messages below are substituted with the actual error information.
+
+== System Errors
+
+`System error! malloc: out of memory` :::
+A very serious error since _**toolmake**_ hardly uses any dynamic memory, please contact your systems administrator or your ToolMaker contact person.
+
+`System error! _function_(): switch error (_integer_)` :::
+A very serious software error in _**toolmake**_, please contact your ToolMaker contact person.
+
+`System error! IMP failed to set _variable_ (error code _integer_)` :::
+
+`System error! IMP failed (error level _integer_)` :::
+Internal errors in the communication between _**toolmake**_ and _**IMP**_, please contact your systems administrator or your ToolMaker contact person.
+
+
+== Fatal Errors
+
+`Fatal! Language library not found: _language name_` :::
+The selected language is not yet installed on your system, or the environmental variable `TMHOME` is not properly set.
+
+`Fatal! Illegal function type: _function name_` :::
+An error in the command line parsing, please contact your ToolMaker contact person.
+
+`Fatal! Skeleton file halted with error code _integer_` :::
+_**IMP**_ executed an `%%EXIT` command in a skeleton file, this should not occur and should be reported to your ToolMaker contact person.
+
+
+== Errors
+
+`Error! File not found: _file_` :::
+Probably the environmental variable `TMHOME` is not properly set, e.g. the indicated directory can contain an older version of ToolMaker.
+
+// PAGE 238
+
+`Error! Non-matching option: _option_` :::
+An unknown option was supplied.
+
+`Error! License server: unknown error (_number_)` :::
+The license file did not have the correct format.
+Contact your ToolMaker contact person.
+
+
+== Warnings
+
+`Warning! Argument not used: _argument_` :::
+Too many arguments where supplied.
+
+`Warning! File exists: _file_` :::
+This messages informs you that a file to be generated already exists.
+You are asked a new question about which action to take (quit, rename etc. `HELP` will give more information).
+
+`Warning! License server: no license available` :::
+You were not able to get a ToolMaker license as there were too many other simultaneous users.
+Try again later.
+
+`Warning! License server: date expired` :::
+Your ToolMaker license has expired.
+Contact your ToolMaker contact person.
+
+`Warning! License server: no contact` :::
+ToolMaker was not properly installed or your license server process has died.
+Contact your ToolMaker contact person or system administrator.
+
+`Warning! License server: date expired` :::
+Your ToolMaker license has probably expired.
+Please contact your ToolMaker contact person or system administrator.
+
+`Warning! License server: illegal license key` :::
+The password in the license file was illegal.
+Contact your ToolMaker contact person.
+
+`Warning! License server: format error` :::
+The license file did not have the correct format.
+Contact your ToolMaker contact person.
+
+// PAGE 239
+
+`Warning! License server: license file missing` :::
+No license file was found in the `TMHOME` directory.
+Contact your ToolMaker contact person.
+
+
+== Informational Messages
+
+Note that informational messages are only printed when the verbose output mode is enabled.
+
+
+`Information! Generating: _file_` :::
+Informational message about the file to be generated.
+
+`Information! Backup file: _file_` :::
+If you decide to generate a file although it already exists the old file will be saved with another name.
+
+`Information! Execution stopped` :::
+The previous error was so severe that _**toolmake**_ is aborted.
