@@ -1,0 +1,286 @@
+// PAGE 222 -- ListerMaker Reference Manual
+
+[appendix]
+= TARGET LANGUAGE DETAILS
+
+This appendix lists the actual definition of run-time elements exported by ListerMaker.
+The following sections contain this information per target language.
+
+// @XREF: THE PL/0 EXAMPLE
+// @XREF: The ToolMaker Description File
+// @XREF: ToolMaker System Description
+// @XREF: The Messages Sections
+
+`%%(srcpType)` denotes the type name defined for the source position structure in the _srcp section_ in the ToolMaker control file (see appendix A, _THE PL/0 EXAMPLE_, on page 220 and _The ToolMaker Description File_ in the _ToolMaker System Description_, page 27).
+Functions, types and constants prefixed by `_lm_` use the `listerPrefix` (see _The Messages Sections_ on page 204).
+
+
+== '`c`'
+
+=== Types
+
+// SYNTAX: ToolMaker description file
+
+[subs="quotes,attributes"]
+------------------------------
+typedef enum __lm__Sev {
+    sevOK  = (1<<0),
+    sevINF = (1<<1),
+    sevWAR = (1<<2),
+    sevERR = (1<<3),
+    sevFAT = (1<<4),
+    sevSYS = (1<<5)
+} __lm__Sev;
+
+
+typedef enum __lm__Typ {
+        liSUM  = (1<<0), /{asterisk}  Summary {asterisk}/
+        liERR  = (1<<1), /{asterisk}  Erroneous source lines {asterisk}/
+        liOK   = (1<<2), /{asterisk}  Correct source lines {asterisk}/
+        liINCL = (1<<3), /{asterisk}  Look also in PUSHed files {asterisk}/
+        liHEAD = (1<<4)  /{asterisk}  Heading {asterisk}/
+} __lm__Typ;
+
+typedef enum lmMessages {
+    lm_XXXX_Messages,
+} lmMessages;
+------------------------------
+
+
+=== Constants
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+#define __lm__SEPARATOR ((char)0xff)
+
+#define liTINY (liSUM|liERR|liHEAD|liINCL)
+#define liFULL (liTINY|liOK)
+
+#define sevALL (sevOK|sevINF|sevWAR|sevERR|sevFAT|sevSYS)
+------------------------------
+
+
+=== Functions
+
+// PAGE 223
+
+// @CHECK: No italics for 'lm' prefixes in original!!!
+// @CHECK: Toward the end there's a ')' which was never opened:
+//             char *msg);
+// SYNTAX: ToolMaker description file
+
+------------------------------
+void lmLiInit(header, src, msect)
+    char header[];
+    char src[];
+    lmMessages msect;
+
+void lmLog(pos, ecode, sev, istrs)
+    %%(srcpType) *pos;
+    int ecode;
+    lmSev sev;
+    char istrs[];
+
+void lmLiOff(pos)
+    %%(srcpType) *pos;
+
+void lmLiOn(pos)
+    %%(srcpType) *pos;
+
+void lmLiEnter(pos, start, fnm)
+    %%(srcpType) *pos;
+    %%(srcpType) *start;
+    char fnm[];
+
+void lmLiExit(%%(srcpType) *pos);
+
+void lmLiPage(pos, lins)
+    %%(srcpType) *pos;
+    int lins;
+
+lmSev lmSeverity();
+
+lmSev lmLocSeverity();
+
+void lmResLocSeverity();
+
+void lmList(ofnm, lins, cols, typ, sevs)
+    char ofnm[];
+    int lins;
+    int cols;
+    lmTyp typ;
+    lmSev sevs;
+
+void lmListm(ofnm, lins, cols, typ, sevs, fnms)
+    char ofnm[];
+    int lins;
+    int cols;
+    lmTyp typ;
+    lmSev sevs;
+    char *fnms[];
+
+void lmListsi(ofnm, Tins, cols, typ)
+    char ofnm[];
+    int Tins;
+    int cols;
+    lmTyp typ;
+
+void lmLists(sevs, fno, fnm)
+    lmSev sevs;
+    int fno;
+    char *fnm;
+
+void lmListse(sevs)
+    lmSev sevs;
+
+int lmMsg(i, pos, msg)
+    int i;
+    %%(srcpType) *pos;
+    char *msg);
+
+void lmLiPrint(str)
+    char str[];
+
+void lmSkipLines(lins)
+    int lins;
+
+void lmLiTerminate();
+------------------------------
+
+
+// PAGE 224
+
+== '`ansi-c`' and '`c++`'
+
+=== Types
+// SYNTAX: ToolMaker description file
+
+[subs="quotes,attributes"]
+------------------------------
+typedef enum lmSev {
+    sevOK   (1<<O),
+    sevINF =    (1<<l),
+    sevWAR  (1<<2),
+    sevERR  (1<<3),
+    sevFAT  (1<<4),
+    sevSYS  (1<<5)
+} lmSev;
+
+typedef enum __lm__Typ {
+        liSUM  = (1<<0), /{asterisk}  Summary {asterisk}/
+        liERR  = (1<<1), /{asterisk}  Erroneous source lines {asterisk}/
+        liOK   = (1<<2), /{asterisk}  Correct source lines {asterisk}/
+        liINCL = (1<<3), /{asterisk}  Look also in PUSHed files {asterisk}/
+        liHEAD = (1<<4)  /{asterisk}  Heading {asterisk}/
+} __lm__Typ;
+
+typedef enum lmMessages {
+    lm_XXXX_Messages,
+    ⋮
+} lmMessages;
+------------------------------
+
+
+=== Constants
+
+// SYNTAX: ToolMaker description file
+
+[subs=quotes]
+------------------------------
+#define __lm__SEPARATOR ((char)0xff)
+
+#define liTINY (liSUM|liERR|liHEAD|liINCL)
+#define liFULL (liTINY|liOK)
+
+#define sevALL (sevOK|sevINF|sevWAR|sevERR|sevFAT|sevSYS)
+------------------------------
+
+
+// PAGE 225
+
+=== Functions
+
+// @CHECK: No italics for 'lm' prefixes in original!!!
+
+// SYNTAX: ToolMaker description file
+
+------------------------------
+void lmLiInit(
+    char header[],
+    char src[],
+    lmMessages msect);
+
+void lmLog(
+    %%(srcpType) *pos,
+    int ecode,
+    lmSev sev,
+    char istrs[]);
+
+void lmLogv(
+    %%(srcpType) *pos,
+    int ecode,
+    lmSev sev,
+    ...);
+
+void lmLiOff(%%(srcpType) *pos);
+
+void lmLiOn(%%(srcpType) *pos);
+
+void lmLiEnter(
+    %%(srcpType) *pos,
+    %%(srcpType) *start,
+    char fnm[]);
+
+void lmLiExit(%%(srcpType) *pos);
+
+void lmLiPage(
+    %%(srcpType) *pos,
+    int lins);
+
+lmSev lmSeverity(void);
+
+lmSev lmLocSeverity(void);
+
+void lmResLocSeverity(void);
+
+void lmList(
+    char ofnm[],
+    int lins,
+    int cols,
+    lmTyp typ,
+    lmSev sevs);
+
+void lmListm(
+    char ofnm[],
+    int lins,
+    int cols,
+    lmTyp typ,
+    lmSev sevs,
+    char *fnms[]);
+
+void lmListsi(
+    char ofnm[],
+    int lins,
+    int cols,
+    lmTyp typ) ;
+
+void lmLists(
+    lmSev sevs,
+    int fno,
+    char *fpm);
+
+void lmListse(lmSev sevs);
+
+int lmMsg(
+    int i,
+    %%(srcpType) *pos,
+    char *msg);
+
+void lmLiPrint(char str[]);
+
+void lmSkipLines(int lins);
+
+void lmLiTerminate(void);
+------------------------------
