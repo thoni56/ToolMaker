@@ -1,0 +1,102 @@
+// PAGE 240 -- Toolmake Reference Manual
+
+[appendix]
+= FILE GENERATION DETAILS
+
+The details in this appendix should be regarded as an internal interface between _**toolmake**_ and the skeleton files used, compatibility between two versions of ToolMaker is not guaranteed.
+
+The _**toolmake**_ program is however guaranteed to be available in future versions.
+
+
+== Generated Files
+
+The files generated differs naturally depending on target language, wanted components and generation level. For the default case and a subsystem called *x*, the following ToolMaker description files will be generated:
+
+[horizontal]
+`x.tmk` ::: The common ToolMaker description file.
+`x.smk` ::: The ScannerMaker description file.
+`x.pmk` ::: The ParserMaker description file.
+`x.lmk` ::: The ListerMaker description file.
+
+And for your convenience:
+
+[horizontal]
+`x.c`       ::: An example main program.
+`Makefile`  ::: A suitable file for make(1).
+
+The following source code files will be generated empty by _**toolmake**_, to be filled by the various Makers.
+
+[horizontal]
+`xCommon.h` ::: subsystem common definitions, e.g. token definition
+`xScSema.c`, `xScan.c`, `xScan.h` ::: scanner
+`xPaSema.c`, `xParse.c`, `xParse.h` ::: parser
+`xList.c`, `xList.h` ::: lister
+`xErr.c`, `xErr.h` ::: error handler, an interface between parser and lister
+
+
+== Skeleton Files
+
+_**Toolmake**_ uses skeleton files for all the files it produces.
+The skeleton files are found in the different language libraries found under the ToolMaker directory, `$TMHOME/lib` (normally `/usr/local/ToolMaker/lib/`).
+
+// PAGE 241
+
+These files are used as input to IMP together with the appropriate settings of all the variables above.
+The output should be directed to an appropriate output file in the current directory.
+For example, for a '`ansi-c`'-based system with the system name `pl0`:
+
+// SYNTAX: Shell
+
+------------------------------
+imp -s_T("12:34:56") -s_D("1990-01-12") \
+    -s_sN("pl0") -s_tL("ansi-c") ... \
+    $TMHOME/lib/c/main.imp pl0.c
+------------------------------
+
+// @XREF: IMP Reference Manual
+
+For more details on using the Macro Processor IMP refer to the _IMP Reference Manual_.
+
+The skeleton files for the files produced by _**toolmake**_ are:
+
+[horizontal]
+`pmk.imp`      ::: ParserMaker description file skeleton
+`smk.imp`      ::: ScannerMaker description file skeleton
+`lmk.imp`      ::: ListerMaker description file skeleton
+`tmk.imp`      ::: common description file skeleton
+`main.imp`     ::: main program skeleton
+`makefile.imp` ::: makefile skeleton
+`voc.imp`      ::: ScannerMaker vocabulary file skeleton
+
+
+== IMP Variables
+
+_**Toolmake**_ uses SoftLabs Incremental Macro Processor, IMP, in order to generate the files properly.
+In each call to IMP, _**toolmake**_ will set some IMP variables.
+These are used by the IMP scripts to produce the appropriate file.
+The following variables are required:
+
+// @NOTE: This would probably be better as a table, but the leading underscores
+//        need to be dealt with.
+
+[horizontal]
+Variable ::: *Description* (_example value_)
+`T`    ::: Current time (`"23:59:59"`)
+`_D`   ::: Current date (`"1999-12-31"`)
+`_P`   ::: Producers name (`"toolmake"`)
+`_V`   ::: Version information (`v2, r0, c0`)
+`_sN`  ::: System name (`"pl0"`)
+`_Lvl` ::: Contents level, `MINIMAL`, `NORMAL` or `EXAMPLE` (`NORMAL`)
+`_tOS` :::  Target OS (`SunOS`)
+`_tL`  ::: Target language (`"ansi-c"`)
+`_tD`  ::: Target directory below `$TMHOME/lib` (`"ansi-c"`)
+`_tX`  ::: Target language file extension (`"c"`)
+`_i`   ::: Included parts of ToolMaker (`sm, pm, lm, tm`)
+`_mm`   ::: If main module generated (`YES`)
+
+// @CHECK: Says "library files, SEE BELOW, you", but there's nothing below
+//         since this is the last paragraph of the book. Try to find out
+//         what the original reference might have been, or fix the text.
+
+If you would do a manual call to IMP in order to produce any of the library files, see below, you must supply these variables.
+This should however be avoided since this may not be compatible with coming versions of ToolMaker.
