@@ -23,10 +23,10 @@ Often you can get further help with a `HELP` command.
 
 :leveloffset: +1
 
-include::part5-1_principles.adoc[]
-include::part5-2_command.adoc[]
-include::part5-3_runtime.adoc[]
-include::part5-4_app_err-messages.adoc[]
-include::part5-5_app_generation.adoc[]
+include::part5-01_principles.adoc[]
+include::part5-02_command.adoc[]
+include::part5-03_runtime.adoc[]
+include::part5-04_app_errors.adoc[]
+include::part5-05_app_generation.adoc[]
 
 :leveloffset: 0
