@@ -26,13 +26,13 @@ The concept of regular expressions, semantic actions, and tokens should be well 
 
 :leveloffset: +1
 
-include::part3-1_concepts.adoc[]
-include::part3-2_production.adoc[]
-include::part3-3_command.adoc[]
-include::part3-4_runtime.adoc[]
-include::part3-5_app_pl0-example.adoc[]
-include::part3-6_app_errors.adoc[]
-include::part3-7_app_desc-lang.adoc[]
-include::part3-8_app_target-lang.adoc[]
+include::part3-01_concepts.adoc[]
+include::part3-02_production.adoc[]
+include::part3-03_command.adoc[]
+include::part3-04_runtime.adoc[]
+include::part3-05_app_pl0.adoc[]
+include::part3-06_app_errors.adoc[]
+include::part3-07_app_desc-lang.adoc[]
+include::part3-08_app_target-lang.adoc[]
 
 :leveloffset: 0

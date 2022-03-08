@@ -20,12 +20,12 @@ Familiarity with compiler construction, and the principles of operation of the o
 
 :leveloffset: +1
 
-include::part4-1_concepts.adoc[]
-include::part4-2_production.adoc[]
-include::part4-3_command.adoc[]
-include::part4-4_runtime.adoc[]
-include::part4-5_app_pl0-example.adoc[]
-include::part4-6_app_errors.adoc[]
-include::part4-7_app_target-lang.adoc[]
+include::part4-01_concepts.adoc[]
+include::part4-02_production.adoc[]
+include::part4-03_command.adoc[]
+include::part4-04_runtime.adoc[]
+include::part4-05_app_pl0.adoc[]
+include::part4-06_app_errors.adoc[]
+include::part4-07_app_target-lang.adoc[]
 
 :leveloffset: 0
