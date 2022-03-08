@@ -7,6 +7,10 @@ bin
 ######################
 /doc/*.html
 
+## Sass Toolchain
+#################
+*.css.map
+
 ## Apps Local Settings & Temp Files
 ###################################
 

@@ -1,0 +1,34 @@
+// "_common.scss" | 2022/03/08 | by Tristano Ajmone
+// *****************************************************************************
+// *                                                                           *
+// *                        Common Styles Definitions                          *
+// *                                                                           *
+// *****************************************************************************
+// These are some custom styles which don't depend on the syntax highlighter
+// used and can be safely used by all documents.
+
+// =============================================================================
+//                            Blocks & Code Mock-ups
+// =============================================================================
+// Some code block are not syntax highlighted but just given some basic colours
+// for background, foreground and border. Mock-ups are fake-code blocks, usually
+// employed to illustrate the styling notation of the document, or for some
+// pseudocode examples that can't be highlighted properly.
+
+// -----------------------------------------------------------------------------
+/* Shell/CMD */
+// -----------------------------------------------------------------------------
+// This isn't a syntax highlighted block, it's just a literal block with custom
+// styles to emulate the look and feel of a Windows CMD, but we throw it in here
+// to keep it simpler...
+
+div.literalblock.shell pre {
+  background-color: $CMD-Black;
+  color: $CMD-White;
+
+  // AsciiDoc Callouts
+  .conum {
+    background: $CMD-callouts-background !important;
+    color: $CMD-Black !important;
+  }
+}

@@ -1,0 +1,18 @@
+// "_color-scheme.scss" | 2022/03/08 | by Tristano Ajmone
+// *****************************************************************************
+// *                                                                           *
+// *                  Colour Schemes and Palettes Definitions                  *
+// *                                                                           *
+// *****************************************************************************
+
+// Any colour used in the Sass sources must be defined here in order to have
+// control of all colours via variables in a centralized file.
+
+// --------------
+// Shell Examples
+// --------------
+// Based on Windows 10 new CMD default colors:
+// https://blogs.msdn.microsoft.com/commandline/2017/08/02/updating-the-windows-console-colors/
+$CMD-Black: #0C0C0C;
+$CMD-White: #F2F2F2;
+$CMD-callouts-background: #FFF945; // bright yellow
