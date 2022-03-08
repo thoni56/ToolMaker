@@ -20,3 +20,9 @@
 *.gemspec   Ruby
 Rakefile    Ruby
 rakefile    Ruby
+
+
+## Sass/CSS
+###########
+*.scss   text eol=lf
+*.css    text eol=lf   linguist-generated=true
