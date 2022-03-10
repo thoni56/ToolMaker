@@ -1,13 +1,13 @@
 // PAGE 220 -- ListerMaker Reference Manual
 
 [appendix]
-= THE PL/0 EXAMPLE
-
-// @XREF: ToolMaker System Description
+[[lm.PL0-Example]]
+= The PL/0 Example
 
 This example is a part of the overall example used throughout the ToolMaker documentation.
-In _ToolMaker System Description_ there is a detailed walkthrough of the main parts of the example.
+In <<tm.PL0-Example,_ToolMaker System Description_>> there is a detailed walkthrough of the main parts of the example.
 This appendix contains the files relevant for ListerMaker.
+
 
 == pl0.lmk -- The ListerMaker Description File
 

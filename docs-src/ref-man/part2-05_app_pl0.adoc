@@ -1,12 +1,11 @@
 // PAGE 111 -- ParserMaker Reference Manual
 
 [appendix]
-= THE PL/0 EXAMPLE
+[[pm.PL0-Example]]
+= The PL/0 Example
 
-// @XREF: ToolMaker System Description
-
-This example is a part of the pl/0 example used throughout the ToolMaker documentation.
-The _ToolMaker System Description_ contains a detailed walkthrough of the relevant parts of the example.
+This example is a part of the PL/0 example used throughout the ToolMaker documentation.
+<<tm.PL0-Example,_ToolMaker System Description_>> contains a detailed walkthrough of the relevant parts of the example.
 This appendix contains the files relevant for ParserMaker.
 
 == pl0.pmk -- The ParserMaker Description File

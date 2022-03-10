@@ -1,7 +1,8 @@
 // PAGE 164 -- ScannerMaker Reference Manual
 
-= SCANNER RUN-TIME USAGE
+= Scanner Run-Time Usage
 
+[[sm.Principles-of-Operation]]
 == Principles of Operation
 
 To use a ScannerMaker generated scanner the following step should be performed:
@@ -10,9 +11,7 @@ To use a ScannerMaker generated scanner the following step should be performed:
 * initialise the reading from the input stream (e.g. open the file and attach it to the context)
 * call `__sm__Scan` until end of input
 
-// @XREF: Semantic Actions
-
-During each call to the scanner the appropriate semantic action will automatically be performed (see _Semantic Actions_ on page 158) in which various of the features of the generated scanner can be used.
+During each call to the scanner the appropriate semantic action will automatically be performed (see <<sm.Semantic-Actions>>) in which various of the features of the generated scanner can be used.
 It is also possible to create additional contexts, using the function `__sm__ScNew`, and switch scanner and vocabulary during the scanning process.
 
 

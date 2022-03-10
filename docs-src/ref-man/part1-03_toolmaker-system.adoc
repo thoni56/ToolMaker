@@ -2,40 +2,35 @@
 
 // STATUS: 6 XRefs
 
-= A TOOLMAKER BASED SYSTEM
+= A ToolMaker Based System
 
 In this section we will go through a simple but complete example using ToolMaker.
 The example will briefly describe all the files needed, their relationships and the running of each maker.
 
-// @XREF: App. A
-
 This chapter shows an example with the system name `pl0`.
-The example is also available with the ToolMaker distribution and some of the files are shown in appendix A, THE PUO EXAMPLE, on page 45.
+The example is also available with the ToolMaker distribution and some of the files are shown in <<tm.PL0-Example>>.
 The example uses the `ansi-c` language as its target language.
 
 Note that the figures below only show the files present in your directory, and thus the skeleton files are not shown, but of course they are also needed for the generation.
 
 
+[[sec.ToolMaker-Description-File]]
 == The ToolMaker Description File
 
 ToolMaker requires one common description file containing information about common data declarations, such as source position and token representations, options common to all the Makers and various other definitions.
 
-// @XREF: App. A.2
-
 The ToolMaker description file is called `pl0.tmk`.
-See appendix section A.2, _pl0.tmk -- the ToolMaker Description File_ on page 45 for an example of the contents of a ToolMaker description file.
+See <<pl0.ToolMaker-Description>> for an example of the contents of a ToolMaker description file.
 
 The processing of the ToolMaker description file is performed automatically by each of the Makers as a part of their normal processing.
 
 
 == ParserMaker
 
-// @XREF: ParserMaker Reference Manual
-
 The next file needed is the ParserMaker description file.
 This file should contain the grammar of the input to your tool.
 In addition optional sections may be included to inform ParserMaker of your selected options (like packing strategies, target language etc.), error recovery information a.s.o.
-For more details refer to the _ParserMaker Reference Manual_.
+For more details refer to <<ParserMaker Reference Manual>>.
 
 This file we call `pl0.pmk` and is input to ParserMaker with the command
 
@@ -54,11 +49,9 @@ This will produce the following output files (assuming no errors were detected):
 
 == ScannerMaker
 
-// @XREF: ScannerMaker Reference Manual
-
 Using ScannerMaker is much like using ParserMaker.
 It needs a description file, `pl0.smk`, describing the regular expressions the generated scanner should recognise.
-As with the ParserMaker description file this file also may have additional sections defining options and target source code for various code hooks, but for details refer to the _ScannerMaker Reference Manual_.
+As with the ParserMaker description file this file also may have additional sections defining options and target source code for various code hooks, but for details refer to <<ScannerMaker Reference Manual>>.
 
 In addition ScannerMaker also accepts the vocabulary file produced by ParserMaker, in this example `pl0.voc`, making the transfer of vocabulary information from the grammar to the scanner generating process fully automatic.
 
@@ -82,15 +75,11 @@ For a complete system we also need a main program and any additional modules nee
 
 // PAGE 28/29
 
-// @XREF: App. A.3
-
 To make the ToolMaker generated parts function the main program, `pl0.c`, must initialise the lister and the scanner and then call the parser.
 As a last action a call to the lister to produce a listing file or show the error messages on the screen is advisable.
-In appendix section A.3, _pl0.c -- the Main Program_ on page 46 an example of a main program can be found.
+In <<pl0.Main-Program>> an example of a main program can be found.
 
-// @XREF: Toolmake Reference Manual
-
-The files in this example are all automatically produced using the _**toolmake**_ utility (see _Toolmake Reference Manual_) if the contents level _example_ is used.
+The files in this example are all automatically produced using the _**toolmake**_ utility (see <<Toolmake Reference Manual>>) if the contents level _example_ is used.
 To study their contents, create a new directory and set up a ToolMaker environment with level _example_ as described in the _Toolmake Reference Manual_.
 Using _**toolmake**_ creates all necessary files, including a main program suggestion and a *makefile* (or command file depending on your environment) to keep track of dependencies between description files, table files, source code, object code and executable.
 The *makefile* must be updated to include any additional modules that are to be included in the complete tool.

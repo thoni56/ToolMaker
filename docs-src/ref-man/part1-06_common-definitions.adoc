@@ -1,6 +1,6 @@
 // PAGE 40 -- ToolMaker System Description
 
-= COMMON DEFINITIONS
+= Common Definitions
 
 == Description File Option Format
 
@@ -217,17 +217,13 @@ There is no need to identify these sections explicitly.
 
 == Escape Character
 
-// @XREF: The Escape Directive
-
 As the percentage sign have special significance to the Makers a means to indicate that a percentage sign is not to be treated by the Makers is provided.
 The way to escape the special meaning of the `%` is to place a special character before the percent character.
 This special character is called the escape character.
 It is possible to set using an option in the description files and on the command line.
-See section _The Escape Directive_ on page 32.
+See section <<The Escape Directive>>.
 
 // PAGE 44
-
-// @XREF: turn "see below" into a link via anchor ID?
 
 NOTE: The escape character is not used within strings, see below.
 

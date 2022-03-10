@@ -1,17 +1,12 @@
 // PAGE 182 -- ScannerMaker Reference Manual
 
 [appendix]
-= DESCRIPTION LANGUAGE
-
-// @XREF: The ScannerMaker Description File
+= Description Language
 
 This appendix contains a syntax summary of the ScannerMaker description language.
-For a full discussion of the language, see _The ScannerMaker Description File_ on page 138.
+For a full discussion of the language, see <<The ScannerMaker Description File>>.
 
-// @XREF: ToolMaker System Description
-// @XREF: SYNTAX NOTATION
-
-For a brief discussion of the notation used in this description see appendix C in the ToolMaker System Description_, _SYNTAX NOTATION_, page 52
+For a brief discussion of the notation used in this description see <<Syntax Notation>> in <<ToolMaker System Description>>.
 
 
 == Language Syntax

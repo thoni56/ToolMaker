@@ -1,7 +1,7 @@
 // PAGE 188 -- ScannerMaker Reference Manual
 
 [appendix]
-= TARGET LANGUAGE DETAILS
+= Target Language Details
 
 This appendix describes the actual definition of the run-time environment by the generated scanner for different target languages.
 

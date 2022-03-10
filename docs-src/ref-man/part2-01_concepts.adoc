@@ -2,7 +2,8 @@
 
 // STATUS: Biblio-Entries.
 
-= CONCEPTS AND ASSUMPTIONS
+[[pm.Concepts-and-Assumptions]]
+= Concepts and Assumptions
 
 
 == Backus-Naur Form (BNF)
@@ -217,7 +218,7 @@ ParserMaker = goal_symbol $;
 
 where `ParserMaker` is the unique system generated symbol, `goal_symbol` is the found goal symbol and `$` is the end marker.
 
-
+[[pm.Semantic-Actions]]
 == Semantic Actions
 
 _Semantic actions_ or _semantic rules_ are code written in the target language which is evaluated when a particular production is reduced by the parser.
@@ -242,10 +243,8 @@ left = rhs
 
 // PAGE 64
 
-// @XREF: The Import, Export and Declarations Sections
-
 When _rhs_ has been identified, the output action is executed and the desired text is written.
-Variables and functions referenced within a semantic action must be defined in the _declaration section_ or imported using target language code in the _import section_ (see _The Import, Export and Declarations Sections_ on page 93) in order for the generated parser to compile correctly.
+Variables and functions referenced within a semantic action must be defined in the _declaration section_ or imported using target language code in the _import section_ (see <<The-Import-Export-and-Declarations-Sections>>) in order for the generated parser to compile correctly.
 
 ParserMaker also supports actions within the right hand side and not necessarily at the very end.
 In order to get hold of the action during parsing, a new empty production is created to control the execution.
@@ -424,10 +423,8 @@ However using an explicit stack and embedding push and pop semantic actions with
 Semantic actions embedded in a production (i.e. not located at the end) are only permitted if the actions are not referencing any attributes.
 Exceptions are EBNF rules where embedded semantic actions may contain attribute references to the symbols in the current EBNF context.
 
-// @XREF: The Attributes Section
-
 Lexical attributes, attributes connected to terminal symbols, must not necessarily be the same as the nonterminal attributes.
-The two types are declared separately in the _attributes section_, see _The Attributes Section_ on page 95.
+The two types are declared separately in the _attributes section_, see <<The Attributes Section>>.
 
 NOTE: To simplify the propagation of attributes, the left hand side symbol shares its attributes with the first symbol on the right hand side if this is a nonterminal.
 This means that by default, all the attributes of the first symbol on the right hand side will be propagated automatically to the left hand side symbol.
@@ -477,12 +474,10 @@ term
 
 // PAGE 68
 
-// @XREF: The Attributes Section
-
-The target language type of an attribute is application dependent, and it is up to the parser implementor to define the attribute type (see also _The Attributes Section_ on page 95).
+The target language type of an attribute is application dependent, and it is up to the parser implementor to define the attribute type (see also <<The Attributes Section>>).
 
 
-== Grammar Ambiguity and LALR-conflicts
+== Grammar Ambiguity and LALR-Conflicts
 
 For some input grammars ParserMaker is not able to create a consistent parser.
 This is dependent on the fact that the input grammar is either ambiguous or is a non-LALR(1) grammar.
@@ -745,12 +740,10 @@ These levels are:
 2. _Multiple_ symbol correction by a string synthesizing technique.
 3. _Panic_ mode.
 
-// @XREF: The Options Section
-
 In the normal case these levels or phases are applied in this particular order.
 Starting with the single symbol corrector and continuing with the string synthesizing corrector if the first level fails.
 Finally, if the second level fails the last one, panic mode, is applied.
-However, by options (see _The Options Section_ on page 86) any level can be turned on or off.
+However, by options (see <<pm.Options-Section>>) any level can be turned on or off.
 Each one of the error recovery phases is described below.
 
 
@@ -770,11 +763,8 @@ If the computed cost is below this threshold value, the correction is applied.
 If not, the first level fails.
 By default the threshold value is equal to the cost of accepting two symbols after the error symbol.
 
-// @XREF: The Options Section
-// @XREF: The Terminals Section
-
-The acceptance cost and the amount of look-ahead are defined using options (see _The Options Section_ on page 86).
-Together with the facility of defining costs for each terminal symbol (see _The Terminals Section_ on page 94) a parser implementor has an opportunity to tune the first level of recovery to a specific environment.
+The acceptance cost and the amount of look-ahead are defined using options (see <<pm.Options-Section>>).
+Together with the facility of defining costs for each terminal symbol (see <<The Terminals Section>>) a parser implementor has an opportunity to tune the first level of recovery to a specific environment.
 
 // PAGE 74
 
@@ -799,22 +789,18 @@ If you want to make sure that a specific terminal symbol is never inserted or de
 
 === Level 2: String Synthesizing Technique
 
-// @XREF: The Terminals Section
-
 If the first level of recovery fails, the parser will enter the second phase.
 The string synthesizer will, from the error point, generate a least-cost string which yields a legal continuation of the already parsed text.
-The least cost string is generated from the grammar and based on the insertion costs (defined in _The Terminals Section_ on page 94).
+The least cost string is generated from the grammar and based on the insertion costs (defined in <<The Terminals Section>>).
 
 The generated string is then matched against the remaining input.
 In this process, a prefix of the generated string will be inserted, and some symbols from the remaining input might be deleted.
 The idea is to preserve as much as possible of the remaining input and base the recovery on insertion rather than deletion.
 
-// @XREF: The Fiducial Part
-
 The string synthesising technique is a _true local corrector_ as it never gives up.
 It can return a legal configuration for each possible input string.
 However, the parser will terminate the second level when it tries to delete a _fiducial symbol_ (however see the modified panic mode algorithm below).
-A fiducial symbol is a syntactically important symbol, and it is defined as fiducial by the parser implementor (see _The Fiducial Part_ on page 98).
+A fiducial symbol is a syntactically important symbol, and it is defined as fiducial by the parser implementor (see <<The Fiducial Part>>).
 Symbols that start main phrases of the input language, e.g. some of the reserved words like `VAR`, `BEGIN` and `PROCEDURE` in Pascal, should be defined as fiducial symbols.
 
 
@@ -822,13 +808,11 @@ Symbols that start main phrases of the input language, e.g. some of the reserved
 
 === Level 3: Panic Mode
 
-// @XREF: The Fiducial Part
-
 Panic mode is a very crude way of recovering from syntax errors.
 The general idea behind panic mode is to scan ahead into the input string until something solid, like a reserved word, is found.
 The parse stack is then reconfigured, popped, such that the new token is accepted.
 The term _fiducial_ will be used for such important symbols.
-See _The Fiducial Part_ on page 98 for how to specify these symbols.
+See <<The Fiducial Part>> for how to specify these symbols.
 
 In the original panic mode large portions of the remaining input might be deleted, and ParserMaker therefore uses a modified variant.
 
@@ -848,12 +832,8 @@ Even if panic mode is a crude way of recovery, it might be the only reasonable c
 
 === Improvements of the Error Recovery System
 
-// @XREF: The Terminals Section
-// @XREF: The Recovery Section
-// @XREF: The Options Section
-
 The error recovery system is generated almost entirely from the grammar, and very little extra information must be supplied by the parser implementor.
 There are however, several ways of enhancing the generated error recovery system.
-Parser implementor supplied information can be added in the _terminals section_ (see _The Terminals Section_ on page 94), by the cost functions and print symbol, and in the _recovery section_ (see _The Recovery Section_ on page 97).
+Parser implementor supplied information can be added in the _terminals section_ (see <<The Terminals Section>>), by the cost functions and print symbol, and in the _recovery section_ (see <<The Recovery Section>>).
 The _recovery section_ contains facilities for defining the set of fiducial symbols and some other tuning information.
-Also, the shifting cost and the amount of look-ahead applied can be defined using options to ParserMaker (see _The Options Section_ on page 86)
+Also, the shifting cost and the amount of look-ahead applied can be defined using options to ParserMaker (see <<pm.Options-Section>>).

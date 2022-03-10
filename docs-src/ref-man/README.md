@@ -15,6 +15,7 @@ AsciiDoc port of the original _ToolMaker Reference Manual_.
     - [Book Partitioning and Cross References](#book-partitioning-and-cross-references)
     - [Text Changes and Conventions](#text-changes-and-conventions)
         - [Programming Languages Names](#programming-languages-names)
+- [XRefs Custom Anchors](#xrefs-custom-anchors)
 
 <!-- /MarkdownTOC -->
 
@@ -72,6 +73,78 @@ But I also believe that thanks to the fact that parameters and settings are now 
 
 I strived to preserve the original notation (as inline-code) whenever I felt that the text was referring explicitly to a specific ToolMake target language; but I might have accidentally adopted the plain notation in a few places where the specific target might have been more correct (e.g. in context applying only to the `c` target without `ansi-c`).
 Hopefully these mistakes are few in number, and the context in which they occur should dispel any doubts in this regard.
+
+
+# XRefs Custom Anchors
+
+Unless otherwise required, cross references in the source document rely on the basic AsciiDoc notation of enclosing the target section title within double chevrons (`<<`..`>>`).
+
+But due to symmetric nature of the _ToolMaker Reference Manual_, there are some chapters and section which share the same raw title, so I had to add some custom section IDs in order to allow exact cross-reference targeting.
+
+Below are reference tables indicating the custom anchor IDs which were added, their target section and its page number in the original printed manual.
+
+In case of a chapter and section sharing a same raw title, the distinction is provided via the `ch.` and `sec.` prefixes:
+
+|            anchor ID             |             target section            | page |
+|----------------------------------|---------------------------------------|------|
+| `ch.ToolMaker-Description-File`  | Ch. 4. The ToolMaker Description File | p.30 |
+| `sec.ToolMaker-Description-File` | §3.1. The ToolMaker Description File  | p.27 |
+
+In case of multiple chapters or sections with same raw titles but in different book parts, the distinction is provided by prefixes indicating the Maker tool their refer too (each book Part deals with a single Maker):
+
+|           anchor ID           |          target section         |         Part        |  page |
+|-------------------------------|---------------------------------|---------------------|-------|
+| `tm.Options-Section`          | §4.1. The Options Section       | I. ToolMaker System | p.30  |
+| `pm.Options-Section`          | §8.2.4. The Options Section     | II. ParserMaker     | p.86  |
+| `sm.Options-Section`          | §12.2.3. The Options Section    | III. ScannerMaker   | p.140 |
+| `lm.Options-Section`          | §16.1.2. The Options Section    | IV. ListerMaker     | p.202 |
+| `tm.PL0-Example`              | App. A. The PL/0 Example        | I. ToolMaker System | p.45  |
+| `pm.PL0-Example`              | App. E. The PL/0 Example        | II. ParserMaker     | p.111 |
+| `sm.PL0-Example`              | App. I. The PL/0 Example        | III. ScannerMaker   | p.172 |
+| `lm.PL0-Example`              | App. M. The PL/0 Example        | IV. ListerMaker     | p.220 |
+| `pm.Semantic-Actions`         | §7.4. Semantic Actions          | II. ParserMaker     | p.63  |
+| `sm.Semantic-Actions`         | §12.2.21. Semantic Actions      | III. ScannerMaker   | p.158 |
+| `pm.List-Directive`           | The List Directive              | II. ParserMaker     | p.91  |
+| `sm.List-Directive`           | The List Directive              | III. ScannerMaker   | p.144 |
+| `pm.Principles-of-Operation`  | §10.1. Principles of Operation  | II. ParserMaker     | p.106 |
+| `sm.Principles-of-Operation`  | §14.1. Principles of Operation  | III. ScannerMaker   | p.164 |
+| `lm.Principles-of-Operation`  | §18.1. Principles of Operation  | IV. ListerMaker     | p.208 |
+| `tm.Principles-of-Operation`  | Ch. 19. Principles of Operation | V. Toolmake         | p.232 |
+| `pm.Common-Directives`        | Common Directives               | II. ParserMaker     | p.87  |
+| `sm.Common-Directives`        | Common Directives               | III. ScannerMaker   | p.141 |
+| `lm.Common-Directives`        | Common Directives               | IV. ListerMaker     | p.202 |
+| `tm.Concepts-and-Assumptions` | Ch 1. Concepts and Assumptions  | I. ToolMaker System | p.22  |
+| `pm.Concepts-and-Assumptions` | Ch 7. Concepts and Assumptions  | II. ParserMaker     | p.60  |
+| `sm.Concepts-and-Assumptions` | Ch 11. Concepts and Assumptions | III. ScannerMaker   | p.134 |
+| `lm.Concepts-and-Assumptions` | Ch 15. Concepts and Assumptions | IV. ListerMaker     | p.198 |
+| `pm.Options`                  | §9.2. Options                   | II. ParserMaker     | p.104 |
+| `sm.Options`                  | §13.2. Options                  | III. ScannerMaker   | p.162 |
+| `lm.Options`                  | §17.2. Options                  | IV. ListerMake      | p.206 |
+| `tm.Options`                  | §20.2. Options                  | V. Toolmake         | p.233 |
+| `pm.The-Trace-Directive`      | The Trace Directive             | II. ParserMaker     | p.88  |
+| `sm.The-Trace-Directive`      | The Trace Directive             | III. ScannerMaker   | p.142 |
+| `pm.The-Vocabulary-File`      | §8.5. The Vocabulary File       | II. ParserMaker     | p.102 |
+| `sm.The-Vocabulary-File`      | §12.4. The Vocabulary File      | III. ScannerMaker   | p.160 |
+| `pm.Parameters`               | §9.1 Parameters                 | II. ParserMaker     | p.104 |
+| `sm.Parameters`               | §13.1 Parameters                | III. ScannerMaker   | p.162 |
+| `lm.Parameters`               | §17.1 Parameters                | IV. ListerMaker     | p.206 |
+| `tm.Parameters`               | §20.1 Parameters                | V. Toolmake         | p.233 |
+| `pm.Output-Files`             | Output Files                    | II. ParserMaker     | p.78  |
+| `sm.Output-Files`             | Output Files                    | III. ScannerMaker   | p.138 |
+| `pm.File-Descriptions`        | §8.1.1. File Descriptions       | II. ParserMaker     | p.77  |
+| `sm.File-Descriptions`        | §12.1.1. File Descriptions      | III. ScannerMaker   | p.138 |
+
+> **NOTE** — Even though I've added custom prefixes to all sections sharing a same title, it doesn't necessary mean that there are XRefs targetting each one of them (and often this isn't the case).
+But I still deemed it worth enforcing the distinctive prefixes for consistency sake.
+
+In other cases a custom section ID anchor was required due to the nature of the raw title, which would fail with the `<<`..`>>` notation.
+
+
+|                   anchor ID                   |                    target section                    | page |
+|-----------------------------------------------|------------------------------------------------------|------|
+| `pl0.ToolMaker-Description`                   | A.2. pl0.tmk — The ToolMaker Description File        | p.45 |
+| `pl0.Main-Program`                            | A.3. pl0.c — The Main Program                        | p.46 |
+| `The-Import-Export-and-Declarations-Sections` | §8.2.5. The Import, Export and Declarations Sections | p.93 |
 
 <!-----------------------------------------------------------------------------
                                REFERENCE LINKS
