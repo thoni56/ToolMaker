@@ -22,7 +22,7 @@ image::Fig-2-1_temp.gif[width=40%,align="center"]
 //        segment is too slanted in the final document, and bold might
 //        be easier to read.
 
-Depending on the target language used the produced target language modules, may be one or more files, e.g. for '`c`' there will be one `__pm__Parse.c` and one `__pm__Parse.h` created for the module `__pm__Parse`.
+Depending on the target language used the produced target language modules, may be one or more files, e.g. for C there will be one `__pm__Parse.c` and one `__pm__Parse.h` created for the module `__pm__Parse`.
 
 // PAGE 77
 
@@ -105,7 +105,7 @@ A complete list file contains the following:
 _Parser module_ (`__pm__Parse`).
 Target language dependent parser module.
 Created from the `Parse.imp` file where definitions, interfaces and tables have been incorporated.
-Depending on the target language one or more files may be produced, e.g. for '`c`' the files `__pm__Parse.c` and `__pm__Parse.h` are produced.
+Depending on the target language one or more files may be produced, e.g. for C the files `__pm__Parse.c` and `__pm__Parse.h` are produced.
 The directives `Pack` and `Recovery` defines much of the layout of the file.
 
 _Semantic module_ (`__pm__PaSema`).
@@ -490,7 +490,7 @@ Each telegram consists of one or more sentences terminated by the symbol `STOP`.
 A telegram ends with the symbol `ZZZZ`.
 The problem is to analyse a telegram file and for each telegram write a summary containing the total number of words in the telegram (excluding `STOP` and `ZZZZ`) and all words exceeding 12 characters.
 
-Preconditions: The target language is '`c`'.
+Preconditions: The target language is C.
 A scanner exists which recognizes the tokens:
 
 // SYNTAX: ToolMaker description file?
@@ -925,7 +925,7 @@ Refer to [.red]#[MISSING TEXT]# for more information on how to select which tabl
 
 The line directive instructs ParserMaker to generate line number information in the generated source so that compilers and debuggers will believe that the source is the actual description file instead of the generated source file.
 This can not be handy in initial stages of compiling the semantic actions and debugging, but as advanced debugger allows you to point in the source to find variables it is not always good.
-Also this option might not have any effect for every of the supported languages (cf. the '`c`'-language preprocessor directive `#line`).
+Also this option might not have any effect for every of the supported languages (cf. the C-language preprocessor directive `#line`).
 
 
 // PAGE 91
@@ -1102,7 +1102,7 @@ The character sequences, representing the code, are copied unformatted to the ou
 
 NOTE: If the character sequence `%%` appears in the code, at least one of the percent signs (preferably both) must be quoted with the escape character.
 
-Example: A '`c`' interface might be written:
+Example: A C interface might be written:
 
 // @EXTERNALIZE SOURCE: C + IMP macros
 // SYNTAX: C + IMP macros? (generated)

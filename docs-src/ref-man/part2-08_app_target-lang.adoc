@@ -8,7 +8,7 @@
 
 In the descriptions below, the IMP insert statements `%%(tokenType)` and `%%(codeType)` refers to the type names defined by the token section (see _The Token Section_ in the _ToolMaker System Description_, page 36).
 
-== '`c`'
+== C
 
 // SYNTAX: C + IMP macros? (generated)
 
@@ -37,7 +37,7 @@ void __pm__Mess(token, method, code, severity)
 ------------------------------
 
 
-== '`ansi-c`' and '`c++`'
+== ANSI C and C++
 
 // SYNTAX: C + IMP macros? (generated)
 

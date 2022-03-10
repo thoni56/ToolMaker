@@ -16,7 +16,7 @@ General features of ParserMaker are:
 * It supports the creation of a system by a special description file and the possibility of inserting target dependent code in the input (semantic actions).
 * It contains a mechanism for the support of synthesized attributes in the semantic actions.
 * It is highly integrated with the other tools in SoftLab's ToolMaker.
-* It supports multiple target languages, currently '`c`', '`ansi-c`' and '`c++`'.
+* It supports multiple target languages, currently C, ANSI{nbsp}C and C++.
 
 The input description consists of a set of context free grammar productions, extended with target dependent code segments.
 Output from ParserMaker consists of one or more complete programs recognizing the language specified as input.

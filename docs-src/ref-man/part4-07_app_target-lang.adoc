@@ -15,7 +15,7 @@ The following sections contain this information per target language.
 Functions, types and constants prefixed by `_lm_` use the `listerPrefix` (see _The Messages Sections_ on page 204).
 
 
-== '`c`'
+== C
 
 === Types
 
@@ -152,7 +152,7 @@ void lmLiTerminate();
 
 // PAGE 224
 
-== '`ansi-c`' and '`c++`'
+== ANSI C and C++
 
 === Types
 // SYNTAX: ToolMaker description file
