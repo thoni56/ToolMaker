@@ -79,8 +79,8 @@ In some cases a method of handling nested files is needed.
 This is for example the case with so called include-files in some programming languages.
 ListerMaker supplies functions to handle this feature.
 
-Suppose that we want to create a '`c`'-preprocessor.
-The preprocessor has a directive, `#include`, which allows inclusion of secondary files containing '`c`' source.
+Suppose that we want to create a C-preprocessor.
+The preprocessor has a directive, `#include`, which allows inclusion of secondary files containing C source.
 
 To solve the problem of creating lists of such input using ListerMaker the function `__lm__LiEnter()` is used.
 When encountering the `#include` directive this function should be called with the name of the new (included) file and a source position where the file should be inserted (normally at the first position on the line following the `#include` directive.
@@ -442,10 +442,10 @@ code  :  IN INTEGER
 sev   :  IN __lm__Sev
 ------------------------------
 
-Corresponds to the function `__lm__Log()` but uses the '`c`'-language feature of variable number of arguments.
+Corresponds to the function `__lm__Log()` but uses the C-language feature of variable number of arguments.
 This greatly simplifies the logging of messages having multiple insert strings.
 
-NOTE: The function is only available in the '`c`' target languages.
+NOTE: The function is only available in the C target languages.
 
 NOTE: The parameter list must be terminated by a NULL value.
 

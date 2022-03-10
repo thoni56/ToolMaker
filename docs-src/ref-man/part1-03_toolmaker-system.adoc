@@ -11,7 +11,7 @@ The example will briefly describe all the files needed, their relationships and 
 
 This chapter shows an example with the system name `pl0`.
 The example is also available with the ToolMaker distribution and some of the files are shown in appendix A, THE PUO EXAMPLE, on page 45.
-The example uses the '`ansi-c`' language as its target language.
+The example uses the `ansi-c` language as its target language.
 
 Note that the figures below only show the files present in your directory, and thus the skeleton files are not shown, but of course they are also needed for the generation.
 
@@ -47,8 +47,8 @@ This will produce the following output files (assuming no errors were detected):
 
 * `pl0.voc` -- generated vocabulary file containing all tokens found in the grammar and their corresponding token codes.
 * `pl0.pml` -- optionally generated listing file containing the input, error messages and other information.
-* `pl0Parse.h`, `pl0Parse.c`, `pl0PaSema.c` -- '`ansi-c`' source for the parser proper and semantic actions from the description file.
-* `pl0Err.h`, `pl0Err.c` -- '`ansi-c`' source for error message interfacing (optional).
+* `pl0Parse.h`, `pl0Parse.c`, `pl0PaSema.c` -- ANSI{nbsp}C source for the parser proper and semantic actions from the description file.
+* `pl0Err.h`, `pl0Err.c` -- ANSI{nbsp}C source for error message interfacing (optional).
 * `pl0.pmt` -- generated tables and source code sections in IMP format (normally removed after successful source file generation).
 
 

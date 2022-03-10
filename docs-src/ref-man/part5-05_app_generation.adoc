@@ -43,7 +43,7 @@ The skeleton files are found in the different language libraries found under the
 
 These files are used as input to IMP together with the appropriate settings of all the variables above.
 The output should be directed to an appropriate output file in the current directory.
-For example, for a '`ansi-c`'-based system with the system name `pl0`:
+For example, for an `ansi-c`-based system with the system name `pl0`:
 
 [.shell]
 .........................................

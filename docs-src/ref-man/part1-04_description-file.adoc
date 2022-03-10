@@ -49,7 +49,7 @@ The _options section_ of the ToolMaker description file can be used to set optio
 Corresponding options and options special for each Maker can be given as command line switches to each tool at its invocation.
 Options given in other description files override those given in the ToolMaker description file.
 
-NOTE: Directives given in the ToolMaker description file always apply when generating the common declarations for the ToolMaker based components (in '`c`' the `tmCommon.h`) even if that option is set to another value locally for a particular Maker (for example if the target directive is set in the description file for a Maker the common declarations will still be generated in the target language defined in the ToolMaker description file).
+NOTE: Directives given in the ToolMaker description file always apply when generating the common declarations for the ToolMaker based components (in C the `tmCommon.h`) even if that option is set to another value locally for a particular Maker (for example if the target directive is set in the description file for a Maker the common declarations will still be generated in the target language defined in the ToolMaker description file).
 
 // PAGE 31
 
@@ -95,9 +95,9 @@ This option specifies for which language the files should be generated.
 The following values of the target option are supported:
 
 [horizontal]
-`c`      :: generate files in '`c`' (K&R)
-`ansi-c` :: generate files in '`c`' (ANSI)
-`c++`    :: generate files in '`c++`'
+`c`      :: generate files in C (K&R)
+`ansi-c` :: generate files in C (ANSI)
+`c++`    :: generate files in C++
 
 // @ADMONITION: Use IMPORTANT instead?
 

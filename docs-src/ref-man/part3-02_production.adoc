@@ -20,7 +20,7 @@ image::Fig-3-2_temp.gif[width=40%,align="center"]
 
 // PAGE 137
 
-Depending on the target language used the produced target language module, `__sm__Scan`, may be one or more files, e.g. for '`c`' there will be one `__sm__Scan.c` and one `__sm__Scan.h` created.
+Depending on the target language used the produced target language module, `__sm__Scan`, may be one or more files, e.g. for C there will be one `__sm__Scan.c` and one `__sm__Scan.h` created.
 
 The only files that must be maintained by the user are `__sm__.smk` and `__sm__.tmk`.
 A vocabulary file is not necessary though it is strongly recommended that a vocabulary file is used.
@@ -41,7 +41,7 @@ This step is not necessary if you are developing a stand-alone scanner (in this 
 ScannerMaker can be controlled by using various options as described in _THE SCANNERMAKER COMMAND_ on page 162.
 
 4. Compile the ScannerMaker generated source module, `__sm__Scan`, the scanner semantic actions module `__sm__ScSema`, and the common definition module `__sm__Common`.
-If the target language was '`c`', `__sm__Scan.c`, `__sm__Scan.h`, `__sm__ScSema.c` and `__sm__Common.h` were produced.
+If the target language was C, `__sm__Scan.c`, `__sm__Scan.h`, `__sm__ScSema.c` and `__sm__Common.h` were produced.
 
 5. Compile and link the main program and any auxiliary modules with the object files produced.
 
@@ -675,7 +675,7 @@ In this section variables used within a scanner context should be defined, see _
     '%%EXPORT' <target language code> ['%%END']
 ---------------------------------
 
-User defined functions and variables that should be visible outside the generated scanner should be defined in this section, this section is included in the interface description of the generated scanner (in '`c`' the `__sm__Scan.h` file).
+User defined functions and variables that should be visible outside the generated scanner should be defined in this section, this section is included in the interface description of the generated scanner (in C the `__sm__Scan.h` file).
 
 // PAGE 146
 
@@ -818,7 +818,7 @@ smToken  :  IN OUT %%(tokenType)
 returns INTEGER
 ------------------------------
 
-The found token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in '`c`') when the posthook function is terminated.
+The found token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in C) when the posthook function is terminated.
 This field is initially set to the value as specified in the vocabulary file or the vocabulary section depending on the token recognised.
 
 The external token code for the token found can be changed in two ways, either by setting `smToken->smCode` to the new external code or by returning the new external code by executing a `return` statement.
@@ -1360,8 +1360,10 @@ If `complex` derives 20 states the expression above will derive 120 states.
     <regular expression> '.'
 ------------------------------
 
+// @GRAMMAR: "For example, [...] in for example C" => Too many "for example"!
+
 When a token up to the cut operator is found the scanning is immediately abandoned.
-For example, this operator is very useful to describe comments in for example '`c`'
+For example, this operator is very useful to describe comments in for example C
 
 // SYNTAX: ToolMaker description file
 
@@ -1684,7 +1686,7 @@ returns INTEGER
 // @XREF: The Action Section
 
 In addition the code given in the _action section_ is executed first.
-The token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in '`c`') when the function is terminated.
+The token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in C) when the function is terminated.
 This variable is initially set to the value as specified in the vocabulary file or the vocabulary section or as set in a possible _action section_ (see _The Action Section_ on page 146).
 
 The external token code for the token found can be changed (simulating finding of another token) in two ways by either setting `smToken->smCode` to the new external code or by returning the new external code by executing a _return statement_.

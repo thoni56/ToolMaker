@@ -437,7 +437,7 @@ Again, this mechanism applies only if the first symbol on the right hand side is
 
 Example: The complete specification below defines a small grammar for additive expressions.
 The lexical symbol `NUMBER` defines an attribute named `SCAN_VALUE`.
-The grammar defines the `expression`, computes its value in the '`c`' language, and outputs it.
+The grammar defines the `expression`, computes its value in the C language, and outputs it.
 
 // SYNTAX: ToolMaker description file
 

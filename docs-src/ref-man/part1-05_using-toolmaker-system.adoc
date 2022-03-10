@@ -87,7 +87,7 @@ To adapt this in a complete environment add any additional object files to the l
 // @XREF: ScannerMaker Reference Manual
 // @XREF: ListerMaker Reference Manual
 
-To call the ToolMaker generated functions at run-time the appropriate import declarations should be made (e.g. in '`c`' the `#include` statements inserted).
+To call the ToolMaker generated functions at run-time the appropriate import declarations should be made (e.g. in C the `#include` statements inserted).
 The main program should import the *Parse*, *Scan* and *List* declarations to be able to initialise the scanner, listing system and then call the parser.
 Refer to _ParserMaker Reference Manual_, _ScannerMaker Reference Manual_ and _ListerMaker Reference Manual_ for details on how this is performed.
 The *Common* header file may also be included in various modules of the application (e.g. to include the source position structure in external type declarations such as an abstract syntax tree).

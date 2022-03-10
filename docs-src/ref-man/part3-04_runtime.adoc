@@ -46,7 +46,7 @@ A context is the main object in the generated scanner.
 Almost all functions operate on that object.
 A context consist of a buffer, source position, scanner, and user defined variables.
 
-In object oriented languages this type is declared as a class named `__sm__ScContext` with the structure components above as public members.
+In object-oriented languages this type is declared as a class named `__sm__ScContext` with the structure components above as public members.
 
 NOTE: All predefined variables starts with the characters `sm` and can not be changed.
 This is _not_ the scanner prefix used as a prefix for the exported functions and the context data type.
@@ -184,7 +184,7 @@ Which scanner a context should use is determined by the value of the `smScanner`
 Available scanners are determined by the description file defining the scanners.
 An enumeration type is defined containing an enumeration literal for each scanner.
 The name of the enumeration literal is the scanner prefix concatenated by the vocabulary name and scanner name surrounded by underscores and finally the characters `Scanner` as a suffix.
-For example, if the scanners `main` and `comment` are defined the following enumeration type is defined (if '`c`' is the target language):
+For example, if the scanners `main` and `comment` are defined the following enumeration type is defined (if C is the target language):
 
 // SYNTAX: C + IMP macros? (generated)
 
@@ -204,7 +204,7 @@ For example, it is possible to change scanner in a semantic action and then cont
 For each vocabulary there is also an enumeration type defined containing enumeration literals for all tokens defined in that vocabulary.
 The name of the enumeration type is `_sm_` followed by the vocabulary name enclosed by underscores and followed by the characters `ScToken`.
 Each enumeration literal is named `_sm_` followed by underscore, vocabulary name, underscore, token name or external token code for a string token, underscore, and `Token`.
-For example, if '`c`' is the target language:
+For example, if C is the target language:
 
 // SYNTAX: C + IMP macros? (generated)
 
@@ -225,8 +225,8 @@ typedef enum __sm___main_ScToken {
 
 The run time interface consist of a number of functions.
 All functions except `__sm__ScScrScanner`, `__sm__ScScrToken`, and `__sm__ScScrRule` operate on a context.
-In a non-object oriented language the context is always given as the first argument.
-In an object oriented language these functions are member functions to the `__sm__ScContext` class and messages are sent to a context object.
+In a non-object-oriented language the context is always given as the first argument.
+In an object-oriented language these functions are member functions to the `__sm__ScContext` class and messages are sent to a context object.
 
 
 === Function: __sm__Scan

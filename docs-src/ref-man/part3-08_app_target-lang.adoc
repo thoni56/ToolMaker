@@ -6,7 +6,7 @@
 This appendix describes the actual definition of the run-time environment by the generated scanner for different target languages.
 
 
-== '`c`'
+== C
 
 === Types
 
@@ -94,9 +94,9 @@ void __sm__ScScrRule(smScanner, smToken, smOnOff)
 ------------------------------
 
 
-== '`ansi-c`' and '`c++`'
+== ANSI C and C++
 
-This interface is used both for '`ansi-c`' and '`c++`'.
+This interface is used both for `ansi-c` and `c++`.
 
 === Types
 
@@ -186,11 +186,11 @@ void __sm__ScScrRule(
 ------------------------------
 
 
-== Object oriented '`c++`' (proposal)
+== Object-Oriented C++ (Proposal)
 
-This is a suggestion how an object-oriented '`c++`' interface may look like.
+This is a suggestion how an object-oriented C++ interface may look like.
 Currently there exist no such interface.
-'`c++`' users should use the '`ansi-c`' interface to generate source code compilable with '`c++`' compilers.
+C++ users should use the `ansi-c` interface to generate source code compilable with C++ compilers.
 
 
 === Types
