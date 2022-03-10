@@ -2,7 +2,7 @@
 // STATUS: Bibliography fixing!
 
 [appendix]
-= REFERENCES
+= References
 
 ////
 * [ ] Convert to [bibliography] section:

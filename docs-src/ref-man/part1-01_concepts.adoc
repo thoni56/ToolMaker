@@ -2,7 +2,8 @@
 
 // STATUS: All text OK (no xrefs).
 
-= CONCEPTS AND ASSUMPTIONS
+[[tm.Concepts-and-Assumptions]]
+= Concepts and Assumptions
 
 ToolMaker is a set of tools to generate the input analysing part of a complete tool, a ToolMaker-based _subsystem_.
 A subsystem is denoted by a name -- a _system name_.

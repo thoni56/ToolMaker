@@ -16,8 +16,7 @@ Understanding the method of software generation techniques is also most helpful,
 
 A novice user should carefully study the introductory chapters in all the parts of the ToolMaker documentation for the various tools and the example in this part before attempting to build his own tool using ToolMaker.
 
-// @XREF: Ch.4
-The more experienced user, familiar with similar products (notably YACC and LEX), should at least read chapter 4, A TOOLMAKER BASED SYSTEM on page 27 in this part of the document and then refer to the reference chapters for each individual Maker in the ToolMaker kit.
+The more experienced user, familiar with similar products (notably YACC and LEX), should at least read <<A ToolMaker Based System>> in this part of the document and then refer to the reference chapters for each individual Maker in the ToolMaker kit.
 
 
 :leveloffset: +1

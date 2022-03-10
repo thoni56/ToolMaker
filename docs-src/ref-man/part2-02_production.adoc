@@ -2,14 +2,12 @@
 
 // STATUS: XRefs
 
-= PARSER PRODUCTION
+= Parser Production
 
 == Creating a Running Parser
 
-// @XREF: The Options Section
-
 The figure below gives an overview over the relation between the files required and produced by ParserMaker.
-The prefix `_pm_` is chosen by the parser implementor and is dependent on the system prefix and the parser prefix (see _The Options Section_ on page 86), and the file names for any produced target source code module is target language dependent.
+The prefix `_pm_` is chosen by the parser implementor and is dependent on the system prefix and the parser prefix (see <<pm.Options-Section>>), and the file names for any produced target source code module is target language dependent.
 
 // @FIG 2: Convert to SVG.
 
@@ -28,17 +26,12 @@ Depending on the target language used the produced target language modules, may 
 
 Following the above figure, this following is a step by step instruction how to use ParserMaker in order to create a working system.
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-// @XREF: The ParserMaker Description File
-// @XREF: THE PARSERMAKER COMMAND
-
-1. Create a ToolMaker description file (`__pm__.tmk`) according to the specifications in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+1. Create a ToolMaker description file (`__pm__.tmk`) according to the specifications in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 This step is not necessary if you are developing a stand-alone parser (in this case the information can be put inside `__pm__.pmk` instead).
 
-2. Create a ParserMaker description (grammar) file (`__pm__.pmk`) according to the specifications in _The ParserMaker Description File_ on page 79.
+2. Create a ParserMaker description (grammar) file (`__pm__.pmk`) according to the specifications in <<The ParserMaker Description File>>.
 
-3. Invoke ParserMaker on the grammar file (see _THE PARSERMAKER COMMAND_ on page 104).
+3. Invoke ParserMaker on the grammar file (see <<The ParserMaker Command>>).
 Repeat this step until there are no input errors.
 
 4. Compile the ParserMaker generated components (e.g. `__pm__Parse.c` and `__pm__PaSema.c`).
@@ -49,9 +42,7 @@ If you use the ToolMaker kit, a lot of these modules will already have been crea
 6. Link the object modules and execute.
 
 
-// @XREF: Toolmake Reference Manual
-
-Points 1 and 2 can be simplified by invoking _**toolmake**_ to set up a development environment for you (see the _Toolmake Reference Manual_).
+Points 1 and 2 can be simplified by invoking _**toolmake**_ to set up a development environment for you (see <<Toolmake Reference Manual>>).
 
 // @ADMONITION: Note was converted to TIP!
 // @NOTE: Highlighter marker formatting (below) added by porter!
@@ -62,22 +53,20 @@ If this is the case copy the files `Parse.imp` and `Err.imp` to the development 
 Change the library option in the ParserMaker description file to point to the directory where the modified skeletons resides.
 When ParserMaker is executed, it will use these skeletons instead of the standard ones.
 
-
+[[pm.File-Descriptions]]
 === File Descriptions
 
 ==== Input Files
 
-// @XREF: The ParserMaker Description File
-
 _ParserMaker Description file_ (`.pmk`), also known as the _Grammar file_.
-This file contains a definition of the input grammar according to the specifications in _The ParserMaker Description File_ on page 79.
+This file contains a definition of the input grammar according to the specifications in <<The ParserMaker Description File>>.
 
 // PAGE 78
 
 _ToolMaker Common Description file_ (`.tmk`) contains definitions common for all Makers.
 ParserMaker uses common options and the token definition from this file.
 
-
+[[pm.Output-Files]]
 ==== Output Files
 
 _Table and definition file_ (`.pmt`).
@@ -88,10 +77,8 @@ _Vocabulary file_ (`.voc`).
 Contains the representation of the terminal symbols and constitutes the interface between the scanner and the parser.
 It is used by ScannerMaker to construct a scanner for the language.
 
-// @XREF: The List Directive
-
 _List file_ (`.pml`).
-The contents of the list file is controlled by the List-directive (see _The List Directive_ on page 91).
+The contents of the list file is controlled by the List-directive (see <<pm.List-Directive>>).
 A complete list file contains the following:
 
 * Pretty printed grammar (`List Grammar;`).
@@ -122,15 +109,9 @@ All output files from ParserMaker are created in the current directory.
 
 == The ParserMaker Description File
 
-// @NOTE: Maybe we could reduce the number of XRefs here, since Asciidoctor
-//        provides enough info to implicitly indicate Part and App. title!
-// @XREF: appendix C
-// @XREF: ToolMaker System Description
-// @XREF: SYNTAX NOTATION
-
 This section describes the format of the ParserMaker description file.
 The notation used to do this is a modified EBNF.
-For a brief description of this refer to appendix C in the _ToolMaker System Description_, _SYNTAX NOTATION_, page 52.
+For a brief description of this refer to <<Syntax Notation>> in <<ToolMaker System Description>>.
 
 
 === Lexical Definitions
@@ -151,14 +132,10 @@ Symbols in the ParserMaker language is constructed by using upper case character
     <upper case letter> | <lower case letter>
 ------------------------------
 
-// @XREF: (see below) => add xref link?
-
 All symbols defined by the parser implementor in the ParserMaker description file are case sensitive, e.g. `Begin` is different from `BEGIN`.
-Reserved words and keywords (see below) are not case sensitive.
+Reserved words and keywords (<<Reserved words,see below>>) are not case sensitive.
 
-// @XREF: Common Directives
-
-In the target dependent parts of the ParserMaker language, any character is accepted (see _Common Directives_ on page 87 for a description of how to specify the escape character).
+In the target dependent parts of the ParserMaker language, any character is accepted (see <<pm.Common-Directives>> for a description of how to specify the escape character).
 
 
 ==== Lexical Items and Spacing Conventions
@@ -416,11 +393,9 @@ Example:
 //         I think it's a backtick, but I'll need to check again by looking
 //         at the examples in "Common Directives" section.
 
-// @XREF: Common Directives
-
 In the semantic actions, the character `{backtick}` is used as an escape character.
 A character following the escape character will always be copied to the output.
-The escape character may be changed by means of the escape option (see _Common Directives_ on page 87).
+The escape character may be changed by means of the escape option (see <<pm.Common-Directives>>).
 
 Example: to include the character `%` in a semantic action it must be written `{backtick}%`
 
@@ -464,10 +439,7 @@ Otherwise the order between the sections is free.
 The _options section_ controls the ParserMaker generation process.
 For instance, the degree of table packing, included error recovery facilities and the kind of logging information produced.
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-
-The _import_, _token_ and _srcp sections_ are further described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+The _import_, _token_ and _srcp sections_ are further described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 These three sections are normally located in the ToolMaker description file and should be put in the ParserMaker description file only when developing a stand-alone parser.
 
 // @CHECK GRAMMAR: "DEFINES target" => "DEFINE"? (sing.)
@@ -502,11 +474,9 @@ WORD
 END-OF-FILE
 ------------------------------
 
-// @XREF: The Scanner Section
-
 When a `WORD` is recognized the scanner returns the length of the `WORD`.
 The lexical attribute `LENGTH` is used to hold this value.
-The scanner call interface is defined in the scanner section (see _The Scanner Section_ on page 96).
+The scanner call interface is defined in the scanner section (see <<The Scanner Section>>).
 The token section is shown here for completeness but is normally defined in the ToolMaker description file.
 
 Example: A file containing the text:
@@ -599,6 +569,7 @@ element
 
 // PAGE 86
 
+[[pm.Options-Section]]
 === The Options Section
 
 // SYNTAX: EBNF
@@ -626,15 +597,11 @@ element
     | <list file directive>
 ------------------------------
 
-// @XREF: Options
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-
 The _options section_ of the ParserMaker description file controls the parser generation process.
 Corresponding options can be given as command line parameters to ParserMaker at its invocation.
 Options given as command line parameters override those within the description file.
-Command line options are described in _Options_ on page 104.
-For a detailed discussion on options see _The Options Section_ in the _ToolMaker System Description_, page 30.
+Command line options are described in <<pm.Options>>.
+For a detailed discussion on options see <<tm.Options-Section>> in <<ToolMaker System Description>>.
 
 The directives can be given in any order.
 If a directive is repeated, only the last one given is used.
@@ -664,6 +631,7 @@ Resolve SR;
 
 // PAGE 87
 
+[[pm.Common-Directives]]
 ==== Common Directives
 
 // SYNTAX: EBNF
@@ -681,11 +649,8 @@ Resolve SR;
     | <force directive>
 ------------------------------
 
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-
 The common directives are directives available for all of the Makers in the ToolMaker kit.
-For a detailed description of these refer to _The Options Section_ in the _ToolMaker System Description_, page 30.
+For a detailed description of these refer to <<tm.Options-Section>> in <<ToolMaker System Description>>.
 All directives are available for ParserMaker, and if used overrides default values and settings in the ToolMaker Common Description file.
 
 The prefix directive does not inherit its default value, instead it defaults to `_pm_` if not explicitly set in the `.tmk` file.
@@ -701,13 +666,11 @@ If set in the ToolMaker Common Description file and not used in the ParserMaker 
     'LISTERPREFIX' <quoted string> ';'
 ------------------------------
 
-// @XREF: ListerMaker Reference Manual
-
 // @CHECK GRAMMAR: "that DOES not use" = "DO" (sing.) if it refers to the
 //                 Lister modules, but the whole sentence is rather entangled
 //                 and unclear. Should be polished.
 
-To be able to interface the generated error message handler to ToolMaker generated Lister modules (see _ListerMaker Reference Manual_) that does not use the default prefix this directive can be used.
+To be able to interface the generated error message handler to ToolMaker generated Lister modules (see <<ListerMaker Reference Manual>>) that does not use the default prefix this directive can be used.
 The quoted string will be used as a prefix in all function calls to the Lister.
 
 The default is the system prefix, i.e. ParserMaker assumes that the Lister is generated using the system prefix, which unless set otherwise in the ToolMaker description file is `tm`.
@@ -724,10 +687,8 @@ The default is the system prefix, i.e. ParserMaker assumes that the Lister is ge
 
 // PAGE 88
 
-// @XREF: Run-Time Interface
-
 This option turns on [off] generation of the parser error handling interface routines.
-See _Run-Time Interface_ on page 107 for a definition of these routines.
+See <<Run-Time Interface>> for a definition of these routines.
 
 The default is:
 
@@ -738,6 +699,7 @@ ErrorHandler;
 ------------------------------
 
 
+[[pm.The-Trace-Directive]]
 ==== The Trace Directive
 
 // SYNTAX: EBNF
@@ -768,11 +730,9 @@ No Trace;
     'LOOKAHEADMAX' <number> ';'
 ------------------------------
 
-// @XREF: Error Recovery Principles
-
 This option defines _the maximum amount of look-ahead that will be applied when the parser detects a syntax error_.
 The default value of 5 represents a reasonable functionality versus performance trade-off.
-See _Error Recovery Principles_ on page 72 for a discussion of the impact of this option.
+See <<Error Recovery Principles>> for a discussion of the impact of this option.
 Any positive integer value larger than or equal to 4 may be used as value.
 Due to performance reasons, it is not recommended to increase the look-ahead above 6.
 
@@ -786,10 +746,8 @@ Due to performance reasons, it is not recommended to increase the look-ahead abo
     'SHIFTCOST' <number> ';'
 ------------------------------
 
-// @XREF: Error Recovery Principles
-
 This option defines the acceptance cost for shifting one symbol from the input.
-See _Error Recovery Principles_ on page 72 for a discussion of the impact of this option.
+See <<Error Recovery Principles>> for a discussion of the impact of this option.
 Any positive integer may be used as the value.
 The default is:
 
@@ -930,6 +888,7 @@ Also this option might not have any effect for every of the supported languages 
 
 // PAGE 91
 
+[[pm.List-Directive]]
 ==== The List Directive
 
 // SYNTAX: EBNF
@@ -1027,10 +986,8 @@ Activating the `MULTIPLE` option means that the _second level_ should be invoked
 If `SINGLE` is not activated, the second level is activated first.
 The second level correction continues until the string is corrected or until it tries to delete an important symbol (fiducial) and the `PANIC` option is specified.
 
-// @XREF: Error Recovery Principles
-
 `PANIC` indicates that the last step in the recovery is pure _panic mode_.
-Refer to the section _Error Recovery Principles_ on page 72 for further details.
+Refer to <<Error Recovery Principles>> for further details.
 
 `NO RECOVERY` means that the parser will _abort the parsing process_ if an error is detected.
 
@@ -1065,10 +1022,8 @@ Option `SR` implies that a shift-reduce conflict shall be resolved by using shif
 
 Option `RR` implies that a reduce-reduce conflict shall be resolved by reducing the production that comes first in the input grammar.
 
-// @XREF: Grammar Ambiguity and LALR-conflicts
-
 If `NO RESOLVE` is specified _no tables are created_ if conflicts are not removed by modifications, i.e. the generation is aborted on any conflict.
-Also refer to _Grammar Ambiguity and LALR-conflicts_ on page 68.
+Also refer to <<Grammar Ambiguity and LALR-Conflicts>>.
 
 The default setting, which you get if the directive is not specified or if it is specified without options, is:
 
@@ -1079,6 +1034,7 @@ Resolve SR;
 ------------------------------
 
 
+[[The-Import-Export-and-Declarations-Sections]]
 === The Import, Export and Declarations Sections
 
 // SYNTAX: EBNF
@@ -1221,12 +1177,7 @@ is equivalent to:
 <identifier> = 10, 1, 1 => '<identifier>';
 ------------------------------
 
-// @XREF: Error Recovery Principles
-// @XREF: The Insertsymbol Section
-// @XREF: The Deletesymbol Section
-// @XREF: Error Recovery
-
-How these weights and the print name are used is described in _Error Recovery Principles_ on page 72, in _The Insertsymbol Section_ on page 97, _The Deletesymbol Section_ on page 97 and in _Error Recovery_ on page 106.
+How these weights and the print name are used is described in <<Error Recovery Principles>>, in <<The Insertsymbol Section>>, <<The Deletesymbol Section>> and in <<Error Recovery>>.
 
 
 === The Attributes Section
@@ -1271,9 +1222,7 @@ Example:
     pos  %% long %1 %%;
 ------------------------------
 
-// @XREF: Grammar Attributes
-
-How to use attributes is described in _Grammar Attributes_ on page 64.
+How to use attributes is described in <<Grammar Attributes>>.
 
 
 === The Scanner Section
@@ -1285,13 +1234,10 @@ How to use attributes is described in _Grammar Attributes_ on page 64.
     '%%SCANNER' <target language code> ['%%END']
 ------------------------------
 
-// @XREF: The Token Section
-// @XREF: ToolMaker System Description
-
 The code specified in the scanner section is executed when a new token should be read from the input stream.
 The target language code is copied into the generated parser.
 The purpose of this code is to fill the token structure as supplied by the pre-defined pointer variable token which is defined when the scanner section is entered.
-See _The Token Section_ in the _ToolMaker System Description_, page 36 for a description of the fields in the token structure and how to define them.
+See <<The Token Section>> in <<ToolMaker System Description>> for a description of the fields in the token structure and how to define them.
 
 The _scanner section_ can be viewed as a procedure with the following formal interface:
 
@@ -1328,10 +1274,7 @@ If this section is omitted, default code will be generated:
 %%(tmkPrefix)Scan(lexContext, token);
 ------------------------------
 
-// @XREF: The Prefix Directive
-// @XREF: ToolMaker System Description
-
-where `%%(tmkPrefix)` stands for (and will be expanded to) the system prefix, i.e. the code generated will assume that the scanner is a scanner generated by ScannerMaker using the common prefix (see _The Prefix Directive_ in the _ToolMaker System Description_, page 32 for a description of how to define a system prefix).
+where `%%(tmkPrefix)` stands for (and will be expanded to) the system prefix, i.e. the code generated will assume that the scanner is a scanner generated by ScannerMaker using the common prefix (see <<The Prefix Directive>> in <<ToolMaker System Description>> for a description of how to define a system prefix).
 
 
 
@@ -1344,11 +1287,9 @@ where `%%(tmkPrefix)` stands for (and will be expanded to) the system prefix, i.
     '%%INSERTSYMBOL' <target language code> ['%%END']
 ------------------------------
 
-// @XREF: Run-Time Interface
-
 This block should contain the necessary _target language code to construct a semantically valid token_ when the parser error recovery process has decided to insert a token in the input stream.
 The code is inserted into the `__pm__ISym()` function.
-See _Run-Time Interface_ on page 107 for further details.
+See <<Run-Time Interface>> for further details.
 
 
 === The Deletesymbol Section
@@ -1360,11 +1301,9 @@ See _Run-Time Interface_ on page 107 for further details.
     '%%DELETESYMBOL' <target language code> ['%%END']
 ------------------------------
 
-// @XREF: Run-Time Interface
-
 This block should contain the necessary _target language code to handle the deletion of an already constructed token_ when the parser error recovery process has decided to delete a token from the input stream.
 The code is inserted into the `__pm__DSym()` function.
-See _Run-Time Interface_ on page 107 for further details.
+See <<Run-Time Interface>> for further details.
 
 
 === The Recovery Section
@@ -1515,19 +1454,14 @@ In Pascal, identifiers and constants are good skip symbol candidates.
 The _rules section_ defines the syntax of the input language.
 The input specification is written in an EBNF-like notation, extended with semantic actions and a mechanism for resolving ambiguities in the grammar.
 
-// @XREF: CONCEPTS AND ASSUMPTIONS
-
-The concepts behind the various constructs in the rules section are discussed at length in _CONCEPTS AND ASSUMPTIONS_ on page 60.
+The concepts behind the various constructs in the rules section are discussed at length in <<pm.Concepts-and-Assumptions>>.
 
 
 // PAGE 100
 
 == The ToolMaker Common Description File
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-
-Unless ParserMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+Unless ParserMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 Otherwise these two sections may be specified in the ParserMaker Description file, removing any need for the ToolMaker Common Description file.
 
 
@@ -1561,22 +1495,18 @@ The internal codes of the vocabulary and the production numbers are later used w
 
 === Format of the Generated Item Set
 
-// @XREF: The Trace Directive
 // @BIBLIO_ENTRY: [Aho]
 
 The LALR(1) item set is written to the list file if the option `List Items;` is activated.
 A subset of the item set is also written if the grammar contains errors.
-This may provide useful information in conjunction with the trace output printed if the trace directive is set in the options section (see _The Trace Directive_ on page 88).
+This may provide useful information in conjunction with the trace output printed if the trace directive is set in the options section (see <<pm.The-Trace-Directive>>).
 The concept of items is further discussed in reference [Aho].
 
 // PAGE 101
 
-// @XREF: Level 2: String Synthesizing Technique
-// @XREF: The Separator Part
-
 For each state, a table containing all items in that state is written.
-The table is labelled by the _state number_ and the _continuation symbol_ chosen by the second level error correction (see _Level 2: String Synthesizing Technique_ on page 74).
-If _separators_ have been defined (see _The Separator Part_ on page 98), a _separator continuation symbol_ will be printed within parentheses if applicable for the state.
+The table is labelled by the _state number_ and the _continuation symbol_ chosen by the second level error correction (see <<Level 2: String Synthesizing Technique>>).
+If _separators_ have been defined (see <<The Separator Part>>), a _separator continuation symbol_ will be printed within parentheses if applicable for the state.
 
 Each item in the state is represented by an entry in the table.
 Each entry is labelled by the _parsing action_ for the item in the state.
@@ -1617,11 +1547,9 @@ The parsing action for the first item is reduce by production 39, and the follow
 The parsing action for the second item is shift, and the next state is number 15 if a `<mulop>` is recognized.
 The parsing action for the third item is shift-reduce by production 50 if a `{asterisk}` is the next token.
 
-// @XREF: Grammar Ambiguity and LALR-conflicts
-
 When the grammar is _ambiguous_, indicated by error message 303, the list file will contain information about the ambiguity.
 If this is the case, the item sets for all offending states will be logged, and each state will be preceded by a line explaining the nature of the ambiguity (shift-reduce or reduce-reduce), followed by the offending symbol and the involved production or productions.
-With this information it is normally possible to rewrite the grammar or use modification rules to resolve the ambiguity (see _Grammar Ambiguity and LALR-conflicts_ on page 68).
+With this information it is normally possible to rewrite the grammar or use modification rules to resolve the ambiguity (see <<Grammar Ambiguity and LALR-Conflicts>>).
 
 // PAGE 102
 
@@ -1646,7 +1574,7 @@ If table packing is activated, the packed parser tables and the various access s
 In order to understand the purpose of the various access structures it is necessary to understand the theory behind the various packing methods, see reference [Sencker].
 The entries in the packed parser tables have the same format as described above.
 
-
+[[pm.The-Vocabulary-File]]
 == The Vocabulary File
 
 The vocabulary file contains the representation and codes of the terminal symbols, and it constitutes the interface between the scanner and the parser.
@@ -1680,9 +1608,7 @@ Each line has the following format:
 
 The `<sequence number>` is a pure sequence number starting from 1.
 
-// @XREF: The Token Section
-
-The `<scanner code>` is the number the scanner is supposed to return to the parser in the code member of the token structure (see _The Token Section_ on page 36) when the corresponding token has been recognized.
+The `<scanner code>` is the number the scanner is supposed to return to the parser in the code member of the token structure (see <<The Token Section>>) when the corresponding token has been recognized.
 
 The `<terminal string>` is the string representing the terminal to be recognized.
 The appearance is exactly the same as in the grammar file.
@@ -1691,11 +1617,7 @@ This may be either a string or an identifier representing lexical items needing 
 IMPORTANT: Only normal identifiers can be used in the vocabulary file, i.e. as identifiers for tokens.
 Angle bracketed strings are _not_ recognized by ScannerMaker.
 
-// @XREF: Vocabulary
-// @XREF: The Vocabulary file
-// @XREF: ScannerMaker Reference Manual
-
 Last on each line is an identifier indicating to which vocabulary this token belongs.
-This is to comply with the ScannerMaker ability to handle multiple vocabularies (see _Vocabulary_ on page 134 and _The Vocabulary file_ in the _ScannerMaker Reference Manual_, page 160).
+This is to comply with the ScannerMaker ability to handle multiple vocabularies (see <<Vocabulary>> and <<sm.The-Vocabulary-File>> in <<ScannerMaker Reference Manual>>).
 
 TIP: ParserMaker assumes that all tokens should belong to the main vocabulary, but by editing this file (e.g. automatically through a stream editor) tokens may be placed in different vocabularies.

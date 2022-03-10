@@ -2,7 +2,8 @@
 
 // STATUS: TBD!
 
-= CONCEPTS AND ASSUMPTIONS
+[[sm.Concepts-and-Assumptions]]
+= Concepts and Assumptions
 
 == ScannerMaker and Scanner
 
@@ -50,10 +51,6 @@ Tokens and scanners which screens a token may also be turned on or off at run-ti
 
 == Token and Source Position Definitions
 
-// @XREF: The Token Section
-// @XREF: The Srcp Section
-// @XREF: ToolMaker System Description
-
 The generated scanner supports automatic source position calculation.
 The _row_, _column_ and _position_ source position members are automatically updated by the generated scanner if they are defined in the _source position section_ in the ToolMaker Common Description file (`.tmk`).
-See _The Token Section_ on page 36 and _The Srcp Section_ in the _ToolMaker System Description_, page 34.
+See <<The Token Section>> and <<The Srcp Section>> in <<ToolMaker System Description>>.

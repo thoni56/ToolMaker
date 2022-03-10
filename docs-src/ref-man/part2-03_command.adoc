@@ -1,6 +1,6 @@
 // PAGE 104 -- ParserMaker Reference Manual
 
-= THE PARSERMAKER COMMAND
+= The ParserMaker Command
 
 To invoke ParserMaker the following command should be given:
 
@@ -11,13 +11,14 @@ pmk [-help] [options] <input grammar>
 
 The special option `-help` will cause ParserMaker to print a short description of the parameters and available options and then immediately exit.
 
-
+[[pm.Parameters]]
 == Parameters
 
 ParserMaker takes only one parameter, `<input grammar>`, which is the name of the ParserMaker, or grammar, description file.
 If no extension is given, `.pmk` is assumed.
 
 
+[[pm.Options]]
 == Options
 
 Any number of options may be given on the command line. These options override or complement the options given in the options section in the grammar file. The Command Line Options and their corresponding directives in the options section are the following:
@@ -57,15 +58,12 @@ Options:
   -tmk <file>       read common options from <file>
   -help             this help information
 ..............................................................................
+
 // PAGE 105
 
-// @XREF: The Options Section
+Refer to the corresponding directives and options in <<pm.Options-Section>> for a detailed description of the options.
 
-Refer to the corresponding directives and options in _The Options Section_ on page 86 for a detailed description of the options.
-
-// @XREF: Output Files
-
-The `-voc`, `-pmt` and `-pml` options are only available from the command line and are used to give explicit names to the _vocabulary file_, the _table and definition file_ and the _list file_ respectively (see _Output Files_ on page 78).
+The `-voc`, `-pmt` and `-pml` options are only available from the command line and are used to give explicit names to the _vocabulary file_, the _table and definition file_ and the _list file_ respectively (see <<pm.Output-Files>>).
 
 
 == Example

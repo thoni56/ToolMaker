@@ -1,7 +1,7 @@
 // PAGE 49 -- ToolMaker System Description
 
 [appendix]
-= ERROR MESSAGES
+= Error Messages
 
 == Message Format
 

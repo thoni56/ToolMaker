@@ -1,6 +1,6 @@
 // PAGE 233 -- Toolmake Reference Manual
 
-= THE TOOLMAKE COMMAND
+= The Toolmake Command
 
 _**Toolmake**_ is invoked by the following call:
 
@@ -10,12 +10,14 @@ toolmake [-help] [<option>...] [<system-name>]
 ..............................................
 
 
+[[tm.Parameters]]
 == Parameters
 
 _**Toolmake**_ takes one optional parameter, the subsystem name, this parameter is used as default for a subsequent question about the name.
 Or, as a matter of fact, as the subsystem name in combination with the `-go` option.
 
 
+[[tm.Options]]
 == Options
 
 [.shell]

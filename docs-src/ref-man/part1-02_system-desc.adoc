@@ -3,7 +3,7 @@
 // STATUS: 3 XRefs needs fixing; Fig 1 in SVG.
 
 
-= SYSTEM DESCRIPTION
+= System Description
 
 == The ToolMaker Components
 
@@ -70,9 +70,7 @@ The Incremental Macro Processor is delivered as a separate tool with the ToolMak
 _**Toolmake**_ makes it very simple to set up a new subsystem based on ToolMaker.
 Using a dialogue you specify what parts you want to generate using ToolMaker, _**toolmake**_ creates the appropriate files in the current directory.
 
-// @XREF: THE PL/0 EXAMPLE
-
-You may also select the level of information already in the various files (description files, main module suggestion etc.), minimal, normal contents or a complete example (see _THE PL/0 EXAMPLE_ on page 45, page 111, page 172 and page 220).
+You may also select the level of information already in the various files (description files, main module suggestion etc.), minimal, normal contents or a complete example (see <<tm.PL0-Example>>, <<pm.PL0-Example>>, <<sm.PL0-Example>> and <<lm.PL0-Example>>).
 
 // PAGE 25
 
@@ -108,9 +106,7 @@ image::Fig-1-1_temp.gif[width=40%,align="center"]
 
 // PAGE 26
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-
-After having analysed the Makers own description file and the optional ToolMaker Common Description file (containing definitions common for all Makers, refer to _THE TOOLMAKER DESCRIPTION FILE_ on page 30) the Maker produces output in the form of table files.
+After having analysed the Makers own description file and the optional ToolMaker Common Description file (containing definitions common for all Makers, refer to <<ch.ToolMaker-Description-File>>) the Maker produces output in the form of table files.
 The table files contain data and code definitions to complement skeleton files which are provided and may be modified.
 As a last step the table file is processed together with the skeleton files (using the Macro processor IMP) to produce the actual source files.
 

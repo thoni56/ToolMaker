@@ -1,7 +1,7 @@
 // PAGE 240 -- Toolmake Reference Manual
 
 [appendix]
-= FILE GENERATION DETAILS
+= File Generation Details
 
 The details in this appendix should be regarded as an internal interface between _**toolmake**_ and the skeleton files used, compatibility between two versions of ToolMaker is not guaranteed.
 
@@ -52,7 +52,7 @@ imp -s_T("12:34:56") -s_D("1990-01-12") \
     $TMHOME/lib/c/main.imp pl0.c
 .........................................
 
-// @XREF: IMP Reference Manual
+// @XREF: IMP Reference Manual [ a separate book? ]
 
 For more details on using the Macro Processor IMP refer to the _IMP Reference Manual_.
 

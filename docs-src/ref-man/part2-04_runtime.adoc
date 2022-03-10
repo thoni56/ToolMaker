@@ -1,14 +1,12 @@
 // PAGE 106 -- ParserMaker Reference Manual
 
-= PARSER RUN-TIME USAGE
-
-// @XREF: The ToolMaker Description File
-// @XREF: ToolMaker System Description
+= Parser Run-Time Usage
 
 In the descriptions below, all functions external to the generated parser are described with their default prefix `pm`.
-This prefix may be changed with the parser prefix option (see _The ToolMaker Description File_ in the _ToolMaker System Description_, page 27).
+This prefix may be changed with the parser prefix option (see <<sec.ToolMaker-Description-File>> in <<ToolMaker System Description>>).
 
 
+[[pm.Principles-of-Operation]]
 == Principles of Operation
 
 === Parsing
@@ -25,10 +23,8 @@ The generated parser expects the code defined in the scanner section (or default
 This functionality must be implemented by the parser implementor.
 If ScannerMaker is used this is no problem since this is exactly the task of ScannerMaker.
 
-// @XREF: The Vocabulary File
-
 The parser expects the scanner section to return exactly one token from the input stream each time it is called.
-The tokens it expects the scanner to recognize are defined together with their token codes in the vocabulary file (see _The Vocabulary File_ on page 102 for the format of the vocabulary file).
+The tokens it expects the scanner to recognize are defined together with their token codes in the vocabulary file (see <<pm.The-Vocabulary-File>> for the format of the vocabulary file).
 
 
 === Error Recovery
@@ -107,10 +103,8 @@ When the parser error recovery process decides to insert an `INTEGER` token in t
 
 The parameters: `code` is the terminal code for the inserted token, `symString` is the terminal string as used in the grammar, `printString` is the terminal print string as defined in the grammar, and `token` is the token that should be created.
 
-// @XREF: The Insertsymbol Section
-
 This function is defined in the generated error recovery interface module, `__pm__Err`, if selected by use of the `errorhandler` option.
-The actual code to construct a semantically valid token should be defined in the ParserMaker description file (see _The Insertsymbol Section_ on page 97).
+The actual code to construct a semantically valid token should be defined in the ParserMaker description file (see <<The Insertsymbol Section>>).
 The code from the _insertsymbol section_ is inserted into the body of the `__pm__ISym()` function if the option `Errorhandler;` is set, otherwise this functionality must be supplied by the implementor.
 
 
@@ -134,9 +128,7 @@ The function is defined in the default error recovery interface module that is a
 
 // PAGE 109
 
-// @XREF: The Deletesymbol Section
-
-The actual code to necessary to clean up may be defined in the ParserMaker description file (see _The Deletesymbol Section_ on page 97).
+The actual code to necessary to clean up may be defined in the ParserMaker description file (see <<The Deletesymbol Section>>).
 The code may for example return dynamically allocated areas referenced by the semantic attributes of the token.
 The code from the _deletesymbol section_ is inserted into the body of the `__pm__DSym()` function if the option `Errorhandler;` is set, otherwise this functionality must be supplied by the implementor.
 

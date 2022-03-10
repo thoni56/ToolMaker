@@ -1,6 +1,6 @@
 // PAGE 206 -- ListerMaker Reference Manual
 
-= THE LISTERMAKER COMMAND
+= The ListerMaker Command
 
 The invocation of ListerMaker is performed by a command of the form
 
@@ -12,16 +12,16 @@ lmk [-help] [<options> ...] <file>
 The special option `-help` gives a short help of available options and their meaning.
 
 
+[[lm.Parameters]]
 == Parameters
 
-// @XREF: The ListerMaker Description File
-
 The ListerMaker command takes only one argument, the name of a description file.
-The description file contains a description of the lister to be generated using definitions as described in _The ListerMaker Description File_ on page 201.
+The description file contains a description of the lister to be generated using definitions as described in <<The ListerMaker Description File>>.
 The argument may appear anywhere on the command line except between an option name and its arguments.
 The default extension for the ListerMaker description file is `.lmk`.
 
 
+[[lm.Options]]
 == Options
 
 One or more options may be specified on the command line overriding any specified options in the _options section_ in the description file.
@@ -33,19 +33,13 @@ All options are available as command line options, the general format is:
 -[-]optionname [optionvalue]
 ............................
 
-// @XREF: The Options Section
-
-The option names corresponds exactly to the names given in the section _The Options Section_ on page 202.
+The option names corresponds exactly to the names given in the section <<lm.Options-Section>>.
 The option value (if required) corresponds to allowed values of the option.
 To turn an option on, one dash is used, to turn an option off two dashes are used.
 For example, to turn the verbose option on, use `-verbose`, to turn it off, use `--verbose`, which is equivalent to specifying `NO VERBOSE` in the options section.
 
-// @XREF: The Options Section
-// @XREF: Command Line Option Format
-// @XREF: ToolMaker System Description
-
-Please refer to the corresponding options and directives in _The Options Section_ on page 202 for a detailed description of the various options.
-The general command line option format is described in _Command Line Option Format_ in the _ToolMaker System Description_, page 40.
+Please refer to the corresponding options and directives in <<lm.Options-Section>> for a detailed description of the various options.
+The general command line option format is described in <<Command Line Option Format>> in <<ToolMaker System Description>>.
 
 The special option
 
@@ -54,11 +48,9 @@ The special option
 -help
 ........
 
-// @XREF: The Options Section
-
 produces a verbose listing of the usage format of the command.
 Each argument and option are given a short explanation.
-Refer to _The Options Section_ on page 202 for details on the various options.
+Refer to <<lm.Options-Section>> for details on the various options.
 
 // PAGE 207
 

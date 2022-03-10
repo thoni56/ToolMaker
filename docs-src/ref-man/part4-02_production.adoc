@@ -1,6 +1,6 @@
 // PAGE 201 -- ListerMaker Reference Manual
 
-= LISTER PRODUCTION
+= Lister Production
 
 == The ListerMaker Description File
 
@@ -10,10 +10,8 @@ These are normally written in a description file used by ListerMaker.
 To inform ListerMaker how your Lister is to work there is a number of options that you may choose.
 These include for example whether to include routines for list production and the prefix for all the externally visible functions in the produced Lister.
 
-// @XREF: appendix A, THE PL/0 EXAMPLE
-
 After setting up a directory using _**toolmake**_ there should exist a default description file prepared with all necessary options set to their default values and some example messages.
-An example of a ListerMaker description file is included in appendix A, _THE PL/0 EXAMPLE_, on page 220.
+An example of a ListerMaker description file is included in <<lm.PL0-Example>>.
 
 The structure of the ListerMaker description file is
 
@@ -29,10 +27,7 @@ The structure of the ListerMaker description file is
     { <import section> | <srcp section> }
 ------------------------------
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-
-The _import_ and _srcp sections_ are further described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+The _import_ and _srcp sections_ are further described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 These sections are normally located in the ToolMaker description file and should be put in the ParserMaker description file only when developing a stand-alone Lister.
 
 
@@ -60,6 +55,7 @@ Symbols in the ListerMaker description language are constructed from using upper
 
 // PAGE 202
 
+[[lm.Options-Section]]
 === The Options Section
 
 // SYNTAX: EBNF
@@ -76,16 +72,11 @@ Symbols in the ListerMaker description language are constructed from using upper
     | <limit directive>
 ------------------------------
 
-// @XREF: The ToolMaker Description File
-// @XREF: ToolMaker System Description,
-
 In the options section various options can be set.
 The available options for ListerMaker are described below.
-The term default describes the initial setting unless otherwise stated in the ToolMaker Common Description file when appropriate (see _The ToolMaker Description File_ in the _ToolMaker System Description,_ page 27).
+The term default describes the initial setting unless otherwise stated in the ToolMaker Common Description file when appropriate (see <<sec.ToolMaker-Description-File>> in <<ToolMaker System Description>>).
 
-// @XREF: THE LISTERMAKER COMMAND
-
-These options can be overridden by options given on the command line when ListerMaker is invoked (see _THE LISTERMAKER COMMAND_ on page 206).
+These options can be overridden by options given on the command line when ListerMaker is invoked (see <<The ListerMaker Command>>).
 If an option is not specified its default value is used.
 The default options are:
 
@@ -108,14 +99,10 @@ Limit 100;
 Messages embedded;
 ------------------------------
 
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-// @XREF: Prefix Management
-// @XREF: ToolMaker System Description
-
-Note however that the settings of common options in the ToolMaker Common Description file influences the default values (see _The Options Section_ in the _ToolMaker System Description_, page 30, and _Prefix Management_ in the _ToolMaker System Description_, page 42).
+Note however that the settings of common options in the ToolMaker Common Description file influences the default values (see <<tm.Options-Section>> in <<ToolMaker System Description>>, and <<Prefix Management>> in <<ToolMaker System Description>>).
 
 
+[[lm.Common-Directives]]
 ==== Common Directives
 
 // SYNTAX: EBNF
@@ -129,11 +116,8 @@ Note however that the settings of common options in the ToolMaker Common Descrip
     | <library directive>
 ------------------------------
 
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-
 The common directives are directives available for all Makers in the ToolMaker kit.
-For a detailed description of these refer to The Options Section in the ToolMaker System Description, page 30.
+For a detailed description of these refer to <<tm.Options-Section>> in <<ToolMaker System Description>>.
 The directives listed above are the directives relevant for ListerMaker, and if used overrides settings and default values from the ToolMaker Common Description file.
 
 // PAGE 203
@@ -159,15 +143,11 @@ If set in the ToolMaker Common Description file and _not_ used in the ListerMake
 The listings directive tells ListerMaker to include the functions for producing listings in the generated Lister module.
 In cases where only message by message retrieval using the `__lm__Msg()` function is used the `NO LISTINGS` option may be specified to reduce the amount of code in the Lister.
 
-// @XREF: Multiple Input Files
-
 Under certain circumstances it is necessary to make a list of multiple source files, for example if the application is checking the interfaces between program modules.
 If this directive is specified, ListerMaker will generate a `__lm__Listm()` function, which may be used instead of `__lm__List()` to achieve this.
-See _Multiple Input Files_ on page 210.
+See <<Multiple Input Files>>.
 
-// @XREF: Separate Listing of Multiple Input Files
-
-The functions to use for separate listings of multiple input files (see _Separate Listing of Multiple Input Files_ on page 211) is only generated into the Lister if the value `SEPARATE` is selected.
+The functions to use for separate listings of multiple input files (see <<Separate Listing of Multiple Input Files>>) is only generated into the Lister if the value `SEPARATE` is selected.
 The default value is:
 
 // SYNTAX: ToolMaker description file
@@ -279,8 +259,5 @@ Example:
 
 // PAGE 205
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-
-Unless ListerMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+Unless ListerMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 Otherwise these two sections may be specified in the ListerMaker Description file, removing any need for the ToolMaker Common Description file.

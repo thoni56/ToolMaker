@@ -2,7 +2,8 @@
 
 // STATUS: OK!
 
-= PRINCIPLES OF OPERATION
+[[tm.Principles-of-Operation]]
+= Principles of Operation
 
 When started _**toolmake**_ will ask you about the system name and the target language to be used.
 

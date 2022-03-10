@@ -1,18 +1,13 @@
 // PAGE 222 -- ListerMaker Reference Manual
 
 [appendix]
-= TARGET LANGUAGE DETAILS
+= Target Language Details
 
 This appendix lists the actual definition of run-time elements exported by ListerMaker.
 The following sections contain this information per target language.
 
-// @XREF: THE PL/0 EXAMPLE
-// @XREF: The ToolMaker Description File
-// @XREF: ToolMaker System Description
-// @XREF: The Messages Sections
-
-`%%(srcpType)` denotes the type name defined for the source position structure in the _srcp section_ in the ToolMaker control file (see appendix A, _THE PL/0 EXAMPLE_, on page 220 and _The ToolMaker Description File_ in the _ToolMaker System Description_, page 27).
-Functions, types and constants prefixed by `_lm_` use the `listerPrefix` (see _The Messages Sections_ on page 204).
+`%%(srcpType)` denotes the type name defined for the source position structure in the _srcp section_ in the ToolMaker control file (see <<lm.PL0-Example>> and <<sec.ToolMaker-Description-File>> in <<ToolMaker System Description>>).
+Functions, types and constants prefixed by `_lm_` use the `listerPrefix` (see <<The Messages Sections>>).
 
 
 == C

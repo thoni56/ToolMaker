@@ -1,6 +1,6 @@
 // PAGE 136 -- ScannerMaker Reference Manual
 
-= SCANNER PRODUCTION
+= Scanner Production
 
 ScannerMaker requires a number of files to describe the scanner that should be generated.
 In this chapter descriptions of these files are given.
@@ -27,18 +27,13 @@ A vocabulary file is not necessary though it is strongly recommended that a voca
 
 The following walk-through should give you a feeling how to create an operational scanner, step by step.
 
-// @XREF: (1) THE TOOLMAKER DESCRIPTION FILE
-// @XREF: (1) ToolMaker System Description
-// @XREF: (2) The ScannerMaker Description File
-// @XREF: (3) THE SCANNERMAKER COMMAND
-
-1. Create a ToolMaker description file (`__sm__.tmk`) according to the specifications in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+1. Create a ToolMaker description file (`__sm__.tmk`) according to the specifications in <<The ToolMaker Description File>> in the <<ToolMaker System Description>>.
 This step is not necessary if you are developing a stand-alone scanner (in this case the information can be put inside `__sm__.smk` instead).
 
-2. Create a ScannerMaker description file (`__sm__.tmk`) according to the specifications in _The ScannerMaker Description File_ on page 138.
+2. Create a ScannerMaker description file (`__sm__.tmk`) according to the specifications in <<The ScannerMaker Description File>>.
 
 3. Either run _**make**_ and skip to step 6, or run _**smk**_, ScannerMaker, with `__sm__.tmk` as argument.
-ScannerMaker can be controlled by using various options as described in _THE SCANNERMAKER COMMAND_ on page 162.
+ScannerMaker can be controlled by using various options as described in <<The ScannerMaker Command>>.
 
 4. Compile the ScannerMaker generated source module, `__sm__Scan`, the scanner semantic actions module `__sm__ScSema`, and the common definition module `__sm__Common`.
 If the target language was C, `__sm__Scan.c`, `__sm__Scan.h`, `__sm__ScSema.c` and `__sm__Common.h` were produced.
@@ -47,9 +42,8 @@ If the target language was C, `__sm__Scan.c`, `__sm__Scan.h`, `__sm__ScSema.c` a
 
 6. Execute and test the scanner.
 
-// @XREF: Toolmake Reference Manual
 
-Points 1 and 2 can be simplified by invoking _**toolmake**_ to set up a development environment for you (see the _Toolmake Reference Manual_).
+Points 1 and 2 can be simplified by invoking _**toolmake**_ to set up a development environment for you (see <<Toolmake Reference Manual>>).
 The files created by _*toolmake*_ must be modified to suit your requirements.
 
 TIP: In rare cases the description files are not sufficient to capture all the target dependencies or special requirements for a project, and you have to modify the scanner skeletons.
@@ -60,28 +54,26 @@ When ScannerMaker is executed, it will use these skeletons instead of the standa
 
 // PAGE 138
 
+[[sm.File-Descriptions]]
 === File Descriptions
 
 ==== Input Files
 
-// @XREF: The ScannerMaker Description File
-
 _ScannerMaker description file_ (`.smk`).
 This file describes the scanners which should be generated using the ScannerMaker program, _**smk**_.
-This file is described in _The ScannerMaker Description File_ on page 138.
+This file is described in <<The ScannerMaker Description File>>.
 
 _ToolMaker description file_ (`.tmk`).
 This file describe common definition for all tools in ToolMaker.
 ScannerMaker uses the token and source position, options, etc., as described in this file.
 
-// @XREF: The Vocabulary file
-
 _Vocabulary file_, (`.voc`).
 This file describes the vocabularies to be used by the scanner.
 The vocabulary file is normally produced by ParserMaker.
-This file is described in _The Vocabulary file_ on page 160.
+This file is described in <<sm.The-Vocabulary-File>>.
 
 
+[[sm.Output-Files]]
 ==== Output Files
 
 _ScannerMaker source module_, (`__sm__Scan`).
@@ -97,12 +89,9 @@ It controls the generation of the files above from skeleton files.
 
 == The ScannerMaker Description File
 
-// @XREF: ToolMaker System Description
-// @XREF: SYNTAX NOTATION
-
 This section describes the ScannerMaker description file.
 In this description a modified BNF notation is used to describe the syntax.
-This notation is briefly described in appendix C in the _ToolMaker System Description_, _SYNTAX NOTATION_, page 52.
+This notation is briefly described in <<Syntax Notation>> in <<ToolMaker System Description>>.
 
 
 === Lexical items
@@ -156,10 +145,7 @@ The overall structure of the Scanner Description file is as follows:
     {<vocabulary section>}
 ---------------------------------
 
-// @XREF: THE TOOLMAKER DESCRIPTION
-// @XREF: ToolMaker System Description
-
-The _toolmaker sections_ are further described in _THE TOOLMAKER DESCRIPTION_ FILE in the _ToolMaker System Description_, page 30.
+The _toolmaker sections_ are further described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 
 // SYNTAX: EBNF
 
@@ -170,15 +156,9 @@ The _toolmaker sections_ are further described in _THE TOOLMAKER DESCRIPTION_ FI
         | <token section> }
 ---------------------------------
 
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-// @XREF: Options
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-
-The option section follows the general guidelines as described in _The Options Section_ in the _ToolMaker System Description_, page 30.
-The options which can be specified in the options section are described in _Options_ on page 162.
-The import, srcp and token sections are described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+The option section follows the general guidelines as described in <<tm.Options-Section>> in <<ToolMaker System Description>>.
+The options which can be specified in the options section are described in <<sm.Options>>.
+The import, srcp and token sections are described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 
 The _target code sections_ are one of the following subsections:
 
@@ -265,6 +245,7 @@ Comments begin with two hyphens and end with a new line.
 ------------------------------
 
 
+[[sm.Options-Section]]
 === The Options Section
 
 // SYNTAX: EBNF
@@ -286,10 +267,8 @@ Comments begin with two hyphens and end with a new line.
 ---------------------------------
 
 
-// @XREF: THE SCANNERMAKER COMMAND
-
 In this section options can be specified to control some actions taken by the scanner generator.
-These options can be overridden by options given on the command line when the scanner generator is invoked (see _THE SCANNERMAKER COMMAND_ on page 162).
+These options can be overridden by options given on the command line when the scanner generator is invoked (see <<The ScannerMaker Command>>).
 If an option is not specified its default value is used.
 The default options are:
 
@@ -318,12 +297,10 @@ Tokensize 1024;
 Tokenlimit 524288;
 ---------------------------------
 
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-
-Note however that the settings of common options in the ToolMaker Common Description file influences the default values (see _The Options Section_ in the _ToolMaker System Description_, page 30).
+Note however that the settings of common options in the ToolMaker Common Description file influences the default values (see <<tm.Options-Section>> in <<ToolMaker System Description>>).
 
 
+[[sm.Common-Directives]]
 ==== Common Directives
 
 // SYNTAX: EBNF
@@ -340,11 +317,8 @@ Note however that the settings of common options in the ToolMaker Common Descrip
     | <force directive>
 ---------------------------------
 
-// @XREF: The Options Section
-// @XREF: ToolMaker System Description
-
 The common directives are directives available for all of the Makers in the ToolMaker kit.
-For a detailed description of these refer to _The Options Section_ in the _ToolMaker System Description_, page 30.
+For a detailed description of these refer to <<tm.Options-Section>> in <<ToolMaker System Description>>.
 All directives are available for ScannerMaker, and if used overrides settings and default values from the ToolMaker Common Description file.
 
 
@@ -375,6 +349,7 @@ Optimize;
 ---------------------------------
 
 
+[[sm.The-Trace-Directive]]
 ==== The Trace Directive
 
 // SYNTAX: EBNF
@@ -543,6 +518,7 @@ No Screening;
 ------------------------------
 
 
+[[sm.List-Directive]]
 ==== The List Directive
 
 // SYNTAX: EBNF
@@ -660,10 +636,7 @@ This target language dependent source code is copied into the generated scanner 
     '%%CONTEXT' <target language code> ['%%END']
 ---------------------------------
 
-// @XREF: Semantic Actions
-// @XREF: Type: smScContext and smScContextItem
-
-In this section variables used within a scanner context should be defined, see _Semantic Actions_ on page 158 and _Type: smScContext and smScContextItem_ on page 164 for a complete description of how to use the scanner context.
+In this section variables used within a scanner context should be defined, see <<sm.Semantic-Actions>> and <<Type: __sm__ScContext and __sm__ScContextItem>> for a complete description of how to use the scanner context.
 
 
 === The Export Section
@@ -688,9 +661,7 @@ User defined functions and variables that should be visible outside the generate
     '%%READER' <target language code> ['%%END']
 ---------------------------------
 
-// @XREF: Semantic Actions
-
-The code specified in the _reader section_ is executed when reading characters into the input stream, see _Semantic Actions_ on page 158 for more information on the contents of this section.
+The code specified in the _reader section_ is executed when reading characters into the input stream, see <<sm.Semantic-Actions>> for more information on the contents of this section.
 The _reader section_ may be viewed as the body of a function with the following definition.
 
 // SYNTAX: ToolMaker description file???
@@ -743,9 +714,7 @@ That is, characters are read from _standard input_.
     '%%ACTION' <target language code> ['%%END']
 ---------------------------------
 
-// @XREF: Semantic Actions
-
-The code specified in the _action section_ is executed just before entering any token specific action and is therefore common to all token specific actions, see _Semantic Actions_ on page 158 for a complete definition of semantic actions.
+The code specified in the _action section_ is executed just before entering any token specific action and is therefore common to all token specific actions, see <<sm.Semantic-Actions>> for a complete definition of semantic actions.
 This code is copied in-line into the body of the `__sm__ScAction` function and then followed by the semantic actions for the tokens.
 
 // SYNTAX: ToolMaker description file???
@@ -770,10 +739,8 @@ returns INTEGER
     '%%PREHOOK' <target language code> ['%%END']
 ------------------------------
 
-// @XREF: Semantic Actions
-
 In the _prehook section_ code which should be performed before scanning a token is defined.
-For more information on the contents of this section, see _Semantic Actions_ on page 158.
+For more information on the contents of this section, see <<sm.Semantic-Actions>>.
 The _prehook section_ may be viewed as the body of a function with the following definition
 
 // SYNTAX: ToolMaker description file???
@@ -802,9 +769,7 @@ NOTE: When executing the prehook the variable `srnLength` has the value `0` (zer
     '%%POSTHOOK' <target language code> ['%%END']
 ------------------------------
 
-// @XREF: Semantic Actions
-
-The code specified in the _posthook section_ is executed after a complete token is found, see _Semantic Actions_ on page 158 for more information on the contents of this section.
+The code specified in the _posthook section_ is executed after a complete token is found, see <<sm.Semantic-Actions>> for more information on the contents of this section.
 The _posthook section_ may be viewed as the body of a function with the following definition:
 
 // SYNTAX: ToolMaker description file???
@@ -1538,10 +1503,8 @@ For example:
     '_EndOfText'
 ------------------------------
 
-// @XREF: The Reader Section
-
 This special symbol matches the end of the input stream, the end of text.
-The end of the input stream is reached when the reader (as defined in the _reader section_, see _The Reader Section_ on page 146) returns zero.
+The end of the input stream is reached when the reader (as defined in the _reader section_, see <<The Reader Section>>) returns zero.
 
 The `_EndOfText` symbol is case insensitive and must be the full regular expression.
 That is, `_EndOfText` can not be combined with selection, concatenation or closure.
@@ -1585,6 +1548,7 @@ In the table below each operator is given in order of priority, and with its ass
 The highest operator priority is 1 and lowest priority is 4.
 
 
+[[sm.Semantic-Actions]]
 === Semantic Actions
 
 // SYNTAX: EBNF
@@ -1643,11 +1607,8 @@ For example:
 %%MAP
 ------------------------------
 
-// @XREF: The Escape Directive
-// @XREF: ToolMaker System Description
-
 By default the character `{backtick}` has special meaning in the target language code sections.
-This character is called the escape character (see _The Escape Directive_ in the _ToolMaker System Description_, page 32).
+This character is called the escape character (see <<The Escape Directive>> in <<ToolMaker System Description>>).
 By giving an escape character the following character is unconditionally processed.
 For example, if double percent characters should be used in the code they should be preceded by the escape character.
 For example
@@ -1683,11 +1644,9 @@ smToken  :  IN OUT %%(tokenType)
 returns INTEGER
 ------------------------------
 
-// @XREF: The Action Section
-
 In addition the code given in the _action section_ is executed first.
 The token's external code is determined by the value of the field `smCode` in the token structure (`smToken->smCode` in C) when the function is terminated.
-This variable is initially set to the value as specified in the vocabulary file or the vocabulary section or as set in a possible _action section_ (see _The Action Section_ on page 146).
+This variable is initially set to the value as specified in the vocabulary file or the vocabulary section or as set in a possible _action section_ (see <<The Action Section>>).
 
 The external token code for the token found can be changed (simulating finding of another token) in two ways by either setting `smToken->smCode` to the new external code or by returning the new external code by executing a _return statement_.
 The external token codes should be one of the enumeration values defined for tokens in the vocabulary to which the current token belongs, or the predefined enumerators `smSkipToken` or `smContinueToken`.
@@ -1696,22 +1655,19 @@ The external token codes should be one of the enumeration values defined for tok
 
 When `smSkipToken` is returned the current token is skipped, as if it had been specified in the skip section.
 
-// @XREF: Continued Scanning
 // @MISSING TEXT: "will be performed, [SEE?] Continued Scanning on page 171."
 
-When `smContinueToken` is returned continued scanning will be performed, _Continued Scanning_ on page 171.
+When `smContinueToken` is returned continued scanning will be performed, <<Continued Scanning>>.
 
 
 == The ToolMaker Common Description file
 
-// @XREF: THE TOOLMAKER DESCRIPTION FILE
-// @XREF: ToolMaker System Description
-
-Unless ScannerMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in _THE TOOLMAKER DESCRIPTION FILE_ in the _ToolMaker System Description_, page 30.
+Unless ScannerMaker is the only Maker used, common declarations of the source position and the token structures should be placed in the ToolMaker Common Description file which is described in <<ch.ToolMaker-Description-File>> in <<ToolMaker System Description>>.
 Otherwise these two sections may be specified in the ScannerMaker Description file, removing any need for the ToolMaker Common Description file.
 
 
-== The Vocabulary file
+[[sm.The-Vocabulary-File]]
+== The Vocabulary File
 
 The vocabulary file used by ScannerMaker corresponds to the vocabulary file produced by ParserMaker.
 The format of the vocabulary file consist of four fields:

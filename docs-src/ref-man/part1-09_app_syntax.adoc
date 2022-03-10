@@ -3,14 +3,11 @@
 // STATUS: XRefs; EBNF blocks
 
 [appendix]
-= SYNTAX NOTATION
-
-// @XREF: The Rules Section
-// @XREF: ParserMaker Reference Manual
+= Syntax Notation
 
 The syntactic structure of the description files throughout this documentation are described using a modified EBNF.
 This appendix briefly describes that notation.
-This syntax is used to describe the structure of the description files in a ToolMaker-based system, it is not the syntax you should use for your context free grammar productions in the ParserMaker description file (see _The Rules Section_ in the _ParserMaker Reference Manual_, page 99 for a description of that syntax).
+This syntax is used to describe the structure of the description files in a ToolMaker-based system, it is not the syntax you should use for your context free grammar productions in the ParserMaker description file (see <<The Rules Section>> in <<ParserMaker Reference Manual>> for a description of that syntax).
 
 Words enclosed by angle brackets denote syntactic categories (nonterminals).
 Example:

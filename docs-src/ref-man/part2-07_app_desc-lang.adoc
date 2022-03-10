@@ -1,16 +1,15 @@
 // PAGE 123 -- ParserMaker Reference Manual
 
 [appendix]
-= DESCRIPTION LANGUAGE
-
-// @XREF: The ParserMaker Description File
-// @XREF: ToolMaker System Description
-// @XREF: SYNTAX NOTATION
+= Description Language
 
 This appendix contains a syntax summary of the ParserMaker description language.
-For a full discussion of the language, see _The ParserMaker Description File_ on page 79.
+For a full discussion of the language, see <<The ParserMaker Description File>>.
 
-For a brief discussion of the notation used in this description see appendix C in the _ToolMaker System Description_, _SYNTAX NOTATION_, page 52.
+For a brief discussion of the notation used in this description see <<Syntax Notation>> in <<ToolMaker System Description>>..
+
+// @XREF NOTE: In last sentence, App.C and SYNTAX NOTATION are one and the same
+//             (App. C. "Syntax Notation", at p.52)
 
 == Language Syntax
 

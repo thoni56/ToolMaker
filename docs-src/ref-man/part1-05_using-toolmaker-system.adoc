@@ -1,6 +1,6 @@
 // PAGE 38 -- ToolMaker System Description
 
-= USING A TOOLMAKER BASED SYSTEM
+= Using a ToolMaker Based System
 
 == Import
 
@@ -68,12 +68,10 @@ ttList.o: ttList.c ttCommon.h ttList.h
 //         Could be a type due to editor spelling correction? Check the XRef
 //         "The Maker" section to see if the terms occurs there, and how.
 
-// @XREF: The Maker
-
 The `all` target indicates that the application is dependent on `tm` (which is a subtarget to create the generated sources) and on the object files acquired by compiling them.
 Inserting the `tm` target first will force a generation of the source files before compiling anything.
 The `tm` target is dependent on the hidden stamp files (`.smkstamp`, `.pmkstamp` and `.lmkstamp`) which always carry the date of the last run by the corresponding Maker.
-This is necessary as the Makers have the intelligent source generation method mentioned in _The Maker_ on page 25, otherwise the Makers would be run again and again in an attempt to update the output files.
+This is necessary as the Makers have the intelligent source generation method mentioned in <<The Maker>>, otherwise the Makers would be run again and again in an attempt to update the output files.
 The `touch` commands updates the marker files as soon as a Maker have been run.
 
 The targets for the various generated source files ensures that if the files should not exist the appropriate makers are run and finally the dependencies between the generated `.c` and `.h` files are listed.
@@ -83,11 +81,7 @@ To adapt this in a complete environment add any additional object files to the l
 
 == Run-time
 
-// @XREF: ParserMaker Reference Manual
-// @XREF: ScannerMaker Reference Manual
-// @XREF: ListerMaker Reference Manual
-
 To call the ToolMaker generated functions at run-time the appropriate import declarations should be made (e.g. in C the `#include` statements inserted).
 The main program should import the *Parse*, *Scan* and *List* declarations to be able to initialise the scanner, listing system and then call the parser.
-Refer to _ParserMaker Reference Manual_, _ScannerMaker Reference Manual_ and _ListerMaker Reference Manual_ for details on how this is performed.
+Refer to <<ParserMaker Reference Manual>>, <<ScannerMaker Reference Manual>> and <<ListerMaker Reference Manual>> for details on how this is performed.
 The *Common* header file may also be included in various modules of the application (e.g. to include the source position structure in external type declarations such as an abstract syntax tree).

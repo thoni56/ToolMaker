@@ -2,7 +2,8 @@
 
 // STATUS: TBD!
 
-= CONCEPTS AND ASSUMPTIONS
+[[lm.Concepts-and-Assumptions]]
+= Concepts and Assumptions
 
 == ListerMaker and Lister
 
@@ -31,8 +32,6 @@ TIP: The automatic source position calculation of ScannerMaker can be used to cr
 
 
 == Messages
-
-// @XREF: Message section => (see below)
 
 A _message_ is actually a number of different things.
 The first meaning of a message is _one number and corresponding text in the Message section in the description file_ (see below).

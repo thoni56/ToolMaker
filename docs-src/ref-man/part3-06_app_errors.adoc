@@ -1,14 +1,11 @@
 // PAGE 176 -- ScannerMaker Reference Manual
 
 [appendix]
-= ERROR MESSAGES
+= Error Messages
 
 Error messages produced by ScannerMaker are output to the terminal, and if the option `List Input;` is set, messages are also output to the list file.
 
-// @XREF: Message Format
-// @XREF: ToolMaker System Description
-
-For a description of the format of error messages refer to _Message Format_ in the _ToolMaker System Description_, page 49.
+For a description of the format of error messages refer to <<Message Format>> in <<ToolMaker System Description>>.
 
 
 == Message Explanations
@@ -16,15 +13,9 @@ For a description of the format of error messages refer to _Message Format_ in t
 The following list gives a brief summary of the error messages and in some cases the actions that should be taken by the user.
 An error message containing `%__n__`, where `_n_` is a number, means that an insert string is inserted in that position during the actual generation of the message.
 
-// @XREF: Messages Explanations
-// @XREF: ToolMaker System Description
-// @XREF: License Errors
-// @XREF: ToolMaker System Description
-
 Messages with numbers less than 100 are messages common for all Makers.
-These are described in _Messages Explanations_ in the _ToolMaker System Description_, page 50.
-Messages indicating license problems or limitations are described in _License Errors_ in the _ToolMaker System Description_, page 51.
-
+These are described in <<Messages Explanations>> in <<ToolMaker System Description>>.
+Messages indicating license problems or limitations are described in <<License Errors>> in <<ToolMaker System Description>>.
 
 
 `100 Parsing resumed.` :::

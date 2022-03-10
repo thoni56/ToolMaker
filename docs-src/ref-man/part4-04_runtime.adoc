@@ -1,10 +1,11 @@
 // PAGE 208 -- ListerMaker Reference Manual
 
-= LISTER RUN-TIME USAGE
+= Lister Run-Time Usage
 
 This chapter describe the functions in the run time part of ListerMaker, the Lister, and how your application accesses these functions.
 
 
+[[lm.Principles-of-Operation]]
 == Principles of Operation
 
 The first thing to do is to initiate the listing system.
@@ -12,10 +13,9 @@ This is done by calling the function `__lm__LiInit()`, preferably at the beginni
 This call includes the name of the input file and the string to insert in the header of any listing files produced later and the message section that is to be used for templates.
 If message templates were placed in a separate file (by the use of the appropriate option) the name of the file containing the error message templates should also be given in this call.
 
-// @XREF: ParserMaker Reference Manual
 
 The next step is to start analysis of the input, for example by initiating a ScannerMaker generated scanner and calling the parsing routine in the ParserMaker generated parser.
-During this analysis lexical and syntactical errors discovered are logged by the error handling procedures in the error handler module used by ParserMaker (see _ParserMaker Reference Manual_).
+During this analysis lexical and syntactical errors discovered are logged by the error handling procedures in the error handler module used by ParserMaker (see <<ParserMaker Reference Manual>>).
 The supplied ListerMaker description file contains error message templates for the errors automatically handled here.
 
 Messages are logged using the function `__lm__Log()`.
@@ -73,7 +73,7 @@ To sum up, the following functions are available in each phase:
 
 // PAGE 210
 
-=== Include-handling
+=== Include-Handling
 
 In some cases a method of handling nested files is needed.
 This is for example the case with so called include-files in some programming languages.
@@ -325,12 +325,9 @@ severities :  IN SET OF __lm__Sev
 files      :  IN ARRAY OF STRING
 ------------------------------
 
-// @XREF: Include-handling
-// @XREF: Multiple Input Files
-
 Same as `__lm__List()` but allows for listing of multiple input files.
 This allows an application to e.g. analyse a number of input files and still produce one listing file.
-Note that this is not the same as the include handling (see _Include-handling_ on page 210 and _Multiple Input Files_ on page 210 for a comparison).
+Note that this is not the same as the include handling (see <<Include-Handling>> and <<Multiple Input Files>> for a comparison).
 Instead each input file is listed separately with a page break between each one.
 The extra parameter `files` is an array of strings with the file names of the files to list.
 The last element must be a NULL pointer.
@@ -355,9 +352,7 @@ listtype   :  IN SET OF __lm__Typ
 severities :  IN SET OF __lm__Sev
 ------------------------------
 
-// @XREF: Separate Listing of Multiple Input Files
-
-This function initialises the lister to start separate listing (see _Separate Listing of Multiple Input Files_ on page 211).
+This function initialises the lister to start separate listing (see <<Separate Listing of Multiple Input Files>>).
 This function does not produce a complete listing, instead the function `__lm__Lists()` needs to be called once for each file, and the terminating function `__lm__Listse()` after completing the listing.
 
 The parameters have the same interpretation as for `__lm__List()`.
@@ -378,9 +373,7 @@ fno : INTEGER
 fnm : STRING
 ------------------------------
 
-// @XREF: Separate Listing of Multiple Input Files
-
-The function performs listing of _one_ file while using separate listing (see _Separate Listing of Multiple Input Files_ on page 211). A call to
+The function performs listing of _one_ file while using separate listing (see <<Separate Listing of Multiple Input Files>>). A call to
 `__lm__Listsi()` must first be performed to set it up, then multiple calls to `__lm__Lists()` can be performed until all files have been handled.
 Between calls other retrieving phase functions can be called (e.g. `__lm__LiPrint()` to print extra information).
 
@@ -396,10 +389,9 @@ __lm__Listse(severities)
 severities : IN SET OF __lm__Sev
 ------------------------------
 
-// @XREF: Separate Listing of Multiple Input Files
 // @NOTE: "The severity parameter..." => "The `SEVERITIES` parameter"???
 
-This function terminates the listing of separate files (see _Separate Listing of Multiple Input Files_ on page 211) by printing the global messages.
+This function terminates the listing of separate files (see <<Separate Listing of Multiple Input Files>>) by printing the global messages.
 The severity parameter indicates which severities to include in the global messages section.
 
 
@@ -551,12 +543,11 @@ sev = __lm__LocSeverity()
 returns __lm__Sev
 ------------------------------
 
-// @XREF: Function: lmResLocSeverity()
 // @NOTE: "(see Function: lmResLocSeverity() on page 217)." => It's actually
 //        the very next section! Maybe just say so instead of using an XRef
 //        or mentioning its page?
 
-The function `__lm__LocSeverity()` may be used to read the highest severity logged since the reset of a special local severity variable (see _Function: lmResLocSeverity()_ on page 217).
+The function `__lm__LocSeverity()` may be used to read the highest severity logged since the reset of a special local severity variable (see <<Function: __lm__ResLocSeverity()>>).
 This function is callable both in COLLECTING and RETRIEVING phases and only available if `Listings separate;` is used.
 
 

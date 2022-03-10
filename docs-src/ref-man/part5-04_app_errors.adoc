@@ -1,7 +1,7 @@
 // PAGE 237 -- Toolmake Reference Manual
 
 [appendix]
-= ERROR MESSAGES
+= Error Messages
 
 The following diagnostic messages may appear when running _**toolmake**_.
 In this list they appear sorted in severity order, with the most severe messages first.

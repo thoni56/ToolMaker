@@ -1,29 +1,20 @@
 // PAGE 117 -- ParserMaker Reference Manual
 
 [appendix]
-= ERROR MESSAGES
+= Error Messages
 
 Error messages produced by ParserMaker are output to the terminal, and if the
 option `List Input;` is set, also to the list file.
 
-// @XREF: Message Format
-// @XREF: ToolMaker System Description
-
-For a description of the format of error messages refer to _Message Format_ in the _ToolMaker System Description_, page 49.
+For a description of the format of error messages refer to <<Message Format>> in <<ToolMaker System Description>>.
 
 
 == Message Explanations
 
-// @XREF: Messages Explanations
-// @XREF: ToolMaker System Description
-// @XREF: License Errors
-// @XREF: ToolMaker System Description
-
 The following list gives a brief summary of the error messages and in some cases the actions that should be taken by the user.
 Messages with numbers less than 100 are messages common for all Makers.
-These are described in _Messages Explanations_ in the _ToolMaker System Description_, page 50.
-Messages indicating license problems or limitations are described in _License Errors_ in the _ToolMaker System Description_, page 51.
-
+These are described in <<Messages Explanations>> in <<ToolMaker System Description>>.
+Messages indicating license problems or limitations are described in <<License Errors>> in <<ToolMaker System Description>>.
 
 
 `100 I Parsing resumed.` :::
@@ -113,11 +104,9 @@ You have probably forgotten the ending quote, and thus the rest of the semantic 
 The EBNF repetition construct has been used in a production, but it contains no grammar symbols and is thus meaningless.
 Remove the repetition construct or correct the rule.
 
-// @XREF: Grammar Attributes
-
 `149 E Symbol not recognized in production.` :::
 The indicated grammar symbol used in the attribute reference does not occur in the production and is thus erroneous.
-Misspelling or an attempt to use attribute references in semantic actions embedded in a production (this is not allowed, see _Grammar Attributes_ on page 64 for further details).
+Misspelling or an attempt to use attribute references in semantic actions embedded in a production (this is not allowed, see <<Grammar Attributes>> for further details).
 
 `150 E Undefined attribute %1.` :::
 The indicated attribute has not been defined in the _attributes section_.
@@ -228,11 +217,9 @@ The list file contains details about the changes that have been made.
 Modifications have been used to resolve ambiguities.
 The log file contains information about the effects.
 
-// @XREF: Format of the Generated Item Set
-
 `303 E Grammar is not LALR(1).` :::
 The grammar is ambiguous, and the default disambiguating rules and/or the supplied modifications were not sufficient to disambiguate the grammar.
-Inspect the log file (see _Format of the Generated Item Set_ on page 100) and modify the grammar.
+Inspect the log file (see <<Format of the Generated Item Set>>) and modify the grammar.
 If the grammar is hard to make LALR(1), try using more disambiguating rules.
 
 `401 F Description file "%1" not found.` :::

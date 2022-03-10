@@ -1,12 +1,9 @@
 // PAGE 128 -- ParserMaker Reference Manual
 
 [appendix]
-= TARGET LANGUAGE DETAILS
+= Target Language Details
 
-// @XREF: The Token Section
-// @XREF: ToolMaker System Description
-
-In the descriptions below, the IMP insert statements `%%(tokenType)` and `%%(codeType)` refers to the type names defined by the token section (see _The Token Section_ in the _ToolMaker System Description_, page 36).
+In the descriptions below, the IMP insert statements `%%(tokenType)` and `%%(codeType)` refers to the type names defined by the token section (see <<The Token Section>> in <<ToolMaker System Description>>).
 
 == C
 
