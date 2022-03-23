@@ -32,8 +32,15 @@
 // Preamble
 // ========
 
-WARNING: This document is still work-in-progress.
-Many chapters still need to be ported; but those which are included are fairly polished.
+.AsciiDoc Edition
+****
+This is the AsciiDoc digital edition of the _ToolMaker Reference Manual_, recreated by scanning the original paper book.
+
+OCR and AsciiDoc port by
+https://github.com/tajmone[Tristano Ajmone^, title="View Tristano Ajmone's GitHub profile"], 2022.
+
+include::../man-pages/shared/warning-softlab.adoc[]
+****
 
 include::colophon.adoc[]
 

@@ -1500,7 +1500,7 @@ The internal codes of the vocabulary and the production numbers are later used w
 The LALR(1) item set is written to the list file if the option `List Items;` is activated.
 A subset of the item set is also written if the grammar contains errors.
 This may provide useful information in conjunction with the trace output printed if the trace directive is set in the options section (see <<pm.The-Trace-Directive>>).
-The concept of items is further discussed in reference [Aho].
+The concept of items is further discussed in reference <<Aho>>.
 
 // PAGE 101
 
@@ -1568,10 +1568,10 @@ An entry in the table has one of the following formats:
 `{blank}'X'` :: meaning _error_.
 `{blank}'*'` :: meaning _don't care_, i.e. the entry can never be reached.
 
-// @BIBLIO_ENTRY: [Sencker]
+// @BIBLIO_ENTRY: [Dencker]
 
 If table packing is activated, the packed parser tables and the various access structures will also be printed.
-In order to understand the purpose of the various access structures it is necessary to understand the theory behind the various packing methods, see reference [Sencker].
+In order to understand the purpose of the various access structures it is necessary to understand the theory behind the various packing methods, see reference <<Dencker>>.
 The entries in the packed parser tables have the same format as described above.
 
 [[pm.The-Vocabulary-File]]

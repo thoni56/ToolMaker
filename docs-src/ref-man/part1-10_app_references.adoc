@@ -1,30 +1,45 @@
 // PAGE 53 -- ToolMaker System Description
-// STATUS: Bibliography fixing!
 
-[appendix]
+[bibliography]
 = References
 
-////
-* [ ] Convert to [bibliography] section:
-  https://docs.asciidoctor.org/asciidoc/latest/sections/bibliography/
-* [ ] Find bibliography entries in the book and format them: <<Bib Entry>>
-* [ ] Double Check biblio info and find links.
-* [ ] Consider reformatting using current bibliography standards and styles.
-////
+// @NOTE: The text only contains references to four bibliography entries:
+//        [Aho], [Backus], [Dencker] and [Wirth] -- one reference each.
 
-[horizontal]
-[Aho] ::: Aho A.V., Sethi R., Ullman J.D. -- "`Compilers Principles, Techniques and Tools`", Addison-Wesley 1986.
+// @ERRATA: Fixed "Sencker" to "Dencker", and reordered alphabetically.
+//          Fixed "Durre" to "Dürre".
 
-[Backus] ::: Backus et al -- "`Revised Report on the Algorithmic Language ALGOL 60"`, International Federation for Information Processing 1962.
+* [[[Aho]]]
+Aho A.V., Sethi R., Ullman J.D. --
+https://en.wikipedia.org/wiki/Compilers:_Principles,_Techniques,_and_Tools[pass:q["`Compilers Principles, Techniques and Tools`"]^,
+title="Wikipedia page on the 'red dragon book'"],
+Addison-Wesley, 1986.
 
-[Dastranj] ::: Dastranj-Sedghi A. -- "`A Transformational Approach for Handling Extended BNF Grammars in PWS`", Linköping University, LiTH-IDA-Ex-8932, 1989.
+* [[[Backus]]] Backus et al --
+https://academic.oup.com/comjnl/article-pdf/5/4/349/899594/050349.pdf[pass:q["`Revised Report on the Algorithmic Language ALGOL 60`"]^,
+title="PDF preview via Oxford University Press"],
+International Federation for Information Processing 1962.
 
-[Gries] ::: Gries D. -- "`Error Recovery and Correction -- An introduction to the literature`", In Bauer F.L. (ed) "`Compiler Construction`", Lecture Notes in Computer Science 21, Springer Verlag, 1976, pp 627-638.
+* [[[Dastranj]]] Dastranj-Sedghi A. -- "`A Transformational Approach for Handling Extended BNF Grammars in PWS`", Linköping University, LiTH-IDA-Ex-8932, 1989.
 
-[KR] ::: Kernighan BM, Ritchie D.M. -- "`The C programming language`", Prentice-Hall Inc. 1983.
+* [[[Dencker]]] Dencker P., Dürre K., Heuft J. --
+https://dlnext.acm.org/doi/abs/10.1145/1780.1802[pass:q["`Optimization of Parser Tables for Portable Compilers`"]^,
+title="View full article at ACM Digital Library"],
+acm Transactions on Programming Languages and Systems, Oct. 1984, Vol.6 No. 4, pp. 546-572.
 
-[Sencker] ::: Sencker P., Durre K., Heuft J. -- "`Optimization of Parser Tables for Portable Compilers`", acm Transactions on Programming Languages and Systems, Oct. 1984, Vol.6 No. 4, pp. 546-572.
+* [[[Gries]]] Gries D. -- "`Error Recovery and Correction -- An introduction to the literature`", In Bauer F.L. (ed) "`Compiler Construction`", Lecture Notes in Computer Science 21, Springer Verlag, 1976, pp 627-638.
 
-[Sippu] ::: Sippu S. -- "`Syntax error handling in compilers`", PhD Thesis, Department of Computer Science, University of Helsinki, 1981.
+* [[[KR]]] Kernighan BM, Ritchie D.M. --
+https://en.wikipedia.org/wiki/The_C_Programming_Language[pass:q["`The C programming language`"]^,
+title="Wikipedia page on the 'K&R' book"],
+Prentice-Hall Inc. 1983.
 
-[Wirth] ::: Wirth, Niclaus -- "`Algorithms + Data Structures = Programs`", Prentice-Hall, 1976.
+* [[[Sippu]]] Sippu S. --
+https://researchportal.helsinki.fi/en/publications/syntax-error-handling-in-compilers[pass:q["`Syntax error handling in compilers`"]^,
+title="View thesis info at University of Helsinki Research Portal"],
+PhD Thesis, Department of Computer Science, University of Helsinki, 1981.
+
+* [[[Wirth]]] Wirth, Niclaus --
+link:++https://en.wikipedia.org/wiki/Algorithms_%2B_Data_Structures_%3D_Programs++[pass:q["`Algorithms + Data Structures = Programs`"]^,
+title="Wikipedia page on 'Algorithms + Data Structures = Programs'"],
+Prentice-Hall, 1976.
