@@ -2,7 +2,8 @@
 
 AsciiDoc port of the original _ToolMaker Reference Manual_.
 
-> **WIP WARNING!** — This document is currently still work-in-progress, and many chapters have not yet been ported.
+> **DOC STATUS** — The entire _ToolMaker Reference Manual_ has now been ported to AsciiDoc and proofread.
+> Although there are still some pending tasks to improve the document in the future, the manual is to be considered completed and production ready.
 
 -----
 

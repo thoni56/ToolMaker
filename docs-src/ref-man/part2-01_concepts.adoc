@@ -10,7 +10,7 @@
 
 // @BIBLIO_ENTRY: [Backus]
 
-A commonly used technique for describing the grammar of a language is the _Backus-Naur form_ (BNF for short), so called after its inventors (see reference [Backus]).
+A commonly used technique for describing the grammar of a language is the _Backus-Naur form_ (BNF for short), so called after its inventors (see reference <<Backus>>).
 A grammar described in BNF consists of a number of "`metalinguistic variables`" represented by characters enclosed in angle brackets ``<{nbsp}>``, the symbol `::=` which is interpreted as "`is defined as`", the symbol `|` which is interpreted as "`or`" and all other symbols which stand for themselves.
 For example, the IF-statement in Pascal may be defined as:
 
