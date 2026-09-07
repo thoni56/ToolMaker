@@ -154,14 +154,14 @@ void lmLiTerminate();
 
 [subs="quotes,attributes"]
 ------------------------------
-typedef enum lmSev {
-    sevOK   (1<<O),
-    sevINF =    (1<<l),
-    sevWAR  (1<<2),
-    sevERR  (1<<3),
-    sevFAT  (1<<4),
-    sevSYS  (1<<5)
-} lmSev;
+typedef enum __lm__Sev {
+    sevOK  = (1<<0),
+    sevINF = (1<<1),
+    sevWAR = (1<<2),
+    sevERR = (1<<3),
+    sevFAT = (1<<4),
+    sevSYS = (1<<5)
+} __lm__Sev;
 
 typedef enum __lm__Typ {
         liSUM  = (1<<0), /{asterisk}  Summary {asterisk}/
