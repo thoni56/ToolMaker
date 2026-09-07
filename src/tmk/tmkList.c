@@ -437,8 +437,13 @@ static LMBOOL getsrc(
     /* Don't tell about the EOF yet! */
     tmpeof = (fgets(oline, SRCWIDTH, src[srclev].file) == 0);
       } while (!tmpeof && oline[strlen(oline)-1] != '\n');
-    else
+    else {
       sline[strlen(sline)-1] = '\0';
+      /* A source read in binary mode, or on a system where fopen() does not
+         translate line endings, leaves the CR of a CRLF behind */
+      if (sline[0] != '\0' && sline[strlen(sline)-1] == '\r')
+        sline[strlen(sline)-1] = '\0';
+    }
   } else
     sline[0] = '\0';        /* No more input */
   return(eof);
@@ -484,8 +489,8 @@ static void geterr(
   /* Find last error for the line */
   if (*first >= 0) {
     for (*last = *first; (*last < count.msgs)
-        && (msarr[*last].pos.file == fil)
-        && (msarr[*last].pos.line == line)
+        && (msarr[*last].pos.file == fil) 
+        && (msarr[*last].pos.line == line) 
        ; (*last)++)
     *errflg |= msarr[*last].sev; /* this severity was found */
     (*last)--;
@@ -1016,13 +1021,13 @@ static void prpack(
   src[srclev].lno++;	/* Increment source line number */
 
   /* Any messages for this line ? */
-  geterr( src[srclev].fno,
+  geterr( src[srclev].fno, 
      src[srclev].lno, &first, &last, &msgflg);
 
   /* PUSH or POP from this line */
   if (inset(msgflg, sevPUSH)) {
     liPush(first, last);
-    geterr( src[srclev].fno,
+    geterr( src[srclev].fno, 
        src[srclev].lno, &first, &last, &msgflg);
   }
   if (inset(msgflg, sevPOP)) {
@@ -1287,7 +1292,7 @@ void tmkLiInit(
 
    tmkLog()
 
-   Log an error message, insert strings separatated using %(lmkPrefix)separator
+   Log an error message, insert strings separated using %(lmkPrefix)separator
 
  */
 void tmkLog(
@@ -1642,7 +1647,7 @@ void tmkList(
 
   tmkLiPrint()
 
-  Print one supplimentary line in the output file.
+  Print one supplementary line in the output file.
 
   */
 void tmkLiPrint(

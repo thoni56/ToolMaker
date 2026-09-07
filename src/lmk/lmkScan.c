@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------*\
 
-        lmkScan.c
+    lmkScan.c
 
-        ScannerMaker generated scanner
+    ScannerMaker generated scanner
 
 \*----------------------------------------------------------------------*/
 
@@ -146,7 +146,7 @@ static UByte1 smDFAcol[256]={
 ,9,9,9,9,9,9,9,0,9,9,9,9,9,9,9,0
 }
 ;
-
+  
 static UByte1 smDFAval[1125]={
 51,1,1,12,13,14,2,3,4,4,4,4,4,4,4,4
 ,4,4,4,4,4,4,4,51,51,
@@ -240,7 +240,7 @@ static UByte1 smDFAval[1125]={
 ,51,51,47,51,51,51,51,51,51
 }
 ;
-
+  
 
 
 /* END of scanning tables */
@@ -264,8 +264,8 @@ static void smSourcePosition(
     smThis->smNextPosition+=smEnd-smAt;
     for(;smAt<smEnd;smAt++)
       if(*smAt==10) {
-        smThis->smPosLine=smAt;
-        smThis->smNextLine++;
+    smThis->smPosLine=smAt;
+    smThis->smNextLine++;
       }
 
     smThis->smNextColumn=smEnd-smThis->smPosLine;
@@ -296,7 +296,7 @@ static void smRewindSourcePosition(
 /*
  * int smReadBuffer(SMContext smThis)
  *
- * SmThis function reads charcters using the reader into the buffer in a
+ * SmThis function reads characters using the reader into the buffer in a
  * context. The buffer is enlarged if the current buffer is full
  * (smEnd-smText==smSize) or reduced if current buffer is larger than
  * the standard buffer size and the token may fit the standard buffer
@@ -342,20 +342,20 @@ static int smReadBuffer(lmkScContext smThis)
       /* Enlarge buffer */
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)size+1);
       if(smThis->smBegining==NULL) {
-        /* Cut Buffer */
-        smThis->smBegining = begining;  /* Restore to original buffer */
-        smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
-        memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), (size_t)1024);
-        mod=smThis->smEnd-smThis->smBegining-1024;
-        smThis->smContinue-=mod;
-        smThis->smEnd-=mod;
-        smThis->smPosPrevLine-=mod;
-        smThis->smPosLine-=mod;
-        smThis->smPosContinue-=mod;
+    /* Cut Buffer */
+    smThis->smBegining = begining;	/* Restore to original buffer */
+    smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
+    memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), (size_t)1024);
+    mod=smThis->smEnd-smThis->smBegining-1024;
+    smThis->smContinue-=mod;
+    smThis->smEnd-=mod;
+    smThis->smPosPrevLine-=mod;
+    smThis->smPosLine-=mod;
+    smThis->smPosContinue-=mod;
         smThis->smBufferOverflow+=mod;
       }
       else
-        smThis->smSize=size;
+    smThis->smSize=size;
     }
   }
   if(smThis->smBegining!=smThis->smText) {
@@ -557,7 +557,7 @@ int lmkScan(
   int rew_state;
   int code;
 
-  do {                          /* Skip loop */
+  do {				/* Skip loop */
     smThis->smLine=smThis->smNextLine;
     smThis->smColumn=smThis->smNextColumn;
     smThis->smPosition=smThis->smNextPosition;
@@ -569,52 +569,52 @@ int lmkScan(
     smToken->srcp.col=smThis->smNextColumn;
     smThis->smPosPrevLine=smThis->smPosLine;
     rew_at=smThis->smText;
-    do {                        /* Continue loop */
+    do {			/* Continue loop */
       rew_state=51;
       rew_at++;
       at=(smThis->smContinue);
       state=smScanner[smThis->smScanner];
       for (;;) {
-        if(at==end) {
-          int mod;
+    if(at==end) {
+      int mod;
 
-          if(state>=51) state-=51+1;
-          smThis->smContinue=end;
-          mod=smReadBuffer(smThis);
-          if(mod<0) return mod;
-          rew_at-=end-smThis->smContinue;
-          at=smThis->smContinue;
-          end=smThis->smEnd;
+      if(state>=51) state-=51+1;
+      smThis->smContinue=end;
+      mod=smReadBuffer(smThis);
+      if(mod<0) return mod;
+      rew_at-=end-smThis->smContinue;
+      at=smThis->smContinue;
+      end=smThis->smEnd;
           if(at==end)
-            break;
+        break;
         }
-          ch = *at++;
+      ch = *at++;
 {
 
-
-
-
+  
+    
+      
   state=smDFAval[smDFArow[state]+smDFAcol[ch]];
-
-
-
+      
+    
+  
 }
-          if(state>=51) break;
-          if(smAccept[state]>0) {
-            rew_state=state;
-            rew_at=at;
-          }
+      if(state>=51) break;
+      if(smAccept[state]>0) {
+        rew_state=state;
+        rew_at=at;
+      }
       }
       if(rew_state==51) {
         if(rew_at>end) {
-          code=smEOTCode[smThis->smScanner];
-          rew_at=end;
+      code=smEOTCode[smThis->smScanner];
+      rew_at=end;
         }
         else
-          code=smUnknownCode[smThis->smScanner];
+      code=smUnknownCode[smThis->smScanner];
       }
       else
-        code=smAccept[rew_state]-1;
+    code=smAccept[rew_state]-1;
       smThis->smContinue=rew_at;
       smThis->smLength=smThis->smContinue-smThis->smText;
       smSourcePosition(smThis,smThis->smText,smThis->smContinue);

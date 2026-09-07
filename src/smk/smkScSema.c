@@ -38,9 +38,9 @@ extern smkScContext lexContext;
  */
 
 static Action lexWriteAction(
-    smkScContext smThis,
-    ActionType type,
-    int skip)
+     smkScContext smThis,
+     ActionType type,
+     int skip)
 {
   Action action;
   unsigned char *ch;
@@ -74,14 +74,14 @@ static Action lexWriteAction(
       }
   }
   skip=0;
-  Exit:
+ Exit:
   smkScSkip(smThis,at-smThis->smLength-skip);
   if(type!=actionNONE) action->stop=smThis->smNextPosition-3+skip;
   return action;
 }
 
 static Name lexName(
-    smkScContext smThis)
+     smkScContext smThis)
 {
   unsigned char rem;
   Name name;
@@ -108,7 +108,7 @@ static Name lexMapName(
 }
 
 static int lexNumber(
-    smkScContext smThis)
+     smkScContext smThis)
 {
   char rem;
   int inumber;
@@ -124,9 +124,9 @@ static int lexNumber(
 /* END %%DECLARATION */
 
 int smkScReader(
-    smkScContext smThis,
-    unsigned char *smBuffer,
-    unsigned int smLength)
+     smkScContext smThis,
+     unsigned char *smBuffer,
+     unsigned int smLength)
 {
 
 
@@ -137,38 +137,38 @@ int smkScReader(
 
 
 int smkScAction(
-    smkScContext smThis,
-    int smInternalCode,
-    SmkToken *smToken)
+     smkScContext smThis,
+     int smInternalCode,
+     SmkToken *smToken)
 {
   enum {
     smSkipToken		= -1,
     smContinueToken	= -2
   };
   switch(smInternalCode) {
-  case  38:		/* NUMBER*/
-  case  46:		/* NUMBER*/
-    { smToken->inumber=lexNumber(smThis);
+  case  38:		/* NUMBER*/ 
+  case  46:		/* NUMBER*/ 
+    { smToken->inumber=lexNumber(smThis); 
 }
     break;
 
-  case  35:		/* CLASS*/
-  case  36:		/* STRING*/
-  case  47:		/* STRING*/
-  case  54:		/* NUMBER*/
-  case  56:		/* CHARACTER*/
-    { smToken->name=lexName(smThis);
+  case  35:		/* CLASS*/ 
+  case  36:		/* STRING*/ 
+  case  47:		/* STRING*/ 
+  case  54:		/* NUMBER*/ 
+  case  56:		/* CHARACTER*/ 
+    { smToken->name=lexName(smThis); 
 }
     break;
 
-  case  37:		/* IDENTIFIER*/
-  case  48:		/* IDENTIFIER*/
-  case  57:		/* IDENTIFIER*/
-    { smToken->name=lexMapName(smThis);
+  case  37:		/* IDENTIFIER*/ 
+  case  48:		/* IDENTIFIER*/ 
+  case  57:		/* IDENTIFIER*/ 
+    { smToken->name=lexMapName(smThis); 
 }
     break;
 
-  case  39:		/* SKIPHEADER*/
+  case  39:		/* SKIPHEADER*/ 
     {{
   long fpos, length;
   tmkSkipCode(STRSKP_SKIP, smThis, &fpos, &length,  smkEscape);
@@ -176,7 +176,7 @@ int smkScAction(
 }
     break;
 
-  case  40:		/* SKIPHEADER*/
+  case  40:		/* SKIPHEADER*/ 
     {{
   long fpos, length;
   tmkSkipCode(NOSTRS_SKIP, smThis, &fpos, &length,  smkEscape);
@@ -184,68 +184,68 @@ int smkScAction(
 }
     break;
 
-  case  23:		/* '%%ACTION'*/
-    { smToken->action=lexWriteAction(smThis,actionACTION,2);
+  case  23:		/* '%%ACTION'*/ 
+    { smToken->action=lexWriteAction(smThis,actionACTION,2); 
 }
     break;
 
-  case  22:		/* '%%READER'*/
-    { smToken->action=lexWriteAction(smThis,actionREADER,2);
+  case  22:		/* '%%READER'*/ 
+    { smToken->action=lexWriteAction(smThis,actionREADER,2); 
 }
     break;
 
-  case  25:		/* '%%CONTEXT'*/
-    { smToken->action=lexWriteAction(smThis,actionCONTEXT,2);
+  case  25:		/* '%%CONTEXT'*/ 
+    { smToken->action=lexWriteAction(smThis,actionCONTEXT,2); 
 }
     break;
 
-  case  34:		/* '%%DECLARATION'*/
-    { smToken->action=lexWriteAction(smThis,actionDECLARATION,2);
+  case  34:		/* '%%DECLARATION'*/ 
+    { smToken->action=lexWriteAction(smThis,actionDECLARATION,2); 
 }
     break;
 
-  case  16:		/* '%%END'*/
-    { smToken->action=lexWriteAction(smThis,actionNONE,2);
+  case  16:		/* '%%END'*/ 
+    { smToken->action=lexWriteAction(smThis,actionNONE,2); 
 }
     break;
 
-  case  21:		/* '%%EXPORT'*/
-    { smToken->action=lexWriteAction(smThis,actionEXPORT,2);
+  case  21:		/* '%%EXPORT'*/ 
+    { smToken->action=lexWriteAction(smThis,actionEXPORT,2); 
 }
     break;
 
-  case  28:		/* '%%POSTHOOK'*/
-    { smToken->action=lexWriteAction(smThis,actionPOSTHOOK,2);
+  case  28:		/* '%%POSTHOOK'*/ 
+    { smToken->action=lexWriteAction(smThis,actionPOSTHOOK,2); 
 }
     break;
 
-  case  26:		/* '%%PREHOOK'*/
-    { smToken->action=lexWriteAction(smThis,actionPREHOOK,2);
+  case  26:		/* '%%PREHOOK'*/ 
+    { smToken->action=lexWriteAction(smThis,actionPREHOOK,2); 
 }
     break;
 
-  case  17:		/* '%%SET'*/
-    { setRead(lexContext);
+  case  17:		/* '%%SET'*/ 
+    { setRead(lexContext); 
 }
     break;
 
-  case   0:		/* '%%'*/
-    { smToken->action=lexWriteAction(smThis,actionSEMANTIC,0);
+  case   0:		/* '%%'*/ 
+    { smToken->action=lexWriteAction(smThis,actionSEMANTIC,0); 
 }
     break;
 
-  case  43:		/* COMMENT*/
-    { lexWriteAction(smThis,actionNONE,2);
+  case  43:		/* COMMENT*/ 
+    { lexWriteAction(smThis,actionNONE,2); 
 }
     break;
 
-  case  58:		/* EOS*/
-    { smkScSkip(smThis,-2);
+  case  58:		/* EOS*/ 
+    { smkScSkip(smThis,-2); 
 }
     break;
 
-  case  61:		/* BLANK*/
-    { return smSkipToken;
+  case  61:		/* BLANK*/ 
+    { return smSkipToken; 
 }
     break;
   }
@@ -253,8 +253,8 @@ int smkScAction(
 }
 
 int smkScPostHook(
-    smkScContext smThis,
-    SmkToken *smToken)
+     smkScContext smThis,
+     SmkToken *smToken)
 {
   enum {
     smSkipToken		= -1
@@ -266,3 +266,4 @@ int smkScPostHook(
 
   return smToken->code;
 }
+

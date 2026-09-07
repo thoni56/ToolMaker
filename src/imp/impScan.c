@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------*\
 
-        impScan.c
+    impScan.c
 
-        ScannerMaker generated scanner
+    ScannerMaker generated scanner
 
 \*----------------------------------------------------------------------*/
 
@@ -165,7 +165,7 @@ static UByte1 smDFAcol[256]={
 ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 }
 ;
-
+  
 static UByte1 smDFAval[7268]={
 5,5,5,5,5,5,6,5,5,5,5,5,5,5,5,5
 ,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5
@@ -643,7 +643,7 @@ static UByte1 smDFAval[7268]={
 ,211,43,43,43,43,43,43,43,43,43,216,216,216,216
 }
 ;
-
+  
 
 
 /* END of scanning tables */
@@ -695,29 +695,29 @@ static unsigned char *smLookahead(
   int state;
 
   switch(smLookaheadType[smCode]) {
-  case 1:                       /* Fix prefix length */
+  case 1:			/* Fix prefix length */
     return smAt+smLookaheadPrefix[smCode];
-  case 2:                       /* Fix suffix length */
+  case 2:			/* Fix suffix length */
     return smEnd-smLookaheadSuffix[smCode];
-  case 3:                       /* Variable length */
+  case 3:			/* Variable length */
     /* Scan forward */
     state=smLookaheadPrefix[smCode];
     for(;;) {
 ch=smMap[*smAt++];
 {
 
-
-
-
+  
+    
+      
   state=smDFAval[smDFArow[state]+smDFAcol[ch]];
-
-
-
+      
+    
+  
 }
       if(state==216) break;
       if(smAccept[state]>0) {
-        halt=smAt;
-        continue;
+    halt=smAt;
+    continue;
       }
     }
     /* Scan bakward */
@@ -727,13 +727,13 @@ ch=smMap[*smAt++];
 ch=smMap[*--smEnd];
 {
 
-
-
-
+  
+    
+      
   state=smDFAval[smDFArow[state]+smDFAcol[ch]];
-
-
-
+      
+    
+  
 }
       }
     return smEnd;
@@ -759,8 +759,8 @@ static void smSourcePosition(
     smThis->smNextPosition+=smEnd-smAt;
     for(;smAt<smEnd;smAt++)
       if(*smAt==10) {
-        smThis->smPosLine=smAt;
-        smThis->smNextLine++;
+    smThis->smPosLine=smAt;
+    smThis->smNextLine++;
       }
 
     smThis->smNextColumn=smEnd-smThis->smPosLine;
@@ -791,7 +791,7 @@ static void smRewindSourcePosition(
 /*
  * int smReadBuffer(SMContext smThis)
  *
- * SmThis function reads charcters using the reader into the buffer in a
+ * SmThis function reads characters using the reader into the buffer in a
  * context. The buffer is enlarged if the current buffer is full
  * (smEnd-smText==smSize) or reduced if current buffer is larger than
  * the standard buffer size and the token may fit the standard buffer
@@ -837,20 +837,20 @@ static int smReadBuffer(impScContext smThis)
       /* Enlarge buffer */
       smThis->smBegining=(unsigned char *)realloc(smThis->smBegining,(size_t)size+1);
       if(smThis->smBegining==NULL) {
-        /* Cut Buffer */
-        smThis->smBegining = begining;  /* Restore to original buffer */
-        smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
-        memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), (size_t)1024);
-        mod=smThis->smEnd-smThis->smBegining-1024;
-        smThis->smContinue-=mod;
-        smThis->smEnd-=mod;
-        smThis->smPosPrevLine-=mod;
-        smThis->smPosLine-=mod;
-        smThis->smPosContinue-=mod;
+    /* Cut Buffer */
+    smThis->smBegining = begining;	/* Restore to original buffer */
+    smSourcePosition(smThis,smThis->smText,smThis->smEnd-1024);
+    memcpy((void *)smThis->smBegining, (void *)(smThis->smEnd-1024), (size_t)1024);
+    mod=smThis->smEnd-smThis->smBegining-1024;
+    smThis->smContinue-=mod;
+    smThis->smEnd-=mod;
+    smThis->smPosPrevLine-=mod;
+    smThis->smPosLine-=mod;
+    smThis->smPosContinue-=mod;
         smThis->smBufferOverflow+=mod;
       }
       else
-        smThis->smSize=size;
+    smThis->smSize=size;
     }
   }
   if(smThis->smBegining!=smThis->smText) {
@@ -1052,7 +1052,7 @@ int impScan(
   int rew_state;
   int code;
 
-  do {                          /* Skip loop */
+  do {				/* Skip loop */
     smThis->smLine=smThis->smNextLine;
     smThis->smColumn=smThis->smNextColumn;
     smThis->smPosition=smThis->smNextPosition;
@@ -1063,56 +1063,56 @@ int impScan(
     smToken->srcp.col=smThis->smNextColumn;
     smThis->smPosPrevLine=smThis->smPosLine;
     rew_at=smThis->smText;
-    do {                        /* Continue loop */
+    do {			/* Continue loop */
       rew_state=216;
       rew_at++;
       at=(smThis->smContinue);
       state=smScanner[smThis->smScanner];
       for (;;) {
-        if(at==end) {
-          int mod;
+    if(at==end) {
+      int mod;
 
-          if(state>=216) state-=216+1;
-          smThis->smContinue=end;
-          mod=smReadBuffer(smThis);
-          if(mod<0) return mod;
-          rew_at-=end-smThis->smContinue;
-          at=smThis->smContinue;
-          end=smThis->smEnd;
+      if(state>=216) state-=216+1;
+      smThis->smContinue=end;
+      mod=smReadBuffer(smThis);
+      if(mod<0) return mod;
+      rew_at-=end-smThis->smContinue;
+      at=smThis->smContinue;
+      end=smThis->smEnd;
           if(at==end)
-            break;
+        break;
         }
-          ch = *at++;
+      ch = *at++;
 {
 
-
-
-
+  
+    
+      
   state=smDFAval[smDFArow[state]+smDFAcol[ch]];
-
-
-
+      
+    
+  
 }
-          if(state>=216) break;
-          if(smAccept[state]>0) {
-            rew_state=state;
-            rew_at=at;
-          }
+      if(state>=216) break;
+      if(smAccept[state]>0) {
+        rew_state=state;
+        rew_at=at;
+      }
       }
       if(rew_state==216) {
         if(rew_at>end) {
-          code=smEOTCode[smThis->smScanner];
-          rew_at=end;
+      code=smEOTCode[smThis->smScanner];
+      rew_at=end;
         }
         else
-          code=smUnknownCode[smThis->smScanner];
+      code=smUnknownCode[smThis->smScanner];
       }
       else
-        code=smAccept[rew_state]-1;
+    code=smAccept[rew_state]-1;
       if(smLookaheadType[code])
-        smThis->smContinue=smLookahead(code,smThis->smText,rew_at);
+    smThis->smContinue=smLookahead(code,smThis->smText,rew_at);
       else
-        smThis->smContinue=rew_at;
+    smThis->smContinue=rew_at;
       smThis->smLength=smThis->smContinue-smThis->smText;
       smSourcePosition(smThis,smThis->smText,smThis->smContinue);
       smToken->code=smTokenCode[code]-1;

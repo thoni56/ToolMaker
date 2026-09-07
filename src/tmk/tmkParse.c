@@ -593,7 +593,7 @@ TmkToken *token			/* INOUT symbol to delete, new symbol */
     *token = la_buff[la_ptr];
     } else {
     do {
-
+        
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -941,7 +941,7 @@ UByte1 *newstat		/* OUT state after recovery */
  * - insertion
  * - deletion
  * - replacement
- * is concidered. The cost of the repair is the sum of the ADAPTION cost and
+ * is considered. The cost of the repair is the sum of the ADAPTION cost and
  * the MODIFICATION cost. The adaption cost indicates how well a correction
  * fits in the context. The modification cost is based on the
  * insertion/deletion cost given in the input. A correction is applied if
@@ -978,7 +978,7 @@ TmkToken *curtok			/* IN current token */
     while ((la_buff[la_end].code != ENDMARK) && (la_end < PmLaMax)) {
     la_end++;
     do {
-
+            
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1133,7 +1133,7 @@ short *choice			/* OUT best choice so far */
 
 
 /*----------------------------------------------------------------------------
- * tryRep - Tries to replace currrent symbol with a new terminal:
+ * tryRep - Tries to replace current symbol with a new terminal:
  *      x t y  => x s y, where s becomes current symbol
  *----------------------------------------------------------------------------
  */
@@ -1149,7 +1149,7 @@ short *choice			/* OUT best choice so far */
     short i;
     short mod_cost;		/* Modification cost */
     short ad_cost;		/* Adaption cost */
-    short tot_cost;		/* Total replacment cost */
+    short tot_cost;		/* Total replacement cost */
 
     for (i = 1; i <= Terms; i++) {
     /* For all legal symbols
@@ -1240,7 +1240,7 @@ TmkToken *token			/* OUT new token */
     *token = la_buff[la_ptr];
     } else {
     do {
-
+        
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1303,7 +1303,7 @@ UByte1 *newstat		/* OUT recovery state */
     *token = la_buff[la_ptr];
     } else {
     do {
-
+        
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1368,7 +1368,7 @@ void tmkParse(void)
     *token = la_buff[la_ptr];
     } else {
     do {
-
+        
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1402,7 +1402,7 @@ tmkScan(tmkCext, token);
     *token = la_buff[la_ptr];
     } else {
     do {
-
+        
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {
@@ -1424,7 +1424,7 @@ tmkScan(tmkCext, token);
     *token = la_buff[la_ptr];
     } else {
     do {
-
+        
 tmkScan(tmkCext, token);
 
         if (token->code > SccMax || token->code < 0) {

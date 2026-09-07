@@ -41,8 +41,7 @@ typedef int pmkTyp;
 #define liFULL (liTINY|liOK)
 
 typedef enum pmkMessages {
-    pmk_ENGLISH_Messages,
-    pmk_AMOS_Messages
+    pmk_ENGLISH_Messages
 } pmkMessages;
 
 
@@ -62,3 +61,4 @@ extern void pmkLiTerminate();
 
 
 #endif
+

@@ -43,10 +43,10 @@ extern smkScContext lexContext;
 #define MaxTokens 5
 
 
-static char insStr[101] = "";   /* Inserted symbol strings */
+static char insStr[101] = "";	/* Inserted symbol strings */
 static int insToks = 0;
 
-static char delStr[201] = "";   /* Deleted symbol strings */
+static char delStr[201] = "";	/* Deleted symbol strings */
 static int delToks = 0;
 
 /*-----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ static int delToks = 0;
  *-----------------------------------------------------------------------------
  */
 void smkRPoi(
-    SmkToken *token     /* IN the restart symbol */
+    SmkToken *token		/* IN the restart symbol */
 )
 {
     if (delToks > MaxTokens) {
@@ -74,14 +74,14 @@ void smkRPoi(
 
 /*-----------------------------------------------------------------------------
  * smkISym - A symbol is to be inserted, collect it for later output, and
- *           construct the requested token for use by the parser.
+ *      construct the requested token for use by the parser.
  *-----------------------------------------------------------------------------
  */
 void smkISym(
-     int code,          /* IN terminal code number */
-    char *symString,    /* IN terminal string */
-    char *printString,  /* IN the terminals print symbol */
-    SmkToken *token     /* OUT the created scanner symbol */
+     int code,	/* IN terminal code number */
+    char *symString,			/* IN terminal string */
+    char *printString,			/* IN the terminals print symbol */
+    SmkToken *token		/* OUT the created scanner symbol */
 )
 {
     char *selectedString;
@@ -136,13 +136,13 @@ void smkISym(
 
 /*-----------------------------------------------------------------------------
  * smkDSym - The indicated symbol is deleted by the parser, collect its string
- *           for later output.
+ *      for later output.
  *-----------------------------------------------------------------------------
  */
 void smkDSym(
-    SmkToken *token,    /* IN terminal */
-    char *symString,    /* IN terminal string */
-    char *printString   /* IN terminals print string */
+    SmkToken *token,		/* IN terminal */
+    char *symString,			/* IN terminal string */
+    char *printString			/* IN terminals print string */
 )
 {
     char *selectedString;
@@ -175,28 +175,31 @@ void smkDSym(
 /*-----------------------------------------------------------------------------
  * smkMess - An error message should be output, symbol indicates point of error.
  *-----------------------------------------------------------------------------
- * Method:    1 = Symbol(s) insertion        Message: % inserted
- *            2 = Symbol(s) deletion                  % deleted
- *            3 = Symbol(s) replacement               % replaced by %
- *            4 = Stack backup               Malformed phrase
- *            5 = Halted                              %. System halted
+ * Method:                              Message:
+ *      1 = Symbol(s) insertion         % inserted
+ *		2 = Symbol(s) deletion			% deleted
+ *		3 = Symbol(s) replacement		% replaced by %
+ *      4 = Stack backup                Malformed phrase
+ *		5 = Halted                      %. System halted
  *
- * Code:      1 = Unknown token (error token from scanner)
- *            2 = Syntax error
- *            3 = Parse stack overflow
- *            4 = Table error
+ * Code:
+ *      1 = Unknown token (error token from scanner)
+ *		2 = Syntax error
+ *		3 = Parse stack overflow
+ *		4 = Table error
  *
- * Severity:  1 = Warning
- *            2 = Error (repairable)
- *            3 = Fatal error
- *            4 = System error & Limit error
+ * Severity:
+ *      1 = Warning
+ *		2 = Error (repairable)
+ *		3 = Fatal error
+ *		4 = System error & Limit error
  *-----------------------------------------------------------------------------
  */
 void smkMess(
-    SmkToken *sym,      /* IN error token */
-    int method,         /* IN recovery method */
-    int code,           /* IN error classification */
-    int severity        /* IN error severity code */
+    SmkToken *sym,		/* IN error token */
+    int method,			/* IN recovery method */
+    int code,			/* IN error classification */
+    int severity		/* IN error severity code */
 )
 {
     smkSev sev;
