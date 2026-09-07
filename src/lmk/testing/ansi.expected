@@ -1473,7 +1473,7 @@ void ansiLiInit(
 
    ansiLog()
 
-   Log an error message, insert strings separatated using %(lmkPrefix)separator
+   Log an error message, insert strings separated using %(lmkPrefix)separator
 
  */
 void ansiLog(
@@ -1828,7 +1828,7 @@ void ansiList(
 
   ansiLiPrint()
 
-  Print one supplimentary line in the output file.
+  Print one supplementary line in the output file.
 
   */
 void ansiLiPrint(

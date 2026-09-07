@@ -1845,7 +1845,7 @@ void %%(lmkPrefix)LiInit(header, srcf, msect)
 
    %%(lmkPrefix)Log()
 
-   Log an error message, insert strings separatated using %(lmkPrefix)separator
+   Log an error message, insert strings separated using %(lmkPrefix)separator
 
  */
 %%IF({"c++", "ansi-c"} (%%(lmkTarget)))
@@ -2532,7 +2532,7 @@ void %%(lmkPrefix)Listse(sevs)
 
   %%(lmkPrefix)LiPrint()
 
-  Print one supplimentary line in the output file.
+  Print one supplementary line in the output file.
 
   */
 %%IF({"c++", "ansi-c"} (%%(lmkTarget)))

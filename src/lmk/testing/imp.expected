@@ -1459,7 +1459,7 @@ void impLiInit(header, srcf, msect)
 
    impLog()
 
-   Log an error message, insert strings separatated using %(lmkPrefix)separator
+   Log an error message, insert strings separated using %(lmkPrefix)separator
 
  */
 void impLog(pos, ecode, sev, istrs)
@@ -1755,7 +1755,7 @@ void impList(ofnm, lins, cols, typ, sevs)
 
   impLiPrint()
 
-  Print one supplimentary line in the output file.
+  Print one supplementary line in the output file.
 
   */
 void impLiPrint(str)

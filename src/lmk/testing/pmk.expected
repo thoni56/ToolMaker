@@ -1610,7 +1610,7 @@ void pmkLiInit(
 
    pmkLog()
 
-   Log an error message, insert strings separatated using %(lmkPrefix)separator
+   Log an error message, insert strings separated using %(lmkPrefix)separator
 
  */
 void pmkLog(
@@ -1952,7 +1952,7 @@ void pmkListm(
 
   pmkLiPrint()
 
-  Print one supplimentary line in the output file.
+  Print one supplementary line in the output file.
 
   */
 void pmkLiPrint(

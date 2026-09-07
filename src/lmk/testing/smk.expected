@@ -1586,7 +1586,7 @@ void smkLiInit(
 
    smkLog()
 
-   Log an error message, insert strings separatated using %(lmkPrefix)separator
+   Log an error message, insert strings separated using %(lmkPrefix)separator
 
  */
 void smkLog(
@@ -1928,7 +1928,7 @@ void smkListm(
 
   smkLiPrint()
 
-  Print one supplimentary line in the output file.
+  Print one supplementary line in the output file.
 
   */
 void smkLiPrint(
