@@ -45,6 +45,22 @@
  *
  */
 
+#if !defined(vms) && !defined(WIN32)
+#include <unistd.h>
+
+int tiHz(void)
+{
+  static int hz = 0;
+
+  if (hz == 0) {
+    long ticks = sysconf(_SC_CLK_TCK);
+    /* sysconf returns -1 if it cannot say; 100 is the usual rate today. */
+    hz = ticks > 0 ? (int)ticks : 100;
+  }
+  return hz;
+}
+#endif
+
 void tistart(Time tb)
 {
 #ifdef WIN32

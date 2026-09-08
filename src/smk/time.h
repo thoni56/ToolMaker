@@ -52,7 +52,12 @@ typedef struct {
 #ifdef WIN32
 #define TI_HZ CLOCKS_PER_SEC
 #else
-#define TI_HZ 60
+/* times() counts in ticks of sysconf(_SC_CLK_TCK), which is only knowable
+   at run time, so TI_HZ is a call here rather than a constant. It was 60,
+   the old BSD rate, which made every reported duration on Linux 100/60 too
+   large: a minute of work printed as " 1:40.00". */
+extern int tiHz(void);
+#define TI_HZ tiHz()
 #endif
 #endif
 
