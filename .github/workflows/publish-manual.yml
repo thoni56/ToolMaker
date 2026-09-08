@@ -1,0 +1,70 @@
+name: Publish Manual
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs-src/**'
+      - '_assets/**'
+      - 'Rakefile'
+      - '.github/workflows/publish-manual.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One publish at a time, and never cancel a deploy half-way.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      # There is no Gemfile, so pin here instead. These are the versions the
+      # manual was last built and proofread with; bump them deliberately.
+      # Note the Rakefile passes --failure-level WARN, so a newer Asciidoctor
+      # that emits a new warning will fail this build rather than publish.
+      - name: Install Asciidoctor
+        run: |
+          gem install asciidoctor -v 2.0.17
+          gem install rouge -v 3.26.0
+
+      # Not the default task: that also runs :docinfo, which rebuilds the CSS
+      # through the Sass CLI. Both _assets/adoc/docinfo.html and the compiled
+      # _assets-src/sass/toolmaker.css are committed, so no Sass is needed.
+      - name: Build HTML
+        run: rake refman manpages
+
+      # doc/ also holds manual.pdf, the 86 MB scan of the paper original,
+      # which has no business in a Pages deploy. Stage just the HTML.
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          cp doc/*.html _site/
+          cp _site/ToolMaker-Manual.html _site/index.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
