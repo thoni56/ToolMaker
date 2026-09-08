@@ -9,6 +9,30 @@ tools. It creates a lexcial scanner (like `lex` et.al) and a parser
 top of a powerful macro tool, `imp`, similar in function to m4 and
 others.
 
+## Documentation
+
+The **[ToolMaker Reference Manual](https://thoni56.github.io/ToolMaker/)** is
+published online. It is the original 1994 SoftLab manual, ported to AsciiDoc,
+and covers all five parts:
+
+- Part I — ToolMaker System Description
+- Part II — ParserMaker
+- Part III — ScannerMaker
+- Part IV — ListerMaker
+- Part V — Toolmake
+
+Man pages for the individual tools:
+[imp(1)](https://thoni56.github.io/ToolMaker/imp%281%29.html),
+[lmk(1)](https://thoni56.github.io/ToolMaker/lmk%281%29.html),
+[pmk(1)](https://thoni56.github.io/ToolMaker/pmk%281%29.html),
+[smk(1)](https://thoni56.github.io/ToolMaker/smk%281%29.html) and
+[toolmake(1)](https://thoni56.github.io/ToolMaker/toolmake%281%29.html).
+
+The site is rebuilt and republished automatically whenever the documentation
+sources change. The scanned paper original the text was transcribed from is
+kept in [`doc/manual.pdf`](./doc/manual.pdf), and to build the HTML yourself
+see [`docs-src/README.md`](./docs-src/README.md).
+
 ## License
 
 This is a project which contains original work by Kenth Ericsson,
