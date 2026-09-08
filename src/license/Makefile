@@ -63,13 +63,6 @@ clean:
 veryclean: clean
 	-rm -f $(SERVER) $(CLIENT) $(PASSWD) $(LICENSE)
 
-file:
-	@echo -n "Make depend "
-	@mv Makefile Makefile.~
-	@sed -n '1,/^# DO NOT DELETE THIS LINE -- make depend depends on it.$$/ p' Makefile.~ > Makefile
-	@for file in *.c ; do /lib/cpp $(INCLUDE) -M $$file | egrep -v '/usr/include' | cat >> Makefile ; echo -n . ; done
-	@echo " done."
-
 release:
 	@if cvs status | egrep Status | egrep -v Up-to-date ; then \
 		exit 1 ; \
@@ -172,5 +165,3 @@ version.c version.h: $(VERSIONSRCS)
 	@-\rm [0-9]*_[0-9]*_[0-9]*.*
 	sh version.sh
 	venum +t
-
-# DO NOT DELETE THIS LINE -- make depend depends on it.

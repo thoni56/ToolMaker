@@ -4,6 +4,3 @@
 
 all:
 	jregr -bin ..
-
-performance:
-	cd performance
