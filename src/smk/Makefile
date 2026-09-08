@@ -44,8 +44,34 @@ tmk:
 	../../bin/smk smk
 	../../bin/lmk smk
 
-test:
+test: unit
 	cd testing; make
+
+# Unit tests, in Cgreen. Built with the address sanitizer on purpose: a
+# formatting bug that overruns its buffer can still return the string the
+# test asked for, so without it a broken tistr() would pass.
+#
+# Cgreen is an extra dependency, so skip rather than fail if it is absent.
+# Do not add -I. here, or Cgreen's <time.h> resolves to smk's own.
+UNITTESTS = time_tests
+
+.PHONY: unit
+unit:
+	@if echo '#include <cgreen/cgreen.h>' | $(CC) -fsyntax-only -xc - 2>/dev/null; then \
+		for t in $(UNITTESTS); do \
+			$(CC) -Wall -ggdb -fsanitize=address -o $$t $$t.c $${t%_tests}.c -lcgreen || exit 1; \
+			ASAN_OPTIONS=detect_leaks=0 ./$$t || exit 1; \
+		done; \
+	else \
+		echo "Cgreen not found, skipping unit tests (see https://github.com/cgreen-devs/cgreen)"; \
+	fi
+
+# Adds a prerequisite to the clean rule in common.mk without redefining it.
+clean: clean-unit
+
+.PHONY: clean-unit
+clean-unit:
+	rm -f $(UNITTESTS)
 
 #--
 include ../common.mk

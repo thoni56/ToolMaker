@@ -90,8 +90,11 @@ int tistop(Time tb)
 
 char *tistr(int time)
 {
-  static char buffer[9];
+  /* %2d is a minimum width, not a maximum, so eight characters only ever
+     covered a minute count below 100. Worst case is a full-width negative
+     minute count, "-2147483648", then ":-59.-99" and the terminator. */
+  static char buffer[11+8+1];
 
-  sprintf(buffer,"%2d:%02d.%02d",time/(60*TI_HZ),((int)(time/TI_HZ))%60,((int)(time*100/TI_HZ))%100);
+  snprintf(buffer,sizeof(buffer),"%2d:%02d.%02d",time/(60*TI_HZ),((int)(time/TI_HZ))%60,((int)(time*100/TI_HZ))%100);
   return buffer;
 }
