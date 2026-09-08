@@ -53,11 +53,13 @@ jobs:
           cp doc/*.html _site/
           cp _site/ToolMaker-Manual.html _site/index.html
 
-      # enablement turns Pages on for the repo the first time this runs, so
-      # the deploy needs no click in Settings > Pages beforehand.
+      # Pages is already enabled for this repo with build_type=workflow. Do
+      # not add 'enablement: true' here: GITHUB_TOKEN cannot create a Pages
+      # site whatever its permissions, and the step fails with "Resource not
+      # accessible by integration". Enabling it needs an account with admin
+      # on the repo, either in Settings > Pages or via
+      # 'gh api -X POST repos/OWNER/REPO/pages -f build_type=workflow'.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
