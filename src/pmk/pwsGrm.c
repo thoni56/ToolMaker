@@ -653,6 +653,15 @@ TmkSrcp srcp;                   /* Reference source pos */
 }/*verify_insert_ref()*/
 
 
+/* Longest name copy_action keeps from a %symbol.attribute reference, and
+ * the most digits it keeps from the instance number in front of it. The
+ * buffers hold one more for the '\0', so a name is truncated rather than
+ * written past its end: symlen feeds a quoted symbol that never closes,
+ * and every character up to the end of the action arrives here.
+ */
+#define MAX_SYM_LEN 80
+#define MAX_INST_DIGITS 4
+
 /*-----------------------------------------------------------------------------
  * copy_action - processes a semantic action from the grammar file and
  *               verifies all attribute references.
@@ -666,9 +675,9 @@ long start;                     /* action's start pos in grammar file */
 long length;                    /* length of action */
 TmkSrcp *srcp;                  /* action's source pos */
 {
-    char inststr[5];
-    char symstr[81];
-    char attrstr[81];
+    char inststr[MAX_INST_DIGITS + 1];
+    char symstr[MAX_SYM_LEN + 1];
+    char attrstr[MAX_SYM_LEN + 1];
     int actI = 0;
     int inst;
     char c;
@@ -711,7 +720,7 @@ TmkSrcp *srcp;                  /* action's source pos */
         if (isdigit(c)) {
         j = 0;
         while (isdigit(c) && i <= length) {
-            inststr[j++] = c;
+            if (j < MAX_INST_DIGITS) inststr[j++] = c;
             read(pwsGrm, &c, 1);
             i++;
             if (c == '\n') {
@@ -742,7 +751,7 @@ TmkSrcp *srcp;                  /* action's source pos */
         while ((c == '_' || isalnum(c) || ang_br_str || q_str) &&
                i <= length)
         {
-          if (j<=80) symstr[j++] = c;
+          if (j < MAX_SYM_LEN) symstr[j++] = c;
           read(pwsGrm, &c, 1);
           i++;
           if (c == '\n') {
@@ -757,14 +766,14 @@ TmkSrcp *srcp;                  /* action's source pos */
             i++;
             srcp->col++;
             if (c != '\'') {
-              symstr[j++] = '\'';
+              if (j < MAX_SYM_LEN) symstr[j++] = '\'';
               break;
             } /*if*/
           } /*if*/
 
           if (ang_br_str && c == '>') {
             if (i <= length) {
-              symstr[j++] = c;
+              if (j < MAX_SYM_LEN) symstr[j++] = c;
               read(pwsGrm, &c, 1);
               i++;
               if (c == '\n') {
@@ -796,7 +805,7 @@ TmkSrcp *srcp;                  /* action's source pos */
           if ((isalpha(c) || c == '_') && i <= length) {
             j = 0;
             while ((isalnum(c) || c == '_') && i <= length) {
-              if (j<=80) attrstr[j++] = c;
+              if (j < MAX_SYM_LEN) attrstr[j++] = c;
               read(pwsGrm, &c, 1);
               i++;
               if (c == '\n') {
