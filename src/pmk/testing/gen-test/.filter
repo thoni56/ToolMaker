@@ -1,1 +1,23 @@
-tail -n +1 $* | grep -v tmkOs | grep -v pmkOs | grep -v currentOs
+# The .jregr recipe lists every file a case could generate, which is more
+# than any one case does: lmk emits List.c or List.cc depending on target,
+# and only some pmk grammars produce an Err.c. Being handed a file that is
+# not there is expected, so report it here instead of letting head or tail
+# do it -- GNU and BSD word that diagnostic differently, which tied the
+# goldens to whichever coreutils happened to record them.
+existing=
+missing=
+for f in "$@"; do
+    if [ -f "$f" ]; then
+        existing="$existing $f"
+    else
+        missing="$missing $f"
+    fi
+done
+
+if [ -n "$existing" ]; then
+    tail -n +1 $existing | grep -v tmkOs | grep -v pmkOs | grep -v currentOs
+fi
+
+for f in $missing; do
+    echo "==> $f <== (not generated)"
+done

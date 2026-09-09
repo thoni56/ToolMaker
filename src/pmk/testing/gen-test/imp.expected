@@ -3972,4 +3972,4 @@ extern void impParse(); /* Parser */
 #include "ast.h"
 
 #endif
-head: cannot open 'impErr.c' for reading: No such file or directory
+==> impErr.c <== (not generated)
