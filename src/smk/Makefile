@@ -55,11 +55,24 @@ test: unit
 # Do not add -I. here, or Cgreen's <time.h> resolves to smk's own.
 UNITTESTS = time_tests
 
+# Cgreen names itself @rpath/libcgreen.1.dylib, so on macOS a binary that
+# links it has to carry an rpath to the directory it came from or dyld will
+# not find it at run time. Neither candidate below is on the linker path by
+# default except /usr/local/lib, so ask for both -L and -rpath. ELF systems
+# resolve the library without any of this.
+ifeq ($(TMARCH),Darwin)
+CGREENDIR := $(patsubst %/,%,$(dir $(firstword $(wildcard \
+	/usr/local/lib/libcgreen.dylib /opt/homebrew/lib/libcgreen.dylib))))
+ifneq ($(CGREENDIR),)
+CGREENFLAGS = -L$(CGREENDIR) -Wl,-rpath,$(CGREENDIR)
+endif
+endif
+
 .PHONY: unit
 unit:
 	@if echo '#include <cgreen/cgreen.h>' | $(CC) -fsyntax-only -xc - 2>/dev/null; then \
 		for t in $(UNITTESTS); do \
-			$(CC) -Wall -ggdb -fsanitize=address -o $$t $$t.c $${t%_tests}.c -lcgreen || exit 1; \
+			$(CC) -Wall -ggdb -fsanitize=address -o $$t $$t.c $${t%_tests}.c $(CGREENFLAGS) -lcgreen || exit 1; \
 			ASAN_OPTIONS=detect_leaks=0 ./$$t || exit 1; \
 		done; \
 	else \
