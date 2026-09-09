@@ -28,7 +28,7 @@
  */
 
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "smk_i.h"
 #include "pack.h"
 

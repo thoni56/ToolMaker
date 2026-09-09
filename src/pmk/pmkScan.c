@@ -24,7 +24,7 @@ extern char pmkEscape;
 
 #include <stdio.h>
 #include <memory.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "pmkScan.h"
 
 /* Local imports */

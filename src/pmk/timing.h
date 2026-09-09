@@ -1,8 +1,8 @@
 #ifndef _timing
 #define _timing
 
-#ifdef unix
-#include <malloc.h>
+#if defined(unix) || defined(__APPLE__)
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/times.h>
 typedef struct tms TimesBuffer;

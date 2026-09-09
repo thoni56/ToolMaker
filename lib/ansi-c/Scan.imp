@@ -278,7 +278,7 @@ int %%(smkPrefix)ScPostHook(smThis,smToken)
 #include <string.h>
 %%ELSE
 #include <memory.h>
-#include <malloc.h>
+#include <stdlib.h>
 %%ENDIF
 #include "%%(smkPrefix)Scan.h"
 
