@@ -1,1 +1,1 @@
-head -n-0 $* | grep -v tmkOs | grep -v smkOs | grep -v currentOs
+tail -n +1 $* | grep -v tmkOs | grep -v smkOs | grep -v currentOs
