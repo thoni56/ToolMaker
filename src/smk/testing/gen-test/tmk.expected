@@ -777,7 +777,7 @@ typedef struct tmkScContextItem {
 
 #include <stdio.h>
 #include <memory.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "tmkScan.h"
 
 /* Local imports */

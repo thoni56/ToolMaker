@@ -1338,7 +1338,7 @@ typedef struct impScContextItem {
 
 #include <stdio.h>
 #include <memory.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include "impScan.h"
 
 /* Local imports */
